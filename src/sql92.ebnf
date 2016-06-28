@@ -19,54 +19,54 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-<SQL terminal character> ::=
-        <SQL language character>
-    |   <SQL embedded language character>
+<SQL_terminal_character> ::=
+        <SQL_language_character>
+    |   <SQL_embedded_language_character>
 
-<SQL language character> ::=
-        <simple Latin letter>
+<SQL_language_character> ::=
+        <simple_Latin_letter>
     |   <digit>
-    |   <SQL special character>
+    |   <SQL_special_character>
 
-<simple Latin letter> ::=
-        <simple Latin upper case letter>
-    |   <simple Latin lower case letter>
+<simple_Latin_letter> ::=
+        <simple_Latin_upper_case_letter>
+    |   <simple_Latin_lower_case_letter>
 
-<simple Latin upper case letter> ::=
+<simple_Latin_upper_case_letter> ::=
     A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
 
-<simple Latin lower case letter> ::=
+<simple_Latin_lower_case_letter> ::=
     a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
 
 <digit> ::=
     0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
-<SQL special character> ::=
+<SQL_special_character> ::=
         <space>
-    |   <double quote>
+    |   <double_quote>
     |   <percent>
     |   <ampersand>
     |   <quote>
-    |   <left paren>
-    |   <right paren>
+    |   <left_paren>
+    |   <right_paren>
     |   <asterisk>
-    |   <plus sign>
+    |   <plus_sign>
     |   <comma>
-    |   <minus sign>
+    |   <minus_sign>
     |   <period>
     |   <solidus>
     |   <colon>
     |   <semicolon>
-    |   <less than operator>
-    |   <greater than operator>
-    |   <equals operator>
-    |   <question mark>
+    |   <less_than_operator>
+    |   <greater_than_operator>
+    |   <equals_operator>
+    |   <question_mark>
     |   <underscore>
-    |   <vertical bar>
+    |   <vertical_bar>
 
 <space> ::= !! space character in character set in use
 
-<double quote> ::= "
+<double_quote> ::= "
 
 <percent> ::= %
 
@@ -74,17 +74,17 @@
 
 <quote> ::= '
 
-<left paren> ::= (
+<left_paren> ::= (
 
-<right paren> ::= )
+<right_paren> ::= )
 
 <asterisk> ::= *
 
-<plus sign> ::= +
+<plus_sign> ::= +
 
 <comma> ::= ,
 
-<minus sign> ::= -
+<minus_sign> ::= -
 
 <period> ::= .
 
@@ -94,47 +94,47 @@
 
 <semicolon> ::= ;
 
-<less than operator> ::= <
+<less_than_operator> ::= <
 
-<equals operator> ::= =
+<equals_operator> ::= =
 
-<greater than operator> ::= >
+<greater_than_operator> ::= >
 
-<question mark> ::= ?
+<question_mark> ::= ?
 
 <underscore> ::= _
 
-<vertical bar> ::= |
+<vertical_bar> ::= |
 
-<SQL embedded language character> ::= <left bracket> | <right bracket>
+<SQL_embedded_language_character> ::= <left_bracket> | <right_bracket>
 
-<left bracket> ::= [
+<left_bracket> ::= [
 
-<right bracket> ::= ]
+<right_bracket> ::= ]
 
 <token> ::=
-        <nondelimiter token>
-    |   <delimiter token>
+        <nondelimiter_token>
+    |   <delimiter_token>
 
-<nondelimiter token> ::=
-        <regular identifier>
-    |   <key word>
-    |   <unsigned numeric literal>
-    |   <national character string literal>
-    |   <bit string literal>
-    |   <hex string literal>
+<nondelimiter_token> ::=
+        <regular_identifier>
+    |   <key_word>
+    |   <unsigned_numeric_literal>
+    |   <national_character_string_literal>
+    |   <bit_string_literal>
+    |   <hex_string_literal>
 
-<regular identifier> ::= <identifier body>
+<regular_identifier> ::= <identifier_body>
 
-<identifier body> ::= <identifier start> [ { <underscore> | <identifier part> } ... ]
+<identifier_body> ::= <identifier_start> [ { <underscore> | <identifier_part> } ... ]
 
-<identifier start> ::= !! See the Syntax rules
+<identifier_start> ::= !! See the Syntax rules
 
-<identifier part> ::= <identifier start> | <digit>
+<identifier_part> ::= <identifier_start> | <digit>
 
-<key word> ::= <reserved word> | <non-reserved word>
+<key_word> ::= <reserved_word> | <non_reserved_word>
 
-<reserved word> ::=
+<reserved_word> ::=
         ABSOLUTE | ACTION | ADD | ALL | ALLOCATE | ALTER | AND | ANY | ARE
     |   AS | ASC | ASSERTION | AT | AUTHORIZATION | AVG
     |   BEGIN | BETWEEN | BIT | BIT_LENGTH | BOTH | BY
@@ -169,7 +169,7 @@
     |   YEAR
     |   ZONE
 
-<non-reserved word> ::=
+<non_reserved_word> ::=
         ADA
     |   C | CATALOG_NAME | CHARACTER_SET_CATALOG | CHARACTER_SET_NAME | CHARACTER_SET_SCHEMA
     |   CLASS_ORIGIN | COBOL | COLLATION_CATALOG | COLLATION_NAME | COLLATION_SCHEMA
@@ -186,840 +186,840 @@
     |   TABLE_NAME | TYPE
     |   UNCOMMITTED | UNNAMED
 
-<unsigned numeric literal> ::=
-        <exact numeric literal>
-    |   <approximate numeric literal>
+<unsigned_numeric_literal> ::=
+        <exact_numeric_literal>
+    |   <approximate_numeric_literal>
 
-<exact numeric literal> ::=
-        <unsigned integer> [ <period> [ <unsigned integer> ] ]
-    |   <period> <unsigned integer>
+<exact_numeric_literal> ::=
+        <unsigned_integer> [ <period> [ <unsigned_integer> ] ]
+    |   <period> <unsigned_integer>
 
-<unsigned integer> ::= <digit> ...
+<unsigned_integer> ::= <digit> ...
 
-<approximate numeric literal> ::=
+<approximate_numeric_literal> ::=
         <mantissa> E <exponent>
 
-<mantissa> ::= <exact numeric literal>
+<mantissa> ::= <exact_numeric_literal>
 
-<exponent> ::= <signed integer>
+<exponent> ::= <signed_integer>
 
-<signed integer> ::= [ <sign> ] <unsigned integer>
+<signed_integer> ::= [ <sign> ] <unsigned_integer>
 
-<sign> ::= <plus sign> | <minus sign>
+<sign> ::= <plus_sign> | <minus_sign>
 
-<national character string literal> ::=
-        N <quote> [ <character representation> ... ] <quote> [ { <separator>... <quote> [ <character representation>... ] <quote> }... ]
+<national_character_string_literal> ::=
+        N <quote> [ <character_representation> ... ] <quote> [ { <separator>... <quote> [ <character_representation>... ] <quote> }... ]
 
-<character representation> ::= <nonquote character> | <quote symbol>
+<character_representation> ::= <nonquote_character> | <quote_symbol>
 
-<nonquote character> ::= !! See the Syntax rules
+<nonquote_character> ::= !! See the Syntax rules
 
-<quote symbol> ::= <quote> <quote>
+<quote_symbol> ::= <quote> <quote>
 
 <separator> ::= { <comment> | <space> | <newline> }...
 
-<comment> ::= <comment introducer> [ <comment character>... ] <newline>
+<comment> ::= <comment_introducer> [ <comment_character>... ] <newline>
 
-<comment introducer> ::= <minus sign><minus sign> [<minus sign>...]
+<comment_introducer> ::= <minus_sign><minus_sign> [<minus_sign>...]
 
-<comment character> ::= <nonquote character> | <quote>
+<comment_character> ::= <nonquote_character> | <quote>
 
 <newline> ::= !! implementation defined end of line indicator
 
-<bit string literal> ::=
+<bit_string_literal> ::=
         B <quote> [ <bit> ... ] <quote> [ { <separator>... <quote> [ <bit>... ] <quote> }... ]
 
 <bit> ::= 0 | 1
 
-<hex string literal> ::=
+<hex_string_literal> ::=
         X <quote> [ <hexit> ... ] <quote> [ { <separator>... <quote> [ <hexit>... ] <quote> }... ]
 
 <hexit> ::= <digit> | A | B | C | D | E | F | a | b | c | d | e | f
 
-<delimiter token> ::=
-        <character string literal>
-    |   <date string>
-    |   <time string>
-    |   <timestamp string>
-    |   <delimited identifier>
-    |   <SQL special character>
-    |   <not equals operator>
-    |   <greater than or equals operator>
-    |   <less than or equals operator>
-    |   <concatenation operator>
-    |   <double period>
-    |   <left bracket>
-    |   <right bracket>
+<delimiter_token> ::=
+        <character_string_literal>
+    |   <date_string>
+    |   <time_string>
+    |   <timestamp_string>
+    |   <delimited_identifier>
+    |   <SQL_special_character>
+    |   <not_equals_operator>
+    |   <greater_than_or_equals_operator>
+    |   <less_than_or_equals_operator>
+    |   <concatenation_operator>
+    |   <double_period>
+    |   <left_bracket>
+    |   <right_bracket>
 
-<character string literal> ::=
-    [ <introducer><character set specification> ] <quote> [ <character representation>... ] <quote> [ { <separator>... <quote> [ <character representation>... ] <quote> }... ]
+<character_string_literal> ::=
+    [ <introducer><character_set_specification> ] <quote> [ <character_representation>... ] <quote> [ { <separator>... <quote> [ <character_representation>... ] <quote> }... ]
 
 <introducer> ::= <underscore>
 
-<character set specification> ::=
-        <standard character repertoire name>
-    |   <implementation-defined character repertoire name>
-    |   <user-defined character repertoire name>
-    |   <standard universal character form-of-use name>
-    |   <implementation-defined universal character form-of-use name>
+<character_set_specification> ::=
+        <standard_character_repertoire_name>
+    |   <implementation_defined_character_repertoire_name>
+    |   <user_defined_character_repertoire_name>
+    |   <standard_universal_character_form_of_use_name>
+    |   <implementation_defined_universal_character_form_of_use_name>
 
-<standard character repertoire name> ::= <character set name>
+<standard_character_repertoire_name> ::= <character_set_name>
 
-<character set name> ::= [ <schema name> <period> ] <SQL language identifier>
+<character_set_name> ::= [ <schema_name> <period> ] <SQL_language_identifier>
 
-<schema name> ::= [ <catalog name> <period> ] <unqualified schema name>
+<schema_name> ::= [ <catalog_name> <period> ] <unqualified_schema_name>
 
-<catalog name> ::= <identifier>
+<catalog_name> ::= <identifier>
 
-<identifier> ::= [ <introducer><character set specification> ] <actual identifier>
+<identifier> ::= [ <introducer><character_set_specification> ] <actual_identifier>
 
-<actual identifier> ::= <regular identifier> | <delimited identifier>
+<actual_identifier> ::= <regular_identifier> | <delimited_identifier>
 
-<delimited identifier> ::= <double quote> <delimited identifier body> <double quote>
+<delimited_identifier> ::= <double_quote> <delimited_identifier_body> <double_quote>
 
-<delimited identifier body> ::= <delimited identifier part>...
+<delimited_identifier_body> ::= <delimited_identifier_part>...
 
-<delimited identifier part> ::= <nondoublequote character> | <doublequote symbol>
+<delimited_identifier_part> ::= <nondoublequote_character> | <doublequote_symbol>
 
-<nondoublequote character> ::= !! See the syntax rules
+<nondoublequote_character> ::= !! See the syntax rules
 
-<doublequote symbol> ::= <double quote><double quote>
+<doublequote_symbol> ::= <double_quote><double_quote>
 
-<unqualified schema name> ::= <identifier>
+<unqualified_schema_name> ::= <identifier>
 
-<SQL language identifier> ::=
-        <SQL language identifier start> [ { <underscore> | <SQL language identifier part> }... ]
+<SQL_language_identifier> ::=
+        <SQL_language_identifier_start> [ { <underscore> | <SQL_language_identifier_part> }... ]
 
-<SQL language identifier start> ::= <simple Latin letter>
+<SQL_language_identifier_start> ::= <simple_Latin_letter>
 
-<SQL language identifier part> ::= <simple Latin letter> | <digit>
+<SQL_language_identifier_part> ::= <simple_Latin_letter> | <digit>
 
-<implementation-defined character repertoire name> ::= <character set name>
+<implementation_defined_character_repertoire_name> ::= <character_set_name>
 
-<user-defined character repertoire name> ::= <character set name>
+<user_defined_character_repertoire_name> ::= <character_set_name>
 
-<standard universal character form-of-use name> ::= <character set name>
+<standard_universal_character_form_of_use_name> ::= <character_set_name>
 
-<implementation-defined universal character form-of-use name> ::= <character set name>
+<implementation_defined_universal_character_form_of_use_name> ::= <character_set_name>
 
-<date string> ::= <quote> <date value> <quote>
+<date_string> ::= <quote> <date_value> <quote>
 
-<date value> ::= <years value> <minus sign> <months value> <minus sign> <days value>
+<date_value> ::= <years_value> <minus_sign> <months_value> <minus_sign> <days_value>
 
-<years value> ::= <datetime value>
+<years_value> ::= <datetime_value>
 
-<datetime value> ::= <unsigned integer>
+<datetime_value> ::= <unsigned_integer>
 
-<months value> ::= <datetime value>
+<months_value> ::= <datetime_value>
 
-<days value> ::= <datetime value>
+<days_value> ::= <datetime_value>
 
-<time string> ::= <quote> <time value> [ <time zone interval> ] <quote>
+<time_string> ::= <quote> <time_value> [ <time_zone_interval> ] <quote>
 
-<time value> ::= <hours value> <colon> <minutes value> <colon> <seconds value>
+<time_value> ::= <hours_value> <colon> <minutes_value> <colon> <seconds_value>
 
-<hours value> ::= <datetime value>
+<hours_value> ::= <datetime_value>
 
-<minutes value> ::= <datetime value>
+<minutes_value> ::= <datetime_value>
 
-<seconds value> ::= <seconds integer value> [ <period> [ <seconds fraction> ] ]
+<seconds_value> ::= <seconds_integer_value> [ <period> [ <seconds_fraction> ] ]
 
-<seconds integer value> ::= <unsigned integer>
+<seconds_integer_value> ::= <unsigned_integer>
 
-<seconds fraction> ::= <unsigned integer>
+<seconds_fraction> ::= <unsigned_integer>
 
-<time zone interval> ::= <sign> <hours value> <colon> <minutes value>
+<time_zone_interval> ::= <sign> <hours_value> <colon> <minutes_value>
 
-<timestamp string> ::= <quote> <date value> <space> <time value> [ <time zone interval> ] <quote>
+<timestamp_string> ::= <quote> <date_value> <space> <time_value> [ <time_zone_interval> ] <quote>
 
-<interval string> ::= <quote> { <year-month literal> | <day-time literal> } <quote>
+<interval_string> ::= <quote> { <year_month_literal> | <day_time_literal> } <quote>
 
-<year-month literal> ::=
-        <years value>
-    |   [ <years value> <minus sign> ] <months value>
+<year_month_literal> ::=
+        <years_value>
+    |   [ <years_value> <minus_sign> ] <months_value>
 
-<day-time literal> ::= <day-time interval> | <time interval>
+<day_time_literal> ::= <day_time_interval> | <time_interval>
 
-<day-time interval> ::=
-        <days value> [ <space> <hours value> [ <colon> <minutes value> [ <colon> <seconds value> ] ] ]
+<day_time_interval> ::=
+        <days_value> [ <space> <hours_value> [ <colon> <minutes_value> [ <colon> <seconds_value> ] ] ]
 
-<time-interval> ::=
-        <hours value> [ <colon> <minutes value> [ <colon> <seconds value> ] ]
-    |   <minutes value> [ <colon> <seconds value> ]
-    |   <seconds value>
+<time_interval> ::=
+        <hours_value> [ <colon> <minutes_value> [ <colon> <seconds_value> ] ]
+    |   <minutes_value> [ <colon> <seconds_value> ]
+    |   <seconds_value>
 
-<not equals operator> ::= <>
+<not_equals_operator> ::= <>
 
-<greater than or equals operator> ::= >=
+<greater_than_or_equals_operator> ::= >=
 
-<less than or equals operator> ::= <=
+<less_than_or_equals_operator> ::= <=
 
-<concatenation operator> ::= ||
+<concatenation_operator> ::= ||
 
-<double period> ::= ..
+<double_period> ::= ..
 
 <module> ::=
-        <module name clause> <language clause> <module authorization clause>
-        [ <temporary table declaration>... ]
-        <module contents>...
+        <module_name_clause> <language_clause> <module_authorization_clause>
+        [ <temporary_table_declaration>... ]
+        <module_contents>...
 
-<module name clause> ::=
-        MODULE [ <module name> ] [ <module character set specification> ]
+<module_name_clause> ::=
+        MODULE [ <module_name> ] [ <module_character_set_specification> ]
 
-<module name> ::= <identifier>
+<module_name> ::= <identifier>
 
-<module character set specification> ::= NAMES ARE <character set specification>
+<module_character_set_specification> ::= NAMES ARE <character_set_specification>
 
-<language clause> ::= LANGUAGE <language name>
+<language_clause> ::= LANGUAGE <language_name>
 
-<language name> ::= ADA | C | COBOL | FORTRAN | MUMPS | PASCAL | PLI
+<language_name> ::= ADA | C | COBOL | FORTRAN | MUMPS | PASCAL | PLI
 
-<module authorization clause> ::=
-        SCHEMA <schema name>
-    |   AUTHORIZATION <module authorization identifier>
-    |   SCHEMA <schema name> AUTHORIZATION <module authorization identifier>
+<module_authorization_clause> ::=
+        SCHEMA <schema_name>
+    |   AUTHORIZATION <module_authorization_identifier>
+    |   SCHEMA <schema_name> AUTHORIZATION <module_authorization_identifier>
 
-<module authorization identifier> ::= <authorization identifier>
+<module_authorization_identifier> ::= <authorization_identifier>
 
-<authorization identifier> ::= <identifier>
+<authorization_identifier> ::= <identifier>
 
-<temporary table declaration> ::=
-    DECLARE LOCAL TEMPORARY TABLE <qualified local table name> <table element list> [ ON COMMIT { PRESERVE | DELETE } ROWS ]
+<temporary_table_declaration> ::=
+    DECLARE LOCAL TEMPORARY TABLE <qualified_local_table_name> <table_element_list> [ ON COMMIT { PRESERVE | DELETE } ROWS ]
 
-<qualified local table name> ::= MODULE <period> <local table name>
+<qualified_local_table_name> ::= MODULE <period> <local_table_name>
 
-<local table name> ::= <qualified identifier>
+<local_table_name> ::= <qualified_identifier>
 
-<qualified identifier> ::= <identifier>
+<qualified_identifier> ::= <identifier>
 
-<table element list> ::= <left paren> <table element> [ { <comma> <table element> }... ] <right paren>
+<table_element_list> ::= <left_paren> <table_element> [ { <comma> <table_element> }... ] <right_paren>
 
-<table element> ::= <column definition> | <table constraint definition>
+<table_element> ::= <column_definition> | <table_constraint_definition>
 
-<column definition> ::=
-        <column name> { <data type> | <domain name> } [ <default clause> ] [ <column constraint definition>... ] [ <collate clause> ]
+<column_definition> ::=
+        <column_name> { <data_type> | <domain_name> } [ <default_clause> ] [ <column_constraint_definition>... ] [ <collate_clause> ]
 
-<column name> ::= <identifier>
+<column_name> ::= <identifier>
 
-<data type> ::=
-        <character string type> [ CHARACTER SET <character set specification> ]
-    |   <national character string type>
-    |   <bit string type>
-    |   <numeric type>
-    |   <datetime type>
-    |   <interval type>
+<data_type> ::=
+        <character_string_type> [ CHARACTER SET <character_set_specification> ]
+    |   <national_character_string_type>
+    |   <bit_string_type>
+    |   <numeric_type>
+    |   <datetime_type>
+    |   <interval_type>
 
-<character string type> ::=
-        CHARACTER [ <left paren> <length> <right paren> ]
-    |   CHAR [ <left paren> <length> <right paren> ]
-    |   CHARACTER VARYING [ <left paren> <length> <right paren> ]
-    |   CHAR VARYING [ <left paren> <length> <right paren> ]
-    |   VARCHAR [ <left paren> <length> <right paren> ]
+<character_string_type> ::=
+        CHARACTER [ <left_paren> <length> <right_paren> ]
+    |   CHAR [ <left_paren> <length> <right_paren> ]
+    |   CHARACTER VARYING [ <left_paren> <length> <right_paren> ]
+    |   CHAR VARYING [ <left_paren> <length> <right_paren> ]
+    |   VARCHAR [ <left_paren> <length> <right_paren> ]
 
-<length> ::= <unsigned integer>
+<length> ::= <unsigned_integer>
 
-<national character string type> ::=
-        NATIONAL CHARACTER [ <left paren> <length> <right paren> ]
-    |   NATIONAL CHAR [ <left paren> <length> <right paren> ]
-    |   NCHAR [ <left paren> <length> <right paren> ]
-    |   NATIONAL CHARACTER VARYING [ <left paren> <length> <right paren> ]
-    |   NATIONAL CHAR VARYING [ <left paren> <length> <right paren> ]
-    |   NCHAR VARYING [ <left paren> <length> <right paren> ]
+<national_character_string_type> ::=
+        NATIONAL CHARACTER [ <left_paren> <length> <right_paren> ]
+    |   NATIONAL CHAR [ <left_paren> <length> <right_paren> ]
+    |   NCHAR [ <left_paren> <length> <right_paren> ]
+    |   NATIONAL CHARACTER VARYING [ <left_paren> <length> <right_paren> ]
+    |   NATIONAL CHAR VARYING [ <left_paren> <length> <right_paren> ]
+    |   NCHAR VARYING [ <left_paren> <length> <right_paren> ]
 
-<bit string type> ::=
-        BIT [ <left paren> <length> <right paren> ]
-    |   BIT VARYING [ <left paren> <length> <right paren> ]
+<bit_string_type> ::=
+        BIT [ <left_paren> <length> <right_paren> ]
+    |   BIT VARYING [ <left_paren> <length> <right_paren> ]
 
-<numeric type> ::=
-        <exact numeric type>
-    |   <approximate numeric type>
+<numeric_type> ::=
+        <exact_numeric_type>
+    |   <approximate_numeric_type>
 
-<exact numeric type> ::=
-        NUMERIC [ <left paren> <precision> [ <comma> <scale> ] <right paren> ]
-    |   DECIMAL [ <left paren> <precision> [ <comma> <scale> ] <right paren> ]
-    |   DEC [ <left paren> <precision> [ <comma> <scale> ] <right paren> ]
+<exact_numeric_type> ::=
+        NUMERIC [ <left_paren> <precision> [ <comma> <scale> ] <right_paren> ]
+    |   DECIMAL [ <left_paren> <precision> [ <comma> <scale> ] <right_paren> ]
+    |   DEC [ <left_paren> <precision> [ <comma> <scale> ] <right_paren> ]
     |   INTEGER
     |   INT
     |   SMALLINT
 
-<precision> ::= <unsigned integer>
+<precision> ::= <unsigned_integer>
 
-<scale> ::= <unsigned integer>
+<scale> ::= <unsigned_integer>
 
-<approximate numeric type> ::=
-        FLOAT [ <left paren> <precision> <right paren> ]
+<approximate_numeric_type> ::=
+        FLOAT [ <left_paren> <precision> <right_paren> ]
     |   REAL
     |   DOUBLE PRECISION
 
-<datetime type> ::=
+<datetime_type> ::=
         DATE
-    |   TIME [ <left paren> <time precision> <right paren> ] [ WITH TIME ZONE ]
-    |   TIMESTAMP [ <left paren> <timestamp precision> <right paren> ] [ WITH TIME ZONE ]
+    |   TIME [ <left_paren> <time_precision> <right_paren> ] [ WITH TIME ZONE ]
+    |   TIMESTAMP [ <left_paren> <timestamp_precision> <right_paren> ] [ WITH TIME ZONE ]
 
-<time precision> ::= <time fractional seconds precision>
+<time_precision> ::= <time_fractional_seconds_precision>
 
-<time fractional seconds precision> ::= <unsigned integer>
+<time_fractional_seconds_precision> ::= <unsigned_integer>
 
-<timestamp precision> ::= <time fractional seconds precision>
+<timestamp_precision> ::= <time_fractional_seconds_precision>
 
-<interval type> ::= INTERVAL <interval qualifier>
+<interval_type> ::= INTERVAL <interval_qualifier>
 
-<interval qualifier> ::=
-        <start field> TO <end field>
-    |   <single datetime field>
+<interval_qualifier> ::=
+        <start_field> TO <end_field>
+    |   <single_datetime_field>
 
-<start field> ::=
-        <non-second datetime field> [ <left paren> <interval leading field precision> <right paren> ]
+<start_field> ::=
+        <non_second_datetime_field> [ <left_paren> <interval_leading_field_precision> <right_paren> ]
 
-<non-second datetime field> ::= YEAR | MONTH | DAY | HOUR | MINUTE
+<non_second_datetime_field> ::= YEAR | MONTH | DAY | HOUR | MINUTE
 
-<interval leading field precision> ::= <unsigned integer>
+<interval_leading_field_precision> ::= <unsigned_integer>
 
-<end field> ::=
-        <non-second datetime field>
-    |   SECOND [ <left paren> <interval fractional seconds precision> <right paren> ]
+<end_field> ::=
+        <non_second_datetime_field>
+    |   SECOND [ <left_paren> <interval_fractional_seconds_precision> <right_paren> ]
 
-<interval fractional seconds precision> ::= <unsigned integer>
+<interval_fractional_seconds_precision> ::= <unsigned_integer>
 
-<single datetime field> ::=
-        <non-second datetime field> [ <left paren> <interval leading field precision> <right paren> ]
-    |   SECOND [ <left paren> <interval leading field precision> [ <comma> <left paren> <interval fractional seconds precision> ] <right paren> ]
+<single_datetime_field> ::=
+        <non_second_datetime_field> [ <left_paren> <interval_leading_field_precision> <right_paren> ]
+    |   SECOND [ <left_paren> <interval_leading_field_precision> [ <comma> <left_paren> <interval_fractional_seconds_precision> ] <right_paren> ]
 
-<domain name> ::= <qualified name>
+<domain_name> ::= <qualified_name>
 
-<qualified name> ::= [ <schema name> <period> ] <qualified identifier>
+<qualified_name> ::= [ <schema_name> <period> ] <qualified_identifier>
 
-<default clause> ::= DEFAULT <default option>
+<default_clause> ::= DEFAULT <default_option>
 
-<default option> ::=
+<default_option> ::=
         <literal>
-    |   <datetime value function>
+    |   <datetime_value_function>
     |   USER
     |   CURRENT_USER
     |   SESSION_USER
     |   SYSTEM_USER
     |   NULL
 
-<literal> ::= <signed numeric literal> | <general literal>
+<literal> ::= <signed_numeric_literal> | <general_literal>
 
-<signed numeric literal> ::= [ <sign> ] <unsigned numeric literal>
+<signed_numeric_literal> ::= [ <sign> ] <unsigned_numeric_literal>
 
-<general literal> ::=
-        <character string literal>
-    |   <national character string literal>
-    |   <bit string literal>
-    |   <hex string literal>
-    |   <datetime literal>
-    |   <interval literal>
+<general_literal> ::=
+        <character_string_literal>
+    |   <national_character_string_literal>
+    |   <bit_string_literal>
+    |   <hex_string_literal>
+    |   <datetime_literal>
+    |   <interval_literal>
 
-<datetime literal> ::=
-        <date literal>
-    |   <time literal>
-    |   <timestamp literal>
+<datetime_literal> ::=
+        <date_literal>
+    |   <time_literal>
+    |   <timestamp_literal>
 
-<date literal> ::= DATE <date string>
+<date_literal> ::= DATE <date_string>
 
-<time literal> ::= TIME <time string>
+<time_literal> ::= TIME <time_string>
 
-<timestamp literal> ::= TIMESTAMP <timestamp string>
+<timestamp_literal> ::= TIMESTAMP <timestamp_string>
 
-<interval literal> ::= INTERVAL [ <sign> ] <interval string> <interval qualifier>
+<interval_literal> ::= INTERVAL [ <sign> ] <interval_string> <interval_qualifier>
 
-<datetime value function> ::=
-        <current date value function>
-    |   <current time value function>
-    |   <current timestamp value function>
+<datetime_value_function> ::=
+        <current_date_value_function>
+    |   <current_time_value_function>
+    |   <current_timestamp_value_function>
 
-<current date value function> ::= CURRENT_DATE
+<current_date_value_function> ::= CURRENT_DATE
 
-<current time value function> ::= CURRENT_TIME [ <left paren> <time precision> <right paren> ]
+<current_time_value_function> ::= CURRENT_TIME [ <left_paren> <time_precision> <right_paren> ]
 
-<current timestamp value function> ::= CURRENT_TIMESTAMP [ <left paren> <timestamp precision> <right paren> ]
+<current_timestamp_value_function> ::= CURRENT_TIMESTAMP [ <left_paren> <timestamp_precision> <right_paren> ]
 
-<column constraint definition> ::=
-        [ <constraint name definition> ] <column constraint> [ <constraint attributes> ]
+<column_constraint_definition> ::=
+        [ <constraint_name_definition> ] <column_constraint> [ <constraint_attributes> ]
 
-<constraint name definition> ::= CONSTRAINT <constraint name>
+<constraint_name_definition> ::= CONSTRAINT <constraint_name>
 
-<constraint name> ::= <qualified name>
+<constraint_name> ::= <qualified_name>
 
-<column constraint> ::=
+<column_constraint> ::=
         NOT NULL
-    |   <unique specification>
-    |   <references specification>
-    |   <check constraint definition>
+    |   <unique_specification>
+    |   <references_specification>
+    |   <check_constraint_definition>
 
-<unique specification> ::= UNIQUE | PRIMARY KEY
+<unique_specification> ::= UNIQUE | PRIMARY KEY
 
-<references specification> ::=
-        REFERENCES <referenced table and columns> [ MATCH <match type> ] [ <referential triggered action> ]
+<references_specification> ::=
+        REFERENCES <referenced_table_and_columns> [ MATCH <match_type> ] [ <referential_triggered_action> ]
 
-<referenced table and columns> ::= <table name> [ <left paren> <reference column list> <right paren> ]
+<referenced_table_and_columns> ::= <table_name> [ <left_paren> <reference_column_list> <right_paren> ]
 
-<table name> ::= <qualified name> | <qualified local table name>
+<table_name> ::= <qualified_name> | <qualified_local_table_name>
 
-<reference column list> ::= <column name list>
+<reference_column_list> ::= <column_name_list>
 
-<column name list> ::= <column name> [ { <comma> <column name> }... ]
+<column_name_list> ::= <column_name> [ { <comma> <column_name> }... ]
 
-<match type> ::= FULL | PARTIAL
+<match_type> ::= FULL | PARTIAL
 
-<referential triggered action> ::=
-        <update rule> [ <delete rule> ]
-    |   <delete rule> [ <update rule> ]
+<referential_triggered_action> ::=
+        <update_rule> [ <delete_rule> ]
+    |   <delete_rule> [ <update_rule> ]
 
-<update rule> ::= ON UPDATE <referential action>
+<update_rule> ::= ON UPDATE <referential_action>
 
-<referential action> ::= CASCADE | SET NULL | SET DEFAULT | NO ACTION
+<referential_action> ::= CASCADE | SET NULL | SET DEFAULT | NO ACTION
 
-<delete rule> ::= ON DELETE <referential action>
+<delete_rule> ::= ON DELETE <referential_action>
 
-<check constraint definition> ::= CHECK <left paren> <search condition> <right paren>
+<check_constraint_definition> ::= CHECK <left_paren> <search_condition> <right_paren>
 
-<search condition> ::=
-        <boolean term>
-    |   <search condition> OR <boolean term>
+<search_condition> ::=
+        <boolean_term>
+    |   <search_condition> OR <boolean_term>
 
-<boolean term> ::=
-        <boolean factor>
-    |   <boolean term> AND <boolean factor>
+<boolean_term> ::=
+        <boolean_factor>
+    |   <boolean_term> AND <boolean_factor>
 
-<boolean factor> ::= [ NOT ] <boolean test>
+<boolean_factor> ::= [ NOT ] <boolean_test>
 
-<boolean test> ::= <boolean primary> [ IS [ NOT ] <truth value> ]
+<boolean_test> ::= <boolean_primary> [ IS [ NOT ] <truth_value> ]
 
-<boolean primary> ::= <predicate> | <left paren> <search condition> <right paren>
+<boolean_primary> ::= <predicate> | <left_paren> <search_condition> <right_paren>
 
 <predicate> ::=
-        <comparison predicate>
-    |   <between predicate>
-    |   <in predicate>
-    |   <like predicate>
-    |   <null predicate>
-    |   <quantified comparison predicate>
-    |   <exists predicate>
-    |   <match predicate>
-    |   <overlaps predicate>
+        <comparison_predicate>
+    |   <between_predicate>
+    |   <in_predicate>
+    |   <like_predicate>
+    |   <null_predicate>
+    |   <quantified_comparison_predicate>
+    |   <exists_predicate>
+    |   <match_predicate>
+    |   <overlaps_predicate>
 
-<comparison predicate> ::= <row value constructor> <comp op> <row value constructor>
+<comparison_predicate> ::= <row_value_constructor> <comp_op> <row_value_constructor>
 
-<row value constructor> ::=
-        <row value constructor element>
-    |   <left paren> <row value constructor list> <right paren>
-    |   <row subquery>
+<row_value_constructor> ::=
+        <row_value_constructor_element>
+    |   <left_paren> <row_value_constructor_list> <right_paren>
+    |   <row_subquery>
 
-<row value constructor element> ::=
-        <value expression>
-    |   <null specification>
-    |   <default specification>
+<row_value_constructor_element> ::=
+        <value_expression>
+    |   <null_specification>
+    |   <default_specification>
 
-<value expression> ::=
-        <numeric value expression>
-    |   <string value expression>
-    |   <datetime value expression>
-    |   <interval value expression>
+<value_expression> ::=
+        <numeric_value_expression>
+    |   <string_value_expression>
+    |   <datetime_value_expression>
+    |   <interval_value_expression>
 
-<numeric value expression> ::=
+<numeric_value_expression> ::=
         <term>
-    |   <numeric value expression> <plus sign> <term>
-    |   <numeric value expression> <minus sign> <term>
+    |   <numeric_value_expression> <plus_sign> <term>
+    |   <numeric_value_expression> <minus_sign> <term>
 
 <term> ::=
         <factor>
     |   <term> <asterisk> <factor>
     |   <term> <solidus> <factor>
 
-<factor> ::= [ <sign> ] <numeric primary>
+<factor> ::= [ <sign> ] <numeric_primary>
 
-<numeric primary> ::= <value expression primary> | <numeric value function>
+<numeric_primary> ::= <value_expression_primary> | <numeric_value_function>
 
-<value expression primary> ::=
-        <unsigned value specification>
-    |   <column reference>
-    |   <set function specification>
-    |   <scalar subquery>
-    |   <case expression>
-    |   <left paren> <value expression> <right paren>
-    |   <cast specification>
+<value_expression_primary> ::=
+        <unsigned_value_specification>
+    |   <column_reference>
+    |   <set_function_specification>
+    |   <scalar_subquery>
+    |   <case_expression>
+    |   <left_paren> <value_expression> <right_paren>
+    |   <cast_specification>
 
-<unsigned value specification> ::= <unsigned literal> | <general value specification>
+<unsigned_value_specification> ::= <unsigned_literal> | <general_value_specification>
 
-<unsigned literal> ::= <unsigned numeric literal> | <general literal>
+<unsigned_literal> ::= <unsigned_numeric_literal> | <general_literal>
 
-<general value specification> ::=
-        <parameter specification>
-    |   <dynamic parameter specification>
-    |   <variable specification>
+<general_value_specification> ::=
+        <parameter_specification>
+    |   <dynamic_parameter_specification>
+    |   <variable_specification>
     |   USER
     |   CURRENT_USER
     |   SESSION_USER
     |   SYSTEM_USER
     |   VALUE
 
-<parameter specification> ::= <parameter name> [ <indicator parameter> ]
+<parameter_specification> ::= <parameter_name> [ <indicator_parameter> ]
 
-<parameter name> ::= <colon> <identifier>
+<parameter_name> ::= <colon> <identifier>
 
-<indicator parameter> ::= [ INDICATOR ] <parameter name>
+<indicator_parameter> ::= [ INDICATOR ] <parameter_name>
 
-<dynamic parameter specification> ::= <question mark>
+<dynamic_parameter_specification> ::= <question_mark>
 
-<variable specification> ::= <embedded variable name> [ <indicator variable> ]
+<variable_specification> ::= <embedded_variable_name> [ <indicator_variable> ]
 
-<embedded variable name> ::= <colon><host identifier>
+<embedded_variable_name> ::= <colon><host_identifier>
 
-<host identifier> ::=
-        <Ada host identifier>
-    |   <C host identifier>
-    |   <Cobol host identifier>
-    |   <Fortran host identifier>
-    |   <MUMPS host identifier>
-    |   <Pascal host identifier>
+<host_identifier> ::=
+        <Ada_host_identifier>
+    |   <C_host_identifier>
+    |   <Cobol_host_identifier>
+    |   <Fortran_host_identifier>
+    |   <MUMPS_host_identifier>
+    |   <Pascal_host_identifier>
     |   <PL/I host identifier>
 
-<Ada host identifier> ::= !! See syntax rules
+<Ada_host_identifier> ::= !! See syntax rules
 
-<C host identifier> ::= !! See syntax rules
+<C_host_identifier> ::= !! See syntax rules
 
-<Cobol host identifier> ::= !! See syntax rules
+<Cobol_host_identifier> ::= !! See syntax rules
 
-<Fortran host identifier> ::= !! See syntax rules
+<Fortran_host_identifier> ::= !! See syntax rules
 
-<MUMPS host identifier> ::= !! See syntax rules
+<MUMPS_host_identifier> ::= !! See syntax rules
 
-<Pascal host identifier> ::= !! See syntax rules
+<Pascal_host_identifier> ::= !! See syntax rules
 
 <PL/I host identifier> ::= !! See syntax rules
 
-<indicator variable> ::= [ INDICATOR ] <embedded variable name>
+<indicator_variable> ::= [ INDICATOR ] <embedded_variable_name>
 
-<column reference> ::= [ <qualifier> <period> ] <column name>
+<column_reference> ::= [ <qualifier> <period> ] <column_name>
 
-<qualifier> ::= <table name> | <correlation name>
+<qualifier> ::= <table_name> | <correlation_name>
 
-<correlation name> ::= <identifier>
+<correlation_name> ::= <identifier>
 
-<set function specification> ::=
-        COUNT <left paren> <asterisk> <right paren>
-    |   <general set function>
+<set_function_specification> ::=
+        COUNT <left_paren> <asterisk> <right_paren>
+    |   <general_set_function>
 
-<general set function> ::=
-        <set function type> <left paren> [ <set quantifier> ] <value expression> <right paren>
+<general_set_function> ::=
+        <set_function_type> <left_paren> [ <set_quantifier> ] <value_expression> <right_paren>
 
-<set function type> ::= AVG | MAX | MIN | SUM | COUNT
+<set_function_type> ::= AVG | MAX | MIN | SUM | COUNT
 
-<set quantifier> ::= DISTINCT | ALL
+<set_quantifier> ::= DISTINCT | ALL
 
-<scalar subquery> ::= <subquery>
+<scalar_subquery> ::= <subquery>
 
-<subquery> ::= <left paren> <query expression> <right paren>
+<subquery> ::= <left_paren> <query_expression> <right_paren>
 
-<query expression> ::= <non-join query expression> | <joined table>
+<query_expression> ::= <non_join_query_expression> | <joined_table>
 
-<non-join query expression> ::=
-        <non-join query term>
-    |   <query expression> UNION [ ALL ] [ <corresponding spec> ] <query term>
-    |   <query expression> EXCEPT [ ALL ] [ <corresponding spec> ] <query term>
+<non_join_query_expression> ::=
+        <non_join_query_term>
+    |   <query_expression> UNION [ ALL ] [ <corresponding_spec> ] <query_term>
+    |   <query_expression> EXCEPT [ ALL ] [ <corresponding_spec> ] <query_term>
 
-<non-join query term> ::=
-        <non-join query primary>
-    |   <query term> INTERSECT [ ALL ] [ <corresponding spec> ] <query primary>
+<non_join_query_term> ::=
+        <non_join_query_primary>
+    |   <query_term> INTERSECT [ ALL ] [ <corresponding_spec> ] <query_primary>
 
-<non-join query primary> ::= <simple table> | <left paren> <non-join query expression> <right paren>
+<non_join_query_primary> ::= <simple_table> | <left_paren> <non_join_query_expression> <right_paren>
 
-<simple table> ::=
-        <query specification>
-    |   <table value constructor>
-    |   <explicit table>
+<simple_table> ::=
+        <query_specification>
+    |   <table_value_constructor>
+    |   <explicit_table>
 
-<query specification> ::=
-        SELECT [ <set quantifier> ] <select list> <table expression>
+<query_specification> ::=
+        SELECT [ <set_quantifier> ] <select_list> <table_expression>
 
-<select list> ::=
+<select_list> ::=
         <asterisk>
-    |   <select sublist> [ { <comma> <select sublist> }... ]
+    |   <select_sublist> [ { <comma> <select_sublist> }... ]
 
-<select sublist> ::= <derived column> | <qualifier> <period> <asterisk>
+<select_sublist> ::= <derived_column> | <qualifier> <period> <asterisk>
 
-<derived column> ::= <value expression> [ <as clause> ]
+<derived_column> ::= <value_expression> [ <as_clause> ]
 
-<as clause> ::= [ AS ] <column name>
+<as_clause> ::= [ AS ] <column_name>
 
-<table expression> ::=
-        <from clause>
-        [ <where clause> ]
-        [ <group by clause> ]
-        [ <having clause> ]
+<table_expression> ::=
+        <from_clause>
+        [ <where_clause> ]
+        [ <group_by_clause> ]
+        [ <having_clause> ]
 
-<from clause> ::= FROM <table reference> [ { <comma> <table reference> }... ]
+<from_clause> ::= FROM <table_reference> [ { <comma> <table_reference> }... ]
 
-<table reference> ::=
-        <table name> [ <correlation specification> ]
-    |   <derived table> <correlation specification>
-    |   <joined table>
+<table_reference> ::=
+        <table_name> [ <correlation_specification> ]
+    |   <derived_table> <correlation_specification>
+    |   <joined_table>
 
-<correlation specification> ::=
-        [ AS ] <correlation name> [ <left paren> <derived column list> <right paren> ]
+<correlation_specification> ::=
+        [ AS ] <correlation_name> [ <left_paren> <derived_column_list> <right_paren> ]
 
-<derived column list> ::= <column name list>
+<derived_column_list> ::= <column_name_list>
 
-<derived table> ::= <table subquery>
+<derived_table> ::= <table_subquery>
 
-<table subquery> ::= <subquery>
+<table_subquery> ::= <subquery>
 
-<joined table> ::=
-        <cross join>
-    |   <qualified join>
-    |   <left paren> <joined table> <right paren>
+<joined_table> ::=
+        <cross_join>
+    |   <qualified_join>
+    |   <left_paren> <joined_table> <right_paren>
 
-<cross join> ::=
-        <table reference> CROSS JOIN <table reference>
+<cross_join> ::=
+        <table_reference> CROSS JOIN <table_reference>
 
-<qualified join> ::=
-        <table reference> [ NATURAL ] [ <join type> ] JOIN <table reference> [ <join specification> ]
+<qualified_join> ::=
+        <table_reference> [ NATURAL ] [ <join_type> ] JOIN <table_reference> [ <join_specification> ]
 
-<join type> ::=
+<join_type> ::=
         INNER
-    |   <outer join type> [ OUTER ]
+    |   <outer_join_type> [ OUTER ]
     |   UNION
 
-<outer join type> ::= LEFT | RIGHT | FULL
+<outer_join_type> ::= LEFT | RIGHT | FULL
 
-<join specification> ::= <join condition> | <named columns join>
+<join_specification> ::= <join_condition> | <named_columns_join>
 
-<join condition> ::= ON <search condition>
+<join_condition> ::= ON <search_condition>
 
-<named columns join> ::= USING <left paren> <join column list> <right paren>
+<named_columns_join> ::= USING <left_paren> <join_column_list> <right_paren>
 
-<join column list> ::= <column name list>
+<join_column_list> ::= <column_name_list>
 
-<where clause> ::= WHERE <search condition>
+<where_clause> ::= WHERE <search_condition>
 
-<group by clause> ::= GROUP BY <grouping column reference list>
+<group_by_clause> ::= GROUP BY <grouping_column_reference_list>
 
-<grouping column reference list> ::=
-        <grouping column reference> [ { <comma> <grouping column reference> }... ]
+<grouping_column_reference_list> ::=
+        <grouping_column_reference> [ { <comma> <grouping_column_reference> }... ]
 
-<grouping column reference> ::= <column reference> [ <collate clause> ]
+<grouping_column_reference> ::= <column_reference> [ <collate_clause> ]
 
-<collate clause> ::= COLLATE <collation name>
+<collate_clause> ::= COLLATE <collation_name>
 
-<collation name> ::= <qualified name>
+<collation_name> ::= <qualified_name>
 
-<having clause> ::= HAVING <search condition>
+<having_clause> ::= HAVING <search_condition>
 
-<table value constructor> ::= VALUES <table value constructor list>
+<table_value_constructor> ::= VALUES <table_value_constructor_list>
 
-<table value constructor list> ::= <row value constructor> [ { <comma> <row value constructor> }... ]
+<table_value_constructor_list> ::= <row_value_constructor> [ { <comma> <row_value_constructor> }... ]
 
-<explicit table> ::= TABLE <table name>
+<explicit_table> ::= TABLE <table_name>
 
-<query term> ::= <non-join query term> | <joined table>
+<query_term> ::= <non_join_query_term> | <joined_table>
 
-<corresponding spec> ::= CORRESPONDING [ BY <left paren> <corresponding column list> <right paren> ]
+<corresponding_spec> ::= CORRESPONDING [ BY <left_paren> <corresponding_column_list> <right_paren> ]
 
-<corresponding column list> ::= <column name list>
+<corresponding_column_list> ::= <column_name_list>
 
-<query primary> ::= <non-join query primary> | <joined table>
+<query_primary> ::= <non_join_query_primary> | <joined_table>
 
-<case expression> ::= <case abbreviation> | <case specification>
+<case_expression> ::= <case_abbreviation> | <case_specification>
 
-<case abbreviation> ::=
-        NULLIF <left paren> <value expression> <comma> <value expression> <right paren>
-    |   COALESCE <left paren> <value expression> { <comma> <value expression> }...  <right paren>
+<case_abbreviation> ::=
+        NULLIF <left_paren> <value_expression> <comma> <value_expression> <right_paren>
+    |   COALESCE <left_paren> <value_expression> { <comma> <value_expression> }...  <right_paren>
 
-<case specification> ::= <simple case> | <searched case>
+<case_specification> ::= <simple_case> | <searched_case>
 
-<simple case> ::=
-        CASE <case operand>
-            <simple when clause>...
-            [ <else clause> ]
+<simple_case> ::=
+        CASE <case_operand>
+            <simple_when_clause>...
+            [ <else_clause> ]
         END
 
-<case operand> ::= <value expression>
+<case_operand> ::= <value_expression>
 
-<simple when clause> ::= WHEN <when operand> THEN <result>
+<simple_when_clause> ::= WHEN <when_operand> THEN <result>
 
-<when operand> ::= <value expression>
+<when_operand> ::= <value_expression>
 
-<result> ::= <result expression> | NULL
+<result> ::= <result_expression> | NULL
 
-<result expression> ::= <value expression>
+<result_expression> ::= <value_expression>
 
-<else clause> ::= ELSE <result>
+<else_clause> ::= ELSE <result>
 
-<searched case> ::=
+<searched_case> ::=
         CASE
-        <searched when clause>...
-        [ <else clause> ]
+        <searched_when_clause>...
+        [ <else_clause> ]
         END
 
-<searched when clause> ::= WHEN <search condition> THEN <result>
+<searched_when_clause> ::= WHEN <search_condition> THEN <result>
 
-<cast specification> ::= CAST <left paren> <cast operand> AS <cast target> <right paren>
+<cast_specification> ::= CAST <left_paren> <cast_operand> AS <cast_target> <right_paren>
 
-<cast operand> ::= <value expression> | NULL
+<cast_operand> ::= <value_expression> | NULL
 
-<cast target> ::= <domain name> | <data type>
+<cast_target> ::= <domain_name> | <data_type>
 
-<numeric value function> ::= <position expression> | <extract expression> | <length expression>
+<numeric_value_function> ::= <position_expression> | <extract_expression> | <length_expression>
 
-<position expression> ::=
-    POSITION <left paren> <character value expression> IN <character value expression> <right paren>
+<position_expression> ::=
+    POSITION <left_paren> <character_value_expression> IN <character_value_expression> <right_paren>
 
-<character value expression> ::= <concatenation> | <character factor>
+<character_value_expression> ::= <concatenation> | <character_factor>
 
-<concatenation> ::= <character value expression> <concatenation operator> <character factor>
+<concatenation> ::= <character_value_expression> <concatenation_operator> <character_factor>
 
-<character factor> ::= <character primary> [ <collate clause> ]
+<character_factor> ::= <character_primary> [ <collate_clause> ]
 
-<character primary> ::= <value expression primary> | <string value function>
+<character_primary> ::= <value_expression_primary> | <string_value_function>
 
-<string value function> ::= <character value function> | <bit value function>
+<string_value_function> ::= <character_value_function> | <bit_value_function>
 
-<character value function> ::=
-        <character substring function>
+<character_value_function> ::=
+        <character_substring_function>
     |   <fold>
-    |   <form-of-use conversion>
-    |   <character translation>
-    |   <trim function>
+    |   <form_of_use_conversion>
+    |   <character_translation>
+    |   <trim_function>
 
-<character substring function> ::=
-        SUBSTRING <left paren> <character value expression> FROM <start position> [ FOR <string length> ] <right paren>
+<character_substring_function> ::=
+        SUBSTRING <left_paren> <character_value_expression> FROM <start_position> [ FOR <string_length> ] <right_paren>
 
-<start position> ::= <numeric value expression>
+<start_position> ::= <numeric_value_expression>
 
-<string length> ::= <numeric value expression>
+<string_length> ::= <numeric_value_expression>
 
-<fold> ::= { UPPER | LOWER } <left paren> <character value expression> <right paren>
+<fold> ::= { UPPER | LOWER } <left_paren> <character_value_expression> <right_paren>
 
-<form-of-use conversion> ::=
-        CONVERT <left paren> <character value expression> USING <form-of-use conversion name> <right paren>
+<form_of_use_conversion> ::=
+        CONVERT <left_paren> <character_value_expression> USING <form_of_use_conversion_name> <right_paren>
 
-<form-of-use conversion name> ::= <qualified name>
+<form_of_use_conversion_name> ::= <qualified_name>
 
-<character translation> ::=
-        TRANSLATE <left paren> <character value expression> USING <translation name> <right paren>
+<character_translation> ::=
+        TRANSLATE <left_paren> <character_value_expression> USING <translation_name> <right_paren>
 
-<translation name> ::= <qualified name>
+<translation_name> ::= <qualified_name>
 
-<trim function> ::= TRIM <left paren> <trim operands> <right paren>
+<trim_function> ::= TRIM <left_paren> <trim_operands> <right_paren>
 
-<trim operands> ::= [ [ <trim specification> ] [ <trim character> ] FROM ] <trim source>
+<trim_operands> ::= [ [ <trim_specification> ] [ <trim_character> ] FROM ] <trim_source>
 
-<trim specification> ::= LEADING | TRAILING | BOTH
+<trim_specification> ::= LEADING | TRAILING | BOTH
 
-<trim character> ::= <character value expression>
+<trim_character> ::= <character_value_expression>
 
-<trim source> ::= <character value expression>
+<trim_source> ::= <character_value_expression>
 
-<bit value function> ::= <bit substring function>
+<bit_value_function> ::= <bit_substring_function>
 
-<bit substring function> ::=
-        SUBSTRING <left paren> <bit value expression> FROM <start position> [ FOR <string length> ] <right paren>
+<bit_substring_function> ::=
+        SUBSTRING <left_paren> <bit_value_expression> FROM <start_position> [ FOR <string_length> ] <right_paren>
 
-<bit value expression> ::= <bit concatenation> | <bit factor>
+<bit_value_expression> ::= <bit_concatenation> | <bit_factor>
 
-<bit concatenation> ::= <bit value expression> <concatenation operator> <bit factor>
+<bit_concatenation> ::= <bit_value_expression> <concatenation_operator> <bit_factor>
 
-<bit factor> ::= <bit primary>
+<bit_factor> ::= <bit_primary>
 
-<bit primary> ::= <value expression primary> | <string value function>
+<bit_primary> ::= <value_expression_primary> | <string_value_function>
 
-<extract expression> ::= EXTRACT <left paren> <extract field> FROM <extract source> <right paren>
+<extract_expression> ::= EXTRACT <left_paren> <extract_field> FROM <extract_source> <right_paren>
 
-<extract field> ::= <datetime field> | <time zone field>
+<extract_field> ::= <datetime_field> | <time_zone_field>
 
-<datetime field> ::= <non-second datetime field> | SECOND
+<datetime_field> ::= <non_second_datetime_field> | SECOND
 
-<time zone field> ::= TIMEZONE_HOUR | TIMEZONE_MINUTE
+<time_zone_field> ::= TIMEZONE_HOUR | TIMEZONE_MINUTE
 
-<extract source> ::= <datetime value expression> | <interval value expression>
+<extract_source> ::= <datetime_value_expression> | <interval_value_expression>
 
-<datetime value expression> ::=
-        <datetime term>
-    |   <interval value expression> <plus sign> <datetime term>
-    |   <datetime value expression> <plus sign> <interval term>
-    |   <datetime value expression> <minus sign> <interval term>
+<datetime_value_expression> ::=
+        <datetime_term>
+    |   <interval_value_expression> <plus_sign> <datetime_term>
+    |   <datetime_value_expression> <plus_sign> <interval_term>
+    |   <datetime_value_expression> <minus_sign> <interval_term>
 
-<interval term> ::=
-        <interval factor>
-    |   <interval term 2> <asterisk> <factor>
-    |   <interval term 2> <solidus> <factor>
-    |   <term> <asterisk> <interval factor>
+<interval_term> ::=
+        <interval_factor>
+    |   <interval_term_2> <asterisk> <factor>
+    |   <interval_term_2> <solidus> <factor>
+    |   <term> <asterisk> <interval_factor>
 
-<interval factor> ::= [ <sign> ] <interval primary>
+<interval_factor> ::= [ <sign> ] <interval_primary>
 
-<interval primary> ::= <value expression primary> [ <interval qualifier> ]
+<interval_primary> ::= <value_expression_primary> [ <interval_qualifier> ]
 
-<interval term 2> ::= <interval term>
+<interval_term_2> ::= <interval_term>
 
-<interval value expression> ::=
-        <interval term>
-    |   <interval value expression 1> <plus sign> <interval term 1>
-    |   <interval value expression 1> <minus sign> <interval term 1>
-    |   <left paren> <datetime value expression> <minus sign> <datetime term> <right paren> <interval qualifier>
+<interval_value_expression> ::=
+        <interval_term>
+    |   <interval_value_expression_1> <plus_sign> <interval_term_1>
+    |   <interval_value_expression_1> <minus_sign> <interval_term_1>
+    |   <left_paren> <datetime_value_expression> <minus_sign> <datetime_term> <right_paren> <interval_qualifier>
 
-<interval value expression 1> ::= <interval value expression>
+<interval_value_expression_1> ::= <interval_value_expression>
 
-<interval term 1> ::= <interval term>
+<interval_term_1> ::= <interval_term>
 
-<datetime term> ::= <datetime factor>
+<datetime_term> ::= <datetime_factor>
 
-<datetime factor> ::= <datetime primary> [ <time zone> ]
+<datetime_factor> ::= <datetime_primary> [ <time_zone> ]
 
-<datetime primary> ::= <value expression primary> | <datetime value function>
+<datetime_primary> ::= <value_expression_primary> | <datetime_value_function>
 
-<time zone> ::= AT <time zone specifier>
+<time_zone> ::= AT <time_zone_specifier>
 
-<time zone specifier> ::= LOCAL | TIME ZONE <interval value expression>
+<time_zone_specifier> ::= LOCAL | TIME ZONE <interval_value_expression>
 
-<length expression> ::= <char length expression> | <octet length expression> | <bit length expression>
+<length_expression> ::= <char_length_expression> | <octet_length_expression> | <bit_length_expression>
 
-<char length expression> ::= { CHAR_LENGTH | CHARACTER_LENGTH } <left paren> <string value expression> <right paren>
+<char_length_expression> ::= { CHAR_LENGTH | CHARACTER_LENGTH } <left_paren> <string_value_expression> <right_paren>
 
-<string value expression> ::= <character value expression> | <bit value expression>
+<string_value_expression> ::= <character_value_expression> | <bit_value_expression>
 
-<octet length expression> ::= OCTET_LENGTH <left paren> <string value expression> <right paren>
+<octet_length_expression> ::= OCTET_LENGTH <left_paren> <string_value_expression> <right_paren>
 
-<bit length expression> ::= BIT_LENGTH <left paren> <string value expression> <right paren>
+<bit_length_expression> ::= BIT_LENGTH <left_paren> <string_value_expression> <right_paren>
 
-<null specification> ::= NULL
+<null_specification> ::= NULL
 
-<default specification> ::= DEFAULT
+<default_specification> ::= DEFAULT
 
-<row value constructor list> ::= <row value constructor element> [ { <comma> <row value constructor element> } ... ]
+<row_value_constructor_list> ::= <row_value_constructor_element> [ { <comma> <row_value_constructor_element> } ... ]
 
-<row subquery> ::= <subquery>
+<row_subquery> ::= <subquery>
 
-<comp op> ::=
-        <equals operator>
-    |   <not equals operator>
-    |   <less than operator>
-    |   <greater than operator>
-    |   <less than or equals operator>
-    |   <greater than or equals operator>
+<comp_op> ::=
+        <equals_operator>
+    |   <not_equals_operator>
+    |   <less_than_operator>
+    |   <greater_than_operator>
+    |   <less_than_or_equals_operator>
+    |   <greater_than_or_equals_operator>
 
-<between predicate> ::=
-        <row value constructor> [ NOT ] BETWEEN <row value constructor> AND <row value constructor>
+<between_predicate> ::=
+        <row_value_constructor> [ NOT ] BETWEEN <row_value_constructor> AND <row_value_constructor>
 
-<in predicate> ::= <row value constructor> [ NOT ] IN <in predicate value>
+<in_predicate> ::= <row_value_constructor> [ NOT ] IN <in_predicate_value>
 
-<in predicate value> ::= <table subquery> | <left paren> <in value list> <right paren>
+<in_predicate_value> ::= <table_subquery> | <left_paren> <in_value_list> <right_paren>
 
-<in value list> ::= <value expression> { <comma> <value expression> } ...
+<in_value_list> ::= <value_expression> { <comma> <value_expression> } ...
 
-<like predicate> ::= <match value> [ NOT ] LIKE <pattern> [ ESCAPE <escape character> ]
+<like_predicate> ::= <match_value> [ NOT ] LIKE <pattern> [ ESCAPE <escape_character> ]
 
-<match value> ::= <character value expression>
+<match_value> ::= <character_value_expression>
 
-<pattern> ::= <character value expression>
+<pattern> ::= <character_value_expression>
 
-<escape character> ::= <character value expression>
+<escape_character> ::= <character_value_expression>
 
-<null predicate> ::= IS [ NOT ] NULL
+<null_predicate> ::= IS [ NOT ] NULL
 
-<quantified comparison predicate> ::= <row value constructor> <comp op> <quantifier> <table subquery>
+<quantified_comparison_predicate> ::= <row_value_constructor> <comp_op> <quantifier> <table_subquery>
 
 <quantifier> ::= <all> | <some>
 
@@ -1027,520 +1027,520 @@
 
 <some> ::= SOME | ANY
 
-<exists predicate> ::= EXISTS <table subquery>
+<exists_predicate> ::= EXISTS <table_subquery>
 
-<unique predicate> ::= UNIQUE <table subquery>
+<unique_predicate> ::= UNIQUE <table_subquery>
 
-<match predicate> ::= <row value constructor> MATCH [ UNIQUE ] [ PARTIAL | FULL ] <table subquery>
+<match_predicate> ::= <row_value_constructor> MATCH [ UNIQUE ] [ PARTIAL | FULL ] <table_subquery>
 
-<overlaps predicate> ::= <row value constructor 1> OVERLAPS <row value constructor 2>
+<overlaps_predicate> ::= <row_value_constructor_1> OVERLAPS <row_value_constructor_2>
 
-<row value constructor 1> ::= <row value constructor>
+<row_value_constructor_1> ::= <row_value_constructor>
 
-<row value constructor 2> ::= <row value constructor>
+<row_value_constructor_2> ::= <row_value_constructor>
 
-<truth value> ::= TRUE | FALSE | UNKNOWN
+<truth_value> ::= TRUE | FALSE | UNKNOWN
 
-<constraint attributes> ::=
-        <constraint check time> [ [ NOT ] DEFERRABLE ]
-    |   [ NOT ] DEFERRABLE [ <constraint check time> ]
+<constraint_attributes> ::=
+        <constraint_check_time> [ [ NOT ] DEFERRABLE ]
+    |   [ NOT ] DEFERRABLE [ <constraint_check_time> ]
 
-<constraint check time> ::= INITIALLY DEFERRED | INITIALLY IMMEDIATE
+<constraint_check_time> ::= INITIALLY DEFERRED | INITIALLY IMMEDIATE
 
-<table constraint definition> ::= [ <constraint name definition> ] <table constraint> [ <constraint check time> ]
+<table_constraint_definition> ::= [ <constraint_name_definition> ] <table_constraint> [ <constraint_check_time> ]
 
-<table constraint> ::=
-        <unique constraint definition>
-    |   <referential constraint definition>
-    |   <check constraint definition>
+<table_constraint> ::=
+        <unique_constraint_definition>
+    |   <referential_constraint_definition>
+    |   <check_constraint_definition>
 
-<unique constraint definition> ::= <unique specification> <left paren> <unique column list> <right paren>
+<unique_constraint_definition> ::= <unique_specification> <left_paren> <unique_column_list> <right_paren>
 
-<unique column list> ::= <column name list>
+<unique_column_list> ::= <column_name_list>
 
-<referential constraint definition> ::=
-        FOREIGN KEY <left paren> <referencing columns> <right paren> <references specification>
+<referential_constraint_definition> ::=
+        FOREIGN KEY <left_paren> <referencing_columns> <right_paren> <references_specification>
 
-<referencing columns> ::= <reference column list>
+<referencing_columns> ::= <reference_column_list>
 
-<module contents> ::=
-        <declare cursor>
-    |   <dynamic declare cursor>
+<module_contents> ::=
+        <declare_cursor>
+    |   <dynamic_declare_cursor>
     |   <procedure>
 
-<declare cursor> ::=
-        DECLARE <cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <cursor specification>
+<declare_cursor> ::=
+        DECLARE <cursor_name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <cursor_specification>
 
-<cursor name> ::= <identifier>
+<cursor_name> ::= <identifier>
 
-<cursor specification> ::= <query expression> [ <order by clause> ] [ <updatability clause> ]
+<cursor_specification> ::= <query_expression> [ <order_by_clause> ] [ <updatability_clause> ]
 
-<order by clause> ::= ORDER BY <sort specification list>
+<order_by_clause> ::= ORDER BY <sort_specification_list>
 
-<sort specification list> ::= <sort specification> [ { <comma> <sort specification> }... ]
+<sort_specification_list> ::= <sort_specification> [ { <comma> <sort_specification> }... ]
 
-<sort specification> ::= <sort key> [ <collate clause> ] [ <ordering specification> ]
+<sort_specification> ::= <sort_key> [ <collate_clause> ] [ <ordering_specification> ]
 
-<sort key> ::= <column name> | <unsigned integer>
+<sort_key> ::= <column_name> | <unsigned_integer>
 
-<ordering specification> ::= ASC | DESC
+<ordering_specification> ::= ASC | DESC
 
-<updatability clause> ::= FOR { READ ONLY | UPDATE [ OF <column name list> ] }
+<updatability_clause> ::= FOR { READ ONLY | UPDATE [ OF <column_name_list> ] }
 
-<dynamic declare cursor> ::=
-        DECLARE <cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <statement name>
+<dynamic_declare_cursor> ::=
+        DECLARE <cursor_name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <statement_name>
 
-<statement name> ::= <identifier>
+<statement_name> ::= <identifier>
 
 <procedure> ::=
-    PROCEDURE <procedure name> <parameter declaration list> <semicolon> <SQL procedure statement> <semicolon>
+    PROCEDURE <procedure_name> <parameter_declaration_list> <semicolon> <SQL_procedure_statement> <semicolon>
 
-<procedure name> ::= <identifier>
+<procedure_name> ::= <identifier>
 
-<parameter declaration list> ::=
-        <left paren> <parameter declaration> [ { <comma> <parameter declaration> }... ] <right paren>
+<parameter_declaration_list> ::=
+        <left_paren> <parameter_declaration> [ { <comma> <parameter_declaration> }... ] <right_paren>
 
-<parameter declaration> ::= <parameter name> <data type> | <status parameter>
+<parameter_declaration> ::= <parameter_name> <data_type> | <status_parameter>
 
-<status parameter> ::= SQLCODE | SQLSTATE
+<status_parameter> ::= SQLCODE | SQLSTATE
 
-<SQL procedure statement> ::=
-        <SQL schema statement>
-    |   <SQL data statement>
-    |   <SQL transaction statement>
-    |   <SQL connection statement>
-    |   <SQL session statement>
-    |   <SQL dynamic statement>
-    |   <SQL diagnostics statement>
+<SQL_procedure_statement> ::=
+        <SQL_schema_statement>
+    |   <SQL_data_statement>
+    |   <SQL_transaction_statement>
+    |   <SQL_connection_statement>
+    |   <SQL_session_statement>
+    |   <SQL_dynamic_statement>
+    |   <SQL_diagnostics_statement>
 
-<SQL schema statement> ::=
-        <SQL schema definition statement>
-    |   <SQL schema manipulation statement>
+<SQL_schema_statement> ::=
+        <SQL_schema_definition_statement>
+    |   <SQL_schema_manipulation_statement>
 
-<SQL schema definition statement> ::=
-        <schema definition>
-    |   <table definition>
-    |   <view definition>
-    |   <grant statement>
-    |   <domain definition>
-    |   <character set definition>
-    |   <collation definition>
-    |   <translation definition>
-    |   <assertion definition>
+<SQL_schema_definition_statement> ::=
+        <schema_definition>
+    |   <table_definition>
+    |   <view_definition>
+    |   <grant_statement>
+    |   <domain_definition>
+    |   <character_set_definition>
+    |   <collation_definition>
+    |   <translation_definition>
+    |   <assertion_definition>
 
-<schema definition> ::=
-        CREATE SCHEMA <schema name clause>
-            [ <schema character set specification> ]
-            [ <schema element>... ]
+<schema_definition> ::=
+        CREATE SCHEMA <schema_name_clause>
+            [ <schema_character_set_specification> ]
+            [ <schema_element>... ]
 
-<schema name clause> ::=
-        <schema name>
-    |   AUTHORIZATION <schema authorization identifier>
-    |   <schema name> AUTHORIZATION <schema authorization identifier>
+<schema_name_clause> ::=
+        <schema_name>
+    |   AUTHORIZATION <schema_authorization_identifier>
+    |   <schema_name> AUTHORIZATION <schema_authorization_identifier>
 
-<schema authorization identifier> ::= <authorization identifier>
+<schema_authorization_identifier> ::= <authorization_identifier>
 
-<schema character set specification> ::= DEFAULT CHARACTER SET <character set specification>
+<schema_character_set_specification> ::= DEFAULT CHARACTER SET <character_set_specification>
 
-<schema element> ::=
-        <domain definition>
-    |   <table definition>
-    |   <view definition>
-    |   <grant statement>
-    |   <assertion definition>
-    |   <character set definition>
-    |   <collation definition>
-    |   <translation definition>
+<schema_element> ::=
+        <domain_definition>
+    |   <table_definition>
+    |   <view_definition>
+    |   <grant_statement>
+    |   <assertion_definition>
+    |   <character_set_definition>
+    |   <collation_definition>
+    |   <translation_definition>
 
-<domain definition> ::=
-        CREATE DOMAIN <domain name> [ AS ] <data type>
-            [ <default clause> ] [ <domain constraint> ] [ <collate clause> ]
+<domain_definition> ::=
+        CREATE DOMAIN <domain_name> [ AS ] <data_type>
+            [ <default_clause> ] [ <domain_constraint> ] [ <collate_clause> ]
 
-<domain constraint> ::=
-        [ <constraint name definition> ] <check constraint definition> [ <constraint attributes> ]
+<domain_constraint> ::=
+        [ <constraint_name_definition> ] <check_constraint_definition> [ <constraint_attributes> ]
 
-<table definition> ::=
-        CREATE [ { GLOBAL | LOCAL } TEMPORARY ] TABLE <table name> <table element list> [ ON COMMIT { DELETE | PRESERVE } ROWS ]
+<table_definition> ::=
+        CREATE [ { GLOBAL | LOCAL } TEMPORARY ] TABLE <table_name> <table_element_list> [ ON COMMIT { DELETE | PRESERVE } ROWS ]
 
-<view definition> ::=
-        CREATE VIEW <table name> [ <left paren> <view column list> <right paren> ]
-            AS <query expression> [ WITH [ <levels clause> ] CHECK OPTION ]
+<view_definition> ::=
+        CREATE VIEW <table_name> [ <left_paren> <view_column_list> <right_paren> ]
+            AS <query_expression> [ WITH [ <levels_clause> ] CHECK OPTION ]
 
-<view column list> ::= <column name list>
+<view_column_list> ::= <column_name_list>
 
-<levels clause> ::= CASCADED | LOCAL
+<levels_clause> ::= CASCADED | LOCAL
 
-<grant statement> ::=
-        GRANT <privileges> ON <object name> TO <grantee> [ { <comma> <grantee> }... ] [ WITH GRANT OPTION ]
+<grant_statement> ::=
+        GRANT <privileges> ON <object_name> TO <grantee> [ { <comma> <grantee> }... ] [ WITH GRANT OPTION ]
 
-<privileges> ::= ALL PRIVILEGES | <action list>
+<privileges> ::= ALL PRIVILEGES | <action_list>
 
-<action list> ::= <action> [ { <comma> <action> }... ]
+<action_list> ::= <action> [ { <comma> <action> }... ]
 
 <action> ::=
         SELECT
     |   DELETE
-    |   INSERT [ <left paren> <privilege column list> <right paren> ]
-    |   UPDATE [ <left paren> <privilege column list> <right paren> ]
-    |   REFERENCES [ <left paren> <privilege column list> <right paren> ]
+    |   INSERT [ <left_paren> <privilege_column_list> <right_paren> ]
+    |   UPDATE [ <left_paren> <privilege_column_list> <right_paren> ]
+    |   REFERENCES [ <left_paren> <privilege_column_list> <right_paren> ]
     |   USAGE
 
-<privilege column list> ::= <column name list>
+<privilege_column_list> ::= <column_name_list>
 
-<object name> ::=
-        [ TABLE ] <table name>
-    |   DOMAIN <domain name>
-    |   COLLATION <collation name>
-    |   CHARACTER SET <character set name>
-    |   TRANSLATION <translation name>
+<object_name> ::=
+        [ TABLE ] <table_name>
+    |   DOMAIN <domain_name>
+    |   COLLATION <collation_name>
+    |   CHARACTER SET <character_set_name>
+    |   TRANSLATION <translation_name>
 
-<grantee> ::= PUBLIC | <authorization identifier>
+<grantee> ::= PUBLIC | <authorization_identifier>
 
-<assertion definition> ::=
-        CREATE ASSERTION <constraint name> <assertion check> [ <constraint attributes> ]
+<assertion_definition> ::=
+        CREATE ASSERTION <constraint_name> <assertion_check> [ <constraint_attributes> ]
 
-<assertion check> ::= CHECK <left paren> <search condition> <right paren>
+<assertion_check> ::= CHECK <left_paren> <search_condition> <right_paren>
 
-<character set definition> ::=
-        CREATE CHARACTER SET <character set name> [ AS ] <character set source>
-        [ <collate clause> | <limited collation definition> ]
+<character_set_definition> ::=
+        CREATE CHARACTER SET <character_set_name> [ AS ] <character_set_source>
+        [ <collate_clause> | <limited_collation_definition> ]
 
-<character set source> ::= GET <existing character set name>
+<character_set_source> ::= GET <existing_character_set_name>
 
-<existing character set name> ::=
-        <standard character repertoire name>
-    |   <implementation-defined character repertoire name>
-    |   <schema character set name>
+<existing_character_set_name> ::=
+        <standard_character_repertoire_name>
+    |   <implementation_defined_character_repertoire_name>
+    |   <schema_character_set_name>
 
-<schema character set name> ::= <character set name>
+<schema_character_set_name> ::= <character_set_name>
 
-<limited collation definition> ::=
-        COLLATION FROM <collation source>
+<limited_collation_definition> ::=
+        COLLATION FROM <collation_source>
 
-<collation source> ::= <collating sequence definition> | <translation collation>
+<collation_source> ::= <collating_sequence_definition> | <translation_collation>
 
-<collating sequence definition> ::=
-        <external collation>
-    |   <schema collation name>
-    |   DESC <left paren> <collation name> <right paren>
+<collating_sequence_definition> ::=
+        <external_collation>
+    |   <schema_collation_name>
+    |   DESC <left_paren> <collation_name> <right_paren>
     |   DEFAULT
 
-<external collation> ::=
-    EXTERNAL <left paren> <quote> <external collation name> <quote> <right paren>
+<external_collation> ::=
+    EXTERNAL <left_paren> <quote> <external_collation_name> <quote> <right_paren>
 
-<external collation name> ::= <standard collation name> | <implementation-defined collation name>
+<external_collation_name> ::= <standard_collation_name> | <implementation_defined_collation_name>
 
-<standard collation name> ::= <collation name>
+<standard_collation_name> ::= <collation_name>
 
-<implementation-defined collation name> ::= <collation name>
+<implementation_defined_collation_name> ::= <collation_name>
 
-<schema collation name> ::= <collation name>
+<schema_collation_name> ::= <collation_name>
 
-<translation collation> ::= TRANSLATION <translation name> [ THEN COLLATION <collation name> ]
+<translation_collation> ::= TRANSLATION <translation_name> [ THEN COLLATION <collation_name> ]
 
-<collation definition> ::=
-        CREATE COLLATION <collation name> FOR <character set specification>
-            FROM <collation source> [ <pad attribute> ]
+<collation_definition> ::=
+        CREATE COLLATION <collation_name> FOR <character_set_specification>
+            FROM <collation_source> [ <pad_attribute> ]
 
-<pad attribute> ::= NO PAD | PAD SPACE
+<pad_attribute> ::= NO PAD | PAD SPACE
 
-<translation definition> ::=
-        CREATE TRANSLATION <translation name>
-            FOR <source character set specification>
-            TO <target character set specification>
-            FROM <translation source>
+<translation_definition> ::=
+        CREATE TRANSLATION <translation_name>
+            FOR <source_character_set_specification>
+            TO <target_character_set_specification>
+            FROM <translation_source>
 
-<source character set specification> ::= <character set specification>
+<source_character_set_specification> ::= <character_set_specification>
 
-<target character set specification> ::= <character set specification>
+<target_character_set_specification> ::= <character_set_specification>
 
-<translation source> ::= <translation specification>
+<translation_source> ::= <translation_specification>
 
-<translation specification> ::=
-        <external translation>
+<translation_specification> ::=
+        <external_translation>
     |   IDENTITY
-    |   <schema translation name>
+    |   <schema_translation_name>
 
-<external translation> ::=
-        EXTERNAL <left paren> <quote> <external translation name> <quote> <right paren>
+<external_translation> ::=
+        EXTERNAL <left_paren> <quote> <external_translation_name> <quote> <right_paren>
 
-<external translation name> ::=
-        <standard translation name>
-    |   <implementation-defined translation name>
+<external_translation_name> ::=
+        <standard_translation_name>
+    |   <implementation_defined_translation_name>
 
-<standard translation name> ::= <translation name>
+<standard_translation_name> ::= <translation_name>
 
-<implementation-defined translation name> ::= <translation name>
+<implementation_defined_translation_name> ::= <translation_name>
 
-<schema translation name> ::= <translation name>
+<schema_translation_name> ::= <translation_name>
 
-<SQL schema manipulation statement> ::=
-        <drop schema statement>
-    |   <alter table statement>
-    |   <drop table statement>
-    |   <drop view statement>
-    |   <revoke statement>
-    |   <alter domain statement>
-    |   <drop domain statement>
-    |   <drop character set statement>
-    |   <drop collation statement>
-    |   <drop translation statement>
-    |   <drop assertion statement>
+<SQL_schema_manipulation_statement> ::=
+        <drop_schema_statement>
+    |   <alter_table_statement>
+    |   <drop_table_statement>
+    |   <drop_view_statement>
+    |   <revoke_statement>
+    |   <alter_domain_statement>
+    |   <drop_domain_statement>
+    |   <drop_character_set_statement>
+    |   <drop_collation_statement>
+    |   <drop_translation_statement>
+    |   <drop_assertion_statement>
 
-<drop schema statement> ::= DROP SCHEMA <schema name> <drop behaviour>
+<drop_schema_statement> ::= DROP SCHEMA <schema_name> <drop_behaviour>
 
-<drop behaviour> ::= CASCADE | RESTRICT
+<drop_behaviour> ::= CASCADE | RESTRICT
 
-<alter table statement> ::= ALTER TABLE <table name> <alter table action>
+<alter_table_statement> ::= ALTER TABLE <table_name> <alter_table_action>
 
-<alter table action> ::=
-        <add column definition>
-    |   <alter column definition>
-    |   <drop column definition>
-    |   <add table constraint definition>
-    |   <drop table constraint definition>
+<alter_table_action> ::=
+        <add_column_definition>
+    |   <alter_column_definition>
+    |   <drop_column_definition>
+    |   <add_table_constraint_definition>
+    |   <drop_table_constraint_definition>
 
-<add column definition> ::= ADD [ COLUMN ] <column definition>
+<add_column_definition> ::= ADD [ COLUMN ] <column_definition>
 
-<alter column definition> ::= ALTER [ COLUMN ] <column name> <alter column action>
+<alter_column_definition> ::= ALTER [ COLUMN ] <column_name> <alter_column_action>
 
-<alter column action> ::= <set column default clause> | <drop column default clause>
+<alter_column_action> ::= <set_column_default_clause> | <drop_column_default_clause>
 
-<set column default clause> ::= SET <default clause>
+<set_column_default_clause> ::= SET <default_clause>
 
-<drop column default clause> ::= DROP DEFAULT
+<drop_column_default_clause> ::= DROP DEFAULT
 
-<drop column definition> ::= DROP [ COLUMN ] <column name> <drop behaviour>
+<drop_column_definition> ::= DROP [ COLUMN ] <column_name> <drop_behaviour>
 
-<add table constraint definition> ::= ADD <table constraint definition>
+<add_table_constraint_definition> ::= ADD <table_constraint_definition>
 
-<drop table constraint definition> ::= DROP CONSTRAINT <constraint name> <drop behaviour>
+<drop_table_constraint_definition> ::= DROP CONSTRAINT <constraint_name> <drop_behaviour>
 
-<drop table statement> ::= DROP TABLE <table name> <drop behaviour>
+<drop_table_statement> ::= DROP TABLE <table_name> <drop_behaviour>
 
-<drop view statement> ::= DROP VIEW <table name> <drop behaviour>
+<drop_view_statement> ::= DROP VIEW <table_name> <drop_behaviour>
 
-<revoke statement> ::=
-        REVOKE [ GRANT OPTION FOR ] <privileges> ON <object name>
-            FROM <grantee> [ { <comma> <grantee> }... ] <drop behaviour>
+<revoke_statement> ::=
+        REVOKE [ GRANT OPTION FOR ] <privileges> ON <object_name>
+            FROM <grantee> [ { <comma> <grantee> }... ] <drop_behaviour>
 
-<alter domain statement> ::= ALTER DOMAIN <domain name> <alter domain action>
+<alter_domain_statement> ::= ALTER DOMAIN <domain_name> <alter_domain_action>
 
-<alter domain action> ::=
-        <set domain default clause>
-    |   <drop domain default clause>
-    |   <add domain constraint definition>
-    |   <drop domain constraint definition>
+<alter_domain_action> ::=
+        <set_domain_default_clause>
+    |   <drop_domain_default_clause>
+    |   <add_domain_constraint_definition>
+    |   <drop_domain_constraint_definition>
 
-<set domain default clause> ::= SET <default clause>
+<set_domain_default_clause> ::= SET <default_clause>
 
-<drop domain default clause> ::= DROP DEFAULT
+<drop_domain_default_clause> ::= DROP DEFAULT
 
-<add domain constraint definition> ::= ADD <domain constraint>
+<add_domain_constraint_definition> ::= ADD <domain_constraint>
 
-<drop domain constraint definition> ::= DROP CONSTRAINT <constraint name>
+<drop_domain_constraint_definition> ::= DROP CONSTRAINT <constraint_name>
 
-<drop domain statement> ::= DROP DOMAIN <domain name> <drop behaviour>
+<drop_domain_statement> ::= DROP DOMAIN <domain_name> <drop_behaviour>
 
-<drop character set statement> ::= DROP CHARACTER SET <character set name>
+<drop_character_set_statement> ::= DROP CHARACTER SET <character_set_name>
 
-<drop collation statement> ::= DROP COLLATION <collation name>
+<drop_collation_statement> ::= DROP COLLATION <collation_name>
 
-<drop translation statement> ::= DROP TRANSLATION <translation name>
+<drop_translation_statement> ::= DROP TRANSLATION <translation_name>
 
-<drop assertion statement> ::= DROP ASSERTION <constraint name>
+<drop_assertion_statement> ::= DROP ASSERTION <constraint_name>
 
-<SQL data statement> ::=
-        <open statement>
-    |   <fetch statement>
-    |   <close statement>
-    |   <select statement: single row>
-    |   <SQL data change statement>
+<SQL_data_statement> ::=
+        <open_statement>
+    |   <fetch_statement>
+    |   <close_statement>
+    |   <select_statement__single_row>
+    |   <SQL_data_change_statement>
 
-<open statement> ::= OPEN <cursor name>
+<open_statement> ::= OPEN <cursor_name>
 
-<fetch statement> ::=
-        FETCH [ [ <fetch orientation> ] FROM ] <cursor name> INTO <fetch target list>
+<fetch_statement> ::=
+        FETCH [ [ <fetch_orientation> ] FROM ] <cursor_name> INTO <fetch_target_list>
 
-<fetch orientation> ::=
+<fetch_orientation> ::=
         NEXT
     |   PRIOR
     |   FIRST
     |   LAST
-    |   { ABSOLUTE | RELATIVE } <simple value specification>
+    |   { ABSOLUTE | RELATIVE } <simple_value_specification>
 
-<simple value specification> ::= <parameter name> | <embedded variable name> | <literal>
+<simple_value_specification> ::= <parameter_name> | <embedded_variable_name> | <literal>
 
-<fetch target list> ::= <target specification> [ { <comma> <target specification> }... ]
+<fetch_target_list> ::= <target_specification> [ { <comma> <target_specification> }... ]
 
-<target specification> ::=
-        <parameter specification>
-    |   <variable specification>
+<target_specification> ::=
+        <parameter_specification>
+    |   <variable_specification>
 
-<close statement> ::= CLOSE <cursor name>
+<close_statement> ::= CLOSE <cursor_name>
 
-<select statement: single row> ::=
-    SELECT [ <set quantifier> ] <select list> INTO <select target list> <table expression>
+<select_statement__single_row> ::=
+    SELECT [ <set_quantifier> ] <select_list> INTO <select_target_list> <table_expression>
 
-<select target list> ::= <target specification> [ { <comma> <target specification> }... ]
+<select_target_list> ::= <target_specification> [ { <comma> <target_specification> }... ]
 
-<SQL data change statement> ::=
-        <delete statement: positioned>
-    |   <delete statement: searched>
-    |   <insert statement>
-    |   <update statement: positioned>
-    |   <update statement: searched>
+<SQL_data_change_statement> ::=
+        <delete_statement__positioned>
+    |   <delete_statement__searched>
+    |   <insert_statement>
+    |   <update_statement__positioned>
+    |   <update_statement__searched>
 
-<delete statement: positioned> ::= DELETE FROM <table name> WHERE CURRENT OF <cursor name>
+<delete_statement__positioned> ::= DELETE FROM <table_name> WHERE CURRENT OF <cursor_name>
 
-<delete statement: searched> ::= DELETE FROM <table name> [ WHERE <search condition> ]
+<delete_statement__searched> ::= DELETE FROM <table_name> [ WHERE <search_condition> ]
 
-<insert statement> ::= INSERT INTO <table name> <insert columns and source>
+<insert_statement> ::= INSERT INTO <table_name> <insert_columns_and_source>
 
-<insert columns and source> ::=
-        [ <left paren> <insert column list> <right paren> ] <query expression>
+<insert_columns_and_source> ::=
+        [ <left_paren> <insert_column_list> <right_paren> ] <query_expression>
     |   DEFAULT VALUES
 
-<insert column list> ::= <column name list>
+<insert_column_list> ::= <column_name_list>
 
-<update statement: positioned> ::=
-        UPDATE <table name> SET <set clause list> WHERE CURRENT OF <cursor name>
+<update_statement__positioned> ::=
+        UPDATE <table_name> SET <set_clause_list> WHERE CURRENT OF <cursor_name>
 
-<set clause list> ::= <set clause> [ { <comma> <set clause> } ... ]
+<set_clause_list> ::= <set_clause> [ { <comma> <set_clause> } ... ]
 
-<set clause> ::= <object column> <equals operator> <update source>
+<set_clause> ::= <object_column> <equals_operator> <update_source>
 
-<object column> ::= <column name>
+<object_column> ::= <column_name>
 
-<update source> ::= <value expression> | <null specification> | DEFAULT
+<update_source> ::= <value_expression> | <null_specification> | DEFAULT
 
-<update statement: searched> ::=
-        UPDATE <table name> SET <set clause list> [ WHERE <search condition> ]
+<update_statement__searched> ::=
+        UPDATE <table_name> SET <set_clause_list> [ WHERE <search_condition> ]
 
-<SQL transaction statement> ::=
-        <set transaction statement>
-    |   <set constraints mode statement>
-    |   <commit statement>
-    |   <rollback statement>
+<SQL_transaction_statement> ::=
+        <set_transaction_statement>
+    |   <set_constraints_mode_statement>
+    |   <commit_statement>
+    |   <rollback_statement>
 
-<set transaction statement> ::=
-        SET TRANSACTION <transaction mode> [ { <comma> <transaction mode> }... ]
+<set_transaction_statement> ::=
+        SET TRANSACTION <transaction_mode> [ { <comma> <transaction_mode> }... ]
 
-<transaction mode> ::=
-        <isolation level>
-    |   <transaction access mode>
-    |   <diagnostics size>
+<transaction_mode> ::=
+        <isolation_level>
+    |   <transaction_access_mode>
+    |   <diagnostics_size>
 
-<isolation level> ::= ISOLATION LEVEL <level of isolation>
+<isolation_level> ::= ISOLATION LEVEL <level_of_isolation>
 
-<level of isolation> ::=
+<level_of_isolation> ::=
         READ UNCOMMITTED
     |   READ COMMITTED
     |   REPEATABLE READ
     |   SERIALIZABLE
 
-<transaction access mode> ::= READ ONLY | READ WRITE
+<transaction_access_mode> ::= READ ONLY | READ WRITE
 
-<diagnostics size> ::= DIAGNOSTICS SIZE <number of conditions>
+<diagnostics_size> ::= DIAGNOSTICS SIZE <number_of_conditions>
 
-<number of conditions> ::= <simple value specification>
+<number_of_conditions> ::= <simple_value_specification>
 
-<set constraints mode statement> ::=
-        SET CONSTRAINTS <constraint name list> { DEFERRED | IMMEDIATE }
+<set_constraints_mode_statement> ::=
+        SET CONSTRAINTS <constraint_name_list> { DEFERRED | IMMEDIATE }
 
-<constraint name list> ::= ALL | <constraint name> [ { <comma> <constraint name> }... ]
+<constraint_name_list> ::= ALL | <constraint_name> [ { <comma> <constraint_name> }... ]
 
-<commit statement> ::= COMMIT [ WORK ]
+<commit_statement> ::= COMMIT [ WORK ]
 
-<rollback statement> ::= ROLLBACK [ WORK ]
+<rollback_statement> ::= ROLLBACK [ WORK ]
 
-<SQL connection statement> ::=
-        <connect statement>
-    |   <set connection statement>
-    |   <disconnect statement>
+<SQL_connection_statement> ::=
+        <connect_statement>
+    |   <set_connection_statement>
+    |   <disconnect_statement>
 
-<connect statement> ::= CONNECT TO <connection target>
+<connect_statement> ::= CONNECT TO <connection_target>
 
-<connection target> ::=
-        <SQL-server name> [ AS <connection name> ] [ USER <user name> ]
+<connection_target> ::=
+        <SQL_server_name> [ AS <connection_name> ] [ USER <user_name> ]
     |   DEFAULT
 
-<SQL-server name> ::= <simple value specification>
+<SQL_server_name> ::= <simple_value_specification>
 
-<connection name> ::= <simple value specification>
+<connection_name> ::= <simple_value_specification>
 
-<user name> ::= <simple value specification>
+<user_name> ::= <simple_value_specification>
 
-<set connection statement> ::= SET CONNECTION <connection object>
+<set_connection_statement> ::= SET CONNECTION <connection_object>
 
-<connection object> ::= DEFAULT | <connection name>
+<connection_object> ::= DEFAULT | <connection_name>
 
-<disconnect statement> ::= DISCONNECT <disconnect object>
+<disconnect_statement> ::= DISCONNECT <disconnect_object>
 
-<disconnect object> ::= <connection object> | ALL | CURRENT
+<disconnect_object> ::= <connection_object> | ALL | CURRENT
 
-<SQL session statement> ::=
-        <set catalog statement>
-    |   <set schema statement>
-    |   <set names statement>
-    |   <set session authorization identifier statement>
-    |   <set local time zone statement>
+<SQL_session_statement> ::=
+        <set_catalog_statement>
+    |   <set_schema_statement>
+    |   <set_names_statement>
+    |   <set_session_authorization_identifier_statement>
+    |   <set_local_time_zone_statement>
 
-<set catalog statement> ::= SET CATALOG <value specification>
+<set_catalog_statement> ::= SET CATALOG <value_specification>
 
-<value specification> ::= <literal> | <general value specification>
+<value_specification> ::= <literal> | <general_value_specification>
 
-<set schema statement> ::= SET SCHEMA <value specification>
+<set_schema_statement> ::= SET SCHEMA <value_specification>
 
-<set names statement> ::= SET NAMES <value specification>
+<set_names_statement> ::= SET NAMES <value_specification>
 
-<set session authorization identifier statement> ::= SET SESSION AUTHORIZATION <value specification>
+<set_session_authorization_identifier_statement> ::= SET SESSION AUTHORIZATION <value_specification>
 
-<set local time zone statement> ::= SET TIME ZONE <set time zone value>
+<set_local_time_zone_statement> ::= SET TIME ZONE <set_time_zone_value>
 
-<set time zone value> ::= <interval value expression> | LOCAL
+<set_time_zone_value> ::= <interval_value_expression> | LOCAL
 
-<SQL dynamic statement> ::=
-        <system descriptor statement>
-    |   <prepare statement>
-    |   <deallocate prepared statement>
-    |   <describe statement>
-    |   <execute statement>
-    |   <execute immediate statement>
-    |   <SQL dynamic data statement>
+<SQL_dynamic_statement> ::=
+        <system_descriptor_statement>
+    |   <prepare_statement>
+    |   <deallocate_prepared_statement>
+    |   <describe_statement>
+    |   <execute_statement>
+    |   <execute_immediate_statement>
+    |   <SQL_dynamic_data_statement>
 
-<system descriptor statement> ::=
-        <allocate descriptor statement>
-    |   <deallocate descriptor statement>
-    |   <get descriptor statement>
-    |   <set descriptor statement>
+<system_descriptor_statement> ::=
+        <allocate_descriptor_statement>
+    |   <deallocate_descriptor_statement>
+    |   <get_descriptor_statement>
+    |   <set_descriptor_statement>
 
-<allocate descriptor statement> ::= ALLOCATE DESCRIPTOR <descriptor name> [ WITH MAX <occurrences> ]
+<allocate_descriptor_statement> ::= ALLOCATE DESCRIPTOR <descriptor_name> [ WITH MAX <occurrences> ]
 
-<descriptor name> ::= [ <scope option> ] <simple value specification>
+<descriptor_name> ::= [ <scope_option> ] <simple_value_specification>
 
-<scope option> ::= GLOBAL | LOCAL
+<scope_option> ::= GLOBAL | LOCAL
 
-<occurrences> ::= <simple value specification>
+<occurrences> ::= <simple_value_specification>
 
-<deallocate descriptor statement> ::= DEALLOCATE DESCRIPTOR <descriptor name>
+<deallocate_descriptor_statement> ::= DEALLOCATE DESCRIPTOR <descriptor_name>
 
-<set descriptor statement> ::=
-        SET DESCRIPTOR <descriptor name> <set descriptor information>
+<set_descriptor_statement> ::=
+        SET DESCRIPTOR <descriptor_name> <set_descriptor_information>
 
-<set descriptor information> ::=
-        <set count>
-    |   VALUE <item number> <set item information> [ { <comma> <set item information> }... ]
+<set_descriptor_information> ::=
+        <set_count>
+    |   VALUE <item_number> <set_item_information> [ { <comma> <set_item_information> }... ]
 
-<set count> ::= COUNT <equals operator> <simple value specification 1>
+<set_count> ::= COUNT <equals_operator> <simple_value_specification_1>
 
-<simple value specification 1> ::= <simple value specification>
+<simple_value_specification_1> ::= <simple_value_specification>
 
-<item number> ::= <simple value specification>
+<item_number> ::= <simple_value_specification>
 
-<set item information> ::= <descriptor item name> <equals operator> <simple value specification 2>
+<set_item_information> ::= <descriptor_item_name> <equals_operator> <simple_value_specification_2>
 
-<descriptor item name> ::=
+<descriptor_item_name> ::=
         TYPE
     |   LENGTH
     |   OCTET_LENGTH
@@ -1562,109 +1562,109 @@
     |   CHARACTER_SET_SCHEMA
     |   CHARACTER_SET_NAME
 
-<simple value specification 2> ::= <simple value specification>
+<simple_value_specification_2> ::= <simple_value_specification>
 
-<get descriptor statement> ::= GET DESCRIPTOR <descriptor name> <get descriptor information>
+<get_descriptor_statement> ::= GET DESCRIPTOR <descriptor_name> <get_descriptor_information>
 
-<get descriptor information> ::=
-        <get count>
-    |   VALUE <item number> <get item information> [ { <comma> <get item information> }... ]
+<get_descriptor_information> ::=
+        <get_count>
+    |   VALUE <item_number> <get_item_information> [ { <comma> <get_item_information> }... ]
 
-<get count> ::= <simple target specification 1> <equals operator> COUNT
+<get_count> ::= <simple_target_specification_1> <equals_operator> COUNT
 
-<simple target specification 1> ::= <simple target specification>
+<simple_target_specification_1> ::= <simple_target_specification>
 
-<simple target specification> ::= <parameter name> | <embedded variable name>
+<simple_target_specification> ::= <parameter_name> | <embedded_variable_name>
 
-<get item information> ::= <simple target specification 2> <equals operator> <descriptor item name>
+<get_item_information> ::= <simple_target_specification_2> <equals_operator> <descriptor_item_name>
 
-<simple target specification 2> ::= <simple target specification>
+<simple_target_specification_2> ::= <simple_target_specification>
 
-<prepare statement> ::= PREPARE <SQL statement name> FROM <SQL statement variable>
+<prepare_statement> ::= PREPARE <SQL_statement_name> FROM <SQL_statement_variable>
 
-<SQL statement name> ::= <statement name> | <extended statement name>
+<SQL_statement_name> ::= <statement_name> | <extended_statement_name>
 
-<extended statement name> ::= [ <scope option> ] <simple value specification>
+<extended_statement_name> ::= [ <scope_option> ] <simple_value_specification>
 
-<SQL statement variable> ::= <simple value specification>
+<SQL_statement_variable> ::= <simple_value_specification>
 
-<deallocate prepared statement> ::= DEALLOCATE PREPARE <SQL statement name>
+<deallocate_prepared_statement> ::= DEALLOCATE PREPARE <SQL_statement_name>
 
-<describe statement> ::= <describe input statement> | <describe output statement>
+<describe_statement> ::= <describe_input_statement> | <describe_output_statement>
 
-<describe input statement> ::= DESCRIBE INPUT <SQL statement name> <using descriptor>
+<describe_input_statement> ::= DESCRIBE INPUT <SQL_statement_name> <using_descriptor>
 
-<using descriptor> ::= { USING | INTO } SQL DESCRIPTOR <descriptor name>
+<using_descriptor> ::= { USING | INTO } SQL DESCRIPTOR <descriptor_name>
 
-<describe output statement> ::= DESCRIBE [ OUTPUT ] <SQL statement name> <using descriptor>
+<describe_output_statement> ::= DESCRIBE [ OUTPUT ] <SQL_statement_name> <using_descriptor>
 
-<execute statement> ::= EXECUTE <SQL statement name> [ <result using clause> ] [ <parameter using clause> ]
+<execute_statement> ::= EXECUTE <SQL_statement_name> [ <result_using_clause> ] [ <parameter_using_clause> ]
 
-<result using clause> ::= <using clause>
+<result_using_clause> ::= <using_clause>
 
-<using clause> ::= <using arguments> | <using descriptor>
+<using_clause> ::= <using_arguments> | <using_descriptor>
 
-<using arguments> ::= { USING | INTO } <argument> [ { <comma> <argument> }... ]
+<using_arguments> ::= { USING | INTO } <argument> [ { <comma> <argument> }... ]
 
-<argument> ::= <target specification>
+<argument> ::= <target_specification>
 
-<parameter using clause> ::= <using clause>
+<parameter_using_clause> ::= <using_clause>
 
-<execute immediate statement> ::= EXECUTE IMMEDIATE <SQL statement variable>
+<execute_immediate_statement> ::= EXECUTE IMMEDIATE <SQL_statement_variable>
 
-<SQL dynamic data statement> ::=
-        <allocate cursor statement>
-    |   <dynamic open statement>
-    |   <dynamic close statement>
-    |   <dynamic fetch statement>
-    |   <dynamic delete statement: positioned>
-    |   <dynamic update statement: positioned>
+<SQL_dynamic_data_statement> ::=
+        <allocate_cursor_statement>
+    |   <dynamic_open_statement>
+    |   <dynamic_close_statement>
+    |   <dynamic_fetch_statement>
+    |   <dynamic_delete_statement__positioned>
+    |   <dynamic_update_statement__positioned>
 
-<allocate cursor statement> ::=
-        ALLOCATE <extended cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <extended statement name>
+<allocate_cursor_statement> ::=
+        ALLOCATE <extended_cursor_name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <extended_statement_name>
 
-<extended cursor name> ::= [ <scope option> ] <simple value specification>
+<extended_cursor_name> ::= [ <scope_option> ] <simple_value_specification>
 
-<dynamic open statement> ::= OPEN <dynamic cursor name> [ <using clause> ]
+<dynamic_open_statement> ::= OPEN <dynamic_cursor_name> [ <using_clause> ]
 
-<dynamic cursor name> ::= <cursor name> | <extended cursor name>
+<dynamic_cursor_name> ::= <cursor_name> | <extended_cursor_name>
 
-<dynamic close statement> ::= CLOSE <dynamic cursor name>
+<dynamic_close_statement> ::= CLOSE <dynamic_cursor_name>
 
-<dynamic fetch statement> ::=
-        FETCH [ [ <fetch orientation> ] FROM ] <dynamic cursor name>
+<dynamic_fetch_statement> ::=
+        FETCH [ [ <fetch_orientation> ] FROM ] <dynamic_cursor_name>
 
-<dynamic delete statement: positioned> ::=
-        DELETE FROM <table name> WHERE CURRENT OF <dynamic cursor name>
+<dynamic_delete_statement__positioned> ::=
+        DELETE FROM <table_name> WHERE CURRENT OF <dynamic_cursor_name>
 
-<dynamic update statement: positioned> ::=
-        UPDATE <table name>
-            SET <set clause> [ { <comma> <set clause> }... ]
-            WHERE CURRENT OF <dynamic cursor name>
+<dynamic_update_statement__positioned> ::=
+        UPDATE <table_name>
+            SET <set_clause> [ { <comma> <set_clause> }... ]
+            WHERE CURRENT OF <dynamic_cursor_name>
 
-<SQL diagnostics statement> ::= <get diagnostics statement>
+<SQL_diagnostics_statement> ::= <get_diagnostics_statement>
 
-<get diagnostics statement> ::= GET DIAGNOSTICS <sql diagnostics information>
+<get_diagnostics_statement> ::= GET DIAGNOSTICS <sql_diagnostics_information>
 
-<sql diagnostics information> ::= <statement information> | <condition information>
+<sql_diagnostics_information> ::= <statement_information> | <condition_information>
 
-<statement information> ::=
-        <statement information item> [ { <comma> <statement information item> }... ]
+<statement_information> ::=
+        <statement_information_item> [ { <comma> <statement_information_item> }... ]
 
-<statement information item> ::=
-        <simple target specification> <equals operator> <statement information item name>
+<statement_information_item> ::=
+        <simple_target_specification> <equals_operator> <statement_information_item_name>
 
-<statement information item name> ::= NUMBER | MORE | COMMAND_FUNCTION | DYNAMIC_FUNCTION | ROW_COUNT
+<statement_information_item_name> ::= NUMBER | MORE | COMMAND_FUNCTION | DYNAMIC_FUNCTION | ROW_COUNT
 
-<condition information> ::=
-        EXCEPTION <condition number> <condition information item> [ { <comma> <condition information item> }... ]
+<condition_information> ::=
+        EXCEPTION <condition_number> <condition_information_item> [ { <comma> <condition_information_item> }... ]
 
-<condition number> ::= <simple value specification>
+<condition_number> ::= <simple_value_specification>
 
-<condition information item> ::=
-        <simple target specification> <equals operator> <condition information item name>
+<condition_information_item> ::=
+        <simple_target_specification> <equals_operator> <condition_information_item_name>
 
-<condition information item name> ::=
+<condition_information_item_name> ::=
         CONDITION_NUMBER
     |   RETURNED_SQLSTATE
     |   CLASS_ORIGIN
@@ -1683,62 +1683,62 @@
     |   MESSAGE_LENGTH
     |   MESSAGE_OCTET_LENGTH
 
-<embedded SQL host program> ::=
-        <embedded SQL Ada program>
-    |   <embedded SQL C program>
-    |   <embedded SQL Cobol program>
-    |   <embedded SQL Fortran program>
-    |   <embedded SQL MUMPS program>
-    |   <embedded SQL Pascal program>
+<embedded_SQL_host_program> ::=
+        <embedded_SQL_Ada_program>
+    |   <embedded_SQL_C_program>
+    |   <embedded_SQL_Cobol_program>
+    |   <embedded_SQL_Fortran_program>
+    |   <embedded_SQL_MUMPS_program>
+    |   <embedded_SQL_Pascal_program>
     |   <embedded SQL PL/I program>
 
-<embedded SQL Ada program> ::= !! See the syntax rules
+<embedded_SQL_Ada_program> ::= !! See the syntax rules
 
-<embedded SQL C program> ::= !! See the syntax rules
+<embedded_SQL_C_program> ::= !! See the syntax rules
 
-<embedded SQL Cobol program> ::= !! See the syntax rules
+<embedded_SQL_Cobol_program> ::= !! See the syntax rules
 
-<embedded SQL Fortran program> ::= !! See the syntax rules
+<embedded_SQL_Fortran_program> ::= !! See the syntax rules
 
-<embedded SQL MUMPS program> ::= !! See the syntax rules
+<embedded_SQL_MUMPS_program> ::= !! See the syntax rules
 
-<embedded SQL Pascal program> ::= !! See the syntax rules
+<embedded_SQL_Pascal_program> ::= !! See the syntax rules
 
 <embedded SQL PL/I program> ::= !! See the syntax rules
 
-<embedded SQL declare section> ::=
-        <embedded SQL begin declare>
-            [ <embedded character set declaration> ]
-            [ <host variable definition> ... ]
-            <embedded SQL end declare>
-    |   <embedded SQL MUMPS declare>
+<embedded_SQL_declare_section> ::=
+        <embedded_SQL_begin_declare>
+            [ <embedded_character_set_declaration> ]
+            [ <host_variable_definition> ... ]
+            <embedded_SQL_end_declare>
+    |   <embedded_SQL_MUMPS_declare>
 
-<embedded SQL begin declare> ::= <SQL prefix> BEGIN DECLARE SECTION [ <SQL terminator> ]
+<embedded_SQL_begin_declare> ::= <SQL_prefix> BEGIN DECLARE SECTION [ <SQL_terminator> ]
 
-<SQL prefix> ::= EXEC SQL | <ampersand>SQL<left paren>
+<SQL_prefix> ::= EXEC SQL | <ampersand>SQL<left_paren>
 
-<SQL terminator> ::= END-EXEC | <semicolon> | <right paren>
+<SQL_terminator> ::= END_EXEC | <semicolon> | <right_paren>
 
-<embedded character set declaration> ::= SQL NAMES ARE <character set specification>
+<embedded_character_set_declaration> ::= SQL NAMES ARE <character_set_specification>
 
-<host variable definition> ::=
-        <Ada variable definition>
-    |   <C variable definition>
-    |   <Cobol variable definition>
-    |   <Fortran variable definition>
-    |   <MUMPS variable definition>
-    |   <Pascal variable definition>
-    |   <PL/I variable definition>
+<host_variable_definition> ::=
+        <Ada_variable_definition>
+    |   <C_variable_definition>
+    |   <Cobol_variable_definition>
+    |   <Fortran_variable_definition>
+    |   <MUMPS_variable_definition>
+    |   <Pascal_variable_definition>
+    |   <PL_I_variable_definition>
 
-<Ada variable definition> ::=
-        <Ada host identifier> [ { <comma> <Ada host identifier> }... ] <colon>
-        <Ada type specification> [ <Ada initial value> ]
+<Ada_variable_definition> ::=
+        <Ada_host_identifier> [ { <comma> <Ada_host_identifier> }... ] <colon>
+        <Ada_type_specification> [ <Ada_initial_value> ]
 
-<Ada type specification> ::= <Ada qualified type specification> | <Ada unqualified type specification>
+<Ada_type_specification> ::= <Ada_qualified_type_specification> | <Ada_unqualified_type_specification>
 
-<Ada qualified type specification> ::=
-        SQL_STANDARD.CHAR [ CHARACTER SET [ IS ] <character set specification> ] <left paren> 1 <double period> <length> <right paren>
-    |   SQL_STANDARD.BIT <left paren> 1 <double period> <length> <right paren>
+<Ada_qualified_type_specification> ::=
+        SQL_STANDARD.CHAR [ CHARACTER SET [ IS ] <character_set_specification> ] <left_paren> 1 <double_period> <length> <right_paren>
+    |   SQL_STANDARD.BIT <left_paren> 1 <double_period> <length> <right_paren>
     |   SQL_STANDARD.SMALLINT
     |   SQL_STANDARD.INT
     |   SQL_STANDARD.REAL
@@ -1747,9 +1747,9 @@
     |   SQL_STANDARD.SQLSTATE_TYPE
     |   SQL_STANDARD.INDICATOR_TYPE
 
-<Ada unqualified type specification> ::=
-        CHAR <left paren> 1 <double period> <length> <right paren>
-    |   BIT <left paren> 1 <double period> <length> <right paren>
+<Ada_unqualified_type_specification> ::=
+        CHAR <left_paren> 1 <double_period> <length> <right_paren>
+    |   BIT <left_paren> 1 <double_period> <length> <right_paren>
     |   SMALLINT
     |   INT
     |   REAL
@@ -1758,147 +1758,147 @@
     |   SQLSTATE_TYPE
     |   INDICATOR_TYPE
 
-<Ada initial value> ::= <Ada assignment operator> <character representation>
+<Ada_initial_value> ::= <Ada_assignment_operator> <character_representation>
 
-<Ada assignment operator> ::= <colon><equals operator>
+<Ada_assignment_operator> ::= <colon><equals_operator>
 
-<C variable definition> ::= [ <C storage class> ] [ <C class modifier> ] <C variable specification> <semicolon>
+<C_variable_definition> ::= [ <C_storage_class> ] [ <C_class_modifier> ] <C_variable_specification> <semicolon>
 
-<C storage class> ::= auto | extern | static
+<C_storage_class> ::= auto | extern | static
 
-<C class modifier> ::= const | volatile
+<C_class_modifier> ::= const | volatile
 
-<C variable specification> ::=
-        <C numeric variable>
-    |   <C character variable>
-    |   <C derived variable>
+<C_variable_specification> ::=
+        <C_numeric_variable>
+    |   <C_character_variable>
+    |   <C_derived_variable>
 
-<C numeric variable> ::=
+<C_numeric_variable> ::=
         { long | short | float | double }
-            <C host identifier> [ <C initial value> ]
-            [ { <comma> <C host identifier> [ <C initial value> ] }... ]
+            <C_host_identifier> [ <C_initial_value> ]
+            [ { <comma> <C_host_identifier> [ <C_initial_value> ] }... ]
 
-<C initial value> ::= <equals operator> <character representation>
+<C_initial_value> ::= <equals_operator> <character_representation>
 
-<C character variable> ::=
-        char [ CHARACTER SET [ IS ] <character set specification> ]
-            <C host identifier> <C array specification> [ <C initial value> ]
-            [ { <comma> <C host identifier> <C array specification> [ <C initial value> ] }... ]
+<C_character_variable> ::=
+        char [ CHARACTER SET [ IS ] <character_set_specification> ]
+            <C_host_identifier> <C_array_specification> [ <C_initial_value> ]
+            [ { <comma> <C_host_identifier> <C_array_specification> [ <C_initial_value> ] }... ]
 
-<C array specification> ::= <left bracket> <length> <right bracket>
+<C_array_specification> ::= <left_bracket> <length> <right_bracket>
 
-<C derived variable> ::= <C VARCHAR variable> | <C bit variable>
+<C_derived_variable> ::= <C_VARCHAR_variable> | <C_bit_variable>
 
-<C VARCHAR variable> ::=
-        VARCHAR [ CHARACTER SET [ IS ] <character set specification> ]
-            <C host identifier> <C array specification> [ <C initial value> ]
-            [ { <comma> <C host identifier> <C array specification> [ <C initial value> ] }... ]
+<C_VARCHAR_variable> ::=
+        VARCHAR [ CHARACTER SET [ IS ] <character_set_specification> ]
+            <C_host_identifier> <C_array_specification> [ <C_initial_value> ]
+            [ { <comma> <C_host_identifier> <C_array_specification> [ <C_initial_value> ] }... ]
 
-<C bit variable> ::=
-        BIT <C host identifier> <C array specification> [ <C initial value> ]
-            [ { <comma> <C host identifier> <C array specification> [ <C initial value> ] }... ]
+<C_bit_variable> ::=
+        BIT <C_host_identifier> <C_array_specification> [ <C_initial_value> ]
+            [ { <comma> <C_host_identifier> <C_array_specification> [ <C_initial_value> ] }... ]
 
-<Cobol variable definition> ::=
+<Cobol_variable_definition> ::=
     ...omitted...
 
-<Fortran variable definition> ::=
+<Fortran_variable_definition> ::=
     ...omitted...
 
-<MUMPS variable definition> ::=
+<MUMPS_variable_definition> ::=
     ...omitted...
 
-<Pascal variable definition> ::=
+<Pascal_variable_definition> ::=
     ...omitted...
 
-<PL/I variable definition> ::=
+<PL_I_variable_definition> ::=
     ...omitted...
 
-<embedded SQL end declare> ::= <SQL prefix> END DECLARE SECTION [ <SQL terminator> ]
+<embedded_SQL_end_declare> ::= <SQL_prefix> END DECLARE SECTION [ <SQL_terminator> ]
 
-<embedded SQL MUMPS declare> ::=
-    <SQL prefix>
+<embedded_SQL_MUMPS_declare> ::=
+    <SQL_prefix>
     BEGIN DECLARE SECTION
-        [ <embedded character set declaration> ]
-        [ <host variable definition>... ]
+        [ <embedded_character_set_declaration> ]
+        [ <host_variable_definition>... ]
     END DECLARE SECTION
-    <SQL terminator>
+    <SQL_terminator>
 
-<embedded SQL statement> ::= <SQL prefix> <statement or declaration> [ <SQL terminator> ]
+<embedded_SQL_statement> ::= <SQL_prefix> <statement_or_declaration> [ <SQL_terminator> ]
 
-<statement or declaration> ::=
-        <declare cursor>
-    |   <dynamic declare cursor>
-    |   <temporary table declaration>
-    |   <embedded exception declaration>
-    |   <SQL procedure statement>
+<statement_or_declaration> ::=
+        <declare_cursor>
+    |   <dynamic_declare_cursor>
+    |   <temporary_table_declaration>
+    |   <embedded_exception_declaration>
+    |   <SQL_procedure_statement>
 
-<embedded exception declaration> ::= WHENEVER <condition> <condition action>
+<embedded_exception_declaration> ::= WHENEVER <condition> <condition_action>
 
 <condition> ::= SQLERROR | NOT FOUND
 
-<condition action> ::= CONTINUE | <go to>
+<condition_action> ::= CONTINUE | <go_to>
 
-<go to> ::= { GOTO | GO TO } <goto target>
+<go_to> ::= { GOTO | GO TO } <goto_target>
 
-<goto target> ::=
-        <host label identifier>
-    |   <unsigned integer>
-    |   <host PL/I label variable>
+<goto_target> ::=
+        <host_label_identifier>
+    |   <unsigned_integer>
+    |   <host_PL_I_label_variable>
 
-<host label identifier> ::= !! See the syntax rules
+<host_label_identifier> ::= !! See the syntax rules
 
-<host PL/I label variable> ::= !! See the syntax rules
+<host_PL_I_label_variable> ::= !! See the syntax rules
 
-<preparable statement> ::=
-        <preparable SQL data statement>
-    |   <preparable SQL schema statement>
-    |   <preparable SQL transaction statement>
-    |   <preparable SQL session statement>
-    |   <preparable SQL implementation-defined statement>
+<preparable_statement> ::=
+        <preparable_SQL_data_statement>
+    |   <preparable_SQL_schema_statement>
+    |   <preparable_SQL_transaction_statement>
+    |   <preparable_SQL_session_statement>
+    |   <preparable_SQL_implementation_defined_statement>
 
-<preparable SQL data statement> ::=
-        <delete statement: searched>
-    |   <dynamic single row select statement>
-    |   <insert statement>
-    |   <dynamic select statement>
-    |   <update statement: searched>
-    |   <preparable dynamic delete statement: positioned>
-    |   <preparable dynamic update statement: positioned>
+<preparable_SQL_data_statement> ::=
+        <delete_statement__searched>
+    |   <dynamic_single_row_select_statement>
+    |   <insert_statement>
+    |   <dynamic_select_statement>
+    |   <update_statement__searched>
+    |   <preparable_dynamic_delete_statement__positioned>
+    |   <preparable_dynamic_update_statement__positioned>
 
-<dynamic single row select statement> ::= <query specification>
+<dynamic_single_row_select_statement> ::= <query_specification>
 
-<dynamic select statement> ::= <cursor specification>
+<dynamic_select_statement> ::= <cursor_specification>
 
-<preparable dynamic delete statement: positioned> ::=
-        DELETE [ FROM <table name> ] WHERE CURRENT OF <cursor name>
+<preparable_dynamic_delete_statement__positioned> ::=
+        DELETE [ FROM <table_name> ] WHERE CURRENT OF <cursor_name>
 
-<preparable dynamic update statement: positioned> ::=
-        UPDATE [ <table name> ] SET <set clause> WHERE CURRENT OF <cursor name>
+<preparable_dynamic_update_statement__positioned> ::=
+        UPDATE [ <table_name> ] SET <set_clause> WHERE CURRENT OF <cursor_name>
 
-<preparable SQL schema statement> ::= <SQL schema statement>
+<preparable_SQL_schema_statement> ::= <SQL_schema_statement>
 
-<preparable SQL transaction statement> ::= <SQL transaction statement>
+<preparable_SQL_transaction_statement> ::= <SQL_transaction_statement>
 
-<preparable SQL session statement> ::= <SQL session statement>
+<preparable_SQL_session_statement> ::= <SQL_session_statement>
 
-<preparable SQL implementation-defined statement> ::= !! See the syntax rules
+<preparable_SQL_implementation_defined_statement> ::= !! See the syntax rules
 
-<direct SQL statement> ::=
-        <direct SQL data statement>
-    |   <SQL schema statement>
-    |   <SQL transaction statement>
-    |   <SQL connection statement>
-    |   <SQL session statement>
-    |   <direct implementation-defined statement>
+<direct_SQL_statement> ::=
+        <direct_SQL_data_statement>
+    |   <SQL_schema_statement>
+    |   <SQL_transaction_statement>
+    |   <SQL_connection_statement>
+    |   <SQL_session_statement>
+    |   <direct_implementation_defined_statement>
 
-<direct SQL data statement> ::=
-        <delete statement: searched>
-    |   <direct select statement: multiple rows>
-    |   <insert statement>
-    |   <update statement: searched>
-    |   <temporary table declaration>
+<direct_SQL_data_statement> ::=
+        <delete_statement__searched>
+    |   <direct_select_statement__multiple_rows>
+    |   <insert_statement>
+    |   <update_statement__searched>
+    |   <temporary_table_declaration>
 
-<direct select statement: multiple rows> ::= <query expression> [ <order by clause> ]
+<direct_select_statement__multiple_rows> ::= <query_expression> [ <order_by_clause> ]
 
-<direct implementation-defined statement> ::= !! See the syntax rules
+<direct_implementation_defined_statement> ::= !! See the syntax rules
 
