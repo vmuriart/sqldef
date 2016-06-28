@@ -4,7 +4,7 @@
 
     https://github.com/daeken/PyTableGen/blob/ddc27ac53948e6bf7e273a634450793ef78e5b79/tblgen/grammar.ebnf
     https://github.com/lambdafu/smc.mw/blob/master/smc/mw/mw.ebnf
-    
+
     https://raw.githubusercontent.com/xwb1989/sqlparser/master/sql.y
     http://www.antlr3.org/grammar/list.html
     http://savage.net.au/SQL/sql-92.bnf.html
@@ -60,3 +60,37 @@ with open(path, 'w') as f:
     f.write(b)
 
 ```
+
+
+### Remove rules that aren't reference by anything
+```python
+
+import re
+
+path = r'.\sql92.ebnf'
+
+with open(path) as f:
+    b = f.read()
+
+regex = re.compile(r'(.*) =\n')
+found = regex.findall(b)
+
+res = {}
+for def_ in found:
+    regex = re.compile(r'\b' + def_ + r'\b')
+    res[def_] = len(regex.findall(b))
+
+for key, value in res.items():
+    if key == 'start':
+        continue
+    if value == 1:
+        print key
+        b=re.sub('\n'+key + r' =\n[\s\S]*?;\n', '', b)
+
+with open(path, 'w') as f:
+    f.write(b)
+
+```
+
+
+

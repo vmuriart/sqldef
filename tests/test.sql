@@ -1,1 +1,1 @@
-SELECT 1 from dual where 1 = 4
+SELECT 1 FROM dual WHERE 1 = 4
