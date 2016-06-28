@@ -17,7 +17,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 6, 27, 1, 41, 10, 0)
+__version__ = (2016, 6, 28, 5, 30, 3, 1)
 
 __all__ = [
     'sqlParser',
@@ -141,7 +141,7 @@ class sqlParser(Parser):
 
     @graken()
     def _space_(self):
-        self._pattern(r'\s+')
+        self._pattern(r'\s')
 
     @graken()
     def _double_quote_(self):
@@ -1016,7 +1016,7 @@ class sqlParser(Parser):
 
     @graken()
     def _newline_(self):
-        self._pattern(r'[\r\n]+')
+        self._pattern(r'[\r\n]')
 
     @graken()
     def _bit_string_literal_(self):
@@ -1508,7 +1508,8 @@ class sqlParser(Parser):
 
     @graken()
     def _module_character_set_specification_(self):
-        self._token('NAMES ARE')
+        self._token('NAMES')
+        self._token('ARE')
         self._character_set_specification_()
 
     @graken()
@@ -1561,11 +1562,15 @@ class sqlParser(Parser):
 
     @graken()
     def _temporary_table_declaration_(self):
-        self._token('DECLARE LOCAL TEMPORARY TABLE')
+        self._token('DECLARE')
+        self._token('LOCAL')
+        self._token('TEMPORARY')
+        self._token('TABLE')
         self._qualified_local_table_name_()
         self._table_element_list_()
         with self._optional():
-            self._token('ON COMMIT')
+            self._token('ON')
+            self._token('COMMIT')
 
             def block0():
                 with self._choice():
@@ -1644,7 +1649,8 @@ class sqlParser(Parser):
             with self._option():
                 self._character_string_type_()
                 with self._optional():
-                    self._token('CHARACTER SET')
+                    self._token('CHARACTER')
+                    self._token('SET')
                     self._character_set_specification_()
             with self._option():
                 self._national_character_string_type_()
@@ -1674,13 +1680,15 @@ class sqlParser(Parser):
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('CHARACTER VARYING')
+                self._token('CHARACTER')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('CHAR VARYING')
+                self._token('CHAR')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
@@ -1691,7 +1699,7 @@ class sqlParser(Parser):
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
-            self._error('expecting one of: CHAR CHAR VARYING CHARACTER CHARACTER VARYING VARCHAR')
+            self._error('expecting one of: CHAR CHARACTER VARCHAR')
 
     @graken()
     def _length_(self):
@@ -1701,13 +1709,15 @@ class sqlParser(Parser):
     def _national_character_string_type_(self):
         with self._choice():
             with self._option():
-                self._token('NATIONAL CHARACTER')
+                self._token('NATIONAL')
+                self._token('CHARACTER')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('NATIONAL CHAR')
+                self._token('NATIONAL')
+                self._token('CHAR')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
@@ -1719,24 +1729,29 @@ class sqlParser(Parser):
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('NATIONAL CHARACTER VARYING')
+                self._token('NATIONAL')
+                self._token('CHARACTER')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('NATIONAL CHAR VARYING')
+                self._token('NATIONAL')
+                self._token('CHAR')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('NCHAR VARYING')
+                self._token('NCHAR')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
-            self._error('expecting one of: NATIONAL CHAR NATIONAL CHAR VARYING NATIONAL CHARACTER NATIONAL CHARACTER VARYING NCHAR NCHAR VARYING')
+            self._error('expecting one of: NATIONAL NCHAR')
 
     @graken()
     def _bit_string_type_(self):
@@ -1748,12 +1763,13 @@ class sqlParser(Parser):
                     self._length_()
                     self._right_paren_()
             with self._option():
-                self._token('BIT VARYING')
+                self._token('BIT')
+                self._token('VARYING')
                 with self._optional():
                     self._left_paren_()
                     self._length_()
                     self._right_paren_()
-            self._error('expecting one of: BIT BIT VARYING')
+            self._error('expecting one of: BIT')
 
     @graken()
     def _numeric_type_(self):
@@ -1822,8 +1838,9 @@ class sqlParser(Parser):
             with self._option():
                 self._token('REAL')
             with self._option():
-                self._token('DOUBLE PRECISION')
-            self._error('expecting one of: DOUBLE PRECISION FLOAT REAL')
+                self._token('DOUBLE')
+                self._token('PRECISION')
+            self._error('expecting one of: DOUBLE FLOAT REAL')
 
     @graken()
     def _datetime_type_(self):
@@ -1837,7 +1854,9 @@ class sqlParser(Parser):
                     self._time_precision_()
                     self._right_paren_()
                 with self._optional():
-                    self._token('WITH TIME ZONE')
+                    self._token('WITH')
+                    self._token('TIME')
+                    self._token('ZONE')
             with self._option():
                 self._token('TIMESTAMP')
                 with self._optional():
@@ -1845,7 +1864,9 @@ class sqlParser(Parser):
                     self._timestamp_precision_()
                     self._right_paren_()
                 with self._optional():
-                    self._token('WITH TIME ZONE')
+                    self._token('WITH')
+                    self._token('TIME')
+                    self._token('ZONE')
             self._error('expecting one of: DATE TIME TIMESTAMP')
 
     @graken()
@@ -2094,14 +2115,15 @@ class sqlParser(Parser):
     def _column_constraint_(self):
         with self._choice():
             with self._option():
-                self._token('NOT NULL')
+                self._token('NOT')
+                self._token('NULL')
             with self._option():
                 self._unique_specification_()
             with self._option():
                 self._references_specification_()
             with self._option():
                 self._check_constraint_definition_()
-            self._error('expecting one of: NOT NULL')
+            self._error('expecting one of: NOT')
 
     @graken()
     def _unique_specification_(self):
@@ -2109,8 +2131,9 @@ class sqlParser(Parser):
             with self._option():
                 self._token('UNIQUE')
             with self._option():
-                self._token('PRIMARY KEY')
-            self._error('expecting one of: PRIMARY KEY UNIQUE')
+                self._token('PRIMARY')
+                self._token('KEY')
+            self._error('expecting one of: PRIMARY UNIQUE')
 
     @graken()
     def _references_specification_(self):
@@ -2177,7 +2200,8 @@ class sqlParser(Parser):
 
     @graken()
     def _update_rule_(self):
-        self._token('ON UPDATE')
+        self._token('ON')
+        self._token('UPDATE')
         self._referential_action_()
 
     @graken()
@@ -2186,16 +2210,20 @@ class sqlParser(Parser):
             with self._option():
                 self._token('CASCADE')
             with self._option():
-                self._token('SET NULL')
+                self._token('SET')
+                self._token('NULL')
             with self._option():
-                self._token('SET DEFAULT')
+                self._token('SET')
+                self._token('DEFAULT')
             with self._option():
-                self._token('NO ACTION')
-            self._error('expecting one of: CASCADE NO ACTION SET DEFAULT SET NULL')
+                self._token('NO')
+                self._token('ACTION')
+            self._error('expecting one of: CASCADE NO SET')
 
     @graken()
     def _delete_rule_(self):
-        self._token('ON DELETE')
+        self._token('ON')
+        self._token('DELETE')
         self._referential_action_()
 
     @graken()
@@ -2706,7 +2734,8 @@ class sqlParser(Parser):
     @graken()
     def _cross_join_(self):
         self._table_reference_()
-        self._token('CROSS JOIN')
+        self._token('CROSS')
+        self._token('JOIN')
         self._table_reference_()
 
     @graken()
@@ -2777,7 +2806,8 @@ class sqlParser(Parser):
 
     @graken()
     def _group_by_clause_(self):
-        self._token('GROUP BY')
+        self._token('GROUP')
+        self._token('BY')
         self._grouping_column_reference_list_()
 
     @graken()
@@ -3365,7 +3395,8 @@ class sqlParser(Parser):
             with self._option():
                 self._token('LOCAL')
             with self._option():
-                self._token('TIME ZONE')
+                self._token('TIME')
+                self._token('ZONE')
                 self._interval_value_expression_()
             self._error('expecting one of: LOCAL')
 
@@ -3625,10 +3656,12 @@ class sqlParser(Parser):
     def _constraint_check_time_(self):
         with self._choice():
             with self._option():
-                self._token('INITIALLY DEFERRED')
+                self._token('INITIALLY')
+                self._token('DEFERRED')
             with self._option():
-                self._token('INITIALLY IMMEDIATE')
-            self._error('expecting one of: INITIALLY DEFERRED INITIALLY IMMEDIATE')
+                self._token('INITIALLY')
+                self._token('IMMEDIATE')
+            self._error('expecting one of: INITIALLY')
 
     @graken()
     def _table_constraint_definition_(self):
@@ -3662,7 +3695,8 @@ class sqlParser(Parser):
 
     @graken()
     def _referential_constraint_definition_(self):
-        self._token('FOREIGN KEY')
+        self._token('FOREIGN')
+        self._token('KEY')
         self._left_paren_()
         self._referencing_columns_()
         self._right_paren_()
@@ -3691,7 +3725,8 @@ class sqlParser(Parser):
             self._token('INSENSITIVE')
         with self._optional():
             self._token('SCROLL')
-        self._token('CURSOR FOR')
+        self._token('CURSOR')
+        self._token('FOR')
         self._cursor_specification_()
 
     @graken()
@@ -3708,7 +3743,8 @@ class sqlParser(Parser):
 
     @graken()
     def _order_by_clause_(self):
-        self._token('ORDER BY')
+        self._token('ORDER')
+        self._token('BY')
         self._sort_specification_list_()
 
     @graken()
@@ -3754,13 +3790,14 @@ class sqlParser(Parser):
         def block0():
             with self._choice():
                 with self._option():
-                    self._token('READ ONLY')
+                    self._token('READ')
+                    self._token('ONLY')
                 with self._option():
                     self._token('UPDATE')
                     with self._optional():
                         self._token('OF')
                         self._column_name_list_()
-                self._error('expecting one of: READ ONLY UPDATE')
+                self._error('expecting one of: READ UPDATE')
         self._closure(block0)
 
     @graken()
@@ -3771,7 +3808,8 @@ class sqlParser(Parser):
             self._token('INSENSITIVE')
         with self._optional():
             self._token('SCROLL')
-        self._token('CURSOR FOR')
+        self._token('CURSOR')
+        self._token('FOR')
         self._statement_name_()
 
     @graken()
@@ -3831,6 +3869,14 @@ class sqlParser(Parser):
                 self._SQL_data_statement_()
             with self._option():
                 self._SQL_transaction_statement_()
+            with self._option():
+                self._SQL_connection_statement_()
+            with self._option():
+                self._SQL_session_statement_()
+            with self._option():
+                self._SQL_dynamic_statement_()
+            with self._option():
+                self._SQL_diagnostics_statement_()
             self._error('no available options')
 
     @graken()
@@ -3867,7 +3913,8 @@ class sqlParser(Parser):
 
     @graken()
     def _schema_definition_(self):
-        self._token('CREATE SCHEMA')
+        self._token('CREATE')
+        self._token('SCHEMA')
         self._schema_name_clause_()
         with self._optional():
             self._schema_character_set_specification_()
@@ -3897,7 +3944,9 @@ class sqlParser(Parser):
 
     @graken()
     def _schema_character_set_specification_(self):
-        self._token('DEFAULT CHARACTER SET')
+        self._token('DEFAULT')
+        self._token('CHARACTER')
+        self._token('SET')
         self._character_set_specification_()
 
     @graken()
@@ -3923,7 +3972,8 @@ class sqlParser(Parser):
 
     @graken()
     def _domain_definition_(self):
-        self._token('CREATE DOMAIN')
+        self._token('CREATE')
+        self._token('DOMAIN')
         self._domain_name_()
         with self._optional():
             self._token('AS')
@@ -3961,7 +4011,8 @@ class sqlParser(Parser):
         self._table_name_()
         self._table_element_list_()
         with self._optional():
-            self._token('ON COMMIT')
+            self._token('ON')
+            self._token('COMMIT')
 
             def block2():
                 with self._choice():
@@ -3975,7 +4026,8 @@ class sqlParser(Parser):
 
     @graken()
     def _view_definition_(self):
-        self._token('CREATE VIEW')
+        self._token('CREATE')
+        self._token('VIEW')
         self._table_name_()
         with self._optional():
             self._left_paren_()
@@ -3987,7 +4039,8 @@ class sqlParser(Parser):
             self._token('WITH')
             with self._optional():
                 self._levels_clause_()
-            self._token('CHECK OPTION')
+            self._token('CHECK')
+            self._token('OPTION')
 
     @graken()
     def _view_column_list_(self):
@@ -4017,16 +4070,19 @@ class sqlParser(Parser):
                 self._grantee_()
             self._closure(block0)
         with self._optional():
-            self._token('WITH GRANT OPTION')
+            self._token('WITH')
+            self._token('GRANT')
+            self._token('OPTION')
 
     @graken()
     def _privileges_(self):
         with self._choice():
             with self._option():
-                self._token('ALL PRIVILEGES')
+                self._token('ALL')
+                self._token('PRIVILEGES')
             with self._option():
                 self._action_list_()
-            self._error('expecting one of: ALL PRIVILEGES')
+            self._error('expecting one of: ALL')
 
     @graken()
     def _action_list_(self):
@@ -4085,7 +4141,8 @@ class sqlParser(Parser):
                 self._token('COLLATION')
                 self._collation_name_()
             with self._option():
-                self._token('CHARACTER SET')
+                self._token('CHARACTER')
+                self._token('SET')
                 self._character_set_name_()
             with self._option():
                 self._token('TRANSLATION')
@@ -4103,7 +4160,8 @@ class sqlParser(Parser):
 
     @graken()
     def _assertion_definition_(self):
-        self._token('CREATE ASSERTION')
+        self._token('CREATE')
+        self._token('ASSERTION')
         self._constraint_name_()
         self._assertion_check_()
         with self._optional():
@@ -4118,7 +4176,9 @@ class sqlParser(Parser):
 
     @graken()
     def _character_set_definition_(self):
-        self._token('CREATE CHARACTER SET')
+        self._token('CREATE')
+        self._token('CHARACTER')
+        self._token('SET')
         self._character_set_name_()
         with self._optional():
             self._token('AS')
@@ -4153,7 +4213,8 @@ class sqlParser(Parser):
 
     @graken()
     def _limited_collation_definition_(self):
-        self._token('COLLATION FROM')
+        self._token('COLLATION')
+        self._token('FROM')
         self._collation_source_()
 
     @graken()
@@ -4216,12 +4277,14 @@ class sqlParser(Parser):
         self._token('TRANSLATION')
         self._translation_name_()
         with self._optional():
-            self._token('THEN COLLATION')
+            self._token('THEN')
+            self._token('COLLATION')
             self._collation_name_()
 
     @graken()
     def _collation_definition_(self):
-        self._token('CREATE COLLATION')
+        self._token('CREATE')
+        self._token('COLLATION')
         self._collation_name_()
         self._token('FOR')
         self._character_set_specification_()
@@ -4234,14 +4297,17 @@ class sqlParser(Parser):
     def _pad_attribute_(self):
         with self._choice():
             with self._option():
-                self._token('NO PAD')
+                self._token('NO')
+                self._token('PAD')
             with self._option():
-                self._token('PAD SPACE')
-            self._error('expecting one of: NO PAD PAD SPACE')
+                self._token('PAD')
+                self._token('SPACE')
+            self._error('expecting one of: NO PAD')
 
     @graken()
     def _translation_definition_(self):
-        self._token('CREATE TRANSLATION')
+        self._token('CREATE')
+        self._token('TRANSLATION')
         self._translation_name_()
         self._token('FOR')
         self._source_character_set_specification_()
@@ -4332,7 +4398,8 @@ class sqlParser(Parser):
 
     @graken()
     def _drop_schema_statement_(self):
-        self._token('DROP SCHEMA')
+        self._token('DROP')
+        self._token('SCHEMA')
         self._schema_name_()
         self._drop_behaviour_()
 
@@ -4347,7 +4414,8 @@ class sqlParser(Parser):
 
     @graken()
     def _alter_table_statement_(self):
-        self._token('ALTER TABLE')
+        self._token('ALTER')
+        self._token('TABLE')
         self._table_name_()
         self._alter_table_action_()
 
@@ -4397,7 +4465,8 @@ class sqlParser(Parser):
 
     @graken()
     def _drop_column_default_clause_(self):
-        self._token('DROP DEFAULT')
+        self._token('DROP')
+        self._token('DEFAULT')
 
     @graken()
     def _drop_column_definition_(self):
@@ -4414,19 +4483,22 @@ class sqlParser(Parser):
 
     @graken()
     def _drop_table_constraint_definition_(self):
-        self._token('DROP CONSTRAINT')
+        self._token('DROP')
+        self._token('CONSTRAINT')
         self._constraint_name_()
         self._drop_behaviour_()
 
     @graken()
     def _drop_table_statement_(self):
-        self._token('DROP TABLE')
+        self._token('DROP')
+        self._token('TABLE')
         self._table_name_()
         self._drop_behaviour_()
 
     @graken()
     def _drop_view_statement_(self):
-        self._token('DROP VIEW')
+        self._token('DROP')
+        self._token('VIEW')
         self._table_name_()
         self._drop_behaviour_()
 
@@ -4434,7 +4506,9 @@ class sqlParser(Parser):
     def _revoke_statement_(self):
         self._token('REVOKE')
         with self._optional():
-            self._token('GRANT OPTION FOR')
+            self._token('GRANT')
+            self._token('OPTION')
+            self._token('FOR')
         self._privileges_()
         self._token('ON')
         self._object_name_()
@@ -4450,7 +4524,8 @@ class sqlParser(Parser):
 
     @graken()
     def _alter_domain_statement_(self):
-        self._token('ALTER DOMAIN')
+        self._token('ALTER')
+        self._token('DOMAIN')
         self._domain_name_()
         self._alter_domain_action_()
 
@@ -4474,7 +4549,8 @@ class sqlParser(Parser):
 
     @graken()
     def _drop_domain_default_clause_(self):
-        self._token('DROP DEFAULT')
+        self._token('DROP')
+        self._token('DEFAULT')
 
     @graken()
     def _add_domain_constraint_definition_(self):
@@ -4483,33 +4559,40 @@ class sqlParser(Parser):
 
     @graken()
     def _drop_domain_constraint_definition_(self):
-        self._token('DROP CONSTRAINT')
+        self._token('DROP')
+        self._token('CONSTRAINT')
         self._constraint_name_()
 
     @graken()
     def _drop_domain_statement_(self):
-        self._token('DROP DOMAIN')
+        self._token('DROP')
+        self._token('DOMAIN')
         self._domain_name_()
         self._drop_behaviour_()
 
     @graken()
     def _drop_character_set_statement_(self):
-        self._token('DROP CHARACTER SET')
+        self._token('DROP')
+        self._token('CHARACTER')
+        self._token('SET')
         self._character_set_name_()
 
     @graken()
     def _drop_collation_statement_(self):
-        self._token('DROP COLLATION')
+        self._token('DROP')
+        self._token('COLLATION')
         self._collation_name_()
 
     @graken()
     def _drop_translation_statement_(self):
-        self._token('DROP TRANSLATION')
+        self._token('DROP')
+        self._token('TRANSLATION')
         self._translation_name_()
 
     @graken()
     def _drop_assertion_statement_(self):
-        self._token('DROP ASSERTION')
+        self._token('DROP')
+        self._token('ASSERTION')
         self._constraint_name_()
 
     @graken()
@@ -4522,7 +4605,7 @@ class sqlParser(Parser):
             with self._option():
                 self._close_statement_()
             with self._option():
-                self._select_statement_single_row_()
+                self._select_statement__single_row_()
             with self._option():
                 self._SQL_data_change_statement_()
             self._error('no available options')
@@ -4596,7 +4679,7 @@ class sqlParser(Parser):
         self._cursor_name_()
 
     @graken()
-    def _select_statement_single_row_(self):
+    def _select_statement__single_row_(self):
         self._token('SELECT')
         with self._optional():
             self._set_quantifier_()
@@ -4619,27 +4702,31 @@ class sqlParser(Parser):
     def _SQL_data_change_statement_(self):
         with self._choice():
             with self._option():
-                self._delete_statement_positioned_()
+                self._delete_statement__positioned_()
             with self._option():
-                self._delete_statement_searched_()
+                self._delete_statement__searched_()
             with self._option():
                 self._insert_statement_()
             with self._option():
-                self._update_statement_positioned_()
+                self._update_statement__positioned_()
             with self._option():
-                self._update_statement_searched_()
+                self._update_statement__searched_()
             self._error('no available options')
 
     @graken()
-    def _delete_statement_positioned_(self):
-        self._token('DELETE FROM')
+    def _delete_statement__positioned_(self):
+        self._token('DELETE')
+        self._token('FROM')
         self._table_name_()
-        self._token('WHERE CURRENT OF')
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
         self._cursor_name_()
 
     @graken()
-    def _delete_statement_searched_(self):
-        self._token('DELETE FROM')
+    def _delete_statement__searched_(self):
+        self._token('DELETE')
+        self._token('FROM')
         self._table_name_()
         with self._optional():
             self._token('WHERE')
@@ -4647,7 +4734,8 @@ class sqlParser(Parser):
 
     @graken()
     def _insert_statement_(self):
-        self._token('INSERT INTO')
+        self._token('INSERT')
+        self._token('INTO')
         self._table_name_()
         self._insert_columns_and_source_()
 
@@ -4661,20 +4749,23 @@ class sqlParser(Parser):
                     self._right_paren_()
                 self._query_expression_()
             with self._option():
-                self._token('DEFAULT VALUES')
-            self._error('expecting one of: DEFAULT VALUES')
+                self._token('DEFAULT')
+                self._token('VALUES')
+            self._error('expecting one of: DEFAULT')
 
     @graken()
     def _insert_column_list_(self):
         self._column_name_list_()
 
     @graken()
-    def _update_statement_positioned_(self):
+    def _update_statement__positioned_(self):
         self._token('UPDATE')
         self._table_name_()
         self._token('SET')
         self._set_clause_list_()
-        self._token('WHERE CURRENT OF')
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
         self._cursor_name_()
 
     @graken()
@@ -4709,7 +4800,7 @@ class sqlParser(Parser):
             self._error('expecting one of: DEFAULT')
 
     @graken()
-    def _update_statement_searched_(self):
+    def _update_statement__searched_(self):
         self._token('UPDATE')
         self._table_name_()
         self._token('SET')
@@ -4733,7 +4824,8 @@ class sqlParser(Parser):
 
     @graken()
     def _set_transaction_statement_(self):
-        self._token('SET TRANSACTION')
+        self._token('SET')
+        self._token('TRANSACTION')
         self._transaction_mode_()
         with self._optional():
 
@@ -4755,34 +4847,41 @@ class sqlParser(Parser):
 
     @graken()
     def _isolation_level_(self):
-        self._token('ISOLATION LEVEL')
+        self._token('ISOLATION')
+        self._token('LEVEL')
         self._level_of_isolation_()
 
     @graken()
     def _level_of_isolation_(self):
         with self._choice():
             with self._option():
-                self._token('READ UNCOMMITTED')
+                self._token('READ')
+                self._token('UNCOMMITTED')
             with self._option():
-                self._token('READ COMMITTED')
+                self._token('READ')
+                self._token('COMMITTED')
             with self._option():
-                self._token('REPEATABLE READ')
+                self._token('REPEATABLE')
+                self._token('READ')
             with self._option():
                 self._token('SERIALIZABLE')
-            self._error('expecting one of: READ COMMITTED READ UNCOMMITTED REPEATABLE READ SERIALIZABLE')
+            self._error('expecting one of: READ REPEATABLE SERIALIZABLE')
 
     @graken()
     def _transaction_access_mode_(self):
         with self._choice():
             with self._option():
-                self._token('READ ONLY')
+                self._token('READ')
+                self._token('ONLY')
             with self._option():
-                self._token('READ WRITE')
-            self._error('expecting one of: READ ONLY READ WRITE')
+                self._token('READ')
+                self._token('WRITE')
+            self._error('expecting one of: READ')
 
     @graken()
     def _diagnostics_size_(self):
-        self._token('DIAGNOSTICS SIZE')
+        self._token('DIAGNOSTICS')
+        self._token('SIZE')
         self._number_of_conditions_()
 
     @graken()
@@ -4791,7 +4890,8 @@ class sqlParser(Parser):
 
     @graken()
     def _set_constraints_mode_statement_(self):
-        self._token('SET CONSTRAINTS')
+        self._token('SET')
+        self._token('CONSTRAINTS')
         self._constraint_name_list_()
 
         def block0():
@@ -4829,6 +4929,914 @@ class sqlParser(Parser):
         self._token('ROLLBACK')
         with self._optional():
             self._token('WORK')
+
+    @graken()
+    def _SQL_connection_statement_(self):
+        with self._choice():
+            with self._option():
+                self._connect_statement_()
+            with self._option():
+                self._set_connection_statement_()
+            with self._option():
+                self._disconnect_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _connect_statement_(self):
+        self._token('CONNECT')
+        self._token('TO')
+        self._connection_target_()
+
+    @graken()
+    def _connection_target_(self):
+        with self._choice():
+            with self._option():
+                self._SQL_server_name_()
+                with self._optional():
+                    self._token('AS')
+                    self._connection_name_()
+                with self._optional():
+                    self._token('USER')
+                    self._user_name_()
+            with self._option():
+                self._token('DEFAULT')
+            self._error('expecting one of: DEFAULT')
+
+    @graken()
+    def _SQL_server_name_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _connection_name_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _user_name_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _set_connection_statement_(self):
+        self._token('SET')
+        self._token('CONNECTION')
+        self._connection_object_()
+
+    @graken()
+    def _connection_object_(self):
+        with self._choice():
+            with self._option():
+                self._token('DEFAULT')
+            with self._option():
+                self._connection_name_()
+            self._error('expecting one of: DEFAULT')
+
+    @graken()
+    def _disconnect_statement_(self):
+        self._token('DISCONNECT')
+        self._disconnect_object_()
+
+    @graken()
+    def _disconnect_object_(self):
+        with self._choice():
+            with self._option():
+                self._connection_object_()
+            with self._option():
+                self._token('ALL')
+            with self._option():
+                self._token('CURRENT')
+            self._error('expecting one of: ALL CURRENT')
+
+    @graken()
+    def _SQL_session_statement_(self):
+        with self._choice():
+            with self._option():
+                self._set_catalog_statement_()
+            with self._option():
+                self._set_schema_statement_()
+            with self._option():
+                self._set_names_statement_()
+            with self._option():
+                self._set_session_authorization_identifier_statement_()
+            with self._option():
+                self._set_local_time_zone_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _set_catalog_statement_(self):
+        self._token('SET')
+        self._token('CATALOG')
+        self._value_specification_()
+
+    @graken()
+    def _value_specification_(self):
+        with self._choice():
+            with self._option():
+                self._literal_()
+            with self._option():
+                self._general_value_specification_()
+            self._error('no available options')
+
+    @graken()
+    def _set_schema_statement_(self):
+        self._token('SET')
+        self._token('SCHEMA')
+        self._value_specification_()
+
+    @graken()
+    def _set_names_statement_(self):
+        self._token('SET')
+        self._token('NAMES')
+        self._value_specification_()
+
+    @graken()
+    def _set_session_authorization_identifier_statement_(self):
+        self._token('SET')
+        self._token('SESSION')
+        self._token('AUTHORIZATION')
+        self._value_specification_()
+
+    @graken()
+    def _set_local_time_zone_statement_(self):
+        self._token('SET')
+        self._token('TIME')
+        self._token('ZONE')
+        self._set_time_zone_value_()
+
+    @graken()
+    def _set_time_zone_value_(self):
+        with self._choice():
+            with self._option():
+                self._interval_value_expression_()
+            with self._option():
+                self._token('LOCAL')
+            self._error('expecting one of: LOCAL')
+
+    @graken()
+    def _SQL_dynamic_statement_(self):
+        with self._choice():
+            with self._option():
+                self._system_descriptor_statement_()
+            with self._option():
+                self._prepare_statement_()
+            with self._option():
+                self._deallocate_prepared_statement_()
+            with self._option():
+                self._describe_statement_()
+            with self._option():
+                self._execute_statement_()
+            with self._option():
+                self._execute_immediate_statement_()
+            with self._option():
+                self._SQL_dynamic_data_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _system_descriptor_statement_(self):
+        with self._choice():
+            with self._option():
+                self._allocate_descriptor_statement_()
+            with self._option():
+                self._deallocate_descriptor_statement_()
+            with self._option():
+                self._get_descriptor_statement_()
+            with self._option():
+                self._set_descriptor_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _allocate_descriptor_statement_(self):
+        self._token('ALLOCATE')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+        with self._optional():
+            self._token('WITH')
+            self._token('MAX')
+            self._occurrences_()
+
+    @graken()
+    def _descriptor_name_(self):
+        with self._optional():
+            self._scope_option_()
+        self._simple_value_specification_()
+
+    @graken()
+    def _scope_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('GLOBAL')
+            with self._option():
+                self._token('LOCAL')
+            self._error('expecting one of: GLOBAL LOCAL')
+
+    @graken()
+    def _occurrences_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _deallocate_descriptor_statement_(self):
+        self._token('DEALLOCATE')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+
+    @graken()
+    def _set_descriptor_statement_(self):
+        self._token('SET')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+        self._set_descriptor_information_()
+
+    @graken()
+    def _set_descriptor_information_(self):
+        with self._choice():
+            with self._option():
+                self._set_count_()
+            with self._option():
+                self._token('VALUE')
+                self._item_number_()
+                self._set_item_information_()
+                with self._optional():
+
+                    def block0():
+                        self._comma_()
+                        self._set_item_information_()
+                    self._closure(block0)
+            self._error('no available options')
+
+    @graken()
+    def _set_count_(self):
+        self._token('COUNT')
+        self._equals_operator_()
+        self._simple_value_specification_1_()
+
+    @graken()
+    def _simple_value_specification_1_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _item_number_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _set_item_information_(self):
+        self._descriptor_item_name_()
+        self._equals_operator_()
+        self._simple_value_specification_2_()
+
+    @graken()
+    def _descriptor_item_name_(self):
+        with self._choice():
+            with self._option():
+                self._token('TYPE')
+            with self._option():
+                self._token('LENGTH')
+            with self._option():
+                self._token('OCTET_LENGTH')
+            with self._option():
+                self._token('RETURNED_LENGTH')
+            with self._option():
+                self._token('RETURNED_OCTET_LENGTH')
+            with self._option():
+                self._token('PRECISION')
+            with self._option():
+                self._token('SCALE')
+            with self._option():
+                self._token('DATETIME_INTERVAL_CODE')
+            with self._option():
+                self._token('DATETIME_INTERVAL_PRECISION')
+            with self._option():
+                self._token('NULLABLE')
+            with self._option():
+                self._token('INDICATOR')
+            with self._option():
+                self._token('DATA')
+            with self._option():
+                self._token('NAME')
+            with self._option():
+                self._token('UNNAMED')
+            with self._option():
+                self._token('COLLATION_CATALOG')
+            with self._option():
+                self._token('COLLATION_SCHEMA')
+            with self._option():
+                self._token('COLLATION_NAME')
+            with self._option():
+                self._token('CHARACTER_SET_CATALOG')
+            with self._option():
+                self._token('CHARACTER_SET_SCHEMA')
+            with self._option():
+                self._token('CHARACTER_SET_NAME')
+            self._error('expecting one of: CHARACTER_SET_CATALOG CHARACTER_SET_NAME CHARACTER_SET_SCHEMA COLLATION_CATALOG COLLATION_NAME COLLATION_SCHEMA DATA DATETIME_INTERVAL_CODE DATETIME_INTERVAL_PRECISION INDICATOR LENGTH NAME NULLABLE OCTET_LENGTH PRECISION RETURNED_LENGTH RETURNED_OCTET_LENGTH SCALE TYPE UNNAMED')
+
+    @graken()
+    def _simple_value_specification_2_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _get_descriptor_statement_(self):
+        self._token('GET')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+        self._get_descriptor_information_()
+
+    @graken()
+    def _get_descriptor_information_(self):
+        with self._choice():
+            with self._option():
+                self._get_count_()
+            with self._option():
+                self._token('VALUE')
+                self._item_number_()
+                self._get_item_information_()
+                with self._optional():
+
+                    def block0():
+                        self._comma_()
+                        self._get_item_information_()
+                    self._closure(block0)
+            self._error('no available options')
+
+    @graken()
+    def _get_count_(self):
+        self._simple_target_specification_1_()
+        self._equals_operator_()
+        self._token('COUNT')
+
+    @graken()
+    def _simple_target_specification_1_(self):
+        self._simple_target_specification_()
+
+    @graken()
+    def _simple_target_specification_(self):
+        self._parameter_name_()
+
+    @graken()
+    def _get_item_information_(self):
+        self._simple_target_specification_2_()
+        self._equals_operator_()
+        self._descriptor_item_name_()
+
+    @graken()
+    def _simple_target_specification_2_(self):
+        self._simple_target_specification_()
+
+    @graken()
+    def _prepare_statement_(self):
+        self._token('PREPARE')
+        self._SQL_statement_name_()
+        self._token('FROM')
+        self._SQL_statement_variable_()
+
+    @graken()
+    def _SQL_statement_name_(self):
+        with self._choice():
+            with self._option():
+                self._statement_name_()
+            with self._option():
+                self._extended_statement_name_()
+            self._error('no available options')
+
+    @graken()
+    def _extended_statement_name_(self):
+        with self._optional():
+            self._scope_option_()
+        self._simple_value_specification_()
+
+    @graken()
+    def _SQL_statement_variable_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _deallocate_prepared_statement_(self):
+        self._token('DEALLOCATE')
+        self._token('PREPARE')
+        self._SQL_statement_name_()
+
+    @graken()
+    def _describe_statement_(self):
+        with self._choice():
+            with self._option():
+                self._describe_input_statement_()
+            with self._option():
+                self._describe_output_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _describe_input_statement_(self):
+        self._token('DESCRIBE')
+        self._token('INPUT')
+        self._SQL_statement_name_()
+        self._using_descriptor_()
+
+    @graken()
+    def _using_descriptor_(self):
+
+        def block0():
+            with self._choice():
+                with self._option():
+                    self._token('USING')
+                with self._option():
+                    self._token('INTO')
+                self._error('expecting one of: INTO USING')
+        self._closure(block0)
+        self._token('SQL')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+
+    @graken()
+    def _describe_output_statement_(self):
+        self._token('DESCRIBE')
+        with self._optional():
+            self._token('OUTPUT')
+        self._SQL_statement_name_()
+        self._using_descriptor_()
+
+    @graken()
+    def _execute_statement_(self):
+        self._token('EXECUTE')
+        self._SQL_statement_name_()
+        with self._optional():
+            self._result_using_clause_()
+        with self._optional():
+            self._parameter_using_clause_()
+
+    @graken()
+    def _result_using_clause_(self):
+        self._using_clause_()
+
+    @graken()
+    def _using_clause_(self):
+        with self._choice():
+            with self._option():
+                self._using_arguments_()
+            with self._option():
+                self._using_descriptor_()
+            self._error('no available options')
+
+    @graken()
+    def _using_arguments_(self):
+
+        def block0():
+            with self._choice():
+                with self._option():
+                    self._token('USING')
+                with self._option():
+                    self._token('INTO')
+                self._error('expecting one of: INTO USING')
+        self._closure(block0)
+        self._argument_()
+        with self._optional():
+
+            def block2():
+                self._comma_()
+                self._argument_()
+            self._closure(block2)
+
+    @graken()
+    def _argument_(self):
+        self._target_specification_()
+
+    @graken()
+    def _parameter_using_clause_(self):
+        self._using_clause_()
+
+    @graken()
+    def _execute_immediate_statement_(self):
+        self._token('EXECUTE')
+        self._token('IMMEDIATE')
+        self._SQL_statement_variable_()
+
+    @graken()
+    def _SQL_dynamic_data_statement_(self):
+        with self._choice():
+            with self._option():
+                self._allocate_cursor_statement_()
+            with self._option():
+                self._dynamic_open_statement_()
+            with self._option():
+                self._dynamic_close_statement_()
+            with self._option():
+                self._dynamic_fetch_statement_()
+            with self._option():
+                self._dynamic_delete_statement__positioned_()
+            with self._option():
+                self._dynamic_update_statement__positioned_()
+            self._error('no available options')
+
+    @graken()
+    def _allocate_cursor_statement_(self):
+        self._token('ALLOCATE')
+        self._extended_cursor_name_()
+        with self._optional():
+            self._token('INSENSITIVE')
+        with self._optional():
+            self._token('SCROLL')
+        self._token('CURSOR')
+        self._token('FOR')
+        self._extended_statement_name_()
+
+    @graken()
+    def _extended_cursor_name_(self):
+        with self._optional():
+            self._scope_option_()
+        self._simple_value_specification_()
+
+    @graken()
+    def _dynamic_open_statement_(self):
+        self._token('OPEN')
+        self._dynamic_cursor_name_()
+        with self._optional():
+            self._using_clause_()
+
+    @graken()
+    def _dynamic_cursor_name_(self):
+        with self._choice():
+            with self._option():
+                self._cursor_name_()
+            with self._option():
+                self._extended_cursor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _dynamic_close_statement_(self):
+        self._token('CLOSE')
+        self._dynamic_cursor_name_()
+
+    @graken()
+    def _dynamic_fetch_statement_(self):
+        self._token('FETCH')
+        with self._optional():
+            with self._optional():
+                self._fetch_orientation_()
+            self._token('FROM')
+        self._dynamic_cursor_name_()
+
+    @graken()
+    def _dynamic_delete_statement__positioned_(self):
+        self._token('DELETE')
+        self._token('FROM')
+        self._table_name_()
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._dynamic_cursor_name_()
+
+    @graken()
+    def _dynamic_update_statement__positioned_(self):
+        self._token('UPDATE')
+        self._table_name_()
+        self._token('SET')
+        self._set_clause_()
+        with self._optional():
+
+            def block0():
+                self._comma_()
+                self._set_clause_()
+            self._closure(block0)
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._dynamic_cursor_name_()
+
+    @graken()
+    def _SQL_diagnostics_statement_(self):
+        self._get_diagnostics_statement_()
+
+    @graken()
+    def _get_diagnostics_statement_(self):
+        self._token('GET')
+        self._token('DIAGNOSTICS')
+        self._sql_diagnostics_information_()
+
+    @graken()
+    def _sql_diagnostics_information_(self):
+        with self._choice():
+            with self._option():
+                self._statement_information_()
+            with self._option():
+                self._condition_information_()
+            self._error('no available options')
+
+    @graken()
+    def _statement_information_(self):
+        self._statement_information_item_()
+        with self._optional():
+
+            def block0():
+                self._comma_()
+                self._statement_information_item_()
+            self._closure(block0)
+
+    @graken()
+    def _statement_information_item_(self):
+        self._simple_target_specification_()
+        self._equals_operator_()
+        self._statement_information_item_name_()
+
+    @graken()
+    def _statement_information_item_name_(self):
+        with self._choice():
+            with self._option():
+                self._token('NUMBER')
+            with self._option():
+                self._token('MORE')
+            with self._option():
+                self._token('COMMAND_FUNCTION')
+            with self._option():
+                self._token('DYNAMIC_FUNCTION')
+            with self._option():
+                self._token('ROW_COUNT')
+            self._error('expecting one of: COMMAND_FUNCTION DYNAMIC_FUNCTION MORE NUMBER ROW_COUNT')
+
+    @graken()
+    def _condition_information_(self):
+        self._token('EXCEPTION')
+        self._condition_number_()
+        self._condition_information_item_()
+        with self._optional():
+
+            def block0():
+                self._comma_()
+                self._condition_information_item_()
+            self._closure(block0)
+
+    @graken()
+    def _condition_number_(self):
+        self._simple_value_specification_()
+
+    @graken()
+    def _condition_information_item_(self):
+        self._simple_target_specification_()
+        self._equals_operator_()
+        self._condition_information_item_name_()
+
+    @graken()
+    def _condition_information_item_name_(self):
+        with self._choice():
+            with self._option():
+                self._token('CONDITION_NUMBER')
+            with self._option():
+                self._token('RETURNED_SQLSTATE')
+            with self._option():
+                self._token('CLASS_ORIGIN')
+            with self._option():
+                self._token('SUBCLASS_ORIGIN')
+            with self._option():
+                self._token('SERVER_NAME')
+            with self._option():
+                self._token('CONNECTION_NAME')
+            with self._option():
+                self._token('CONSTRATIN_CATALOG')
+            with self._option():
+                self._token('CONSTRAINT_SCHEMA')
+            with self._option():
+                self._token('CONSTRAINT_NAME')
+            with self._option():
+                self._token('CATALOG_NAME')
+            with self._option():
+                self._token('SCHEMA_NAME')
+            with self._option():
+                self._token('TABLE_NAME')
+            with self._option():
+                self._token('COLUMN_NAME')
+            with self._option():
+                self._token('CURSOR_NAME')
+            with self._option():
+                self._token('MESSAGE_TEXT')
+            with self._option():
+                self._token('MESSAGE_LENGTH')
+            with self._option():
+                self._token('MESSAGE_OCTET_LENGTH')
+            self._error('expecting one of: CATALOG_NAME CLASS_ORIGIN COLUMN_NAME CONDITION_NUMBER CONNECTION_NAME CONSTRAINT_NAME CONSTRAINT_SCHEMA CONSTRATIN_CATALOG CURSOR_NAME MESSAGE_LENGTH MESSAGE_OCTET_LENGTH MESSAGE_TEXT RETURNED_SQLSTATE SCHEMA_NAME SERVER_NAME SUBCLASS_ORIGIN TABLE_NAME')
+
+    @graken()
+    def _embedded_SQL_declare_section_(self):
+        self._embedded_SQL_begin_declare_()
+        with self._optional():
+            self._embedded_character_set_declaration_()
+        self._embedded_SQL_end_declare_()
+
+    @graken()
+    def _embedded_SQL_begin_declare_(self):
+        self._SQL_prefix_()
+        self._token('BEGIN')
+        self._token('DECLARE')
+        self._token('SECTION')
+        with self._optional():
+            self._SQL_terminator_()
+
+    @graken()
+    def _SQL_prefix_(self):
+        with self._choice():
+            with self._option():
+                self._token('EXEC')
+                self._token('SQL')
+            with self._option():
+                self._ampersand_()
+                self._token('SQL')
+                self._left_paren_()
+            self._error('expecting one of: EXEC')
+
+    @graken()
+    def _SQL_terminator_(self):
+        with self._choice():
+            with self._option():
+                self._token('END_EXEC')
+            with self._option():
+                self._semicolon_()
+            with self._option():
+                self._right_paren_()
+            self._error('expecting one of: END_EXEC')
+
+    @graken()
+    def _embedded_character_set_declaration_(self):
+        self._token('SQL')
+        self._token('NAMES')
+        self._token('ARE')
+        self._character_set_specification_()
+
+    @graken()
+    def _embedded_SQL_end_declare_(self):
+        self._SQL_prefix_()
+        self._token('END')
+        self._token('DECLARE')
+        self._token('SECTION')
+        with self._optional():
+            self._SQL_terminator_()
+
+    @graken()
+    def _embedded_SQL_statement_(self):
+        self._SQL_prefix_()
+        self._statement_or_declaration_()
+        with self._optional():
+            self._SQL_terminator_()
+
+    @graken()
+    def _statement_or_declaration_(self):
+        with self._choice():
+            with self._option():
+                self._declare_cursor_()
+            with self._option():
+                self._dynamic_declare_cursor_()
+            with self._option():
+                self._temporary_table_declaration_()
+            with self._option():
+                self._embedded_exception_declaration_()
+            with self._option():
+                self._SQL_procedure_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _embedded_exception_declaration_(self):
+        self._token('WHENEVER')
+        self._condition_()
+        self._condition_action_()
+
+    @graken()
+    def _condition_(self):
+        with self._choice():
+            with self._option():
+                self._token('SQLERROR')
+            with self._option():
+                self._token('NOT')
+                self._token('FOUND')
+            self._error('expecting one of: NOT SQLERROR')
+
+    @graken()
+    def _condition_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('CONTINUE')
+            with self._option():
+                self._go_to_()
+            self._error('expecting one of: CONTINUE')
+
+    @graken()
+    def _go_to_(self):
+
+        def block0():
+            with self._choice():
+                with self._option():
+                    self._token('GOTO')
+                with self._option():
+                    self._token('GO')
+                    self._token('TO')
+                self._error('expecting one of: GO GOTO')
+        self._closure(block0)
+        self._goto_target_()
+
+    @graken()
+    def _goto_target_(self):
+        self._unsigned_integer_()
+
+    @graken()
+    def _preparable_statement_(self):
+        with self._choice():
+            with self._option():
+                self._preparable_SQL_data_statement_()
+            with self._option():
+                self._preparable_SQL_schema_statement_()
+            with self._option():
+                self._preparable_SQL_transaction_statement_()
+            with self._option():
+                self._preparable_SQL_session_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _preparable_SQL_data_statement_(self):
+        with self._choice():
+            with self._option():
+                self._delete_statement__searched_()
+            with self._option():
+                self._dynamic_single_row_select_statement_()
+            with self._option():
+                self._insert_statement_()
+            with self._option():
+                self._dynamic_select_statement_()
+            with self._option():
+                self._update_statement__searched_()
+            with self._option():
+                self._preparable_dynamic_delete_statement__positioned_()
+            with self._option():
+                self._preparable_dynamic_update_statement__positioned_()
+            self._error('no available options')
+
+    @graken()
+    def _dynamic_single_row_select_statement_(self):
+        self._query_specification_()
+
+    @graken()
+    def _dynamic_select_statement_(self):
+        self._cursor_specification_()
+
+    @graken()
+    def _preparable_dynamic_delete_statement__positioned_(self):
+        self._token('DELETE')
+        with self._optional():
+            self._token('FROM')
+            self._table_name_()
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._cursor_name_()
+
+    @graken()
+    def _preparable_dynamic_update_statement__positioned_(self):
+        self._token('UPDATE')
+        with self._optional():
+            self._table_name_()
+        self._token('SET')
+        self._set_clause_()
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._cursor_name_()
+
+    @graken()
+    def _preparable_SQL_schema_statement_(self):
+        self._SQL_schema_statement_()
+
+    @graken()
+    def _preparable_SQL_transaction_statement_(self):
+        self._SQL_transaction_statement_()
+
+    @graken()
+    def _preparable_SQL_session_statement_(self):
+        self._SQL_session_statement_()
+
+    @graken()
+    def _direct_SQL_statement_(self):
+        with self._choice():
+            with self._option():
+                self._direct_SQL_data_statement_()
+            with self._option():
+                self._SQL_schema_statement_()
+            with self._option():
+                self._SQL_transaction_statement_()
+            with self._option():
+                self._SQL_connection_statement_()
+            with self._option():
+                self._SQL_session_statement_()
+            self._error('no available options')
+
+    @graken()
+    def _direct_SQL_data_statement_(self):
+        with self._choice():
+            with self._option():
+                self._delete_statement__searched_()
+            with self._option():
+                self._direct_select_statement__multiple_rows_()
+            with self._option():
+                self._insert_statement_()
+            with self._option():
+                self._update_statement__searched_()
+            with self._option():
+                self._temporary_table_declaration_()
+            self._error('no available options')
+
+    @graken()
+    def _direct_select_statement__multiple_rows_(self):
+        self._query_expression_()
+        with self._optional():
+            self._order_by_clause_()
 
 
 class sqlSemantics(object):
@@ -6179,7 +7187,7 @@ class sqlSemantics(object):
     def close_statement(self, ast):
         return ast
 
-    def select_statement_single_row(self, ast):
+    def select_statement__single_row(self, ast):
         return ast
 
     def select_target_list(self, ast):
@@ -6188,10 +7196,10 @@ class sqlSemantics(object):
     def SQL_data_change_statement(self, ast):
         return ast
 
-    def delete_statement_positioned(self, ast):
+    def delete_statement__positioned(self, ast):
         return ast
 
-    def delete_statement_searched(self, ast):
+    def delete_statement__searched(self, ast):
         return ast
 
     def insert_statement(self, ast):
@@ -6203,7 +7211,7 @@ class sqlSemantics(object):
     def insert_column_list(self, ast):
         return ast
 
-    def update_statement_positioned(self, ast):
+    def update_statement__positioned(self, ast):
         return ast
 
     def set_clause_list(self, ast):
@@ -6218,7 +7226,7 @@ class sqlSemantics(object):
     def update_source(self, ast):
         return ast
 
-    def update_statement_searched(self, ast):
+    def update_statement__searched(self, ast):
         return ast
 
     def SQL_transaction_statement(self, ast):
@@ -6255,6 +7263,306 @@ class sqlSemantics(object):
         return ast
 
     def rollback_statement(self, ast):
+        return ast
+
+    def SQL_connection_statement(self, ast):
+        return ast
+
+    def connect_statement(self, ast):
+        return ast
+
+    def connection_target(self, ast):
+        return ast
+
+    def SQL_server_name(self, ast):
+        return ast
+
+    def connection_name(self, ast):
+        return ast
+
+    def user_name(self, ast):
+        return ast
+
+    def set_connection_statement(self, ast):
+        return ast
+
+    def connection_object(self, ast):
+        return ast
+
+    def disconnect_statement(self, ast):
+        return ast
+
+    def disconnect_object(self, ast):
+        return ast
+
+    def SQL_session_statement(self, ast):
+        return ast
+
+    def set_catalog_statement(self, ast):
+        return ast
+
+    def value_specification(self, ast):
+        return ast
+
+    def set_schema_statement(self, ast):
+        return ast
+
+    def set_names_statement(self, ast):
+        return ast
+
+    def set_session_authorization_identifier_statement(self, ast):
+        return ast
+
+    def set_local_time_zone_statement(self, ast):
+        return ast
+
+    def set_time_zone_value(self, ast):
+        return ast
+
+    def SQL_dynamic_statement(self, ast):
+        return ast
+
+    def system_descriptor_statement(self, ast):
+        return ast
+
+    def allocate_descriptor_statement(self, ast):
+        return ast
+
+    def descriptor_name(self, ast):
+        return ast
+
+    def scope_option(self, ast):
+        return ast
+
+    def occurrences(self, ast):
+        return ast
+
+    def deallocate_descriptor_statement(self, ast):
+        return ast
+
+    def set_descriptor_statement(self, ast):
+        return ast
+
+    def set_descriptor_information(self, ast):
+        return ast
+
+    def set_count(self, ast):
+        return ast
+
+    def simple_value_specification_1(self, ast):
+        return ast
+
+    def item_number(self, ast):
+        return ast
+
+    def set_item_information(self, ast):
+        return ast
+
+    def descriptor_item_name(self, ast):
+        return ast
+
+    def simple_value_specification_2(self, ast):
+        return ast
+
+    def get_descriptor_statement(self, ast):
+        return ast
+
+    def get_descriptor_information(self, ast):
+        return ast
+
+    def get_count(self, ast):
+        return ast
+
+    def simple_target_specification_1(self, ast):
+        return ast
+
+    def simple_target_specification(self, ast):
+        return ast
+
+    def get_item_information(self, ast):
+        return ast
+
+    def simple_target_specification_2(self, ast):
+        return ast
+
+    def prepare_statement(self, ast):
+        return ast
+
+    def SQL_statement_name(self, ast):
+        return ast
+
+    def extended_statement_name(self, ast):
+        return ast
+
+    def SQL_statement_variable(self, ast):
+        return ast
+
+    def deallocate_prepared_statement(self, ast):
+        return ast
+
+    def describe_statement(self, ast):
+        return ast
+
+    def describe_input_statement(self, ast):
+        return ast
+
+    def using_descriptor(self, ast):
+        return ast
+
+    def describe_output_statement(self, ast):
+        return ast
+
+    def execute_statement(self, ast):
+        return ast
+
+    def result_using_clause(self, ast):
+        return ast
+
+    def using_clause(self, ast):
+        return ast
+
+    def using_arguments(self, ast):
+        return ast
+
+    def argument(self, ast):
+        return ast
+
+    def parameter_using_clause(self, ast):
+        return ast
+
+    def execute_immediate_statement(self, ast):
+        return ast
+
+    def SQL_dynamic_data_statement(self, ast):
+        return ast
+
+    def allocate_cursor_statement(self, ast):
+        return ast
+
+    def extended_cursor_name(self, ast):
+        return ast
+
+    def dynamic_open_statement(self, ast):
+        return ast
+
+    def dynamic_cursor_name(self, ast):
+        return ast
+
+    def dynamic_close_statement(self, ast):
+        return ast
+
+    def dynamic_fetch_statement(self, ast):
+        return ast
+
+    def dynamic_delete_statement__positioned(self, ast):
+        return ast
+
+    def dynamic_update_statement__positioned(self, ast):
+        return ast
+
+    def SQL_diagnostics_statement(self, ast):
+        return ast
+
+    def get_diagnostics_statement(self, ast):
+        return ast
+
+    def sql_diagnostics_information(self, ast):
+        return ast
+
+    def statement_information(self, ast):
+        return ast
+
+    def statement_information_item(self, ast):
+        return ast
+
+    def statement_information_item_name(self, ast):
+        return ast
+
+    def condition_information(self, ast):
+        return ast
+
+    def condition_number(self, ast):
+        return ast
+
+    def condition_information_item(self, ast):
+        return ast
+
+    def condition_information_item_name(self, ast):
+        return ast
+
+    def embedded_SQL_declare_section(self, ast):
+        return ast
+
+    def embedded_SQL_begin_declare(self, ast):
+        return ast
+
+    def SQL_prefix(self, ast):
+        return ast
+
+    def SQL_terminator(self, ast):
+        return ast
+
+    def embedded_character_set_declaration(self, ast):
+        return ast
+
+    def embedded_SQL_end_declare(self, ast):
+        return ast
+
+    def embedded_SQL_statement(self, ast):
+        return ast
+
+    def statement_or_declaration(self, ast):
+        return ast
+
+    def embedded_exception_declaration(self, ast):
+        return ast
+
+    def condition(self, ast):
+        return ast
+
+    def condition_action(self, ast):
+        return ast
+
+    def go_to(self, ast):
+        return ast
+
+    def goto_target(self, ast):
+        return ast
+
+    def preparable_statement(self, ast):
+        return ast
+
+    def preparable_SQL_data_statement(self, ast):
+        return ast
+
+    def dynamic_single_row_select_statement(self, ast):
+        return ast
+
+    def dynamic_select_statement(self, ast):
+        return ast
+
+    def preparable_dynamic_delete_statement__positioned(self, ast):
+        return ast
+
+    def preparable_dynamic_update_statement__positioned(self, ast):
+        return ast
+
+    def preparable_SQL_schema_statement(self, ast):
+        return ast
+
+    def preparable_SQL_transaction_statement(self, ast):
+        return ast
+
+    def preparable_SQL_session_statement(self, ast):
+        return ast
+
+    def direct_SQL_statement(self, ast):
+        return ast
+
+    def direct_SQL_data_statement(self, ast):
+        return ast
+
+    def direct_select_statement__multiple_rows(self, ast):
         return ast
 
 
