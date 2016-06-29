@@ -19,197 +19,34 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+@@whitespace :: /[\s]+/
+@@eol_comments :: /--.*?$/
+
 
 start =
         direct_sql_statement
         ;
 
-sql_terminal_character =
-        sql_language_character
-        ;
-
-sql_language_character =
-        simple_latin_letter | digit | sql_special_character
-        ;
-
 simple_latin_letter =
-        simple_latin_upper_case_letter | simple_latin_lower_case_letter
-        ;
-
-simple_latin_upper_case_letter =
-        'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
-        ;
-
-simple_latin_lower_case_letter =
-        'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+        /[A-Za-z]/
         ;
 
 digit =
-        '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+        /\d/
         ;
 
-sql_special_character =
-        space
-    |   double_quote
-    |   percent
-    |   ampersand
-    |   quote
-    |   left_paren
-    |   right_paren
-    |   asterisk
-    |   plus_sign
-    |   comma
-    |   minus_sign
-    |   period
-    |   solidus
-    |   colon
-    |   semicolon
-    |   less_than_operator
-    |   equals_operator
-    |   greater_than_operator
-    |   question_mark
-    |   left_bracket
-    |   right_bracket
-    |   circumflex
-    |   underscore
-    |   vertical_bar
-    |   left_brace
-    |   right_brace
-        ;
-
-space =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-double_quote =
-        '"'
-        ;
-
-percent =
-        '%'
-        ;
-
-ampersand =
-        '&'
-        ;
-
-quote =
-        "'"
-        ;
-
-left_paren =
-        '('
-        ;
-
-right_paren =
-        ')'
-        ;
-
-asterisk =
-        '*'
-        ;
-
-plus_sign =
-        '+'
-        ;
-
-comma =
-        ','
-        ;
-
-minus_sign =
-        '-'
-        ;
-
-period =
-        '.'
-        ;
-
-solidus =
-        '/'
-        ;
-
-colon =
-        ':'
-        ;
-
-semicolon =
-        ';'
-        ;
-
-less_than_operator =
-        ' <'
-        ;
-
-equals_operator =
-        '='
-        ;
-
-greater_than_operator =
-        '> '
-        ;
-
-question_mark =
-        '?'
+whitespace =
+        /\s+/
         ;
 
 left_bracket_or_trigraph =
-        left_bracket | left_bracket_trigraph
+        '[' | '??('
         ;
 
 right_bracket_or_trigraph =
-        right_bracket | right_bracket_trigraph
-        ;
-
-left_bracket =
-        '['
-        ;
-
-left_bracket_trigraph =
-        '??('
-        ;
-
-right_bracket =
-        ']'
-        ;
-
-right_bracket_trigraph =
-        '??)'
-        ;
-
-circumflex =
-        '^'
-        ;
-
-underscore =
-        '_'
-        ;
-
-vertical_bar =
-        '|'
-        ;
-
-left_brace =
-        '{'
-        ;
-
-right_brace =
-        '}'
-        ;
-
-token =
-        nondelimiter_token | delimiter_token
-        ;
-
-nondelimiter_token =
-        regular_identifier
-    |   key_word
-    |   unsigned_numeric_literal
-    |   national_character_string_literal
-    |   bit_string_literal
-    |   hex_string_literal
-    |   large_object_length_token
-    |   multiplier
+        ']' | '??)'
         ;
 
 regular_identifier =
@@ -224,12 +61,14 @@ identifier_part =
         identifier_start | identifier_extend
         ;
 
+# SEE_THE_SYNTAX_RULES
 identifier_start =
-        !!SEE_THE_SYNTAX_RULES!!
+        simple_latin_letter
         ;
 
+# SEE_THE_SYNTAX_RULES
 identifier_extend =
-        !!SEE_THE_SYNTAX_RULES!!
+        digit | '_'
         ;
 
 large_object_length_token =
@@ -241,7 +80,7 @@ multiplier =
         ;
 
 delimited_identifier =
-        double_quote delimited_identifier_body double_quote
+        '"' delimited_identifier_body '"'
         ;
 
 delimited_identifier_body =
@@ -249,24 +88,7 @@ delimited_identifier_body =
         ;
 
 delimited_identifier_part =
-        nondoublequote_character | doublequote_symbol
-        ;
-
-unicode_delimited_identifier =
-        'U' ampersand double_quote unicode_delimiter_body double_quote
-        unicode_escape_specifier
-        ;
-
-unicode_escape_specifier =
-        ['UESCAPE' quote unicode_escape_character quote]
-        ;
-
-unicode_delimiter_body =
-        {unicode_identifier_part}+
-        ;
-
-unicode_identifier_part =
-        delimited_identifier_part | unicode_escape_value
+        nondoublequote_character | '""'
         ;
 
 unicode_escape_value =
@@ -280,75 +102,25 @@ unicode_4_digit_escape_value =
         ;
 
 unicode_6_digit_escape_value =
-        unicode_escape_character plus_sign hexit hexit hexit hexit hexit hexit
+        unicode_escape_character '+' hexit hexit hexit hexit hexit hexit
         ;
 
 unicode_character_escape_value =
         unicode_escape_character unicode_escape_character
         ;
 
+# SEE_THE_SYNTAX_RULES
 unicode_escape_character =
-        !!SEE_THE_SYNTAX_RULES!!
+        "\u"
         ;
 
+# SEE_THE_SYNTAX_RULES
 nondoublequote_character =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-doublequote_symbol =
-        double_quote double_quote
-        ;
-
-delimiter_token =
-        character_string_literal
-    |   date_string
-    |   time_string
-    |   timestamp_string
-    |   interval_string
-    |   delimited_identifier
-    |   unicode_delimited_identifier
-    |   sql_special_character
-    |   not_equals_operator
-    |   greater_than_or_equals_operator
-    |   less_than_or_equals_operator
-    |   concatenation_operator
-    |   right_arrow
-    |   left_bracket_trigraph
-    |   right_bracket_trigraph
-    |   double_colon
-    |   double_period
-        ;
-
-not_equals_operator =
-        less_than_operator greater_than_operator
-        ;
-
-greater_than_or_equals_operator =
-        greater_than_operator equals_operator
-        ;
-
-less_than_or_equals_operator =
-        less_than_operator equals_operator
-        ;
-
-concatenation_operator =
-        vertical_bar vertical_bar
-        ;
-
-right_arrow =
-        minus_sign greater_than_operator
-        ;
-
-double_colon =
-        colon colon
-        ;
-
-double_period =
-        period period
+        simple_latin_letter
         ;
 
 separator =
-        {comment | white_space}+
+        {comment | whitespace}+
         ;
 
 comment =
@@ -360,19 +132,11 @@ simple_comment =
         ;
 
 simple_comment_introducer =
-        minus_sign minus_sign [{minus_sign}+]
+        '--' [{'-'}+]
         ;
 
 bracketed_comment =
-        bracketed_comment_introducer bracketed_comment_contents bracketed_comment_terminator
-        ;
-
-bracketed_comment_introducer =
-        slash asterisk
-        ;
-
-bracketed_comment_terminator =
-        asterisk slash
+        '\*' bracketed_comment_contents '*\'
         ;
 
 bracketed_comment_contents =
@@ -380,518 +144,11 @@ bracketed_comment_contents =
         ;
 
 comment_character =
-        nonquote_character | quote
+        nonquote_character | "'"
         ;
 
 newline =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-key_word =
-        reserved_word | non_reserved_word
-        ;
-
-non_reserved_word =
-        'A'
-    |   'ABS'
-    |   'ABSOLUTE'
-    |   'ACTION'
-    |   'ADA'
-    |   'ADMIN'
-    |   'AFTER'
-    |   'ALWAYS'
-    |   'ASC'
-    |   'ASSERTION'
-    |   'ASSIGNMENT'
-    |   'ATTRIBUTE'
-    |   'ATTRIBUTES'
-    |   'AVG'
-    |   'BEFORE'
-    |   'BERNOULLI'
-    |   'BREADTH'
-    |   'C'
-    |   'CARDINALITY'
-    |   'CASCADE'
-    |   'CATALOG'
-    |   'CATALOG_NAME'
-    |   'CEIL'
-    |   'CEILING'
-    |   'CHAIN'
-    |   'CHARACTERISTICS'
-    |   'CHARACTERS'
-    |   'CHARACTER_LENGTH'
-    |   'CHARACTER_SET_CATALOG'
-    |   'CHARACTER_SET_NAME'
-    |   'CHARACTER_SET_SCHEMA'
-    |   'CHAR_LENGTH'
-    |   'CHECKED'
-    |   'CLASS_ORIGIN'
-    |   'COALESCE'
-    |   'COBOL'
-    |   'CODE_UNITS'
-    |   'COLLATION'
-    |   'COLLATION_CATALOG'
-    |   'COLLATION_NAME'
-    |   'COLLATION_SCHEMA'
-    |   'COLLECT'
-    |   'COLUMN_NAME'
-    |   'COMMAND_FUNCTION'
-    |   'COMMAND_FUNCTION_CODE'
-    |   'COMMITTED'
-    |   'CONDITION'
-    |   'CONDITION_NUMBER'
-    |   'CONNECTION_NAME'
-    |   'CONSTRAINTS'
-    |   'CONSTRAINT_CATALOG'
-    |   'CONSTRAINT_NAME'
-    |   'CONSTRAINT_SCHEMA'
-    |   'CONSTRUCTORS'
-    |   'CONTAINS'
-    |   'CONVERT'
-    |   'CORR'
-    |   'COUNT'
-    |   'COVAR_POP'
-    |   'COVAR_SAMP'
-    |   'CUME_DIST'
-    |   'CURRENT_COLLATION'
-    |   'CURSOR_NAME'
-    |   'DATA'
-    |   'DATETIME_INTERVAL_CODE'
-    |   'DATETIME_INTERVAL_PRECISION'
-    |   'DEFAULTS'
-    |   'DEFERRABLE'
-    |   'DEFERRED'
-    |   'DEFINED'
-    |   'DEFINER'
-    |   'DEGREE'
-    |   'DENSE_RANK'
-    |   'DEPTH'
-    |   'DERIVED'
-    |   'DESC'
-    |   'DESCRIPTOR'
-    |   'DIAGNOSTICS'
-    |   'DISPATCH'
-    |   'DOMAIN'
-    |   'DYNAMIC_FUNCTION'
-    |   'DYNAMIC_FUNCTION_CODE'
-    |   'EQUALS'
-    |   'EVERY'
-    |   'EXCEPTION'
-    |   'EXCLUDE'
-    |   'EXCLUDING'
-    |   'EXP'
-    |   'EXTRACT'
-    |   'FINAL'
-    |   'FIRST'
-    |   'FLOOR'
-    |   'FOLLOWING'
-    |   'FORTRAN'
-    |   'FOUND'
-    |   'FUSION'
-    |   'G'
-    |   'GENERAL'
-    |   'GO'
-    |   'GOTO'
-    |   'GRANTED'
-    |   'HIERARCHY'
-    |   'IMPLEMENTATION'
-    |   'INCLUDING'
-    |   'INCREMENT'
-    |   'INITIALLY'
-    |   'INSTANCE'
-    |   'INSTANTIABLE'
-    |   'INTERSECTION'
-    |   'INVOKER'
-    |   'ISOLATION'
-    |   'K'
-    |   'KEY'
-    |   'KEY_MEMBER'
-    |   'KEY_TYPE'
-    |   'LAST'
-    |   'LENGTH'
-    |   'LEVEL'
-    |   'LN'
-    |   'LOCATOR'
-    |   'LOWER'
-    |   'M'
-    |   'MAP'
-    |   'MATCHED'
-    |   'MAX'
-    |   'MAXVALUE'
-    |   'MESSAGE_LENGTH'
-    |   'MESSAGE_OCTET_LENGTH'
-    |   'MESSAGE_TEXT'
-    |   'MIN'
-    |   'MINVALUE'
-    |   'MOD'
-    |   'MORE'
-    |   'MUMPS'
-    |   'NAME'
-    |   'NAMES'
-    |   'NESTING'
-    |   'NEXT'
-    |   'NORMALIZE'
-    |   'NORMALIZED'
-    |   'NULLABLE'
-    |   'NULLIF'
-    |   'NULLS'
-    |   'NUMBER'
-    |   'OBJECT'
-    |   'OCTETS'
-    |   'OCTET_LENGTH'
-    |   'OPTION'
-    |   'OPTIONS'
-    |   'ORDERING'
-    |   'ORDINALITY'
-    |   'OTHERS'
-    |   'OVERLAY'
-    |   'OVERRIDING'
-    |   'PAD'
-    |   'PARAMETER_MODE'
-    |   'PARAMETER_NAME'
-    |   'PARAMETER_ORDINAL_POSITION'
-    |   'PARAMETER_SPECIFIC_CATALOG'
-    |   'PARAMETER_SPECIFIC_NAME'
-    |   'PARAMETER_SPECIFIC_SCHEMA'
-    |   'PARTIAL'
-    |   'PASCAL'
-    |   'PATH'
-    |   'PERCENTILE_CONT'
-    |   'PERCENTILE_DISC'
-    |   'PERCENT_RANK'
-    |   'PLACING'
-    |   'PLI'
-    |   'POSITION'
-    |   'POWER'
-    |   'PRECEDING'
-    |   'PRESERVE'
-    |   'PRIOR'
-    |   'PRIVILEGES'
-    |   'PUBLIC'
-    |   'RANK'
-    |   'READ'
-    |   'RELATIVE'
-    |   'REPEATABLE'
-    |   'RESTART'
-    |   'RETURNED_CARDINALITY'
-    |   'RETURNED_LENGTH'
-    |   'RETURNED_OCTET_LENGTH'
-    |   'RETURNED_SQLSTATE'
-    |   'ROLE'
-    |   'ROUTINE'
-    |   'ROUTINE_CATALOG'
-    |   'ROUTINE_NAME'
-    |   'ROUTINE_SCHEMA'
-    |   'ROW_COUNT'
-    |   'ROW_NUMBER'
-    |   'SCALE'
-    |   'SCHEMA'
-    |   'SCHEMA_NAME'
-    |   'SCOPE_CATALOG'
-    |   'SCOPE_NAME'
-    |   'SCOPE_SCHEMA'
-    |   'SECTION'
-    |   'SECURITY'
-    |   'SELF'
-    |   'SEQUENCE'
-    |   'SERIALIZABLE'
-    |   'SERVER_NAME'
-    |   'SESSION'
-    |   'SETS'
-    |   'SIMPLE'
-    |   'SIZE'
-    |   'SOURCE'
-    |   'SPACE'
-    |   'SPECIFIC_NAME'
-    |   'SQRT'
-    |   'STATE'
-    |   'STATEMENT'
-    |   'STDDEV_POP'
-    |   'STDDEV_SAMP'
-    |   'STRUCTURE'
-    |   'STYLE'
-    |   'SUBCLASS_ORIGIN'
-    |   'SUBSTRING'
-    |   'SUM'
-    |   'TABLESAMPLE'
-    |   'TABLE_NAME'
-    |   'TEMPORARY'
-    |   'TIES'
-    |   'TOP_LEVEL_COUNT'
-    |   'TRANSACTION'
-    |   'TRANSACTIONS_COMMITTED'
-    |   'TRANSACTIONS_ROLLED_BACK'
-    |   'TRANSACTION_ACTIVE'
-    |   'TRANSFORM'
-    |   'TRANSFORMS'
-    |   'TRANSLATE'
-    |   'TRIGGER_CATALOG'
-    |   'TRIGGER_NAME'
-    |   'TRIGGER_SCHEMA'
-    |   'TRIM'
-    |   'TYPE'
-    |   'UNBOUNDED'
-    |   'UNCOMMITTED'
-    |   'UNDER'
-    |   'UNNAMED'
-    |   'USAGE'
-    |   'USER_DEFINED_TYPE_CATALOG'
-    |   'USER_DEFINED_TYPE_CODE'
-    |   'USER_DEFINED_TYPE_NAME'
-    |   'USER_DEFINED_TYPE_SCHEMA'
-    |   'VIEW'
-    |   'WORK'
-    |   'WRITE'
-    |   'ZONE'
-        ;
-
-reserved_word =
-        'ADD'
-    |   'ALL'
-    |   'ALLOCATE'
-    |   'ALTER'
-    |   'AND'
-    |   'ANY'
-    |   'ARE'
-    |   'ARRAY'
-    |   'AS'
-    |   'ASENSITIVE'
-    |   'ASYMMETRIC'
-    |   'AT'
-    |   'ATOMIC'
-    |   'AUTHORIZATION'
-    |   'BEGIN'
-    |   'BETWEEN'
-    |   'BIGINT'
-    |   'BINARY'
-    |   'BLOB'
-    |   'BOOLEAN'
-    |   'BOTH'
-    |   'BY'
-    |   'CALL'
-    |   'CALLED'
-    |   'CASCADED'
-    |   'CASE'
-    |   'CAST'
-    |   'CHAR'
-    |   'CHARACTER'
-    |   'CHECK'
-    |   'CLOB'
-    |   'CLOSE'
-    |   'COLLATE'
-    |   'COLUMN'
-    |   'COMMIT'
-    |   'CONNECT'
-    |   'CONSTRAINT'
-    |   'CONTINUE'
-    |   'CORRESPONDING'
-    |   'CREATE'
-    |   'CROSS'
-    |   'CUBE'
-    |   'CURRENT'
-    |   'CURRENT_DATE'
-    |   'CURRENT_DEFAULT_TRANSFORM_GROUP'
-    |   'CURRENT_PATH'
-    |   'CURRENT_ROLE'
-    |   'CURRENT_TIME'
-    |   'CURRENT_TIMESTAMP'
-    |   'CURRENT_TRANSFORM_GROUP_FOR_TYPE'
-    |   'CURRENT_USER'
-    |   'CURSOR'
-    |   'CYCLE'
-    |   'DATE'
-    |   'DAY'
-    |   'DEALLOCATE'
-    |   'DEC'
-    |   'DECIMAL'
-    |   'DECLARE'
-    |   'DEFAULT'
-    |   'DELETE'
-    |   'DEREF'
-    |   'DESCRIBE'
-    |   'DETERMINISTIC'
-    |   'DISCONNECT'
-    |   'DISTINCT'
-    |   'DOUBLE'
-    |   'DROP'
-    |   'DYNAMIC'
-    |   'EACH'
-    |   'ELEMENT'
-    |   'ELSE'
-    |   'END'
-    |   'END'-'EXEC'
-    |   'ESCAPE'
-    |   'EXCEPT'
-    |   'EXEC'
-    |   'EXECUTE'
-    |   'EXISTS'
-    |   'EXTERNAL'
-    |   'FALSE'
-    |   'FETCH'
-    |   'FILTER'
-    |   'FLOAT'
-    |   'FOR'
-    |   'FOREIGN'
-    |   'FREE'
-    |   'FROM'
-    |   'FULL'
-    |   'FUNCTION'
-    |   'GET'
-    |   'GLOBAL'
-    |   'GRANT'
-    |   'GROUP'
-    |   'GROUPING'
-    |   'HAVING'
-    |   'HOLD'
-    |   'HOUR'
-    |   'IDENTITY'
-    |   'IMMEDIATE'
-    |   'IN'
-    |   'INDICATOR'
-    |   'INNER'
-    |   'INOUT'
-    |   'INPUT'
-    |   'INSENSITIVE'
-    |   'INSERT'
-    |   'INT'
-    |   'INTEGER'
-    |   'INTERSECT'
-    |   'INTERVAL'
-    |   'INTO'
-    |   'IS'
-    |   'ISOLATION'
-    |   'JOIN'
-    |   'LANGUAGE'
-    |   'LARGE'
-    |   'LATERAL'
-    |   'LEADING'
-    |   'LEFT'
-    |   'LIKE'
-    |   'LOCAL'
-    |   'LOCALTIME'
-    |   'LOCALTIMESTAMP'
-    |   'MATCH'
-    |   'MEMBER'
-    |   'MERGE'
-    |   'METHOD'
-    |   'MINUTE'
-    |   'MODIFIES'
-    |   'MODULE'
-    |   'MONTH'
-    |   'MULTISET'
-    |   'NATIONAL'
-    |   'NATURAL'
-    |   'NCHAR'
-    |   'NCLOB'
-    |   'NEW'
-    |   'NO'
-    |   'NONE'
-    |   'NOT'
-    |   'NULL'
-    |   'NUMERIC'
-    |   'OF'
-    |   'OLD'
-    |   'ON'
-    |   'ONLY'
-    |   'OPEN'
-    |   'OR'
-    |   'ORDER'
-    |   'OUT'
-    |   'OUTER'
-    |   'OUTPUT'
-    |   'OVER'
-    |   'OVERLAPS'
-    |   'PARAMETER'
-    |   'PARTITION'
-    |   'PRECISION'
-    |   'PREPARE'
-    |   'PRIMARY'
-    |   'PROCEDURE'
-    |   'RANGE'
-    |   'READS'
-    |   'REAL'
-    |   'RECURSIVE'
-    |   'REF'
-    |   'REFERENCES'
-    |   'REFERENCING'
-    |   'REGR_AVGX'
-    |   'REGR_AVGY'
-    |   'REGR_COUNT'
-    |   'REGR_INTERCEPT'
-    |   'REGR_R2'
-    |   'REGR_SLOPE'
-    |   'REGR_SXX'
-    |   'REGR_SXY'
-    |   'REGR_SYY'
-    |   'RELEASE'
-    |   'RESULT'
-    |   'RETURN'
-    |   'RETURNS'
-    |   'REVOKE'
-    |   'RIGHT'
-    |   'ROLLBACK'
-    |   'ROLLUP'
-    |   'ROW'
-    |   'ROWS'
-    |   'SAVEPOINT'
-    |   'SCROLL'
-    |   'SEARCH'
-    |   'SECOND'
-    |   'SELECT'
-    |   'SENSITIVE'
-    |   'SESSION_USER'
-    |   'SET'
-    |   'SIMILAR'
-    |   'SMALLINT'
-    |   'SOME'
-    |   'SPECIFIC'
-    |   'SPECIFICTYPE'
-    |   'SQL'
-    |   'SQLEXCEPTION'
-    |   'SQLSTATE'
-    |   'SQLWARNING'
-    |   'START'
-    |   'STATIC'
-    |   'SUBMULTISET'
-    |   'SYMMETRIC'
-    |   'SYSTEM'
-    |   'SYSTEM_USER'
-    |   'TABLE'
-    |   'THEN'
-    |   'TIME'
-    |   'TIMESTAMP'
-    |   'TIMEZONE_HOUR'
-    |   'TIMEZONE_MINUTE'
-    |   'TO'
-    |   'TRAILING'
-    |   'TRANSLATION'
-    |   'TREAT'
-    |   'TRIGGER'
-    |   'TRUE'
-    |   'UESCAPE'
-    |   'UNION'
-    |   'UNIQUE'
-    |   'UNKNOWN'
-    |   'UNNEST'
-    |   'UPDATE'
-    |   'UPPER'
-    |   'USER'
-    |   'USING'
-    |   'VALUE'
-    |   'VALUES'
-    |   'VAR_POP'
-    |   'VAR_SAMP'
-    |   'VARCHAR'
-    |   'VARYING'
-    |   'WHEN'
-    |   'WHENEVER'
-    |   'WHERE'
-    |   'WIDTH_BUCKET'
-    |   'WINDOW'
-    |   'WITH'
-    |   'WITHIN'
-    |   'WITHOUT'
-    |   'YEAR'
+        /[\r\n]/
         ;
 
 literal =
@@ -914,35 +171,32 @@ general_literal =
 
 character_string_literal =
         [introducer character_set_specification]
-        quote [{character_representation}+] quote
-        [{separator quote [{character_representation}+] quote}+]
+        "'" [{character_representation}+] "'"
+        [{separator "'" [{character_representation}+] "'"}+]
         ;
 
 introducer =
-        underscore
+        '_'
         ;
 
 character_representation =
-        nonquote_character | quote_symbol
+        nonquote_character | "''"
         ;
 
+# SEE_THE_SYNTAX_RULES
 nonquote_character =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-quote_symbol =
-        quote quote
+        simple_latin_letter
         ;
 
 national_character_string_literal =
-        'N' quote [{character_representation}+] quote
-        [{separator quote [{character_representation}+] quote}+]
+        'N' "'" [{character_representation}+] "'"
+        [{separator "'" [{character_representation}+] "'"}+]
         ;
 
 unicode_character_string_literal =
         [introducer character_set_specification]
-        'U' ampersand quote [{unicode_representation}+] quote
-        [{separator quote [{unicode_representation}+] quote}+]
+        'U' '&' "'" [{unicode_representation}+] "'"
+        [{separator "'" [{unicode_representation}+] "'"}+]
         ['ESCAPE' escape_character]
         ;
 
@@ -951,13 +205,13 @@ unicode_representation =
         ;
 
 binary_string_literal =
-        'X' quote [{hexit hexit}+] quote
-        [{separator quote [{hexit hexit}+] quote}+]
+        'X' "'" [{hexit hexit}+] "'"
+        [{separator "'" [{hexit hexit}+] "'"}+]
         ['ESCAPE' escape_character]
         ;
 
 hexit =
-        digit | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f'
+        /[\dA-Fa-f]/
         ;
 
 signed_numeric_literal =
@@ -969,12 +223,12 @@ unsigned_numeric_literal =
         ;
 
 exact_numeric_literal =
-        unsigned_integer [period [unsigned_integer]]
-    |   period unsigned_integer
+        unsigned_integer ['.' [unsigned_integer]]
+    |   '.' unsigned_integer
         ;
 
 sign =
-        plus_sign | minus_sign
+        '+' | '-'
         ;
 
 approximate_numeric_literal =
@@ -1014,27 +268,27 @@ timestamp_literal =
         ;
 
 date_string =
-        quote unquoted_date_string quote
+        "'" unquoted_date_string "'"
         ;
 
 time_string =
-        quote unquoted_time_string quote
+        "'" unquoted_time_string "'"
         ;
 
 timestamp_string =
-        quote unquoted_timestamp_string quote
+        "'" unquoted_timestamp_string "'"
         ;
 
 time_zone_interval =
-        sign hours_value colon minutes_value
+        sign hours_value ':' minutes_value
         ;
 
 date_value =
-        years_value minus_sign months_value minus_sign days_value
+        years_value '-' months_value '-' days_value
         ;
 
 time_value =
-        hours_value colon minutes_value colon seconds_value
+        hours_value ':' minutes_value ':' seconds_value
         ;
 
 interval_literal =
@@ -1042,7 +296,7 @@ interval_literal =
         ;
 
 interval_string =
-        quote unquoted_interval_string quote
+        "'" unquoted_interval_string "'"
         ;
 
 unquoted_date_string =
@@ -1054,7 +308,7 @@ unquoted_time_string =
         ;
 
 unquoted_timestamp_string =
-        unquoted_date_string space unquoted_time_string
+        unquoted_date_string whitespace unquoted_time_string
         ;
 
 unquoted_interval_string =
@@ -1062,7 +316,7 @@ unquoted_interval_string =
         ;
 
 year_month_literal =
-        years_value | [years_value minus_sign] months_value
+        years_value | [years_value '-'] months_value
         ;
 
 day_time_literal =
@@ -1070,12 +324,12 @@ day_time_literal =
         ;
 
 day_time_interval =
-        days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+        days_value [whitespace hours_value [':' minutes_value [':' seconds_value]]]
         ;
 
 time_interval =
-        hours_value [colon minutes_value [colon seconds_value]]
-    |   minutes_value [colon seconds_value]
+        hours_value [':' minutes_value [':' seconds_value]]
+    |   minutes_value [':' seconds_value]
     |   seconds_value
         ;
 
@@ -1100,7 +354,7 @@ minutes_value =
         ;
 
 seconds_value =
-        seconds_integer_value [period [seconds_fraction]]
+        seconds_integer_value ['.' [seconds_fraction]]
         ;
 
 seconds_integer_value =
@@ -1128,7 +382,7 @@ actual_identifier =
         ;
 
 sql_language_identifier =
-        sql_language_identifier_start [{underscore | sql_language_identifier_part}+]
+        sql_language_identifier_start [{'_' | sql_language_identifier_part}+]
         ;
 
 sql_language_identifier_start =
@@ -1152,7 +406,11 @@ domain_name =
         ;
 
 schema_name =
-        [catalog_name period] unqualified_schema_name
+        [catalog_name '.'] unqualified_schema_name
+        ;
+
+unqualified_schema_name =
+        identifier
         ;
 
 catalog_name =
@@ -1160,11 +418,11 @@ catalog_name =
         ;
 
 schema_qualified_name =
-        [schema_name period] qualified_identifier
+        [schema_name '.'] qualified_identifier
         ;
 
 local_or_schema_qualified_name =
-        [local_or_schema_qualifier period] qualified_identifier
+        [local_or_schema_qualifier '.'] qualified_identifier
         ;
 
 local_or_schema_qualifier =
@@ -1187,14 +445,6 @@ query_name =
         identifier
         ;
 
-sql_client_module_name =
-        identifier
-        ;
-
-procedure_name =
-        identifier
-        ;
-
 schema_qualified_routine_name =
         schema_qualified_name
         ;
@@ -1212,7 +462,7 @@ cursor_name =
         ;
 
 local_qualified_name =
-        [local_qualifier period] qualified_identifier
+        [local_qualifier '.'] qualified_identifier
         ;
 
 local_qualifier =
@@ -1220,7 +470,7 @@ local_qualifier =
         ;
 
 host_parameter_name =
-        colon identifier
+        ':' identifier
         ;
 
 sql_parameter_name =
@@ -1244,7 +494,7 @@ collation_name =
         ;
 
 character_set_name =
-        [schema_name period] sql_language_identifier
+        [schema_name '.'] sql_language_identifier
         ;
 
 transliteration_name =
@@ -1264,7 +514,7 @@ schema_resolved_user_defined_type_name =
         ;
 
 schema_qualified_type_name =
-        [schema_name period] qualified_identifier
+        [schema_name '.'] qualified_identifier
         ;
 
 attribute_name =
@@ -1354,31 +604,31 @@ predefined_type =
         ;
 
 character_string_type =
-        'CHARACTER' [left_paren length right_paren]
-    |   'CHAR' [left_paren length right_paren]
-    |   'CHARACTER' 'VARYING' left_paren length right_paren
-    |   'CHAR' 'VARYING' left_paren length right_paren
-    |   'VARCHAR' left_paren length right_paren
-    |   'CHARACTER' 'LARGE' 'OBJECT' [left_paren large_object_length right_paren]
-    |   'CHAR' 'LARGE' 'OBJECT' [left_paren large_object_length right_paren]
-    |   'CLOB' [left_paren large_object_length right_paren]
+        'CHARACTER' ['(' length ')']
+    |   'CHAR' ['(' length ')']
+    |   'CHARACTER' 'VARYING' '(' length ')'
+    |   'CHAR' 'VARYING' '(' length ')'
+    |   'VARCHAR' '(' length ')'
+    |   'CHARACTER' 'LARGE' 'OBJECT' ['(' large_object_length ')']
+    |   'CHAR' 'LARGE' 'OBJECT' ['(' large_object_length ')']
+    |   'CLOB' ['(' large_object_length ')']
         ;
 
 national_character_string_type =
-        'NATIONAL' 'CHARACTER' [left_paren length right_paren]
-    |   'NATIONAL' 'CHAR' [left_paren length right_paren]
-    |   'NCHAR' [left_paren length right_paren]
-    |   'NATIONAL' 'CHARACTER' 'VARYING' left_paren length right_paren
-    |   'NATIONAL' 'CHAR' 'VARYING' left_paren length right_paren
-    |   'NCHAR' 'VARYING' left_paren length right_paren
-    |   'NATIONAL' 'CHARACTER' 'LARGE' 'OBJECT' [left_paren large_object_length right_paren]
-    |   'NCHAR' 'LARGE' 'OBJECT' [left_paren large_object_length right_paren]
-    |   'NCLOB' [left_paren large_object_length right_paren]
+        'NATIONAL' 'CHARACTER' ['(' length ')']
+    |   'NATIONAL' 'CHAR' ['(' length ')']
+    |   'NCHAR' ['(' length ')']
+    |   'NATIONAL' 'CHARACTER' 'VARYING' '(' length ')'
+    |   'NATIONAL' 'CHAR' 'VARYING' '(' length ')'
+    |   'NCHAR' 'VARYING' '(' length ')'
+    |   'NATIONAL' 'CHARACTER' 'LARGE' 'OBJECT' ['(' large_object_length ')']
+    |   'NCHAR' 'LARGE' 'OBJECT' ['(' large_object_length ')']
+    |   'NCLOB' ['(' large_object_length ')']
         ;
 
 binary_large_object_string_type =
-        'BINARY' 'LARGE' 'OBJECT' [left_paren large_object_length right_paren]
-    |   'BLOB' [left_paren large_object_length right_paren]
+        'BINARY' 'LARGE' 'OBJECT' ['(' large_object_length ')']
+    |   'BLOB' ['(' large_object_length ')']
         ;
 
 numeric_type =
@@ -1386,9 +636,9 @@ numeric_type =
         ;
 
 exact_numeric_type =
-        'NUMERIC' [left_paren precision [comma scale] right_paren]
-    |   'DECIMAL' [left_paren precision [comma scale] right_paren]
-    |   'DEC' [left_paren precision [comma scale] right_paren]
+        'NUMERIC' ['(' precision [',' scale] ')']
+    |   'DECIMAL' ['(' precision [',' scale] ')']
+    |   'DEC' ['(' precision [',' scale] ')']
     |   'SMALLINT'
     |   'INTEGER'
     |   'INT'
@@ -1396,7 +646,7 @@ exact_numeric_type =
         ;
 
 approximate_numeric_type =
-        'FLOAT' [left_paren precision right_paren]
+        'FLOAT' ['(' precision ')']
     |   'REAL'
     |   'DOUBLE' 'PRECISION'
         ;
@@ -1428,8 +678,8 @@ boolean_type =
 
 datetime_type =
         'DATE'
-    |   'TIME' [left_paren time_precision right_paren] [with_or_without_time_zone]
-    |   'TIMESTAMP' [left_paren timestamp_precision right_paren] [with_or_without_time_zone]
+    |   'TIME' ['(' time_precision ')'] [with_or_without_time_zone]
+    |   'TIMESTAMP' ['(' timestamp_precision ')'] [with_or_without_time_zone]
         ;
 
 with_or_without_time_zone =
@@ -1457,11 +707,11 @@ row_type =
         ;
 
 row_type_body =
-        left_paren field_definition [{comma field_definition}+] right_paren
+        '(' field_definition [{',' field_definition}+] ')'
         ;
 
 reference_type =
-        'REF' left_paren referenced_type right_paren [scope_clause]
+        'REF' '(' referenced_type ')' [scope_clause]
         ;
 
 scope_clause =
@@ -1470,12 +720,6 @@ scope_clause =
 
 referenced_type =
         path_resolved_user_defined_type_name
-        ;
-        ;
-
-path_resolved_user_defined_type_name =
-        user_defined_type_name
-        ;
         ;
 
 path_resolved_user_defined_type_name =
@@ -1504,7 +748,7 @@ value_expression_primary =
         ;
 
 parenthesized_value_expression =
-        left_paren value_expression right_paren
+        '(' value_expression ')'
         ;
 
 nonparenthesized_value_expression_primary =
@@ -1541,7 +785,6 @@ general_value_specification =
         host_parameter_specification
     |   sql_parameter_reference
     |   dynamic_parameter_specification
-    |   embedded_variable_specification
     |   current_collation_specification
     |   'CURRENT_DEFAULT_TRANSFORM_GROUP'
     |   'CURRENT_PATH'
@@ -1558,7 +801,6 @@ simple_value_specification =
         literal
     |   host_parameter_name
     |   sql_parameter_reference
-    |   embedded_variable_name
         ;
 
 target_specification =
@@ -1567,14 +809,12 @@ target_specification =
     |   column_reference
     |   target_array_element_specification
     |   dynamic_parameter_specification
-    |   embedded_variable_specification
         ;
 
 simple_target_specification =
         host_parameter_specification
     |   sql_parameter_reference
     |   column_reference
-    |   embedded_variable_name
         ;
 
 host_parameter_specification =
@@ -1582,15 +822,7 @@ host_parameter_specification =
         ;
 
 dynamic_parameter_specification =
-        question_mark
-        ;
-
-embedded_variable_specification =
-        embedded_variable_name [indicator_variable]
-        ;
-
-indicator_variable =
-        ['INDICATOR'] embedded_variable_name
+        '?'
         ;
 
 indicator_parameter =
@@ -1606,7 +838,7 @@ target_array_reference =
         ;
 
 current_collation_specification =
-        'CURRENT_COLLATION' left_paren string_value_expression right_paren
+        'CURRENT_COLLATION' '(' string_value_expression ')'
         ;
 
 contextually_typed_value_specification =
@@ -1631,7 +863,7 @@ default_specification =
         ;
 
 identifier_chain =
-        identifier [{period identifier}+]
+        identifier [{'.' identifier}+]
         ;
 
 basic_identifier_chain =
@@ -1640,7 +872,7 @@ basic_identifier_chain =
 
 column_reference =
         basic_identifier_chain
-    |   'MODULE' period qualified_identifier period column_name
+    |   'MODULE' '.' qualified_identifier '.' column_name
         ;
 
 sql_parameter_reference =
@@ -1652,7 +884,7 @@ set_function_specification =
         ;
 
 grouping_operation =
-        'GROUPING' left_paren column_reference [{comma column_reference}+] right_paren
+        'GROUPING' '(' column_reference [{',' column_reference}+] ')'
         ;
 
 window_function =
@@ -1660,8 +892,8 @@ window_function =
         ;
 
 window_function_type =
-        rank_function_type left_paren right_paren
-    |   'ROW_NUMBER' left_paren right_paren
+        rank_function_type '(' ')'
+    |   'ROW_NUMBER' '(' ')'
     |   aggregate_function
         ;
 
@@ -1682,8 +914,8 @@ case_expression =
         ;
 
 case_abbreviation =
-        'NULLIF' left_paren value_expression comma value_expression right_paren
-    |   'COALESCE' left_paren value_expression {comma value_expression}+  right_paren
+        'NULLIF' '(' value_expression ',' value_expression ')'
+    |   'COALESCE' '(' value_expression {',' value_expression}+  ')'
         ;
 
 case_specification =
@@ -1711,7 +943,7 @@ else_clause =
         ;
 
 case_operand =
-        row_value_predicand | overlaps_predicate_part
+        row_value_predicand | overlaps_predicate
         ;
 
 when_operand =
@@ -1742,7 +974,7 @@ result_expression =
         ;
 
 cast_specification =
-        'CAST' left_paren cast_operand 'AS' cast_target right_paren
+        'CAST' '(' cast_operand 'AS' cast_target ')'
         ;
 
 cast_operand =
@@ -1758,11 +990,11 @@ next_value_expression =
         ;
 
 field_reference =
-        value_expression_primary period field_name
+        value_expression_primary '.' field_name
         ;
 
 subtype_treatment =
-        'TREAT' left_paren subtype_operand 'AS' target_subtype right_paren
+        'TREAT' '(' subtype_operand 'AS' target_subtype ')'
         ;
 
 subtype_operand =
@@ -1779,36 +1011,20 @@ method_invocation =
         ;
 
 direct_invocation =
-        value_expression_primary period method_name [sql_argument_list]
+        value_expression_primary '.' method_name [sql_argument_list]
         ;
 
 generalized_invocation =
-        left_paren value_expression_primary 'AS' data_type right_paren period method_name
+        '(' value_expression_primary 'AS' data_type ')' '.' method_name
         [sql_argument_list]
         ;
 
-method_selection =
-        routine_invocation
-        ;
-
-constructor_method_selection =
-        routine_invocation
-        ;
-
 static_method_invocation =
-        path_resolved_user_defined_type_name double_colon method_name [sql_argument_list]
-        ;
-
-static_method_selection =
-        routine_invocation
+        path_resolved_user_defined_type_name '::' method_name [sql_argument_list]
         ;
 
 new_specification =
         'NEW' routine_invocation
-        ;
-
-new_invocation =
-        method_invocation | routine_invocation
         ;
 
 attribute_or_method_reference =
@@ -1817,19 +1033,11 @@ attribute_or_method_reference =
         ;
 
 dereference_operator =
-        right_arrow
-        ;
-
-dereference_operation =
-        reference_value_expression dereference_operator attribute_name
-        ;
-
-method_reference =
-        value_expression_primary dereference_operator method_name sql_argument_list
+        '->'
         ;
 
 reference_resolution =
-        'DEREF' left_paren reference_value_expression right_paren
+        'DEREF' '(' reference_value_expression ')'
         ;
 
 array_element_reference =
@@ -1837,7 +1045,7 @@ array_element_reference =
         ;
 
 multiset_element_reference =
-        'ELEMENT' left_paren multset_value_expression right_paren
+        'ELEMENT' '(' multiset_value_expression ')'
         ;
 
 value_expression =
@@ -1874,14 +1082,14 @@ collection_value_constructor =
 
 numeric_value_expression =
         term
-    |   numeric_value_expression plus_sign term
-    |   numeric_value_expression minus_sign term
+    |   numeric_value_expression '+' term
+    |   numeric_value_expression '-' term
         ;
 
 term =
         factor
-    |   term asterisk factor
-    |   term solidus factor
+    |   term '*' factor
+    |   term '/' factor
         ;
 
 factor =
@@ -1915,11 +1123,11 @@ position_expression =
         ;
 
 string_position_expression =
-        'POSITION' left_paren string_value_expression 'IN' string_value_expression ['USING' char_length_units] right_paren
+        'POSITION' '(' string_value_expression 'IN' string_value_expression ['USING' char_length_units] ')'
         ;
 
 blob_position_expression =
-        'POSITION' left_paren blob_value_expression 'IN' blob_value_expression right_paren
+        'POSITION' '(' blob_value_expression 'IN' blob_value_expression ')'
         ;
 
 length_expression =
@@ -1928,15 +1136,15 @@ length_expression =
         ;
 
 char_length_expression =
-        {'CHAR_LENGTH' | 'CHARACTER_LENGTH'} left_paren string_value_expression ['USING' char_length_units] right_paren
+        {'CHAR_LENGTH' | 'CHARACTER_LENGTH'} '(' string_value_expression ['USING' char_length_units] ')'
         ;
 
 octet_length_expression =
-        'OCTET_LENGTH' left_paren string_value_expression right_paren
+        'OCTET_LENGTH' '(' string_value_expression ')'
         ;
 
 extract_expression =
-        'EXTRACT' left_paren extract_field 'FROM' extract_source right_paren
+        'EXTRACT' '(' extract_field 'FROM' extract_source ')'
         ;
 
 extract_field =
@@ -1952,27 +1160,27 @@ extract_source =
         ;
 
 cardinality_expression =
-        'CARDINALITY' left_paren collection_value_expression right_paren
+        'CARDINALITY' '(' collection_value_expression ')'
         ;
 
 absolute_value_expression =
-        'ABS' left_paren numeric_value_expression right_paren
+        'ABS' '(' numeric_value_expression ')'
         ;
 
 modulus_expression =
-        'MOD' left_paren numeric_value_expression_dividend comma numeric_value_expression_divisor right_paren
+        'MOD' '(' numeric_value_expression ',' numeric_value_expression ')'
         ;
 
 natural_logarithm =
-        'LN' left_paren numeric_value_expression right_paren
+        'LN' '(' numeric_value_expression ')'
         ;
 
 exponential_function =
-        'EXP' left_paren numeric_value_expression right_paren
+        'EXP' '(' numeric_value_expression ')'
         ;
 
 power_function =
-        'POWER' left_paren numeric_value_expression_base comma numeric_value_expression_exponent right_paren
+        'POWER' '(' numeric_value_expression_base ',' numeric_value_expression_exponent ')'
         ;
 
 numeric_value_expression_base =
@@ -1984,19 +1192,19 @@ numeric_value_expression_exponent =
         ;
 
 square_root =
-        'SQRT' left_paren numeric_value_expression right_paren
+        'SQRT' '(' numeric_value_expression ')'
         ;
 
 floor_function =
-        'FLOOR' left_paren numeric_value_expression right_paren
+        'FLOOR' '(' numeric_value_expression ')'
         ;
 
 ceiling_function =
-        {'CEIL' | 'CEILING'} left_paren numeric_value_expression right_paren
+        {'CEIL' | 'CEILING'} '(' numeric_value_expression ')'
         ;
 
 width_bucket_function =
-        'WIDTH_BUCKET' left_paren width_bucket_operand comma width_bucket_bound_1 comma width_bucket_bound_2 comma width_bucket_count right_paren
+        'WIDTH_BUCKET' '(' width_bucket_operand ',' width_bucket_bound_1 ',' width_bucket_bound_2 ',' width_bucket_count ')'
         ;
 
 width_bucket_operand =
@@ -2024,7 +1232,7 @@ character_value_expression =
         ;
 
 concatenation =
-        character_value_expression concatenation_operator character_factor
+        character_value_expression '||' character_factor
         ;
 
 character_factor =
@@ -2048,7 +1256,7 @@ blob_primary =
         ;
 
 blob_concatenation =
-        blob_value_expression concatenation_operator blob_factor
+        blob_value_expression '||' blob_factor
         ;
 
 string_value_function =
@@ -2068,29 +1276,29 @@ character_value_function =
         ;
 
 character_substring_function =
-        'SUBSTRING' left_paren character_value_expression 'FROM' start_position
-        ['FOR' string_length] ['USING' char_length_units] right_paren
+        'SUBSTRING' '(' character_value_expression 'FROM' start_position
+        ['FOR' string_length] ['USING' char_length_units] ')'
         ;
 
 regular_expression_substring_function =
-        'SUBSTRING' left_paren character_value_expression
-        'SIMILAR' character_value_expression 'ESCAPE' escape_character right_paren
+        'SUBSTRING' '(' character_value_expression
+        'SIMILAR' character_value_expression 'ESCAPE' escape_character ')'
         ;
 
 fold =
-        {'UPPER' | 'LOWER'} left_paren character_value_expression right_paren
+        {'UPPER' | 'LOWER'} '(' character_value_expression ')'
         ;
 
 transcoding =
-        'CONVERT' left_paren character_value_expression 'USING' transcoding_name right_paren
+        'CONVERT' '(' character_value_expression 'USING' transcoding_name ')'
         ;
 
 character_transliteration =
-        'TRANSLATE' left_paren character_value_expression 'USING' transliteration_name right_paren
+        'TRANSLATE' '(' character_value_expression 'USING' transliteration_name ')'
         ;
 
 trim_function =
-        'TRIM' left_paren trim_operands right_paren
+        'TRIM' '(' trim_operands ')'
         ;
 
 trim_operands =
@@ -2110,16 +1318,16 @@ trim_character =
         ;
 
 character_overlay_function =
-        'OVERLAY' left_paren character_value_expression 'PLACING' character_value_expression
-        'FROM' start_position ['FOR' string_length] ['USING' char_length_units] right_paren
+        'OVERLAY' '(' character_value_expression 'PLACING' character_value_expression
+        'FROM' start_position ['FOR' string_length] ['USING' char_length_units] ')'
         ;
 
 normalize_function =
-        'NORMALIZE' left_paren character_value_expression right_paren
+        'NORMALIZE' '(' character_value_expression ')'
         ;
 
 specific_type_method =
-        user_defined_type_value_expression period 'SPECIFICTYPE'
+        user_defined_type_value_expression '.' 'SPECIFICTYPE'
         ;
 
 blob_value_function =
@@ -2129,11 +1337,11 @@ blob_value_function =
         ;
 
 blob_substring_function =
-        'SUBSTRING' left_paren blob_value_expression 'FROM' start_position ['FOR' string_length] right_paren
+        'SUBSTRING' '(' blob_value_expression 'FROM' start_position ['FOR' string_length] ')'
         ;
 
 blob_trim_function =
-        'TRIM' left_paren blob_trim_operands right_paren
+        'TRIM' '(' blob_trim_operands ')'
         ;
 
 blob_trim_operands =
@@ -2149,8 +1357,8 @@ trim_octet =
         ;
 
 blob_overlay_function =
-        'OVERLAY' left_paren blob_value_expression 'PLACING' blob_value_expression
-        'FROM' start_position ['FOR' string_length] right_paren
+        'OVERLAY' '(' blob_value_expression 'PLACING' blob_value_expression
+        'FROM' start_position ['FOR' string_length] ')'
         ;
 
 start_position =
@@ -2163,9 +1371,9 @@ string_length =
 
 datetime_value_expression =
         datetime_term
-    |   interval_value_expression plus_sign datetime_term
-    |   datetime_value_expression plus_sign interval_term
-    |   datetime_value_expression minus_sign interval_term
+    |   interval_value_expression '+' datetime_term
+    |   datetime_value_expression '+' interval_term
+    |   datetime_value_expression '-' interval_term
         ;
 
 datetime_term =
@@ -2201,33 +1409,33 @@ current_date_value_function =
         ;
 
 current_time_value_function =
-        'CURRENT_TIME' [left_paren time_precision right_paren]
+        'CURRENT_TIME' ['(' time_precision ')']
         ;
 
 current_local_time_value_function =
-        'LOCALTIME' [left_paren time_precision right_paren]
+        'LOCALTIME' ['(' time_precision ')']
         ;
 
 current_timestamp_value_function =
-        'CURRENT_TIMESTAMP' [left_paren timestamp_precision right_paren]
+        'CURRENT_TIMESTAMP' ['(' timestamp_precision ')']
         ;
 
 current_local_timestamp_value_function =
-        'LOCALTIMESTAMP' [left_paren timestamp_precision right_paren]
+        'LOCALTIMESTAMP' ['(' timestamp_precision ')']
         ;
 
 interval_value_expression =
         interval_term
-    |   interval_value_expression_1 plus_sign interval_term_1
-    |   interval_value_expression_1 minus_sign interval_term_1
-    |   left_paren datetime_value_expression minus_sign datetime_term right_paren interval_qualifier
+    |   interval_value_expression_1 '+' interval_term_1
+    |   interval_value_expression_1 '-' interval_term_1
+    |   '(' datetime_value_expression '-' datetime_term ')' interval_qualifier
         ;
 
 interval_term =
         interval_factor
-    |   interval_term_2 asterisk factor
-    |   interval_term_2 solidus factor
-    |   term asterisk interval_factor
+    |   interval_term_2 '*' factor
+    |   interval_term_2 '/' factor
+    |   term '*' interval_factor
         ;
 
 interval_factor =
@@ -2256,7 +1464,7 @@ interval_value_function =
         ;
 
 interval_absolute_value_function =
-        'ABS' left_paren interval_value_expression right_paren
+        'ABS' '(' interval_value_expression ')'
         ;
 
 boolean_value_expression =
@@ -2291,7 +1499,7 @@ boolean_predicand =
         ;
 
 parenthesized_boolean_value_expression =
-        left_paren boolean_value_expression right_paren
+        '(' boolean_value_expression ')'
         ;
 
 array_value_expression =
@@ -2299,7 +1507,7 @@ array_value_expression =
         ;
 
 array_concatenation =
-        array_value_expression_1 concatenation_operator array_factor
+        array_value_expression_1 '||' array_factor
         ;
 
 array_value_expression_1 =
@@ -2320,7 +1528,7 @@ array_value_constructor_by_enumeration =
         ;
 
 array_element_list =
-        array_element [{comma array_element}+]
+        array_element [{',' array_element}+]
         ;
 
 array_element =
@@ -2328,7 +1536,7 @@ array_element =
         ;
 
 array_value_constructor_by_query =
-        'ARRAY' left_paren query_expression [order_by_clause] right_paren
+        'ARRAY' '(' query_expression [order_by_clause] ')'
         ;
 
 multiset_value_expression =
@@ -2351,7 +1559,7 @@ multiset_value_function =
         ;
 
 multiset_set_function =
-        'SET' left_paren multiset_value_expression right_paren
+        'SET' '(' multiset_value_expression ')'
         ;
 
 multiset_value_constructor =
@@ -2365,7 +1573,7 @@ multiset_value_constructor_by_enumeration =
         ;
 
 multiset_element_list =
-        multiset_element [{comma multiset_element}]
+        multiset_element [{',' multiset_element}]
         ;
 
 multiset_element =
@@ -2373,11 +1581,11 @@ multiset_element =
         ;
 
 multiset_value_constructor_by_query =
-        'MULTISET' left_paren query_expression right_paren
+        'MULTISET' '(' query_expression ')'
         ;
 
 table_value_constructor_by_query =
-        'TABLE' left_paren query_expression right_paren
+        'TABLE' '(' query_expression ')'
         ;
 
 row_value_constructor =
@@ -2387,13 +1595,13 @@ row_value_constructor =
         ;
 
 explicit_row_value_constructor =
-        left_paren row_value_constructor_element comma row_value_constructor_element_list right_paren
-    |   'ROW' left_paren row_value_constructor_element_list right_paren
+        '(' row_value_constructor_element ',' row_value_constructor_element_list ')'
+    |   'ROW' '(' row_value_constructor_element_list ')'
     |   row_subquery
         ;
 
 row_value_constructor_element_list =
-        row_value_constructor_element [{comma row_value_constructor_element}+]
+        row_value_constructor_element [{',' row_value_constructor_element}+]
         ;
 
 row_value_constructor_element =
@@ -2404,13 +1612,13 @@ contextually_typed_row_value_constructor =
         common_value_expression
     |   boolean_value_expression
     |   contextually_typed_value_specification
-    |   left_paren contextually_typed_row_value_constructor_element comma contextually_typed_row_value_constructor_element_list right_paren
-    |   'ROW' left_paren contextually_typed_row_value_constructor_element_list right_paren
+    |   '(' contextually_typed_row_value_constructor_element ',' contextually_typed_row_value_constructor_element_list ')'
+    |   'ROW' '(' contextually_typed_row_value_constructor_element_list ')'
         ;
 
 contextually_typed_row_value_constructor_element_list =
         contextually_typed_row_value_constructor_element
-        [{comma contextually_typed_row_value_constructor_element}+]
+        [{',' contextually_typed_row_value_constructor_element}+]
         ;
 
 contextually_typed_row_value_constructor_element =
@@ -2453,7 +1661,7 @@ table_value_constructor =
         ;
 
 row_value_expression_list =
-        table_row_value_expression [{comma table_row_value_expression}+]
+        table_row_value_expression [{',' table_row_value_expression}+]
         ;
 
 contextually_typed_table_value_constructor =
@@ -2461,7 +1669,7 @@ contextually_typed_table_value_constructor =
         ;
 
 contextually_typed_row_value_expression_list =
-        contextually_typed_row_value_expression [{comma contextually_typed_row_value_expression}+]
+        contextually_typed_row_value_expression [{',' contextually_typed_row_value_expression}+]
         ;
 
 table_expression =
@@ -2477,7 +1685,7 @@ from_clause =
         ;
 
 table_reference_list =
-        table_reference [{comma table_reference}+]
+        table_reference [{',' table_reference}+]
         ;
 
 table_reference =
@@ -2489,7 +1697,7 @@ table_primary_or_joined_table =
         ;
 
 sample_clause =
-        'TABLESAMPLE' sample_method left_paren sample_percentage right_paren [repeatable_clause]
+        'TABLESAMPLE' sample_method '(' sample_percentage ')' [repeatable_clause]
         ;
 
 sample_method =
@@ -2497,7 +1705,7 @@ sample_method =
         ;
 
 repeatable_clause =
-        'REPEATABLE' left_paren repeat_argument right_paren
+        'REPEATABLE' '(' repeat_argument ')'
         ;
 
 sample_percentage =
@@ -2509,17 +1717,17 @@ repeat_argument =
         ;
 
 table_primary =
-        table_or_query_name [['AS'] correlation_name [left_paren derived_column_list right_paren]]
-    |   derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
-    |   lateral_derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
-    |   collection_derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
-    |   table_function_derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
-    |   only_spec [['AS'] correlation_name [left_paren derived_column_list right_paren]]
-    |   left_paren joined_table right_paren
+        table_or_query_name [['AS'] correlation_name ['(' derived_column_list ')']]
+    |   derived_table ['AS'] correlation_name ['(' derived_column_list ')']
+    |   lateral_derived_table ['AS'] correlation_name ['(' derived_column_list ')']
+    |   collection_derived_table ['AS'] correlation_name ['(' derived_column_list ')']
+    |   table_function_derived_table ['AS'] correlation_name ['(' derived_column_list ')']
+    |   only_spec [['AS'] correlation_name ['(' derived_column_list ')']]
+    |   '(' joined_table ')'
         ;
 
 only_spec =
-        'ONLY' left_paren table_or_query_name right_paren
+        'ONLY' '(' table_or_query_name ')'
         ;
 
 lateral_derived_table =
@@ -2527,11 +1735,11 @@ lateral_derived_table =
         ;
 
 collection_derived_table =
-        'UNNEST' left_paren collection_value_expression right_paren ['WITH' 'ORDINALITY']
+        'UNNEST' '(' collection_value_expression ')' ['WITH' 'ORDINALITY']
         ;
 
 table_function_derived_table =
-        'TABLE' left_paren collection_value_expression right_paren
+        'TABLE' '(' collection_value_expression ')'
         ;
 
 derived_table =
@@ -2547,7 +1755,7 @@ derived_column_list =
         ;
 
 column_name_list =
-        column_name [{comma column_name}+]
+        column_name [{',' column_name}+]
         ;
 
 joined_table =
@@ -2582,7 +1790,7 @@ join_condition =
         ;
 
 named_columns_join =
-        'USING' left_paren join_column_list right_paren
+        'USING' '(' join_column_list ')'
         ;
 
 join_type =
@@ -2606,7 +1814,7 @@ group_by_clause =
         ;
 
 grouping_element_list =
-        grouping_element [{comma grouping_element}+]
+        grouping_element [{',' grouping_element}+]
         ;
 
 grouping_element =
@@ -2619,7 +1827,7 @@ grouping_element =
 
 ordinary_grouping_set =
         grouping_column_reference
-    |   left_paren grouping_column_reference_list right_paren
+    |   '(' grouping_column_reference_list ')'
         ;
 
 grouping_column_reference =
@@ -2627,27 +1835,27 @@ grouping_column_reference =
         ;
 
 grouping_column_reference_list =
-        grouping_column_reference [{comma grouping_column_reference}+]
+        grouping_column_reference [{',' grouping_column_reference}+]
         ;
 
 rollup_list =
-        'ROLLUP' left_paren ordinary_grouping_set_list right_paren
+        'ROLLUP' '(' ordinary_grouping_set_list ')'
         ;
 
 ordinary_grouping_set_list =
-        ordinary_grouping_set [{comma ordinary_grouping_set}+]
+        ordinary_grouping_set [{',' ordinary_grouping_set}+]
         ;
 
 cube_list =
-        'CUBE' left_paren ordinary_grouping_set_list right_paren
+        'CUBE' '(' ordinary_grouping_set_list ')'
         ;
 
 grouping_sets_specification =
-        'GROUPING' 'SETS' left_paren grouping_set_list right_paren
+        'GROUPING' 'SETS' '(' grouping_set_list ')'
         ;
 
 grouping_set_list =
-        grouping_set [{comma grouping_set}+]
+        grouping_set [{',' grouping_set}+]
         ;
 
 grouping_set =
@@ -2659,7 +1867,7 @@ grouping_set =
         ;
 
 empty_grouping_set =
-        left_paren right_paren
+        '(' ')'
         ;
 
 having_clause =
@@ -2671,7 +1879,7 @@ window_clause =
         ;
 
 window_definition_list =
-        window_definition [{comma window_definition}+]
+        window_definition [{',' window_definition}+]
         ;
 
 window_definition =
@@ -2683,7 +1891,7 @@ new_window_name =
         ;
 
 window_specification =
-        left_paren window_specification_details right_paren
+        '(' window_specification_details ')'
         ;
 
 window_specification_details =
@@ -2699,7 +1907,7 @@ window_partition_clause =
         ;
 
 window_partition_column_reference_list =
-        window_partition_column_reference [{comma window_partition_column_reference}+]
+        window_partition_column_reference [{',' window_partition_column_reference}+]
         ;
 
 window_partition_column_reference =
@@ -2764,7 +1972,7 @@ query_specification =
         ;
 
 select_list =
-        asterisk | select_sublist [{comma select_sublist}+]
+        '*' | select_sublist [{',' select_sublist}+]
         ;
 
 select_sublist =
@@ -2772,12 +1980,12 @@ select_sublist =
         ;
 
 qualified_asterisk =
-        asterisked_identifier_chain period asterisk
+        asterisked_identifier_chain '.' '*'
     |   all_fields_reference
         ;
 
 asterisked_identifier_chain =
-        asterisked_identifier [{period asterisked_identifier}+]
+        asterisked_identifier [{'.' asterisked_identifier}+]
         ;
 
 asterisked_identifier =
@@ -2793,7 +2001,7 @@ as_clause =
         ;
 
 all_fields_reference =
-        value_expression_primary period asterisk ['AS' left_paren all_fields_column_name_list right_paren]
+        value_expression_primary '.' '*' ['AS' '(' all_fields_column_name_list ')']
         ;
 
 all_fields_column_name_list =
@@ -2809,12 +2017,12 @@ with_clause =
         ;
 
 with_list =
-        with_list_element [{comma with_list_element}+]
+        with_list_element [{',' with_list_element}+]
         ;
 
 with_list_element =
-        query_name [left_paren with_column_list right_paren]
-        'AS' left_paren query_expression right_paren [search_or_cycle_clause]
+        query_name ['(' with_column_list ')']
+        'AS' '(' query_expression ')' [search_or_cycle_clause]
         ;
 
 with_column_list =
@@ -2845,7 +2053,7 @@ query_primary =
         ;
 
 non_join_query_primary =
-        simple_table | left_paren non_join_query_expression right_paren
+        simple_table | '(' non_join_query_expression ')'
         ;
 
 simple_table =
@@ -2859,7 +2067,7 @@ explicit_table =
         ;
 
 corresponding_spec =
-        'CORRESPONDING' ['BY' left_paren corresponding_column_list right_paren]
+        'CORRESPONDING' ['BY' '(' corresponding_column_list ')']
         ;
 
 corresponding_column_list =
@@ -2893,7 +2101,7 @@ cycle_clause =
         ;
 
 cycle_column_list =
-        cycle_column [{comma cycle_column}+]
+        cycle_column [{',' cycle_column}+]
         ;
 
 cycle_column =
@@ -2929,7 +2137,7 @@ table_subquery =
         ;
 
 subquery =
-        left_paren query_expression right_paren
+        '(' query_expression ')'
         ;
 
 predicate =
@@ -2961,12 +2169,12 @@ comparison_predicate_part_2 =
         ;
 
 comp_op =
-        equals_operator
-    |   not_equals_operator
-    |   less_than_operator
-    |   greater_than_operator
-    |   less_than_or_equals_operator
-    |   greater_than_or_equals_operator
+        '='
+    |   '<>'
+    |   '<'
+    |   '>'
+    |   '<='
+    |   '>='
         ;
 
 between_predicate =
@@ -2987,11 +2195,11 @@ in_predicate_part_2 =
 
 in_predicate_value =
         table_subquery
-    |   left_paren in_value_list right_paren
+    |   '(' in_value_list ')'
         ;
 
 in_value_list =
-        row_value_expression [{comma row_value_expression}+]
+        row_value_expression [{',' row_value_expression}+]
         ;
 
 like_predicate =
@@ -3044,7 +2252,7 @@ similar_pattern =
 
 regular_expression =
         regular_term
-    |   regular_expression vertical_bar regular_term
+    |   regular_expression '|' regular_term
         ;
 
 regular_term =
@@ -3054,18 +2262,18 @@ regular_term =
 
 regular_factor =
         regular_primary
-    |   regular_primary asterisk
-    |   regular_primary plus_sign
-    |   regular_primary question_mark
+    |   regular_primary '*'
+    |   regular_primary '+'
+    |   regular_primary '?'
     |   regular_primary repeat_factor
         ;
 
 repeat_factor =
-        left_brace low_value [upper_limit] right_brace
+        '{' low_value [upper_limit] '}'
         ;
 
 upper_limit =
-        comma [high_value]
+        ',' [high_value]
         ;
 
 low_value =
@@ -3078,28 +2286,30 @@ high_value =
 
 regular_primary =
         character_specifier
-    |   percent
+    |   '%'
     |   regular_character_set
-    |   left_paren regular_expression right_paren
+    |   '(' regular_expression ')'
         ;
 
 character_specifier =
         non_escaped_character | escaped_character
         ;
 
+# SEE_THE_SYNTAX_RULES
 non_escaped_character =
-        !!SEE_THE_SYNTAX_RULES!!
+        simple_latin_letter
         ;
 
+# SEE_THE_SYNTAX_RULES
 escaped_character =
-        !!SEE_THE_SYNTAX_RULES!!
+        '@r'
         ;
 
 regular_character_set =
-        underscore
-    |   left_bracket {character_enumeration}+ right_bracket
-    |   left_bracket circumflex {character_enumeration}+ right_bracket
-    |   left_bracket {character_enumeration_include}+  circumflex {character_enumeration_exclude}+ right_bracket
+        '_'
+    |   '[' {character_enumeration}+ ']'
+    |   '[' '^' {character_enumeration}+ ']'
+    |   '[' {character_enumeration_include}+  '^' {character_enumeration_exclude}+ ']'
         ;
 
 character_enumeration_include =
@@ -3112,8 +2322,8 @@ character_enumeration_exclude =
 
 character_enumeration =
         character_specifier
-    |   character_specifier minus_sign character_specifier
-    |   left_bracket colon regular_character_set_identifier colon right_bracket
+    |   character_specifier '-' character_specifier
+    |   '[' ':' regular_character_set_identifier ':' ']'
         ;
 
 regular_character_set_identifier =
@@ -3233,11 +2443,11 @@ type_predicate =
         ;
 
 type_predicate_part_2 =
-        'IS' ['NOT'] 'OF' left_paren type_list right_paren
+        'IS' ['NOT'] 'OF' '(' type_list ')'
         ;
 
 type_list =
-        user_defined_type_specification [{comma user_defined_type_specification}+]
+        user_defined_type_specification [{',' user_defined_type_specification}+]
         ;
 
 user_defined_type_specification =
@@ -3263,17 +2473,17 @@ interval_qualifier =
         ;
 
 start_field =
-        non_second_primary_datetime_field [left_paren interval_leading_field_precision right_paren]
+        non_second_primary_datetime_field ['(' interval_leading_field_precision ')']
         ;
 
 end_field =
         non_second_primary_datetime_field
-    |   'SECOND' [left_paren interval_fractional_seconds_precision right_paren]
+    |   'SECOND' ['(' interval_fractional_seconds_precision ')']
         ;
 
 single_datetime_field =
-        non_second_primary_datetime_field [left_paren interval_leading_field_precision right_paren]
-    |   'SECOND' [left_paren interval_leading_field_precision [comma interval_fractional_seconds_precision] right_paren]
+        non_second_primary_datetime_field ['(' interval_leading_field_precision ')']
+    |   'SECOND' ['(' interval_leading_field_precision [',' interval_fractional_seconds_precision] ')']
         ;
 
 primary_datetime_field =
@@ -3306,7 +2516,7 @@ path_specification =
         ;
 
 schema_name_list =
-        schema_name [{comma schema_name}+]
+        schema_name [{',' schema_name}+]
         ;
 
 routine_invocation =
@@ -3314,11 +2524,11 @@ routine_invocation =
         ;
 
 routine_name =
-        [schema_name period] qualified_identifier
+        [schema_name '.'] qualified_identifier
         ;
 
 sql_argument_list =
-        left_paren [sql_argument [{comma sql_argument}+]] right_paren
+        '(' [sql_argument [{',' sql_argument}+]] ')'
         ;
 
 sql_argument =
@@ -3371,7 +2581,7 @@ member_name_alternatives =
         ;
 
 data_type_list =
-        left_paren [data_type [{comma data_type}+]] right_paren
+        '(' [data_type [{',' data_type}+]] ')'
         ;
 
 collate_clause =
@@ -3392,14 +2602,14 @@ constraint_check_time =
         ;
 
 aggregate_function =
-        'COUNT' left_paren asterisk right_paren [filter_clause]
+        'COUNT' '(' '*' ')' [filter_clause]
     |   general_set_function [filter_clause]
     |   binary_set_function [filter_clause]
     |   ordered_set_function [filter_clause]
         ;
 
 general_set_function =
-        set_function_type left_paren [set_quantifier] value_expression right_paren
+        set_function_type '(' [set_quantifier] value_expression ')'
         ;
 
 set_function_type =
@@ -3419,11 +2629,11 @@ set_quantifier =
         ;
 
 filter_clause =
-        'FILTER' left_paren 'WHERE' search_condition right_paren
+        'FILTER' '(' 'WHERE' search_condition ')'
         ;
 
 binary_set_function =
-        binary_set_function_type left_paren dependent_variable_expression comma independent_variable_expression right_paren
+        binary_set_function_type '(' dependent_variable_expression ',' independent_variable_expression ')'
         ;
 
 binary_set_function_type =
@@ -3445,19 +2655,19 @@ ordered_set_function =
         ;
 
 hypothetical_set_function =
-        rank_function_type left_paren hypothetical_set_function_value_expression_list right_paren within_group_specification
+        rank_function_type '(' hypothetical_set_function_value_expression_list ')' within_group_specification
         ;
 
 within_group_specification =
-        'WITHIN' 'GROUP' left_paren 'ORDER' 'BY' sort_specification_list right_paren
+        'WITHIN' 'GROUP' '(' 'ORDER' 'BY' sort_specification_list ')'
         ;
 
 hypothetical_set_function_value_expression_list =
-        value_expression [{comma value_expression}+]
+        value_expression [{',' value_expression}+]
         ;
 
 inverse_distribution_function =
-        inverse_distribution_function_type left_paren inverse_distribution_function_argument right_paren within_group_specification
+        inverse_distribution_function_type '(' inverse_distribution_function_argument ')' within_group_specification
         ;
 
 inverse_distribution_function_argument =
@@ -3469,7 +2679,7 @@ inverse_distribution_function_type =
         ;
 
 sort_specification_list =
-        sort_specification [{comma sort_specification}+]
+        sort_specification [{',' sort_specification}+]
         ;
 
 sort_specification =
@@ -3568,7 +2778,7 @@ table_commit_action =
         ;
 
 table_element_list =
-        left_paren table_element [{comma table_element}+] right_paren
+        '(' table_element [{',' table_element}+] ')'
         ;
 
 table_element =
@@ -3628,7 +2838,7 @@ column_default_option =
         ;
 
 as_subquery_clause =
-        [left_paren column_name_list right_paren] 'AS' subquery with_or_without_data
+        ['(' column_name_list ')'] 'AS' subquery with_or_without_data
         ;
 
 with_or_without_data =
@@ -3662,7 +2872,7 @@ reference_scope_check_action =
 
 identity_column_specification =
         'GENERATED' {'ALWAYS' | 'BY' 'DEFAULT'} 'AS' 'IDENTITY'
-        [left_paren common_sequence_generator_options right_paren]
+        ['(' common_sequence_generator_options ')']
         ;
 
 generation_clause =
@@ -3674,7 +2884,7 @@ generation_rule =
         ;
 
 generation_expression =
-        left_paren value_expression right_paren
+        '(' value_expression ')'
         ;
 
 default_clause =
@@ -3704,7 +2914,7 @@ table_constraint =
         ;
 
 unique_constraint_definition =
-        unique_specification left_paren unique_column_list right_paren
+        unique_specification '(' unique_column_list ')'
     |   'UNIQUE' ('VALUE')
         ;
 
@@ -3717,7 +2927,7 @@ unique_column_list =
         ;
 
 referential_constraint_definition =
-        'FOREIGN' 'KEY' left_paren referencing_columns right_paren references_specification
+        'FOREIGN' 'KEY' '(' referencing_columns ')' references_specification
         ;
 
 references_specification =
@@ -3733,7 +2943,7 @@ referencing_columns =
         ;
 
 referenced_table_and_columns =
-        table_name [left_paren reference_column_list right_paren]
+        table_name ['(' reference_column_list ')']
         ;
 
 reference_column_list =
@@ -3757,7 +2967,7 @@ referential_action =
         ;
 
 check_constraint_definition =
-        'CHECK' left_paren search_condition right_paren
+        'CHECK' '(' search_condition ')'
         ;
 
 alter_table_statement =
@@ -3839,7 +3049,7 @@ view_specification =
         ;
 
 regular_view_specification =
-        [left_paren view_column_list right_paren]
+        ['(' view_column_list ')']
         ;
 
 referenceable_view_specification =
@@ -3851,7 +3061,7 @@ subview_clause =
         ;
 
 view_element_list =
-        left_paren view_element [{comma view_element}+] right_paren
+        '(' view_element [{',' view_element}+] ')'
         ;
 
 view_element =
@@ -3973,7 +3183,7 @@ drop_transliteration_statement =
         ;
 
 assertion_definition =
-        'CREATE' 'ASSERTION' constraint_name 'CHECK' left_paren search_condition right_paren [constraint_characteristics]
+        'CREATE' 'ASSERTION' constraint_name 'CHECK' '(' search_condition ')' [constraint_characteristics]
         ;
 
 drop_assertion_statement =
@@ -4000,13 +3210,13 @@ trigger_column_list =
 
 triggered_action =
         ['FOR' 'EACH' {'ROW' | 'STATEMENT'}]
-        ['WHEN' left_paren search_condition right_paren]
+        ['WHEN' '(' search_condition ')']
         triggered_sql_statement
         ;
 
 triggered_sql_statement =
         sql_procedure_statement
-    |   'BEGIN' 'ATOMIC' {sql_procedure_statement semicolon}+   'END'
+    |   'BEGIN' 'ATOMIC' {sql_procedure_statement ';'}+   'END'
         ;
 
 old_or_new_values_alias_list =
@@ -4074,7 +3284,7 @@ representation =
         ;
 
 member_list =
-        left_paren member [{comma member}+] right_paren
+        '(' member [{',' member}+] ')'
         ;
 
 member =
@@ -4112,7 +3322,7 @@ ref_cast_option =
         ;
 
 cast_to_ref =
-        'CAST' left_paren 'SOURCE' 'AS' 'REF' right_paren 'WITH' cast_to_ref_identifier
+        'CAST' '(' 'SOURCE' 'AS' 'REF' ')' 'WITH' cast_to_ref_identifier
         ;
 
 cast_to_ref_identifier =
@@ -4120,7 +3330,7 @@ cast_to_ref_identifier =
         ;
 
 cast_to_type =
-        'CAST' left_paren 'REF' 'AS' 'SOURCE' right_paren 'WITH' cast_to_type_identifier
+        'CAST' '(' 'REF' 'AS' 'SOURCE' ')' 'WITH' cast_to_type_identifier
         ;
 
 cast_to_type_identifier =
@@ -4128,7 +3338,7 @@ cast_to_type_identifier =
         ;
 
 list_of_attributes =
-        left_paren attribute_name [{comma attribute_name}+] right_paren
+        '(' attribute_name [{',' attribute_name}+] ')'
         ;
 
 cast_option =
@@ -4136,7 +3346,7 @@ cast_option =
         ;
 
 cast_to_distinct =
-        'CAST' left_paren 'SOURCE' 'AS' 'DISTINCT' right_paren
+        'CAST' '(' 'SOURCE' 'AS' 'DISTINCT' ')'
         'WITH' cast_to_distinct_identifier
         ;
 
@@ -4145,7 +3355,7 @@ cast_to_distinct_identifier =
         ;
 
 cast_to_source =
-        'CAST' left_paren 'DISTINCT' 'AS' 'SOURCE' right_paren
+        'CAST' '(' 'DISTINCT' 'AS' 'SOURCE' ')'
         'WITH' cast_to_source_identifier
         ;
 
@@ -4154,7 +3364,7 @@ cast_to_source_identifier =
         ;
 
 method_specification_list =
-        method_specification [{comma method_specification}+]
+        method_specification [{',' method_specification}+]
         ;
 
 method_specification =
@@ -4175,7 +3385,7 @@ partial_method_specification =
         ;
 
 specific_method_name =
-        [schema_name period]qualified_identifier
+        [schema_name '.']qualified_identifier
         ;
 
 method_characteristics =
@@ -4263,7 +3473,7 @@ sql_invoked_function =
         ;
 
 sql_parameter_declaration_list =
-        left_paren [sql_parameter_declaration [{comma sql_parameter_declaration}+]] right_paren
+        '(' [sql_parameter_declaration [{',' sql_parameter_declaration}+]] ')'
         ;
 
 sql_parameter_declaration =
@@ -4338,9 +3548,9 @@ returns_table_type =
         ;
 
 table_function_column_list =
-        left_paren
-        table_function_column_list_element [{comma table_function_column_list_element}+]
-        right_paren
+        '('
+        table_function_column_list_element [{',' table_function_column_list_element}+]
+        ')'
         ;
 
 table_function_column_list_element =
@@ -4420,7 +3630,7 @@ single_group_specification =
         ;
 
 multiple_group_specification =
-        group_specification [{comma group_specification}+]
+        group_specification [{',' group_specification}+]
         ;
 
 group_specification =
@@ -4453,7 +3663,7 @@ drop_routine_statement =
         ;
 
 user_defined_cast_definition =
-        'CREATE' 'CAST' left_paren source_data_type 'AS' target_data_type right_paren
+        'CREATE' 'CAST' '(' source_data_type 'AS' target_data_type ')'
         'WITH' cast_function ['AS' 'ASSIGNMENT']
         ;
 
@@ -4470,7 +3680,7 @@ target_data_type =
         ;
 
 drop_user_defined_cast_statement =
-        'DROP' 'CAST' left_paren source_data_type 'AS' target_data_type right_paren drop_behavior
+        'DROP' 'CAST' '(' source_data_type 'AS' target_data_type ')' drop_behavior
         ;
 
 user_defined_ordering_definition =
@@ -4522,7 +3732,7 @@ transform_definition =
         ;
 
 transform_group =
-        group_name left_paren transform_element_list right_paren
+        group_name '(' transform_element_list ')'
         ;
 
 group_name =
@@ -4530,7 +3740,7 @@ group_name =
         ;
 
 transform_element_list =
-        transform_element [comma transform_element]
+        transform_element [',' transform_element]
         ;
 
 transform_element =
@@ -4558,11 +3768,11 @@ alter_transform_statement =
         ;
 
 alter_group =
-        group_name left_paren alter_transform_action_list right_paren
+        group_name '(' alter_transform_action_list ')'
         ;
 
 alter_transform_action_list =
-        alter_transform_action [{comma alter_transform_action}+]
+        alter_transform_action [{',' alter_transform_action}+]
         ;
 
 alter_transform_action =
@@ -4570,11 +3780,11 @@ alter_transform_action =
         ;
 
 add_transform_element_list =
-        'ADD' left_paren transform_element_list right_paren
+        'ADD' '(' transform_element_list ')'
         ;
 
 drop_transform_element_list =
-        'DROP' left_paren transform_kind [comma transform_kind] drop_behavior right_paren
+        'DROP' '(' transform_kind [',' transform_kind] drop_behavior ')'
         ;
 
 transform_kind =
@@ -4691,7 +3901,7 @@ grant_statement =
         ;
 
 grant_privilege_statement =
-        'GRANT' privileges 'TO' grantee [{comma grantee}+]
+        'GRANT' privileges 'TO' grantee [{',' grantee}+]
         ['WITH' 'HIERARCHY' 'OPTION'] ['WITH' 'GRANT' 'OPTION'] ['GRANTED' 'BY' grantor]
         ;
 
@@ -4712,17 +3922,17 @@ object_name =
 
 object_privileges =
         'ALL' 'PRIVILEGES'
-    |   action [{comma action}+]
+    |   action [{',' action}+]
         ;
 
 action =
         'SELECT'
-    |   'SELECT' left_paren privilege_column_list right_paren
-    |   'SELECT' left_paren privilege_method_list right_paren
+    |   'SELECT' '(' privilege_column_list ')'
+    |   'SELECT' '(' privilege_method_list ')'
     |   'DELETE'
-    |   'INSERT' [left_paren privilege_column_list right_paren]
-    |   'UPDATE' [left_paren privilege_column_list right_paren]
-    |   'REFERENCES' [left_paren privilege_column_list right_paren]
+    |   'INSERT' ['(' privilege_column_list ')']
+    |   'UPDATE' ['(' privilege_column_list ')']
+    |   'REFERENCES' ['(' privilege_column_list ')']
     |   'USAGE'
     |   'TRIGGER'
     |   'UNDER'
@@ -4730,7 +3940,7 @@ action =
         ;
 
 privilege_method_list =
-        specific_routine_designator [{comma specific_routine_designator}+]
+        specific_routine_designator [{',' specific_routine_designator}+]
         ;
 
 privilege_column_list =
@@ -4750,8 +3960,8 @@ role_definition =
         ;
 
 grant_role_statement =
-        'GRANT' role_granted [{comma role_granted}+]
-        'TO' grantee [{comma grantee}+] ['WITH' 'ADMIN' 'OPTION'] ['GRANTED' 'BY' grantor]
+        'GRANT' role_granted [{',' role_granted}+]
+        'TO' grantee [{',' grantee}+] ['WITH' 'ADMIN' 'OPTION'] ['GRANTED' 'BY' grantor]
         ;
 
 role_granted =
@@ -4768,7 +3978,7 @@ revoke_statement =
         ;
 
 revoke_privilege_statement =
-        'REVOKE' [revoke_option_extension] privileges 'FROM' grantee [{comma grantee}+]
+        'REVOKE' [revoke_option_extension] privileges 'FROM' grantee [{',' grantee}+]
         ['GRANTED' 'BY' grantor] drop_behavior
         ;
 
@@ -4777,88 +3987,16 @@ revoke_option_extension =
         ;
 
 revoke_role_statement =
-        'REVOKE' ['ADMIN' 'OPTION' 'FOR'] role_revoked [{comma role_revoked}+]
-        'FROM' grantee [{comma grantee}+] ['GRANTED' 'BY' grantor] drop_behavior
+        'REVOKE' ['ADMIN' 'OPTION' 'FOR'] role_revoked [{',' role_revoked}+]
+        'FROM' grantee [{',' grantee}+] ['GRANTED' 'BY' grantor] drop_behavior
         ;
 
 role_revoked =
         role_name
         ;
 
-sql_client_module_definition =
-        module_name_clause language_clause module_authorization_clause
-        [module_path_specification]
-        [module_transform_group_specification]
-        [module_collation]
-        [{temporary_table_declaration}+]
-        {module_contents}+
-        ;
-
-module_authorization_clause =
-        'SCHEMA' schema_name
-    |   'AUTHORIZATION' module_authorization_identifier ['FOR' 'STATIC' {'ONLY' | 'AND' 'DYNAMIC'}]
-    |   'SCHEMA' schema_name 'AUTHORIZATION' module_authorization_identifier ['FOR' 'STATIC' {'ONLY' | 'AND' 'DYNAMIC'}]
-        ;
-
-module_authorization_identifier =
-        authorization_identifier
-        ;
-
-module_path_specification =
-        path_specification
-        ;
-
-module_transform_group_specification =
-        transform_group_specification
-        ;
-
-module_collations =
-        {module_collation_specification}+
-        ;
-
-module_collation_specification =
-        'COLLATION' collation_name ['FOR' character_set_specification_list]
-        ;
-        ;
-
 character_set_specification_list =
-        character_set_specification [{comma character_set_specification}+]
-        ;
-
-module_contents =
-        declare_cursor
-    |   dynamic_declare_cursor
-    |   externally_invoked_procedure
-        ;
-
-module_name_clause =
-        'MODULE' [sql_client_module_name] [module_character_set_specification]
-        ;
-
-module_character_set_specification =
-        'NAMES' 'ARE' character_set_specification
-        ;
-
-externally_invoked_procedure =
-        'PROCEDURE' procedure_name host_parameter_declaration_list semicolon
-        sql_procedure_statement semicolon
-        ;
-
-host_parameter_declaration_list =
-        left_paren host_parameter_declaration [{comma host_parameter_declaration}+] right_paren
-        ;
-
-host_parameter_declaration =
-        host_parameter_name host_parameter_data_type
-    |   status_parameter
-        ;
-
-host_parameter_data_type =
-        data_type [locator_indication]
-        ;
-
-status_parameter =
-        'SQLSTATE'
+        character_set_specification [{',' character_set_specification}+]
         ;
 
 sql_procedure_statement =
@@ -5009,11 +4147,6 @@ system_descriptor_statement =
     |   get_descriptor_statement
         ;
 
-declare_cursor =
-        'DECLARE' cursor_name [cursor_sensitivity] [cursor_scrollability] 'CURSOR'
-        [cursor_holdability] [cursor_returnability] 'FOR' cursor_specification
-        ;
-
 cursor_sensitivity =
         'SENSITIVE' | 'INSENSITIVE' | 'ASENSITIVE'
         ;
@@ -5059,7 +4192,7 @@ fetch_orientation =
         ;
 
 fetch_target_list =
-        target_specification [{comma target_specification}+]
+        target_specification [{',' target_specification}+]
         ;
 
 close_statement =
@@ -5071,7 +4204,7 @@ select_statement_single_row =
         ;
 
 select_target_list =
-        target_specification [{comma target_specification}+]
+        target_specification [{',' target_specification}+]
         ;
 
 delete_statement_positioned =
@@ -5080,7 +4213,7 @@ delete_statement_positioned =
 
 target_table =
         table_name
-    |   'ONLY' left_paren table_name right_paren
+    |   'ONLY' '(' table_name ')'
         ;
 
 delete_statement_searched =
@@ -5102,11 +4235,11 @@ insert_columns_and_source =
         ;
 
 from_subquery =
-        [left_paren insert_column_list right_paren] [override_clause] query_expression
+        ['(' insert_column_list ')'] [override_clause] query_expression
         ;
 
 from_constructor =
-        [left_paren insert_column_list right_paren] [override_clause] contextually_typed_table_value_constructor
+        ['(' insert_column_list ')'] [override_clause] contextually_typed_table_value_constructor
         ;
 
 override_clause =
@@ -5151,12 +4284,12 @@ merge_update_specification =
         ;
 
 merge_insert_specification =
-        'INSERT' [left_paren insert_column_list right_paren]
+        'INSERT' ['(' insert_column_list ')']
         [override_clause] 'VALUES' merge_insert_value_list
         ;
 
 merge_insert_value_list =
-        left_paren merge_insert_value_element [{comma merge_insert_value_element}+] right_paren
+        '(' merge_insert_value_element [{',' merge_insert_value_element}+] ')'
         ;
 
 merge_insert_value_element =
@@ -5172,12 +4305,12 @@ update_statement_searched =
         ;
 
 set_clause_list =
-        set_clause [{comma set_clause}+]
+        set_clause [{',' set_clause}+]
         ;
 
 set_clause =
         multiple_column_assignment
-    |   set_target equals_operator update_source
+    |   set_target '=' update_source
         ;
 
 set_target =
@@ -5185,11 +4318,11 @@ set_target =
         ;
 
 multiple_column_assignment =
-        set_target_list equals_operator assigned_row
+        set_target_list '=' assigned_row
         ;
 
 set_target_list =
-        left_paren set_target [{comma set_target}+] right_paren
+        '(' set_target [{',' set_target}+] ')'
         ;
 
 assigned_row =
@@ -5206,7 +4339,7 @@ object_column =
         ;
 
 mutated_set_clause =
-        mutated_target period method_name
+        mutated_target '.' method_name
         ;
 
 mutated_target =
@@ -5223,15 +4356,15 @@ temporary_table_declaration =
         ;
 
 free_locator_statement =
-        'FREE' 'LOCATOR' locator_reference [{comma locator_reference}+]
+        'FREE' 'LOCATOR' locator_reference [{',' locator_reference}+]
         ;
 
 locator_reference =
-        host_parameter_name | embedded_variable_name
+        host_parameter_name
         ;
 
 hold_locator_statement =
-        'HOLD' 'LOCATOR' locator_reference [{comma locator_reference}+]
+        'HOLD' 'LOCATOR' locator_reference [{',' locator_reference}+]
         ;
 
 call_statement =
@@ -5247,7 +4380,7 @@ return_value =
         ;
 
 start_transaction_statement =
-        'START' 'TRANSACTION' [transaction_mode [{comma transaction_mode}+]]
+        'START' 'TRANSACTION' [transaction_mode [{',' transaction_mode}+]]
         ;
 
 transaction_mode =
@@ -5279,7 +4412,7 @@ set_transaction_statement =
         ;
 
 transaction_characteristics =
-        'TRANSACTION' transaction_mode [{comma transaction_mode}+]
+        'TRANSACTION' transaction_mode [{',' transaction_mode}+]
         ;
 
 set_constraints_mode_statement =
@@ -5287,7 +4420,7 @@ set_constraints_mode_statement =
         ;
 
 constraint_name_list =
-        'ALL' | constraint_name [{comma constraint_name}+]
+        'ALL' | constraint_name [{',' constraint_name}+]
         ;
 
 savepoint_statement =
@@ -5344,7 +4477,7 @@ set_session_characteristics_statement =
         ;
 
 session_characteristic_list =
-        session_characteristic [{comma session_characteristic}+]
+        session_characteristic [{',' session_characteristic}+]
         ;
 
 session_characteristic =
@@ -5416,11 +4549,6 @@ set_session_collation_statement =
         'SET' 'COLLATION' collation_specification ['FOR' character_set_specification_list]
     |   'SET' 'NO' 'COLLATION' ['FOR' character_set_specification_list]
         ;
-        ;
-
-character_set_specification_list =
-        character_set_specification [, {character_set_specification}+]
-        ;
 
 collation_specification =
         value_specification
@@ -5443,12 +4571,12 @@ get_descriptor_statement =
         ;
 
 get_descriptor_information =
-        get_header_information [{comma get_header_information}+]
-    |   'VALUE' item_number get_item_information [{comma get_item_information}+]
+        get_header_information [{',' get_header_information}+]
+    |   'VALUE' item_number get_item_information [{',' get_item_information}+]
         ;
 
 get_header_information =
-        simple_target_specification_1 equals_operator header_item_name
+        simple_target_specification_1 '=' header_item_name
         ;
 
 header_item_name =
@@ -5456,8 +4584,7 @@ header_item_name =
         ;
 
 get_item_information =
-        simple_target_specification_2 equals_operator descriptor_item_name
-        ;
+        simple_target_specification_2 '=' descriptor_item_name
         ;
 
 item_number =
@@ -5517,16 +4644,16 @@ set_descriptor_statement =
         ;
 
 set_descriptor_information =
-        set_header_information [{comma set_header_information}+]
-    |   'VALUE' item_number set_item_information [{comma set_item_information}+]
+        set_header_information [{',' set_header_information}+]
+    |   'VALUE' item_number set_item_information [{',' set_item_information}+]
         ;
 
 set_header_information =
-        header_item_name equals_operator simple_value_specification_1
+        header_item_name '=' simple_value_specification_1
         ;
 
 set_item_information =
-        descriptor_item_name equals_operator simple_value_specification_2
+        descriptor_item_name '=' simple_value_specification_2
         ;
 
 simple_value_specification_1 =
@@ -5534,11 +4661,6 @@ simple_value_specification_1 =
         ;
 
 simple_value_specification_2 =
-        simple_value_specification
-        ;
-        ;
-
-item_number =
         simple_value_specification
         ;
 
@@ -5556,61 +4678,6 @@ attributes_variable =
 
 sql_statement_variable =
         simple_value_specification
-        ;
-
-preparable_statement =
-        preparable_sql_data_statement
-    |   preparable_sql_schema_statement
-    |   preparable_sql_transaction_statement
-    |   preparable_sql_control_statement
-    |   preparable_sql_session_statement
-    |   preparable_implementation_defined_statement
-        ;
-
-preparable_sql_data_statement =
-        delete_statement_searched
-    |   dynamic_single_row_select_statement
-    |   insert_statement
-    |   dynamic_select_statement
-    |   update_statement_searched
-    |   merge_statement
-    |   preparable_dynamic_delete_statement_positioned
-    |   preparable_dynamic_update_statement_positioned
-        ;
-
-preparable_sql_schema_statement =
-        sql_schema_statement
-        ;
-
-preparable_sql_transaction_statement =
-        sql_transaction_statement
-        ;
-
-preparable_sql_control_statement =
-        sql_control_statement
-        ;
-
-preparable_sql_session_statement =
-        sql_session_statement
-        ;
-
-dynamic_select_statement =
-        cursor_specification
-        ;
-
-preparable_implementation_defined_statement =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-cursor_attributes =
-        {cursor_attribute}+
-        ;
-
-cursor_attribute =
-        cursor_sensitivity
-    |   cursor_scrollability
-    |   cursor_holdability
-    |   cursor_returnability
         ;
 
 deallocate_prepared_statement =
@@ -5647,7 +4714,7 @@ input_using_clause =
         ;
 
 using_arguments =
-        'USING' using_argument [{comma using_argument}+]
+        'USING' using_argument [{',' using_argument}+]
         ;
 
 using_argument =
@@ -5663,7 +4730,7 @@ output_using_clause =
         ;
 
 into_arguments =
-        'INTO' into_argument [{comma into_argument}+]
+        'INTO' into_argument [{',' into_argument}+]
         ;
 
 into_argument =
@@ -5688,11 +4755,6 @@ parameter_using_clause =
 
 execute_immediate_statement =
         'EXECUTE' 'IMMEDIATE' sql_statement_variable
-        ;
-
-dynamic_declare_cursor =
-        'DECLARE' cursor_name [cursor_sensitivity] [cursor_scrollability] 'CURSOR'
-        [cursor_holdability] [cursor_returnability] 'FOR' statement_name
         ;
 
 allocate_cursor_statement =
@@ -5720,10 +4782,6 @@ dynamic_fetch_statement =
         'FETCH' [[fetch_orientation] 'FROM'] dynamic_cursor_name output_using_clause
         ;
 
-dynamic_single_row_select_statement =
-        query_specification
-        ;
-
 dynamic_close_statement =
         'CLOSE' dynamic_cursor_name
         ;
@@ -5736,837 +4794,8 @@ dynamic_update_statement_positioned =
         'UPDATE' target_table 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
         ;
 
-preparable_dynamic_delete_statement_positioned =
-        'DELETE' ['FROM' target_table] 'WHERE' 'CURRENT' 'OF' [scope_option] cursor_name
-        ;
-
-preparable_dynamic_update_statement_positioned =
-        'UPDATE' [target_table] 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' [scope_option] cursor_name
-        ;
-
-embedded_sql_host_program =
-        embedded_sql_ada_program
-    |   embedded_sql_c_program
-    |   embedded_sql_cobol_program
-    |   embedded_sql_fortran_program
-    |   embedded_sql_mumps_program
-    |   embedded_sql_pascal_program
-    |   embedded_sql_pl_i_program
-        ;
-
-embedded_sql_statement =
-        sql_prefix statement_or_declaration [sql_terminator]
-        ;
-
-statement_or_declaration =
-        declare_cursor
-    |   dynamic_declare_cursor
-    |   temporary_table_declaration
-    |   embedded_authorization_declaration
-    |   embedded_path_specification
-    |   embedded_transform_group_specification
-    |   embedded_collation_specification
-    |   embedded_exception_declaration
-    |   handler_declaration
-    |   sql_procedure_statement
-        ;
-
-sql_prefix =
-        'EXEC' 'SQL' | ampersand 'SQL' left_paren
-        ;
-
-sql_terminator =
-        'END-EXEC' | semicolon | right_paren
-        ;
-
-embedded_authorization_declaration =
-        'DECLARE' embedded_authorization_clause
-        ;
-
-embedded_authorization_clause =
-        'SCHEMA' schema_name
-    |   'AUTHORIZATION' embedded_authorization_identifier ['FOR' 'STATIC' {'ONLY' | 'AND' 'DYNAMIC'}]
-    |   'SCHEMA' schema_name 'AUTHORIZATION' embedded_authorization_identifier ['FOR' 'STATIC' {'ONLY' | 'AND' 'DYNAMIC'}]
-        ;
-
-embedded_authorization_identifier =
-        module_authorization_identifier
-        ;
-
-embedded_path_specification =
-        path_specification
-        ;
-
-embedded_transform_group_specification =
-        transform_group_specification
-        ;
-
-embedded_collation_specification =
-        module_collations
-        ;
-
-embedded_sql_declare_section =
-        embedded_sql_begin_declare [embedded_character_set_declaration] [{host_variable_definition}+] embedded_sql_end_declare
-    |   embedded_sql_mumps_declare
-        ;
-
-embedded_character_set_declaration =
-        'SQL' 'NAMES' 'ARE' character_set_specification
-        ;
-
-embedded_sql_begin_declare =
-        sql_prefix 'BEGIN' 'DECLARE' 'SECTION' [sql_terminator]
-        ;
-
-embedded_sql_end_declare =
-        sql_prefix 'END' 'DECLARE' 'SECTION' [sql_terminator]
-        ;
-
-embedded_sql_mumps_declare =
-        sql_prefix 'BEGIN' 'DECLARE' 'SECTION' [embedded_character_set_declaration]
-        [{host_variable_definition}+] 'END' 'DECLARE' 'SECTION' sql_terminator
-        ;
-
-host_variable_definition =
-        ada_variable_definition
-    |   c_variable_definition
-    |   cobol_variable_definition
-    |   fortran_variable_definition
-    |   mumps_variable_definition
-    |   pascal_variable_definition
-    |   pl_i_variable_definition
-        ;
-
-embedded_variable_name =
-        colon host_identifier
-        ;
-
-host_identifier =
-        ada_host_identifier
-    |   c_host_identifier
-    |   cobol_host_identifier
-    |   fortran_host_identifier
-    |   mumps_host_identifier
-    |   pascal_host_identifier
-    |   pl_i_host_identifier
-        ;
-
-embedded_exception_declaration =
-        'WHENEVER' condition condition_action
-        ;
-
-condition =
-        sql_condition
-        ;
-
-sql_condition =
-        major_category
-    |   'SQLSTATE' (sqlstate_class_value [',' sqlstate_subclass_value])
-    |   'CONSTRAINT' constraint_name
-        ;
-
-major_category =
-        'SQLEXCEPTION' | 'SQLWARNING' | 'NOT' 'FOUND'
-        ;
-
-sqlstate_class_value =
-        sqlstate_char sqlstate_char !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-sqlstate_subclass_value =
-        sqlstate_char sqlstate_char sqlstate_char !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-sqlstate_char =
-        simple_latin_upper_case_letter | digit
-        ;
-
-condition_action =
-        'CONTINUE' | go_to
-        ;
-
-go_to =
-        {'GOTO' | 'GO' 'TO'} goto_target
-        ;
-
-goto_target =
-        host_label_identifier
-    |   unsigned_integer
-    |   host_pl_i_label_variable
-        ;
-
-host_label_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-host_pl_i_label_variable =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-embedded_sql_ada_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-ada_variable_definition =
-        ada_host_identifier [{comma ada_host_identifier}+] colon ada_type_specification [ada_initial_value]
-        ;
-
-ada_initial_value =
-        ada_assignment_operator {character_representation}+
-        ;
-
-ada_assignment_operator =
-        colon equals_operator
-        ;
-
-ada_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-ada_type_specification =
-        ada_qualified_type_specification
-    |   ada_unqualified_type_specification
-    |   ada_derived_type_specification
-        ;
-
-ada_qualified_type_specification =
-        'Interfaces'.'SQL' period 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        left_paren '1' double_period length right_paren
-    |   'Interfaces'.'SQL' period 'SMALLINT'
-    |   'Interfaces'.'SQL' period 'INT'
-    |   'Interfaces'.'SQL' period 'BIGINT'
-    |   'Interfaces'.'SQL' period 'REAL'
-    |   'Interfaces'.'SQL' period 'DOUBLE_PRECISION'
-    |   'Interfaces'.'SQL' period 'BOOLEAN'
-    |   'Interfaces'.'SQL' period 'SQLSTATE_TYPE'
-    |   'Interfaces'.'SQL' period 'INDICATOR_TYPE'
-        ;
-
-ada_unqualified_type_specification =
-        'CHAR' left_paren '1' double_period length right_paren
-    |   'SMALLINT'
-    |   'INT'
-    |   'BIGINT'
-    |   'REAL'
-    |   'DOUBLE_PRECISION'
-    |   'BOOLEAN'
-    |   'SQLSTATE_TYPE'
-    |   'INDICATOR_TYPE'
-        ;
-
-ada_derived_type_specification =
-        ada_clob_variable
-    |   ada_clob_locator_variable
-    |   ada_blob_variable
-    |   ada_blob_locator_variable
-    |   ada_user_defined_type_variable
-    |   ada_user_defined_type_locator_variable
-    |   ada_ref_variable
-    |   ada_array_locator_variable
-    |   ada_multiset_locator_variable
-        ;
-
-ada_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-ada_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-ada_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-ada_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-ada_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-ada_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-ada_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-ada_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-ada_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-embedded_sql_c_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-c_variable_definition =
-        [c_storage_class] [c_class_modifier] c_variable_specification semicolon
-        ;
-
-c_variable_specification =
-        c_numeric_variable | c_character_variable | c_derived_variable
-        ;
-
-c_storage_class =
-        'auto' | 'extern' | 'static'
-        ;
-
-c_class_modifier =
-        'const' | 'volatile'
-        ;
-
-c_numeric_variable =
-        {'long' 'long' | 'long' | 'short' | 'float' | 'double'} c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_character_variable =
-        c_character_type ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier c_array_specification [c_initial_value]
-        [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-        ;
-
-c_character_type =
-        'char' | 'unsigned' 'char' | 'unsigned' 'short'
-        ;
-
-c_array_specification =
-        left_bracket length right_bracket
-        ;
-
-c_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-c_derived_variable =
-        c_varchar_variable
-    |   c_nchar_variable
-    |   c_nchar_varying_variable
-    |   c_clob_variable
-    |   c_nclob_variable
-    |   c_blob_variable
-    |   c_user_defined_type_variable
-    |   c_clob_locator_variable
-    |   c_blob_locator_variable
-    |   c_array_locator_variable
-    |   c_multiset_locator_variable
-    |   c_user_defined_type_locator_variable
-    |   c_ref_variable
-        ;
-
-c_varchar_variable =
-        'VARCHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier c_array_specification [c_initial_value]
-        [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-        ;
-
-c_nchar_variable =
-        'NCHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier c_array_specification [c_initial_value]
-        [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-        ;
-
-c_nchar_varying_variable =
-        'NCHAR' 'VARYING' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier c_array_specification [c_initial_value]
-        [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-        ;
-
-c_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_nclob_variable =
-        'SQL' 'TYPE' 'IS' 'NCLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS'
-        path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        c_host_identifier [c_initial_value]
-        [{comma c_host_identifier [c_initial_value]}+]
-        ;
-
-c_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-c_initial_value =
-        equals_operator {character_representation}+
-        ;
-
-embedded_sql_cobol_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-cobol_variable_definition =
-        {'01' | '77'} cobol_host_identifier cobol_type_specification
-        [{character_representation}+] period
-        ;
-
-cobol_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-cobol_type_specification =
-        cobol_character_type
-    |   cobol_national_character_type
-    |   cobol_numeric_type
-    |   cobol_integer_type
-    |   cobol_derived_type_specification
-        ;
-
-cobol_derived_type_specification =
-        cobol_clob_variable
-    |   cobol_nclob_variable
-    |   cobol_blob_variable
-    |   cobol_user_defined_type_variable
-    |   cobol_clob_locator_variable
-    |   cobol_blob_locator_variable
-    |   cobol_array_locator_variable
-    |   cobol_multiset_locator_variable
-    |   cobol_user_defined_type_locator_variable
-    |   cobol_ref_variable
-        ;
-
-cobol_character_type =
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        {'PIC' | 'PICTURE'} ['IS'] {'X' [left_paren length right_paren]}+
-        ;
-
-cobol_national_character_type =
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        {'PIC' | 'PICTURE'} ['IS'] {'N' [left_paren length right_paren]}+
-        ;
-
-cobol_clob_variable =
-        ['USAGE' ['IS']]
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-cobol_nclob_variable =
-        ['USAGE' ['IS']]
-        'SQL' 'TYPE' 'IS' 'NCLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-cobol_blob_variable =
-        ['USAGE' ['IS']]
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-cobol_user_defined_type_variable =
-        ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-cobol_clob_locator_variable =
-        ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-cobol_blob_locator_variable =
-        ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-cobol_array_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-cobol_multiset_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-cobol_user_defined_type_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-cobol_ref_variable =
-        ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-cobol_numeric_type =
-        {'PIC' | 'PICTURE'} ['IS'] 'S' cobol_nines_specification ['USAGE' ['IS']] 'DISPLAY' 'SIGN' 'LEADING' 'SEPARATE'
-        ;
-
-cobol_nines_specification =
-        cobol_nines ['V' [cobol_nines]]
-    |   'V' cobol_nines
-        ;
-
-cobol_integer_type =
-        cobol_binary_integer
-        ;
-
-cobol_binary_integer =
-        {'PIC' | 'PICTURE'} ['IS'] 'S' cobol_nines ['USAGE' ['IS']] 'BINARY'
-        ;
-
-cobol_nines =
-        {'9' [left_paren length right_paren]}+
-        ;
-
-embedded_sql_fortran_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-fortran_variable_definition =
-        fortran_type_specification fortran_host_identifier [{comma fortran_host_identifier}+]
-        ;
-
-fortran_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-fortran_type_specification =
-        'CHARACTER' [asterisk length] ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    |   'CHARACTER' 'KIND' =
-        'n' [asterisk length] ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    |   'INTEGER'
-    |   'REAL'
-    |   'DOUBLE' 'PRECISION'
-    |   'LOGICAL'
-    |   fortran_derived_type_specification
-        ;
-
-fortran_derived_type_specification =
-        fortran_clob_variable
-    |   fortran_blob_variable
-    |   fortran_user_defined_type_variable
-    |   fortran_clob_locator_variable
-    |   fortran_blob_locator_variable
-    |   fortran_user_defined_type_locator_variable
-    |   fortran_array_locator_variable
-    |   fortran_multiset_locator_variable
-    |   fortran_ref_variable
-        ;
-
-fortran_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-fortran_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-fortran_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-fortran_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-fortran_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-fortran_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-fortran_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-fortran_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-fortran_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-embedded_sql_mumps_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-mumps_variable_definition =
-        mumps_numeric_variable semicolon
-    |   mumps_character_variable semicolon
-    |   mumps_derived_type_specification semicolon
-        ;
-
-mumps_character_variable =
-        'VARCHAR' mumps_host_identifier mumps_length_specification
-        [{comma mumps_host_identifier mumps_length_specification}+]
-        ;
-
-mumps_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-mumps_length_specification =
-        left_paren length right_paren
-        ;
-
-mumps_numeric_variable =
-        mumps_type_specification mumps_host_identifier [{comma mumps_host_identifier}+]
-        ;
-
-mumps_type_specification =
-        'INT'
-    |   'DEC' [left_paren precision [comma scale] right_paren]
-    |   'REAL'
-        ;
-
-mumps_derived_type_specification =
-        mumps_clob_variable
-    |   mumps_blob_variable
-    |   mumps_user_defined_type_variable
-    |   mumps_clob_locator_variable
-    |   mumps_blob_locator_variable
-    |   mumps_user_defined_type_locator_variable
-    |   mumps_array_locator_variable
-    |   mumps_multiset_locator_variable
-    |   mumps_ref_variable
-        ;
-
-mumps_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-mumps_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-mumps_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-mumps_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-mumps_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-mumps_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-mumps_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-mumps_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-mumps_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-embedded_sql_pascal_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-pascal_variable_definition =
-        pascal_host_identifier [{comma pascal_host_identifier}+] colon pascal_type_specification semicolon
-        ;
-
-pascal_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-pascal_type_specification =
-        'PACKED' 'ARRAY' left_bracket '1' double_period length right_bracket 'OF' 'CHAR'
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    |   'INTEGER'
-    |   'REAL'
-    |   'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    |   'BOOLEAN'
-    |   pascal_derived_type_specification
-        ;
-
-pascal_derived_type_specification =
-        pascal_clob_variable
-    |   pascal_blob_variable
-    |   pascal_user_defined_type_variable
-    |   pascal_clob_locator_variable
-    |   pascal_blob_locator_variable
-    |   pascal_user_defined_type_locator_variable
-    |   pascal_array_locator_variable
-    |   pascal_multiset_locator_variable
-    |   pascal_ref_variable
-        ;
-
-pascal_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-pascal_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-pascal_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-pascal_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-pascal_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-pascal_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-pascal_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-pascal_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-pascal_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-embedded_sql_pl_i_program =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-pl_i_variable_definition =
-        {'DCL' | 'DECLARE'} {pl_i_host_identifier
-    |   left_paren pl_i_host_identifier [{comma pl_i_host_identifier}+] right_paren}
-        pl_i_type_specification [{character_representation}+] semicolon
-        ;
-
-pl_i_host_identifier =
-        !!SEE_THE_SYNTAX_RULES!!
-        ;
-
-pl_i_type_specification =
-        {'CHAR' | 'CHARACTER'} ['VARYING'] left_paren length right_paren ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    |   pl_i_type_fixed_decimal left_paren precision [comma scale] right_paren
-    |   pl_i_type_fixed_binary [left_paren precision right_paren]
-    |   pl_i_type_float_binary left_paren precision right_paren
-    |   pl_i_derived_type_specification
-        ;
-
-pl_i_derived_type_specification =
-        pl_i_clob_variable
-    |   pl_i_blob_variable
-    |   pl_i_user_defined_type_variable
-    |   pl_i_clob_locator_variable
-    |   pl_i_blob_locator_variable
-    |   pl_i_user_defined_type_locator_variable
-    |   pl_i_array_locator_variable
-    |   pl_i_multiset_locator_variable
-    |   pl_i_ref_variable
-        ;
-
-pl_i_clob_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' left_paren large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ;
-
-pl_i_blob_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ;
-
-pl_i_user_defined_type_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ;
-
-pl_i_clob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ;
-
-pl_i_blob_locator_variable =
-        'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ;
-
-pl_i_user_defined_type_locator_variable =
-        'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ;
-
-pl_i_array_locator_variable =
-        'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ;
-
-pl_i_multiset_locator_variable =
-        'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ;
-
-pl_i_ref_variable =
-        'SQL' 'TYPE' 'IS' reference_type
-        ;
-
-pl_i_type_fixed_decimal =
-        {'DEC' | 'DECIMAL'} 'FIXED'
-    |   'FIXED' {'DEC' | 'DECIMAL'}
-        ;
-
-pl_i_type_fixed_binary =
-        {'BIN' | 'BINARY'} 'FIXED'
-    |   'FIXED' {'BIN' | 'BINARY'}
-        ;
-
-pl_i_type_float_binary =
-        {'BIN' | 'BINARY'} 'FLOAT'
-    |   'FLOAT' {'BIN' | 'BINARY'}
-        ;
-
 direct_sql_statement =
-        directly_executable_statement semicolon
+        directly_executable_statement ';'
         ;
 
 directly_executable_statement =
@@ -6575,7 +4804,6 @@ directly_executable_statement =
     |   sql_transaction_statement
     |   sql_connection_statement
     |   sql_session_statement
-    |   direct_implementation_defined_statement
         ;
 
 direct_sql_data_statement =
@@ -6585,10 +4813,6 @@ direct_sql_data_statement =
     |   update_statement_searched
     |   merge_statement
     |   temporary_table_declaration
-        ;
-
-direct_implementation_defined_statement =
-        !!SEE_THE_SYNTAX_RULES!!
         ;
 
 direct_select_statement_multiple_rows =
@@ -6604,11 +4828,11 @@ sql_diagnostics_information =
         ;
 
 statement_information =
-        statement_information_item [{comma statement_information_item}+]
+        statement_information_item [{',' statement_information_item}+]
         ;
 
 statement_information_item =
-        simple_target_specification equals_operator statement_information_item_name
+        simple_target_specification '=' statement_information_item_name
         ;
 
 statement_information_item_name =
@@ -6625,11 +4849,11 @@ statement_information_item_name =
         ;
 
 condition_information =
-        {'EXCEPTION' | 'CONDITION'} condition_number condition_information_item [{comma condition_information_item}+]
+        {'EXCEPTION' | 'CONDITION'} condition_number condition_information_item [{',' condition_information_item}+]
         ;
 
 condition_information_item =
-        simple_target_specification equals_operator condition_information_item_name
+        simple_target_specification '=' condition_information_item_name
         ;
 
 condition_information_item_name =
