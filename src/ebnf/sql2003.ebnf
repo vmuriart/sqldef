@@ -1,98 +1,10 @@
 BNF Grammar for ISO/IEC 9075-2:2003 - Database Language SQL (SQL-2003) SQL/Foundation
 =====================================================================================
 
-@(#)$Id: sql-2003-2.bnf,v 1.18 2016/04/18 05:12:48 jleffler Exp $
 
---p
-Information taken from the Final Committee Draft (FCD) of ISO/IEC 9075-2:2003.
-However, the page numbers and some section titles (9.14 through 9.23,
-for example) are from the final standard.
-This means there could be other as yet undiagnosed differences between
-the final standard and the notation in this document; you were warned!
---/p
 
---p
-The plain text version of this grammar is
---## <a href='sql-2003-2.bnf'> sql-2003-2.bnf </a>.
---/p
 
---hr
---h2 Key SQL Statements and Fragments
---/h2
---bl
---li ALTER DOMAIN <alter domain statement>
---li ALTER TABLE <alter table statement>
---li CLOSE cursor <close statement>
---li Column definition <column definition>
---li COMMIT WORK <commit statement>
---li CONNECT <connect statement>
---li CREATE ASSERTION <assertion definition>
---li CREATE CHARACTER SET <character set definition>
---li CREATE COLLATION <collation definition>
---li CREATE DOMAIN <domain definition>
---li CREATE FUNCTION <schema function>
---li CREATE PROCEDURE <schema procedure>
---li CREATE SCHEMA <schema definition>
---li CREATE TABLE <table definition>
---li CREATE TRANSLATION <translation definition>
---li CREATE TRIGGER <trigger definition>
---li CREATE VIEW <view definition>
---li Data type <data type>
---li DEALLOCATE PREPARE <deallocate prepared statement>
---li DECLARE cursor <declare cursor> <dynamic declare cursor>
---li DECLARE LOCAL TEMPORARY TABLE <temporary table declaration>
---li DELETE <delete statement: positioned> <delete statement: searched> <dynamic delete statement: positioned>
---li DESCRIBE <describe statement>
---li DESCRIPTOR statements <system descriptor statement>
---li DISCONNECT <disconnect statement>
---li EXECUTE <execute statement>
---li EXECUTE IMMEDIATE <execute immediate statement>
---li FETCH cursor <fetch statement>
---li FROM clause <from clause>
---li GET DIAGNOSTICS <get diagnostics statement>
---li GRANT <grant statement>
---li GROUP BY clause <group by clause>
---li HAVING clause <having clause>
---li INSERT <insert statement>
---li Literals <literal>
---li Keywords <key word>
---li MERGE <merge statement>
---li OPEN cursor <open statement>
---li ORDER BY clause <order by clause>
---li PREPARE <prepare statement>
---li REVOKE <revoke statement>
---li ROLLBACK WORK <rollback statement>
---li SAVEPOINT <savepoint statement>
---li Search condition <search condition> <regular expression>
---li SELECT <query specification>
---li SET CATALOG <set catalog statement>
---li SET CONNECTION <set connection statement>
---li SET CONSTRAINTS <set constraints mode statement>
---li SET NAMES <set names statement>
---li SET SCHEMA <set schema statement>
---li SET SESSION AUTHORIZATION <set session user identifier statement>
---li SET TIME ZONE <set local time zone statement>
---li SET TRANSACTION <set transaction statement>
---li SQL Client MODULE <SQL-client module definition>
---li UPDATE <update statement: positioned> <update statement: searched> <dynamic update statement: positioned>
---li Value expression <value expression>
---li WHERE clause <where clause>
---/bl
 
---hr
---h2 5 Lexical Elements
---/h2
-
---p
-Basic definitions of characters used, tokens, symbols, etc.
-Most of this section would normally be handled within the lexical
-analyzer rather than in the grammar proper.
-Further, the original document does not quote the various single
-characters, which makes it hard to process automatically.
---/p
-
---h3 5.1 <SQL terminal character> (p151)
---/h3
 
 <SQL terminal character> ::= <SQL language character>
 
@@ -174,11 +86,6 @@ characters, which makes it hard to process automatically.
 
 <question mark> ::= ?
 
---p
---i
-The trigraphs are new in SQL-2003.
---/i
---/p
 
 <left bracket or trigraph> ::= <left bracket> | <left bracket trigraph>
 
@@ -202,13 +109,7 @@ The trigraphs are new in SQL-2003.
 
 <right brace> ::= }
 
---hr
---h3 5.2 <token> and <separator> (p134)
---/h3
 
---p
-Specifying lexical units (tokens and separators) that participate in SQL language.
---/p
 
 <token> ::= <nondelimiter token> | <delimiter token>
 
@@ -228,15 +129,6 @@ Specifying lexical units (tokens and separators) that participate in SQL languag
 
 <identifier part> ::= <identifier start> | <identifier extend>
 
---p
---i
---small
-Previous standard said:
---br
-<identifier start> ::= <initial alphabetic character> | <ideographic character>
---/small
---/i
---/p
 
 <identifier start> ::= !! See the Syntax Rules.
 
@@ -252,13 +144,6 @@ Previous standard said:
 
 <delimited identifier part> ::= <nondoublequote character> | <doublequote symbol>
 
---p
---i
---small
-The productions for <Unicode delimited identifier> and so on are new in SQL-2003.
---/small
---/i
---/p
 
 <Unicode delimited identifier> ::=
         U<ampersand><double quote> <Unicode delimiter body> <double quote>
@@ -276,116 +161,26 @@ The productions for <Unicode delimited identifier> and so on are new in SQL-2003
     |   <Unicode 6 digit escape value>
     |   <Unicode character escape value>
 
---p
---i
---small
-Syntax rule 20: <Unicode 4 digit escape value>'<Unicode escape
-character>+xyzw' is equivalent to the Unicode code point specified by
-U+xyzw.
---/small
---/i
---/p
 
 <Unicode 4 digit escape value> ::= <Unicode escape character><hexit><hexit><hexit><hexit>
 
---p
---i
---small
-Syntax rule 21: <Unicode 6 digit escape value>'<Unicode escape
-character>+xyzwrs' is equivalent to the Unicode code point specified by
-U+xyzwrs.
---/small
---/i
---/p
 
---p
---i
---small
-NOTE 64: The 6-hexit notation is derived by taking the UCS-4 notation
-defined by ISO/IEC 10646-1 and removing the leading two hexits, whose
-values are always 0 (zero).
---/small
---/i
---/p
 
 <Unicode 6 digit escape value> ::=
         <Unicode escape character><plus sign><hexit><hexit><hexit><hexit><hexit><hexit>
 
---p
---i
---small
-Syntax rule 22: <Unicode character escape value> is equivalent to a
-single instance of <Unicode escape character>.
---/small
---/i
---/p
 
 <Unicode character escape value> ::= <Unicode escape character><Unicode escape character>
 
---p
---i
---small
-Syntax rule 15: <Unicode escape character> shall be a single character
-from the source language character set other than a <hexit>, <plus
-sign>, or <white space>.
---/small
---/i
---/p
 
---p
---i
---small
-Syntax rule 16: If the source language character set contains <reverse
-solidus>, then let DEC be <reverse solidus>; otherwise, let DEC be an
-implementation-defined character from the source language character set
-that is not a <hexit>, <plus sign>, <double quote>, or <white space>.
---/small
---/i
---/p
 
---p
---i
---small
-Syntax rule 17: If a <Unicode escape specifier> does not contain
-<Unicode escape character>, then "UESCAPE <quote>DEC<quote>" is
-implicit.
---/small
---/i
---/p
 
---p
---i
---small
-Syntax rule 18: In a <Unicode escape value> there shall be no
-<separator> between the <Unicode escape character> and the first
-<hexit>, nor between any of the <hexit>s.
---/small
---/i
---/p
 
 <Unicode escape character> ::= !! See the Syntax Rules (15-18 above).
 
---p
---i
---small
-Syntax rule 6: A <nondoublequote character> is any character of
-the source language character set other than a <double quote>.
---/small
---/i
---/p
 
 <nondoublequote character> ::= !! See the Syntax Rules.
 
---p
---i
---small
-The rule for <doublequote symbol> in the standard uses two adjacent
-literal double quotes rather than referencing <double quote>; the
-reasons are not clear.
-It is annotated '!! two consecutive double quote characters'.
---/small
---/i
---/p
 
 <doublequote symbol> ::= <double quote> <double quote>
 
@@ -408,18 +203,6 @@ It is annotated '!! two consecutive double quote characters'.
     |   <double colon>
     |   <double period>
 
---p
---i
---small
-The rules for <not equals operator> etc in the standard uses
-two adjacent literal characters rather than referencing
-<less than> and <greater than>; the reasons are not clear.
-Note that two characters must be adjacent with no
-intervening space, not a pair of characters separated by
-arbitrary white space.
---/small
---/i
---/p
 
 <not equals operator> ::= <less than operator> <greater than operator>
 
@@ -443,15 +226,6 @@ arbitrary white space.
 
 <simple comment introducer> ::= <minus sign><minus sign> [ <minus sign>... ]
 
---p
---small
---i
-The <bracketed comment> rule included '!! See the Syntax Rules'.
-This probably says something about the <slash> <asterisk> and <asterisk>
-<slash> needing to be adjacent characters rather than adjacent tokens.
---/i
---/small
---/p
 
 <bracketed comment> ::=
         <bracketed comment introducer> <bracketed comment contents> <bracketed comment terminator>
@@ -466,17 +240,6 @@ This probably says something about the <slash> <asterisk> and <asterisk>
 
 <newline> ::= !! See the Syntax Rules.
 
---p
---small
---i
-There was a surprising amount of movement of keywords between the
-reserved and non-reserved word classes between SQL-99 and SQL-2003-2 FCD
-and again between SQL 2003-2 FCD and SQL 2003-2 IS.
-There is also room to think that much of the host language
-support moved out of Part 2 (SQL/Foundation).
---/i
---/small
---/p
 
 <key word> ::= <reserved word> | <non-reserved word>
 
@@ -981,9 +744,6 @@ support moved out of Part 2 (SQL/Foundation).
     |   WITHOUT
     |   YEAR
 
---hr
---h3 5.3 <literal> (p143)
---/h3
 
 <literal> ::= <signed numeric literal> | <general literal>
 
@@ -1009,16 +769,6 @@ support moved out of Part 2 (SQL/Foundation).
 
 <nonquote character> ::= !! See the Syntax Rules.
 
---p
---small
---i
-The <quote symbol> rule consists of two immediately adjacent <quote>
-marks with no spaces.
-As usual, this would be best handled in the lexical analyzer, not in the
-grammar.
---/i
---/small
---/p
 
 <quote symbol> ::= <quote><quote>
 
@@ -1125,9 +875,6 @@ grammar.
 
 <boolean literal> ::= TRUE | FALSE | UNKNOWN
 
---hr
---h3 5.4 Names and identifiers (p151)
---/h3
 
 <identifier> ::= <actual identifier>
 
@@ -1238,12 +985,7 @@ grammar.
 
 <window name> ::= <identifier>
 
---hr
---h2 6 Scalar expressions
---/h2
 
---h3 6.1 <data type> (p161)
---/h3
 
 <data type> ::=
         <predefined type>
@@ -1351,15 +1093,9 @@ grammar.
 
 <multiset type> ::= <data type> MULTISET
 
---hr
---h3 6.2 <field definition> (p173)
---/h3
 
 <field definition> ::= <field name> <data type> [ <reference scope check> ]
 
---hr
---h3 6.3 <value expression primary> (p174)
---/h3
 
 <value expression primary> ::=
         <parenthesized value expression>
@@ -1388,9 +1124,6 @@ grammar.
     |   <routine invocation>
     |   <next value expression>
 
---hr
---h3 6.4 <value specification> and <target specification> (p176)
---/h3
 
 <value specification> ::= <literal> | <general value specification>
 
@@ -1449,9 +1182,6 @@ grammar.
 
 <current collation specification> ::= CURRENT_COLLATION <left paren> <string value expression> <right paren>
 
---hr
---h3 6.5 <contextually typed value specification> (p181)
---/h3
 
 <contextually typed value specification> ::=
         <implicitly typed value specification> | <default specification>
@@ -1466,39 +1196,24 @@ grammar.
 
 <default specification> ::= DEFAULT
 
---hr
---h3 6.6 <identifier chain> (p183)
---/h3
 
 <identifier chain> ::= <identifier> [ { <period> <identifier> }... ]
 
 <basic identifier chain> ::= <identifier chain>
 
---hr
---h3 6.7 <column reference> (p187)
---/h3
 
 <column reference> ::=
         <basic identifier chain>
     |   MODULE <period> <qualified identifier> <period> <column name>
 
---hr
---h3 6.8 <SQL parameter reference> (p190)
---/h3
 
 <SQL parameter reference> ::= <basic identifier chain>
 
---hr
---h3 6.9 <set function specification> (p191)
---/h3
 
 <set function specification> ::= <aggregate function> | <grouping operation>
 
 <grouping operation> ::= GROUPING <left paren> <column reference> [ { <comma> <column reference> }... ] <right paren>
 
---hr
---h3 6.10 <window function> (p193)
---/h3
 
 <window function> ::= <window function type> OVER <window name or specification>
 
@@ -1513,9 +1228,6 @@ grammar.
 
 <in-line window specification> ::= <window specification>
 
---hr
---h3 6.11 <case expression> (p197)
---/h3
 
 
 <case expression> ::= <case abbreviation> | <case specification>
@@ -1560,9 +1272,6 @@ grammar.
 
 <result expression> ::= <value expression>
 
---hr
---h3 6.12 <cast specification> (p200)
---/h3
 
 <cast specification> ::= CAST <left paren> <cast operand> AS <cast target> <right paren>
 
@@ -1570,21 +1279,12 @@ grammar.
 
 <cast target> ::= <domain name> | <data type>
 
---hr
---h3 6.13 <next value expression> (p216)
---/h3
 
 <next value expression> ::= NEXT VALUE FOR <sequence generator name>
 
---hr
---h3 6.14 <field reference> (p218)
---/h3
 
 <field reference> ::= <value expression primary> <period> <field name>
 
---hr
---h3 6.15 <subtype treatment> (p219)
---/h3
 
 <subtype treatment> ::=
         TREAT <left paren> <subtype operand> AS <target subtype> <right paren>
@@ -1595,9 +1295,6 @@ grammar.
         <path-resolved user-defined type name>
     |   <reference type>
 
---hr
---h3 6.16 <method invocation> (p221)
---/h3
 
 <method invocation> ::= <direct invocation> | <generalized invocation>
 
@@ -1612,26 +1309,17 @@ grammar.
 
 <constructor method selection> ::= <routine invocation>
 
---hr
---h3 6.17 <static method invocation> (p223)
---/h3
 
 <static method invocation> ::=
         <path-resolved user-defined type name> <double colon> <method name> [ <SQL argument list> ]
 
 <static method selection> ::= <routine invocation>
 
---hr
---h3 6.18 <new specification> (p225)
---/h3
 
 <new specification> ::= NEW <routine invocation>
 
 <new invocation> ::= <method invocation> | <routine invocation>
 
---hr
---h3 6.19 <attribute or method reference> (p227)
---/h3
 
 <attribute or method reference> ::=
         <value expression primary> <dereference operator> <qualified identifier>
@@ -1639,45 +1327,25 @@ grammar.
 
 <dereference operator> ::= <right arrow>
 
---hr
---h3 6.20 <dereference operation> (p229)
---/h3
 
 <dereference operation> ::= <reference value expression> <dereference operator> <attribute name>
 
---hr
---h3 6.21 <method reference> (p230)
---/h3
 
 <method reference> ::=
         <value expression primary> <dereference operator> <method name> <SQL argument list>
 
---hr
---h3 6.22 <reference resolution> (p232)
---/h3
 
 <reference resolution> ::= DEREF <left paren> <reference value expression> <right paren>
 
---hr
---h3 6.23 <array element reference> (p234)
---/h3
 
 <array element reference> ::=
         <array value expression> <left bracket or trigraph> <numeric value expression> <right bracket or trigraph>
 
---hr
---h3 6.24 <multiset element reference> (p235)
---/h3
 
 <multiset element reference> ::=
         ELEMENT <left paren> <multset value expression> <right paren>
 
---h3 6.25 <value expression> (p236)
---/h3
 
---p
-Specify a value.
---/p
 
 <value expression> ::=
         <common value expression>
@@ -1701,12 +1369,7 @@ Specify a value.
 
 <collection value constructor> ::= <array value constructor> | <multiset value constructor>
 
---h3 6.26 <numeric value expression> (p240)
---/h3
 
---p
-Specify a numeric value.
---/p
 
 <numeric value expression> ::=
         <term>
@@ -1724,12 +1387,7 @@ Specify a numeric value.
         <value expression primary>
     |   <numeric value function>
 
---h3 6.27 <numeric value function> (p242)
---/h3
 
---p
-Specify a function yielding a value of type numeric.
---/p
 
 <numeric value function> ::=
         <position expression>
@@ -1805,12 +1463,7 @@ Specify a function yielding a value of type numeric.
 
 <width bucket count> ::= <numeric value expression>
 
---h3 6.28 <string value expression> (p251)
---/h3
 
---p
-Specify a character string value or a binary string value.
---/p
 
 <string value expression> ::= <character value expression> | <blob value expression>
 
@@ -1830,12 +1483,7 @@ Specify a character string value or a binary string value.
 
 <blob concatenation> ::= <blob value expression> <concatenation operator> <blob factor>
 
---h3 6.29 <string value function> (p255)
---/h3
 
---p
-Specify a function yielding a value of type character string or binary string.
---/p
 
 <string value function> ::= <character value function> | <blob value function>
 
@@ -1906,12 +1554,7 @@ Specify a function yielding a value of type character string or binary string.
 
 <string length> ::= <numeric value expression>
 
---h3 6.30 <datetime value expression> (p266)
---/h3
 
---p
-Specify a datetime value.
---/p
 
 <datetime value expression> ::=
         <datetime term>
@@ -1929,12 +1572,7 @@ Specify a datetime value.
 
 <time zone specifier> ::= LOCAL | TIME ZONE <interval primary>
 
---h3 6.31 <datetime value function> (p269)
---/h3
 
---p
-Specify a function yielding a value of type datetime.
---/p
 
 <datetime value function> ::=
         <current date value function>
@@ -1953,12 +1591,7 @@ Specify a function yielding a value of type datetime.
 
 <current local timestamp value function> ::= LOCALTIMESTAMP [ <left paren> <timestamp precision> <right paren> ]
 
---h3 6.32 <interval value expression> (p271)
---/h3
 
---p
-Specify an interval value.
---/p
 
 <interval value expression> ::=
         <interval term>
@@ -1984,15 +1617,11 @@ Specify an interval value.
 
 <interval term 2> ::= <interval term>
 
---h3 6.33 <interval value function> (p276)
---/h3
 
 <interval value function> ::= <interval absolute value function>
 
 <interval absolute value function> ::= ABS <left paren> <interval value expression> <right paren>
 
---h3 6.34 <boolean value expression> (p277)
---/h3
 
 <boolean value expression> ::=
         <boolean term>
@@ -2016,8 +1645,6 @@ Specify an interval value.
 
 <parenthesized boolean value expression> ::= <left paren> <boolean value expression> <right paren>
 
---h3 6.35 <array value expression> (p284)
---/h3
 
 <array value expression> ::= <array concatenation> | <array factor>
 
@@ -2027,8 +1654,6 @@ Specify an interval value.
 
 <array factor> ::= <value expression primary>
 
---h3 6.36 <array value constructor> (p284)
---/h3
 
 <array value constructor> ::=
         <array value constructor by enumeration>
@@ -2044,8 +1669,6 @@ Specify an interval value.
 <array value constructor by query> ::=
         ARRAY <left paren> <query expression> [ <order by clause> ] <right paren>
 
---h3 6.37 <multiset value expression> (p286)
---/h3
 
 <multiset value expression> ::=
         <multiset term>
@@ -2058,15 +1681,11 @@ Specify an interval value.
 
 <multiset primary> ::= <multiset value function> | <value expression primary>
 
---h3 6.38 <multiset value function> (p289)
---/h3
 
 <multiset value function> ::= <multiset set function>
 
 <multiset set function> ::= SET <left paren> <multiset value expression> <right paren>
 
---h3 6.39 <multiset value constructor> (p290)
---/h3
 
 <multiset value constructor> ::=
         <multiset value constructor by enumeration>
@@ -2083,16 +1702,8 @@ Specify an interval value.
 
 <table value constructor by query> ::= TABLE <left paren> <query expression> <right paren>
 
---hr
---h2 7 Query expressions
---/h2
 
---h3 7.1 <row value constructor> (p293)
---/h3
 
---p
-Specify a value or list of values to be constructed into a row or partial row.
---/p
 
 <row value constructor> ::=
         <common value expression>
@@ -2129,12 +1740,7 @@ Specify a value or list of values to be constructed into a row or partial row.
     |   <boolean predicand>
     |   <explicit row value constructor>
 
---h3 7.2 <row value expression> (p296)
---/h3
 
---p
-Specify a row value.
---/p
 
 <row value expression> ::=
         <row value special case>
@@ -2154,12 +1760,7 @@ Specify a row value.
 
 <row value special case> ::= <nonparenthesized value expression primary>
 
---h3 7.3 <table value constructor> (p298)
---/h3
 
---p
-Specify a set of <row value expression>s to be constructed into a table.
---/p
 
 <table value constructor> ::= VALUES <row value expression list>
 
@@ -2169,12 +1770,7 @@ Specify a set of <row value expression>s to be constructed into a table.
 
 <contextually typed row value expression list> ::= <contextually typed row value expression> [ { <comma> <contextually typed row value expression> }... ]
 
---h3 7.4 <table expression> (p300)
---/h3
 
---p
-Specify a table or a grouped table.
---/p
 
 <table expression> ::=
         <from clause>
@@ -2183,23 +1779,13 @@ Specify a table or a grouped table.
         [ <having clause> ]
         [ <window clause> ]
 
---h3 7.5 <from clause> (p301)
---/h3
 
---p
-Specify a table derived from one or more tables.
---/p
 
 <from clause> ::= FROM <table reference list>
 
 <table reference list> ::= <table reference> [ { <comma> <table reference> }... ]
 
---h3 7.6 <table reference> (p303)
---/h3
 
---p
-Reference a table.
---/p
 
 <table reference> ::= <table primary or joined table> [ <sample clause> ]
 
@@ -2241,12 +1827,7 @@ Reference a table.
 
 <column name list> ::= <column name> [ { <comma> <column name> }... ]
 
---h3 7.7 <joined table> (p312)
---/h3
 
---p
-Specify a table derived from a Cartesian product, inner or outer join, or union join.
---/p
 
 <joined table> ::=
         <cross join>
@@ -2274,23 +1855,11 @@ Specify a table derived from a Cartesian product, inner or outer join, or union 
 
 <join column list> ::= <column name list>
 
---h3 7.8 <where clause> (p319)
---/h3
 
---p
-Specify a table derived by the application of a <search condition> to the result of the preceding
-<from clause>.
---/p
 
 <where clause> ::= WHERE <search condition>
 
---h3 7.9 <group by clause> (p320)
---/h3
 
---p
-Specify a grouped table derived by the application of the <group by clause> to the result of the
-previously specified clause.
---/p
 
 <group by clause> ::= GROUP BY [ <set quantifier> ] <grouping element list>
 
@@ -2330,21 +1899,11 @@ previously specified clause.
 
 <empty grouping set> ::= <left paren> <right paren>
 
---h3 7.10 <having clause> (p329)
---/h3
 
---p
-Specify a grouped table derived by the elimination of groups that do not satisfy a <search condition>.
---/p
 
 <having clause> ::= HAVING <search condition>
 
---h3 7.11 <window clause> (p331)
---/h3
 
---p
-Specify one or more window definitions.
---/p
 
 <window clause> ::= WINDOW <window definition list>
 
@@ -2398,12 +1957,7 @@ Specify one or more window definitions.
     |   EXCLUDE TIES
     |   EXCLUDE NO OTHERS
 
---h3 7.12 <query specification> (p341)
---/h3
 
---p
-Specify a table derived from the result of a <table expression>.
---/p
 
 <query specification> ::= SELECT [ <set quantifier> ] <select list> <table expression>
 
@@ -2427,12 +1981,7 @@ Specify a table derived from the result of a <table expression>.
 
 <all fields column name list> ::= <column name list>
 
---h3 7.13 <query expression> (p350)
---/h3
 
---p
-Specify a table.
---/p
 
 <query expression> ::= [ <with clause> ] <query expression body>
 
@@ -2474,13 +2023,7 @@ Specify a table.
 
 <corresponding column list> ::= <column name list>
 
---h3 7.14 <search or cycle clause> (p363)
---/h3
 
---p
-Specify the generation of ordering and cycle detection information in the result of recursive query
-expressions.
---/p
 
 <search or cycle clause> ::=
         <search clause>
@@ -2513,12 +2056,7 @@ expressions.
 
 <non-cycle mark value> ::= <value expression>
 
---h3 7.15 <subquery> (p368)
---/h3
 
---p
-Specify a scalar value, a row, or a table derived from a <query expression>.
---/p
 
 <scalar subquery> ::= <subquery>
 
@@ -2528,16 +2066,8 @@ Specify a scalar value, a row, or a table derived from a <query expression>.
 
 <subquery> ::= <left paren> <query expression> <right paren>
 
---hr
---h2 8 Predicates
---/h2
 
---h3 8.1 <predicate> (p371)
---/h3
 
---p
-Specify a condition that can be evaluated to give a boolean value.
---/p
 
 <predicate> ::=
         <comparison predicate>
@@ -2558,12 +2088,7 @@ Specify a condition that can be evaluated to give a boolean value.
     |   <set predicate>
     |   <type predicate>
 
---h3 8.2 <comparison predicate> (p373)
---/h3
 
---p
-Specify a comparison of two row values.
---/p
 
 <comparison predicate> ::= <row value predicand> <comparison predicate part 2>
 
@@ -2577,23 +2102,13 @@ Specify a comparison of two row values.
     |   <less than or equals operator>
     |   <greater than or equals operator>
 
---h3 8.3 <between predicate> (p380)
---/h3
 
---p
-Specify a range comparison.
---/p
 
 <between predicate> ::= <row value predicand> <between predicate part 2>
 
 <between predicate part 2> ::= [ NOT ] BETWEEN [ ASYMMETRIC | SYMMETRIC ] <row value predicand> AND <row value predicand>
 
---h3 8.4 <in predicate> (p381)
---/h3
 
---p
-Specify a quantified comparison.
---/p
 
 <in predicate> ::= <row value predicand> <in predicate part 2>
 
@@ -2605,12 +2120,7 @@ Specify a quantified comparison.
 
 <in value list> ::= <row value expression> [ { <comma> <row value expression> }... ]
 
---h3 8.5 <like predicate> (p383)
---/h3
 
---p
-Specify a pattern-match comparison.
---/p
 
 <like predicate> ::= <character like predicate> | <octet like predicate>
 
@@ -2630,12 +2140,7 @@ Specify a pattern-match comparison.
 
 <escape octet> ::= <blob value expression>
 
---h3 8.6 <similar predicate> (p389)
---/h3
 
---p
-Specify a character string similarity by means of a regular expression.
---/p
 
 <similar predicate> ::= <row value predicand> <similar predicate part 2>
 
@@ -2695,23 +2200,13 @@ Specify a character string similarity by means of a regular expression.
 
 <regular character set identifier> ::= <identifier>
 
---h3 8.7 <null predicate> (p395)
---/h3
 
---p
-Specify a test for a null value.
---/p
 
 <null predicate> ::= <row value predicand> <null predicate part 2>
 
 <null predicate part 2> ::= IS [ NOT ] NULL
 
---h3 8.8 <quantified comparison predicate> (p397)
---/h3
 
---p
-Specify a quantified comparison.
---/p
 
 <quantified comparison predicate> ::= <row value predicand> <quantified comparison predicate part 2>
 
@@ -2723,50 +2218,25 @@ Specify a quantified comparison.
 
 <some> ::= SOME | ANY
 
---h3 8.9 <exists predicate> (p399)
---/h3
 
---p
-Specify a test for a non-empty set.
---/p
 
 <exists predicate> ::= EXISTS <table subquery>
 
---h3 8.10 <unique predicate> (p400)
---/h3
 
---p
-Specify a test for the absence of duplicate rows
---/p
 
 <unique predicate> ::= UNIQUE <table subquery>
 
---h3 8.11 <normalized predicate> (p401)
---/h3
 
---p
-Determine whether a character string value is normalized.
---/p
 
 <normalized predicate> ::= <string value expression> IS [ NOT ] NORMALIZED
 
---h3 8.12 <match predicate> (p402)
---/h3
 
---p
-Specify a test for matching rows.
---/p
 
 <match predicate> ::= <row value predicand> <match predicate part 2>
 
 <match predicate part 2> ::= MATCH [ UNIQUE ] [ SIMPLE | PARTIAL | FULL ] <table subquery>
 
---h3 8.13 <overlaps predicate> (p405)
---/h3
 
---p
-Specify a test for an overlap between two datetime periods.
---/p
 
 <overlaps predicate> ::= <overlaps predicate part 1> <overlaps predicate part 2>
 
@@ -2778,12 +2248,7 @@ Specify a test for an overlap between two datetime periods.
 
 <row value predicand 2> ::= <row value predicand>
 
---h3 8.14 <distinct predicate> (p407)
---/h3
 
---p
-Specify a test of whether two row values are distinct
---/p
 
 <distinct predicate> ::= <row value predicand 3> <distinct predicate part 2>
 
@@ -2793,45 +2258,25 @@ Specify a test of whether two row values are distinct
 
 <row value predicand 4> ::= <row value predicand>
 
---h3 8.15 <member predicate> (p409)
---/h3
 
---p
-Specify a test of whether a value is a member of a multiset.
---/p
 
 <member predicate> ::= <row value predicand> <member predicate part 2>
 
 <member predicate part 2> ::= [ NOT ] MEMBER [ OF ] <multiset value expression>
 
---h3 8.16 <submultiset predicate> (p411)
---/h3
 
---p
-Specify a test of whether a multiset is a submultiset of another multiset.
---/p
 
 <submultiset predicate> ::= <row value predicand> <submultiset predicate part 2>
 
 <submultiset predicate part 2> ::= [ NOT ] SUBMULTISET [ OF ] <multiset value expression>
 
---h3 8.17 <set predicate> (p413)
---/h3
 
---p
-Specify a test of whether a multiset is a set (that is, does not contain any duplicates).
---/p
 
 <set predicate> ::= <row value predicand> <set predicate part 2>
 
 <set predicate part 2> ::= IS [ NOT ] A SET
 
---h3 8.18 <type predicate> (p414)
---/h3
 
---p
-Specify a type test.
---/p
 
 <type predicate> ::= <row value predicand> <type predicate part 2>
 
@@ -2847,99 +2292,36 @@ Specify a type test.
 
 <exclusive user-defined type specification> ::= ONLY <path-resolved user-defined type name>
 
---h3 8.19 <search condition> (p416)
---/h3
 
---p
-Specify a condition that is True , False , or Unknown , depending on the value of a <boolean value
-expression>.
---/p
 
 <search condition> ::= <boolean value expression>
 
---hr
---h2 9 Additional common rules
---/h2
 
---h3 9.1 Retrieval assignment (p417)
---/h3
 
---h3 9.2 Store assignment (p422)
---/h3
 
---h3 9.3 Data types of results of aggregations (p427)
---/h3
 
---h3 9.4 Subject routine determination (p430)
---/h3
 
---h3 9.5 Type precedence list determination (p431)
---/h3
 
---h3 9.6 Host parameter mode determination (p434)
---/h3
 
---h3 9.7 Type name determination (p436)
---/h3
 
---h3 9.8 Determination of identical values (p438)
---/h3
 
---h3 9.9 Equality operations (p440)
---/h3
 
---h3 9.10 Grouping operations (p443)
---/h3
 
---h3 9.11 Multiset element grouping operations (p445)
---/h3
 
---h3 9.12 Ordering operations (p447)
---/h3
 
---h3 9.13 Collation determination (p449)
---/h3
 
---h3 9.14 Execution of array-returning functions (p450)
---/h3
 
---h3 9.15 Execution of multiset-returning functions (p453)
---/h3
 
---h3 9.16 Data type identity (p454)
---/h3
 
---h3 9.17 Determination of a from-sql function (p456)
---/h3
 
---h3 9.18 Determination of a from-sql function for an overriding method (p457)
---/h3
 
---h3 9.19 Determination of a to-sql function (p458)
---/h3
 
---h3 9.20 Determination of a to-sql function for an overriding method (p459)
---/h3
 
---h3 9.21 Generation of the next value of a sequence generator (p460)
---/h3
 
---h3 9.22 Creation of a sequence generator (p461)
---/h3
 
---h3 9.23 Altering a sequence generator (p463)
---/h3
 
---hr
---h2 10 Additional common elements
---/h2
 
---h3 10.1 <interval qualifier> (p465)
---/h3
 
---p
-Specify the precision of an interval data type.
---/p
 
 <interval qualifier> ::=
         <start field> TO <end field>
@@ -2965,50 +2347,21 @@ Specify the precision of an interval data type.
 
 <interval leading field precision> ::= <unsigned integer>
 
---h3 10.2 <language clause> (p469)
---/h3
 
---p
-Specify a standard programming language.
---/p
 
 <language clause> ::= LANGUAGE <language name>
 
 <language name> ::= ADA | C | COBOL | FORTRAN | MUMPS | PASCAL | PLI | SQL
 
---p
-Table 14 -- Standard programming languages
---/p
 
---## <table border=1>
---## <tr> <th> Language keyword </th> <th> Relevant standard </th> </tr>
---## <tr><td>ADA</td><td>ISO/IEC 8652</td></tr>
---## <tr><td>C</td><td>ISO/IEC 9899</td></tr>
---## <tr><td>COBOL</td><td>ISO 1989</td></tr>
---## <tr><td>FORTRAN</td><td>ISO 1539</td></tr>
---## <tr><td>MUMPS</td><td>ISO/IEC 11756</td></tr>
---## <tr><td>PASCAL</td><td>ISO/IEC 7185 and ISO/IEC 10206</td></tr>
---## <tr><td>PLI</td><td>ISO 6160</td></tr>
---## <tr><td>SQL</td><td>ISO/IEC 9075</td></tr>
---## </table>
 
---h3 10.3 <path specification> (p471)
---/h3
 
---p
-Specify an order for searching for an SQL-invoked routine.
---/p
 
 <path specification> ::= PATH <schema name list>
 
 <schema name list> ::= <schema name> [ { <comma> <schema name> }... ]
 
---h3 10.4 <routine invocation> (p472)
---/h3
 
---p
-Invoke an SQL-invoked routine.
---/p
 
 <routine invocation> ::= <routine name> <SQL argument list>
 
@@ -3023,12 +2376,7 @@ Invoke an SQL-invoked routine.
 
 <generalized expression> ::= <value expression> AS <path-resolved user-defined type name>
 
---h3 10.5 <character set specification> (p495)
---/h3
 
---p
-Identify a character set.
---/p
 
 <character set specification> ::=
         <standard character set name>
@@ -3041,12 +2389,7 @@ Identify a character set.
 
 <user-defined character set name> ::= <character set name>
 
---h3 10.6 <specific routine designator> (p497)
---/h3
 
---p
-Specify an SQL-invoked routine.
---/p
 
 <specific routine designator> ::=
         SPECIFIC <routine type> <specific name>
@@ -3065,21 +2408,11 @@ Specify an SQL-invoked routine.
 
 <data type list> ::= <left paren> [ <data type> [ { <comma> <data type> }... ] ] <right paren>
 
---h3 10.7 <collate clause> (p500)
---/h3
 
---p
-Specify a default collating sequence.
---/p
 
 <collate clause> ::= COLLATE <collation name>
 
---h3 10.8 <constraint name definition> and <constraint characteristics> (p501)
---/h3
 
---p
-Specify the name of a constraint and its characteristics.
---/p
 
 <constraint name definition> ::= CONSTRAINT <constraint name>
 
@@ -3089,12 +2422,7 @@ Specify the name of a constraint and its characteristics.
 
 <constraint check time> ::= INITIALLY DEFERRED | INITIALLY IMMEDIATE
 
---h3 10.9 <aggregate function> (p503)
---/h3
 
---p
-Specify a value computed from a collection of rows.
---/p
 
 <aggregate function> ::=
         COUNT <left paren> <asterisk> <right paren> [ <filter clause> ]
@@ -3142,12 +2470,7 @@ Specify a value computed from a collection of rows.
 
 <inverse distribution function type> ::= PERCENTILE_CONT | PERCENTILE_DISC
 
---h3 10.10 <sort specification list> (p515)
---/h3
 
---p
-Specify a sort order.
---/p
 
 <sort specification list> ::= <sort specification> [ { <comma> <sort specification> }... ]
 
@@ -3159,16 +2482,8 @@ Specify a sort order.
 
 <null ordering> ::= NULLS FIRST | NULLS LAST
 
---hr
---h2 11 Schema definition and manipulation
---/h2
 
---h3 11.1 <schema definition> (p517)
---/h3
 
---p
-Define a schema.
---/p
 
 <schema definition> ::= CREATE SCHEMA <schema name clause> [ <schema character set or path> ] [ <schema element>... ]
 
@@ -3207,23 +2522,13 @@ Define a schema.
     |   <grant statement>
     |   <role definition>
 
---h3 11.2 <drop schema statement> (p520)
---/h3
 
---p
-Destroy a schema.
---/p
 
 <drop schema statement> ::= DROP SCHEMA <schema name> <drop behavior>
 
 <drop behavior> ::= CASCADE | RESTRICT
 
---h3 11.3 <table definition> (p523)
---/h3
 
---p
-Define a persistent base table, a created local temporary table, or a global temporary table.
---/p
 
 <table definition> ::=
         CREATE [ <table scope> ] TABLE <table name> <table contents source>
@@ -3277,12 +2582,7 @@ Define a persistent base table, a created local temporary table, or a global tem
 
 <with or without data> ::= WITH NO DATA | WITH DATA
 
---h3 11.4 <column definition> (p534)
---/h3
 
---p
-Define a column of a base table.
---/p
 
 <column definition> ::=
         <column name> [ <data type> | <domain name> ] [ <reference scope check> ]
@@ -3311,12 +2611,7 @@ Define a column of a base table.
 
 <generation expression> ::= <left paren> <value expression> <right paren>
 
---h3 11.5 <default clause> (p539)
---/h3
 
---p
-Specify the default for a column, domain, or attribute.
---/p
 
 <default clause> ::= DEFAULT <default option>
 
@@ -3331,12 +2626,7 @@ Specify the default for a column, domain, or attribute.
     |   CURRENT_PATH
     |   <implicitly typed value specification>
 
---h3 11.6 <table constraint definition> (p543)
---/h3
 
---p
-Specify an integrity constraint.
---/p
 
 <table constraint definition> ::= [ <constraint name definition> ] <table constraint> [ <constraint characteristics> ]
 
@@ -3345,12 +2635,7 @@ Specify an integrity constraint.
     |   <referential constraint definition>
     |   <check constraint definition>
 
---h3 11.7 <unique constraint definition> (p545)
---/h3
 
---p
-Specify a uniqueness constraint for a table.
---/p
 
 <unique constraint definition> ::=
         <unique specification> <left paren> <unique column list> <right paren>
@@ -3360,12 +2645,7 @@ Specify a uniqueness constraint for a table.
 
 <unique column list> ::= <column name list>
 
---h3 11.8 <referential constraint definition> (p547)
---/h3
 
---p
-Specify a referential constraint.
---/p
 
 <referential constraint definition> ::= FOREIGN KEY <left paren> <referencing columns> <right paren> <references specification>
 
@@ -3387,21 +2667,11 @@ Specify a referential constraint.
 
 <referential action> ::= CASCADE | SET NULL | SET DEFAULT | RESTRICT | NO ACTION
 
---h3 11.9 <check constraint definition> (p567)
---/h3
 
---p
-Specify a condition for the SQL-data.
---/p
 
 <check constraint definition> ::= CHECK <left paren> <search condition> <right paren>
 
---h3 11.10 <alter table statement> (p569)
---/h3
 
---p
-Change the definition of a table.
---/p
 
 <alter table statement> ::= ALTER TABLE <table name> <alter table action>
 
@@ -3412,21 +2682,11 @@ Change the definition of a table.
     |   <add table constraint definition>
     |   <drop table constraint definition>
 
---h3 11.11 <add column definition> (p570)
---/h3
 
---p
-Add a column to a table.
---/p
 
 <add column definition> ::= ADD [ COLUMN ] <column definition>
 
---h3 11.12 <alter column definition> (p572)
---/h3
 
---p
-Change a column and its definition.
---/p
 
 <alter column definition> ::= ALTER [ COLUMN ] <column name> <alter column action>
 
@@ -3437,48 +2697,23 @@ Change a column and its definition.
     |   <drop column scope clause>
     |   <alter identity column specification>
 
---h3 11.13 <set column default clause> (p573)
---/h3
 
---p
-Set the default clause for a column.
---/p
 
 <set column default clause> ::= SET <default clause>
 
---h3 11.14 <drop column default clause> (p574)
---/h3
 
---p
-Drop the default clause from a column.
---/p
 
 <drop column default clause> ::= DROP DEFAULT
 
---h3 11.15 <add column scope clause> (p575)
---/h3
 
---p
-Add a non-empty scope for an existing column of data type REF in a base table.
---/p
 
 <add column scope clause> ::= ADD <scope clause>
 
---h3 11.16 <drop column scope clause> (p576)
---/h3
 
---p
-Drop the scope from an existing column of data type REF in a base table.
---/p
 
 <drop column scope clause> ::= DROP SCOPE <drop behavior>
 
---h3 11.17 <alter identity column specification> (p578)
---/h3
 
---p
-Change the options specified for an identity column.
---/p
 
 <alter identity column specification> ::= <alter identity column option>...
 
@@ -3486,48 +2721,23 @@ Change the options specified for an identity column.
         <alter sequence generator restart option>
     |   SET <basic sequence generator option>
 
---h3 11.18 <drop column definition> (p579)
---/h3
 
---p
-Destroy a column of a base table.
---/p
 
 <drop column definition> ::= DROP [ COLUMN ] <column name> <drop behavior>
 
---h3 11.19 <add table constraint definition> (p581)
---/h3
 
---p
-Add a constraint to a table.
---/p
 
 <add table constraint definition> ::= ADD <table constraint definition>
 
---h3 11.20 <drop table constraint definition> (p582)
---/h3
 
---p
-Destroy a constraint on a table.
---/p
 
 <drop table constraint definition> ::= DROP CONSTRAINT <constraint name> <drop behavior>
 
---h3 11.21 <drop table statement> (p585)
---/h3
 
---p
-Destroy a table.
---/p
 
 <drop table statement> ::= DROP TABLE <table name> <drop behavior>
 
---h3 11.22 <view definition> (p588)
---/h3
 
---p
-Define a viewed table.
---/p
 
 <view definition> ::=
         CREATE [ RECURSIVE ] VIEW <table name> <view specification> AS <query expression>
@@ -3551,21 +2761,11 @@ Define a viewed table.
 
 <view column list> ::= <column name list>
 
---h3 11.23 <drop view statement> (p598)
---/h3
 
---p
-Destroy a view.
---/p
 
 <drop view statement> ::= DROP VIEW <table name> <drop behavior>
 
---h3 11.24 <domain definition> (p601)
---/h3
 
---p
-Define a domain.
---/p
 
 <domain definition> ::=
         CREATE DOMAIN <domain name> [ AS ] <data type>
@@ -3573,12 +2773,7 @@ Define a domain.
 
 <domain constraint> ::= [ <constraint name definition> ] <check constraint definition> [ <constraint characteristics> ]
 
---h3 11.25 <alter domain statement> (p603)
---/h3
 
---p
-Change a domain and its definition.
---/p
 
 <alter domain statement> ::= ALTER DOMAIN <domain name> <alter domain action>
 
@@ -3588,78 +2783,38 @@ Change a domain and its definition.
     |   <add domain constraint definition>
     |   <drop domain constraint definition>
 
---h3 11.26 <set domain default clause> (p604)
---/h3
 
---p
-Set the default value in a domain.
---/p
 
 <set domain default clause> ::= SET <default clause>
 
---h3 11.27 <drop domain default clause> (p605)
---/h3
 
---p
-Remove the default clause of a domain.
---/p
 
 <drop domain default clause> ::= DROP DEFAULT
 
---h3 11.28 <add domain constraint definition> (p606)
---/h3
 
---p
-Add a constraint to a domain.
---/p
 
 <add domain constraint definition> ::= ADD <domain constraint>
 
---h3 11.29 <drop domain constraint definition> (p607)
---/h3
 
---p
-Destroy a constraint on a domain.
---/p
 
 <drop domain constraint definition> ::= DROP CONSTRAINT <constraint name>
 
---h3 11.30 <drop domain statement> (p608)
---/h3
 
---p
-Destroy a domain.
---/p
 
 <drop domain statement> ::= DROP DOMAIN <domain name> <drop behavior>
 
---h3 11.31 <character set definition> (p610)
---/h3
 
---p
-Define a character set.
---/p
 
 <character set definition> ::=
         CREATE CHARACTER SET <character set name> [ AS ] <character set source> [ <collate clause> ]
 
 <character set source> ::= GET <character set specification>
 
---h3 11.32 <drop character set statement> (p612)
---/h3
 
---p
-Destroy a character set.
---/p
 
 <drop character set statement> ::= DROP CHARACTER SET <character set name>
 
---h3 11.33 <collation definition> (p614)
---/h3
 
---p
-Define a collating sequence.
---/p
 
 <collation definition> ::=
         CREATE COLLATION <collation name> FOR <character set specification>
@@ -3669,21 +2824,11 @@ Define a collating sequence.
 
 <pad characteristic> ::= NO PAD | PAD SPACE
 
---h3 11.34 <drop collation statement> (p616)
---/h3
 
---p
-Destroy a collating sequence.
---/p
 
 <drop collation statement> ::= DROP COLLATION <collation name> <drop behavior>
 
---h3 11.35 <transliteration definition> (p618)
---/h3
 
---p
-Define a character transliteration.
---/p
 
 <transliteration definition> ::=
         CREATE TRANSLATION <transliteration name> FOR <source character set specification>
@@ -3699,40 +2844,20 @@ Define a character transliteration.
 
 <transliteration routine> ::= <specific routine designator>
 
---h3 11.36 <drop transliteration statement> (p621)
---/h3
 
---p
-Destroy a character transliteration.
---/p
 
 <drop transliteration statement> ::= DROP TRANSLATION <transliteration name>
 
---h3 11.37 <assertion definition> (p623)
---/h3
 
---p
-Specify an integrity constraint.
---/p
 
 <assertion definition> ::=
         CREATE ASSERTION <constraint name> CHECK <left paren> <search condition> <right paren> [ <constraint characteristics> ]
 
---h3 11.38 <drop assertion statement> (p625)
---/h3
 
---p
-Destroy an assertion.
---/p
 
 <drop assertion statement> ::= DROP ASSERTION <constraint name>
 
---h3 11.39 <trigger definition> (p627)
---/h3
 
---p
-Define triggered SQL-statements.
---/p
 
 <trigger definition> ::=
         CREATE TRIGGER <trigger name> <trigger action time> <trigger event>
@@ -3770,21 +2895,11 @@ Define triggered SQL-statements.
 
 <new values correlation name> ::= <correlation name>
 
---h3 11.40 <drop trigger statement> (p631)
---/h3
 
---p
-Destroy a trigger.
---/p
 
 <drop trigger statement> ::= DROP TRIGGER <trigger name>
 
---h3 11.41 <user-defined type definition> (p632)
---/h3
 
---p
-Define a user-defined type.
---/p
 
 <user-defined type definition> ::= CREATE TYPE <user-defined type body>
 
@@ -3878,24 +2993,14 @@ Define a user-defined type.
     |   <SQL-data access indication>
     |   <null-call clause>
 
---h3 11.42 <attribute definition> (p648)
---/h3
 
---p
-Define an attribute of a structured type.
---/p
 
 <attribute definition> ::=
         <attribute name> <data type> [ <reference scope check> ] [ <attribute default> ] [ <collate clause> ]
 
 <attribute default> ::= <default clause>
 
---h3 11.43 <alter type statement> (p650)
---/h3
 
---p
-Change the definition of a user-defined type.
---/p
 
 <alter type statement> ::=
 ALTER TYPE <schema-resolved user-defined type name> <alter type action>
@@ -3907,68 +3012,33 @@ ALTER TYPE <schema-resolved user-defined type name> <alter type action>
     |   <add overriding method specification>
     |   <drop method specification>
 
---h3 11.44 <add attribute definition> (p651)
---/h3
 
---p
-Add an attribute to a user-defined type.
---/p
 
 <add attribute definition> ::= ADD ATTRIBUTE <attribute definition>
 
---h3 11.45 <drop attribute definition> (p653)
---/h3
 
---p
-Destroy an attribute of a user-defined type.
---/p
 
 <drop attribute definition> ::= DROP ATTRIBUTE <attribute name> RESTRICT
 
---h3 11.46 <add original method specification> (p655)
---/h3
 
---p
-Add an original method specification to a user-defined type.
---/p
 
 <add original method specification> ::= ADD <original method specification>
 
---h3 11.47 <add overriding method specification> (p661)
---/h3
 
---p
-Add an overriding method specification to a user-defined type.
---/p
 
 <add overriding method specification> ::= ADD <overriding method specification>
 
---h3 11.48 <drop method specification> (p666)
---/h3
 
---p
-Remove a method specification from a user-defined type.
---/p
 
 <drop method specification> ::= DROP <specific method specification designator> RESTRICT
 
 <specific method specification designator> ::= [ INSTANCE | STATIC | CONSTRUCTOR ] METHOD <method name> <data type list>
 
---h3 11.49 <drop data type statement> (p670)
---/h3
 
---p
-Destroy a user-defined type.
---/p
 
 <drop data type statement> ::= DROP TYPE <schema-resolved user-defined type name> <drop behavior>
 
---h3 11.50 <SQL-invoked routine> (p673)
---/h3
 
---p
-Define an SQL-invoked routine.
---/p
 
 <SQL-invoked routine> ::= <schema routine>
 
@@ -4088,12 +3158,7 @@ Define an SQL-invoked routine.
 
 <group specification> ::= <group name> FOR TYPE <path-resolved user-defined type name>
 
---h3 11.51 <alter routine statement> (p698)
---/h3
 
---p
-Alter a characteristic of an SQL-invoked routine.
---/p
 
 <alter routine statement> ::= ALTER <specific routine designator> <alter routine characteristics> <alter routine behavior>
 
@@ -4109,21 +3174,11 @@ Alter a characteristic of an SQL-invoked routine.
 
 <alter routine behavior> ::= RESTRICT
 
---h3 11.52 <drop routine statement> (p701)
---/h3
 
---p
-Destroy an SQL-invoked routine.
---/p
 
 <drop routine statement> ::= DROP <specific routine designator> <drop behavior>
 
---h3 11.53 <user-defined cast definition> (p703)
---/h3
 
---p
-Define a user-defined cast.
---/p
 
 <user-defined cast definition> ::=
         CREATE CAST <left paren> <source data type> AS <target data type> <right paren>
@@ -4135,22 +3190,12 @@ Define a user-defined cast.
 
 <target data type> ::= <data type>
 
---h3 11.54 <drop user-defined cast statement> (p705)
---/h3
 
---p
-Destroy a user-defined cast.
---/p
 
 <drop user-defined cast statement> ::=
         DROP CAST <left paren> <source data type> AS <target data type> <right paren> <drop behavior>
 
---h3 11.55 <user-defined ordering definition> (p707)
---/h3
 
---p
-Define a user-defined ordering for a user-defined type.
---/p
 
 <user-defined ordering definition> ::=
         CREATE ORDERING FOR <schema-resolved user-defined type name> <ordering form>
@@ -4173,22 +3218,12 @@ Define a user-defined ordering for a user-defined type.
 
 <map function specification> ::= <specific routine designator>
 
---h3 11.56 <drop user-defined ordering statement> (p710)
---/h3
 
---p
-Destroy a user-defined ordering method.
---/p
 
 <drop user-defined ordering statement> ::=
         DROP ORDERING FOR <schema-resolved user-defined type name> <drop behavior>
 
---h3 11.57 <transform definition> (p712)
---/h3
 
---p
-Define one or more transform functions for a user-defined type.
---/p
 
 <transform definition> ::= CREATE { TRANSFORM | TRANSFORMS } FOR <schema-resolved user-defined type name> <transform group>...
 
@@ -4208,12 +3243,7 @@ Define one or more transform functions for a user-defined type.
 
 <from sql function> ::= <specific routine designator>
 
---h3 11.58 <alter transform statement> (p715)
---/h3
 
---p
-Change the definition of one or more transform groups.
---/p
 
 <alter transform statement> ::=
         ALTER { TRANSFORM | TRANSFORMS } FOR <schema-resolved user-defined type name> <alter group>...
@@ -4224,32 +3254,17 @@ Change the definition of one or more transform groups.
 
 <alter transform action> ::= <add transform element list> | <drop transform element list>
 
---h3 11.59 <add transform element list> (p717)
---/h3
 
---p
-Add a transform element (<to sql> and/or <from sql>) to an existing transform group.
---/p
 
 <add transform element list> ::= ADD <left paren> <transform element list> <right paren>
 
---h3 11.60 <drop transform element list> (p719)
---/h3
 
---p
-Remove a transform element (<to sql> and/or <from sql>) from a transform group.
---/p
 
 <drop transform element list> ::= DROP <left paren> <transform kind> [ <comma> <transform kind> ] <drop behavior> <right paren>
 
 <transform kind> ::= TO SQL | FROM SQL
 
---h3 11.61 <drop transform statement> (p721)
---/h3
 
---p
-Remove one or more transform functions associated with a transform.
---/p
 
 <drop transform statement> ::=
         DROP { TRANSFORM | TRANSFORMS } <transforms to be dropped> FOR <schema-resolved user-defined type name> <drop behavior>
@@ -4258,12 +3273,7 @@ Remove one or more transform functions associated with a transform.
 
 <transform group element> ::= <group name>
 
---h3 11.62 <sequence generator definition> (p724)
---/h3
 
---p
-Define an external sequence generator.
---/p
 
 <sequence generator definition> ::= CREATE SEQUENCE <sequence generator name> [ <sequence generator options> ]
 
@@ -4303,12 +3313,7 @@ Define an external sequence generator.
 
 <sequence generator cycle option> ::= CYCLE | NO CYCLE
 
---h3 11.63 <alter sequence generator statement> (p726)
---/h3
 
---p
-Change the definition of an external sequence generator.
---/p
 
 <alter sequence generator statement> ::=
         ALTER SEQUENCE <sequence generator name> <alter sequence generator options>
@@ -4323,45 +3328,22 @@ Change the definition of an external sequence generator.
 
 <sequence generator restart value> ::= <signed numeric literal>
 
---h3 11.64 <drop sequence generator statement> (p727)
---/h3
 
---p
-Destroy an external sequence generator.
---/p
 
 <drop sequence generator statement> ::= DROP SEQUENCE <sequence generator name> <drop behavior>
 
---hr
---h2 12 Access control
---/h2
 
---h3 12.1 <grant statement> (p729)
---/h3
 
---p
-Define privileges and role authorizations.
---/p
 
 <grant statement> ::= <grant privilege statement> | <grant role statement>
 
---h3 12.2 <grant privilege statement> (p734)
---/h3
 
---p
-Define privileges.
---/p
 
 <grant privilege statement> ::=
         GRANT <privileges> TO <grantee> [ { <comma> <grantee> }... ]
         [ WITH HIERARCHY OPTION ] [ WITH GRANT OPTION ] [ GRANTED BY <grantor> ]
 
---h3 12.3 <privileges> (p737)
---/h3
 
---p
-Specify privileges.
---/p
 
 <privileges> ::= <object privileges> ON <object name>
 
@@ -4400,21 +3382,11 @@ Specify privileges.
 
 <grantor> ::= CURRENT_USER | CURRENT_ROLE
 
---h3 12.4 <role definition> (p741)
---/h3
 
---p
-Define a role.
---/p
 
 <role definition> ::= CREATE ROLE <role name> [ WITH ADMIN <grantor> ]
 
---h3 12.5 <grant role statement> (p742)
---/h3
 
---p
-Define role authorizations.
---/p
 
 <grant role statement> ::=
         GRANT <role granted> [ { <comma> <role granted> }... ]
@@ -4422,21 +3394,11 @@ Define role authorizations.
 
 <role granted> ::= <role name>
 
---h3 12.6 <drop role statement> (p744)
---/h3
 
---p
-Destroy a role.
---/p
 
 <drop role statement> ::= DROP ROLE <role name>
 
---h3 12.7 <revoke statement> (p745)
---/h3
 
---p
-Destroy privileges and role authorizations.
---/p
 
 <revoke statement> ::=
         <revoke privilege statement>
@@ -4454,16 +3416,8 @@ Destroy privileges and role authorizations.
 
 <role revoked> ::= <role name>
 
---hr
---h2 13 SQL-client modules
---/h2
 
---h3 13.1 <SQL-client module definition> (p763)
---/h3
 
---p
-Define an SQL-client module.
---/p
 
 <SQL-client module definition> ::=
         <module name clause> <language clause> <module authorization clause>
@@ -4495,24 +3449,14 @@ Define an SQL-client module.
     |   <dynamic declare cursor>
     |   <externally-invoked procedure>
 
---h3 13.2 <module name clause> (p768)
---/h3
 
---p
-Name an SQL-client module.
---/p
 
 <module name clause> ::=
         MODULE [ <SQL-client module name> ] [ <module character set specification> ]
 
 <module character set specification> ::= NAMES ARE <character set specification>
 
---h3 13.3 <externally-invoked procedure> (p769)
---/h3
 
---p
-Define an externally-invoked procedure.
---/p
 
 <externally-invoked procedure> ::=
         PROCEDURE <procedure name> <host parameter declaration list> <semicolon>
@@ -4529,15 +3473,8 @@ Define an externally-invoked procedure.
 
 <status parameter> ::= SQLSTATE
 
---h3 13.4 Calls to an <externally-invoked procedure> (p772)
---/h3
 
---h3 13.5 <SQL procedure statement> (p788)
---/h3
 
---p
-Define all of the SQL-statements that are <SQL procedure statement>s.
---/p
 
 <SQL procedure statement> ::= <SQL executable statement>
 
@@ -4670,85 +3607,13 @@ Define all of the SQL-statements that are <SQL procedure statement>s.
     |   <set descriptor statement>
     |   <get descriptor statement>
 
---h3 13.6 Data type correspondences (p796)
---/h3
 
-Table 16 -- Data type correspondences for C
 
---## <table border=1>
---## <tr><th> SQL Data Type </th><th> C Data Type </th></tr>
 
---## <tr><td> SQLSTATE </td><td> char, with length 6 </td></tr>
---## <tr><td> CHARACTER (L)<sup>3</sup> </td><td> char, with length (L+1)*k<sup>1</sup> </td></tr>
---## <tr><td> CHARACTER VARYING (L)<sup>3</sup> </td><td> char, with length (L+1)*k<sup>1</sup> </td></tr>
---## <tr><td> CHARACTER LARGE OBJECT(L) </td><td>
---## <pre>
---## struct {
---## long hvn<sup>3</sup>_reserved
---## unsigned long hvn<sup>2</sup>_length
---## char<sup>3</sup> hvn<sup>2</sup>_data[L];
---## } hvn<sup>2</sup>
---## </pre> </td></tr>
---## <tr><td> BINARY LARGE OBJECT(L) </td><td>
---## <pre> struct {
---## long hvn<sup>2</sup>_reserved
---## unsigned long hvn<sup>2</sup>_length
---## char hvn<sup>2</sup>_data[L];
---## } hvn<sup>2</sup>
---## </pre> </td></tr>
---## <tr><td> NUMERIC(P,S) </td><td> None </td></tr>
---## <tr><td> DECIMAL(P,S) </td><td> None </td></tr>
---## <tr><td> SMALLINT </td><td> pointer to short </td></tr>
---## <tr><td> INTEGER </td><td> pointer to long </td></tr>
---## <tr><td> BIGINT </td><td> pointer to long long </td></tr>
---## <tr><td> FLOAT(P) </td><td> None </td></tr>
---## <tr><td> REAL </td><td> pointer to float </td></tr>
---## <tr><td> DOUBLE PRECISION </td><td> pointer to double </td></tr>
---## <tr><td> BOOLEAN </td><td> pointer to long </td></tr>
---## <tr><td> DATE </td><td> None </td></tr>
---## <tr><td> TIME(T) </td><td> None </td></tr>
---## <tr><td> TIMESTAMP(T) </td><td> None </td></tr>
---## <tr><td> INTERVAL(Q) </td><td> None </td></tr>
---## <tr><td> user-defined type </td><td> None </td></tr>
---## <tr><td> REF </td><td> char, with length N </td></tr>
---## <tr><td> ROW </td><td> None </td></tr>
---## <tr><td> ARRAY </td><td> None </td></tr>
---## <tr><td> MULTISET </td><td> None </td></tr>
---## </table>
 
---p
---## <sup>1</sup> For character set UTF16, as well as other
-implementation-defined character sets in which a code unit occupies two
-octets, k is the length in units of C unsigned short of the character
-encoded using the greatest number of such units in the character set;
-for character set UTF32, as well as other implementation-defined
-character sets in which a code unit occupies four octets, k is four; for
-other character sets, k is the length in units of C char of the
-character encoded using the greatest number of such units in the
-character set.
---br
---## <sup>2</sup> hvn is the name of the host variable defined to correspond
-to the SQL data type
---br
---## <sup>3</sup> For character set UTF16, as well as other
-implementation-defined character sets in which a code unit occupies two
-octets, char or unsigned char should be replaced with unsigned short;
-for character set UTF32, as well as other implementation-defined
-character sets in which a code unit occupies four octets, char or
-unsigned char should be replaced with unsigned int.  Otherwise, char or
-unsigned char should be used.
---/p
 
---hr
---h2 14 Data manipulation
---/h2
 
---h3 14.1 <declare cursor> (p807)
---/h3
 
---p
-Define a cursor.
---/p
 
 <declare cursor> ::=
         DECLARE <cursor name> [ <cursor sensitivity> ] [ <cursor scrollability> ] CURSOR
@@ -4768,21 +3633,11 @@ Define a cursor.
 
 <order by clause> ::= ORDER BY <sort specification list>
 
---h3 14.2 <open statement> (p813)
---/h3
 
---p
-Open a cursor.
---/p
 
 <open statement> ::= OPEN <cursor name>
 
---h3 14.3 <fetch statement> (p815)
---/h3
 
---p
-Position a cursor on a specified row of a table and retrieve values from that row.
---/p
 
 <fetch statement> ::=
         FETCH [ [ <fetch orientation> ] FROM ] <cursor name> INTO <fetch target list>
@@ -4796,33 +3651,18 @@ Position a cursor on a specified row of a table and retrieve values from that ro
 
 <fetch target list> ::= <target specification> [ { <comma> <target specification> }... ]
 
---h3 14.4 <close statement> (p820)
---/h3
 
---p
-Close a cursor.
---/p
 
 <close statement> ::= CLOSE <cursor name>
 
---h3 14.5 <select statement: single row> (p822)
---/h3
 
---p
-Retrieve values from a specified row of a table.
---/p
 
 <select statement: single row> ::=
         SELECT [ <set quantifier> ] <select list> INTO <select target list> <table expression>
 
 <select target list> ::= <target specification> [ { <comma> <target specification> }... ]
 
---h3 14.6 <delete statement: positioned> (p826)
---/h3
 
---p
-Delete a row of a table.
---/p
 
 <delete statement: positioned> ::= DELETE FROM <target table> WHERE CURRENT OF <cursor name>
 
@@ -4830,21 +3670,11 @@ Delete a row of a table.
         <table name>
     |   ONLY <left paren> <table name> <right paren>
 
---h3 14.7 <delete statement: searched> (p829)
---/h3
 
---p
-Delete rows of a table.
---/p
 
 <delete statement: searched> ::= DELETE FROM <target table> [ WHERE <search condition> ]
 
---h3 14.8 <insert statement> (p832)
---/h3
 
---p
-Create new rows in a table.
---/p
 
 <insert statement> ::= INSERT INTO <insertion target> <insert columns and source>
 
@@ -4866,12 +3696,7 @@ Create new rows in a table.
 
 <insert column list> ::= <column name list>
 
---h3 14.9 <merge statement> (p837)
---/h3
 
---p
-Conditionally update rows of a table, or insert new rows into a table, or both.
---/p
 
 <merge statement> ::=
         MERGE INTO <target table> [ [ AS ] <merge correlation name> ]
@@ -4898,30 +3723,15 @@ Conditionally update rows of a table, or insert new rows into a table, or both.
 
 <merge insert value element> ::= <value expression> | <contextually typed value specification>
 
---h3 14.10 <update statement: positioned> (p844)
---/h3
 
---p
-Update a row of a table.
---/p
 
 <update statement: positioned> ::= UPDATE <target table> SET <set clause list> WHERE CURRENT OF <cursor name>
 
---h3 14.11 <update statement: searched> (p847)
---/h3
 
---p
-Update rows of a table.
---/p
 
 <update statement: searched> ::= UPDATE <target table> SET <set clause list> [ WHERE <search condition> ]
 
---h3 14.12 <set clause list> (p851)
---/h3
 
---p
-Specify a list of updates.
---/p
 
 <set clause list> ::= <set clause> [ { <comma> <set clause> }... ]
 
@@ -4949,107 +3759,47 @@ Specify a list of updates.
 
 <update source> ::= <value expression> | <contextually typed value specification>
 
---h3 14.13 <temporary table declaration> (p856)
---/h3
 
---p
-Declare a declared local temporary table.
---/p
 
 <temporary table declaration> ::=
         DECLARE LOCAL TEMPORARY TABLE <table name> <table element list>
         [ ON COMMIT <table commit action> ROWS ]
 
---h3 14.14 <free locator statement> (p858)
---/h3
 
---p
-Remove the association between a locator variable and the value that is represented by that locator.
---/p
 
 <free locator statement> ::= FREE LOCATOR <locator reference> [ { <comma> <locator reference> }... ]
 
 <locator reference> ::= <host parameter name> | <embedded variable name>
 
---h3 14.15 <hold locator statement> (p859)
---/h3
 
---p
-Mark a locator variable as being holdable.
---/p
 
 <hold locator statement> ::= HOLD LOCATOR <locator reference> [ { <comma> <locator reference> }... ]
 
---h3 14.16 Effect of deleting rows from base tables (p860)
---/h3
 
---h3 14.17 Effect of deleting some rows from a derived table (p862)
---/h3
 
---h3 14.18 Effect of deleting some rows from a viewed table (p864)
---/h3
 
---h3 14.19 Effect of inserting tables into base tables (p865)
---/h3
 
---h3 14.20 Effect of inserting a table into a derived table (p867)
---/h3
 
---h3 14.21 Effect of inserting a table into a viewed table (p869)
---/h3
 
---h3 14.22 Effect of replacing rows in base tables (p871)
---/h3
 
---h3 14.23 Effect of replacing some rows in a derived table (p874)
---/h3
 
---h3 14.24 Effect of replacing some rows in a viewed table (p877)
---/h3
 
---h3 14.25 Execution of BEFORE triggers (p879)
---/h3
 
---h3 14.26 Execution of AFTER triggers (p880)
---/h3
 
---h3 14.27 Execution of triggers (p881)
---/h3
 
---hr
---h2 15 Control statements
---/h2
 
---h3 15.1 <call statement> (p883)
---/h3
 
---p
-Invoke an SQL-invoked routine.
---/p
 
 <call statement> ::= CALL <routine invocation>
 
---h3 15.2 <return statement> (p884)
---/h3
 
---p
-Return a value from an SQL function.
---/p
 
 <return statement> ::= RETURN <return value>
 
 <return value> ::= <value expression> | NULL
 
---hr
---h2 16 Transaction management
---/h2
 
---h3 16.1 <start transaction statement> (p885)
---/h3
 
---p
-Start an SQL-transaction and set its characteristics.
---/p
 
 <start transaction statement> ::= START TRANSACTION [ <transaction mode> [ { <comma> <transaction mode> }...] ]
 
@@ -5065,83 +3815,40 @@ Start an SQL-transaction and set its characteristics.
 
 <number of conditions> ::= <simple value specification>
 
---h3 16.2 <set transaction statement> (p888)
---/h3
 
---p
-Set the characteristics of the next SQL-transaction for the SQL-agent.
-NOTE 402 - This statement has no effect on any SQL-transactions subsequent to the next SQL-transaction.
---/p
 
 <set transaction statement> ::= SET [ LOCAL ] <transaction characteristics>
 
 <transaction characteristics> ::= TRANSACTION <transaction mode> [ { <comma> <transaction mode> }... ]
 
---h3 16.3 <set constraints mode statement> (p890)
---/h3
 
---p
-If an SQL-transaction is currently active, then set the constraint mode for that SQL-transaction in
-the current SQL-session. If no SQL-transaction is currently active, then set the constraint mode for
-the next SQL-transaction in the current SQL-session for the SQL-agent.
-NOTE 404 – This statement has no effect on any SQL-transactions subsequent to this SQL-transaction.
---/p
 
 <set constraints mode statement> ::= SET CONSTRAINTS <constraint name list> { DEFERRED | IMMEDIATE }
 
 <constraint name list> ::= ALL | <constraint name> [ { <comma> <constraint name> }... ]
 
---h3 16.4 <savepoint statement> (p892)
---/h3
 
---p
-Establish a savepoint.
---/p
 
 <savepoint statement> ::= SAVEPOINT <savepoint specifier>
 
 <savepoint specifier> ::= <savepoint name>
 
---h3 16.5 <release savepoint statement> (p893)
---/h3
 
---p
-Destroy a savepoint.
---/p
 
 <release savepoint statement> ::= RELEASE SAVEPOINT <savepoint specifier>
 
---h3 16.6 <commit statement> (p894)
---/h3
 
---p
-Terminate the current SQL-transaction with commit.
---/p
 
 <commit statement> ::= COMMIT [ WORK ] [ AND [ NO ] CHAIN ]
 
---h3 16.7 <rollback statement> (p896)
---/h3
 
---p
-Terminate the current SQL-transaction with rollback, or rollback all actions affecting SQL-data
-and/or schemas since the establishment of a savepoint.
---/p
 
 <rollback statement> ::= ROLLBACK [ WORK ] [ AND [ NO ] CHAIN ] [ <savepoint clause> ]
 
 <savepoint clause> ::= TO SAVEPOINT <savepoint specifier>
 
---hr
---h2 17 Connection management
---/h2
 
---h3 17.1 <connect statement> (p899)
---/h3
 
---p
-Establish an SQL-session.
---/p
 
 <connect statement> ::= CONNECT TO <connection target>
 
@@ -5149,38 +3856,20 @@ Establish an SQL-session.
         <SQL-server name> [ AS <connection name> ] [ USER <connection user name> ]
     |   DEFAULT
 
---h3 17.2 <set connection statement> (p902)
---/h3
 
---p
-Select an SQL-connection from the available SQL-connections.
---/p
 
 <set connection statement> ::= SET CONNECTION <connection object>
 
 <connection object> ::= DEFAULT | <connection name>
 
---h3 17.3 <disconnect statement> (p904)
---/h3
 
---p
-Terminate an SQL-connection.
---/p
 
 <disconnect statement> ::= DISCONNECT <disconnect object>
 
 <disconnect object> ::= <connection object> | ALL | CURRENT
 
---hr
---h2 18 Session management
---/h2
 
---h3 18.1 <set session characteristics statement> (p907)
---/h3
 
---p
-Set one or more characteristics for the current SQL-session.
---/p
 
 <set session characteristics statement> ::= SET SESSION CHARACTERISTICS AS <session characteristic list>
 
@@ -5188,99 +3877,47 @@ Set one or more characteristics for the current SQL-session.
 
 <session characteristic> ::= <transaction characteristics>
 
---h3 18.2 <set session user identifier statement> (p908)
---/h3
 
---p
-Set the SQL-session user identifier and the current user identifier of the current SQL-session
-context.
---/p
 
 <set session user identifier statement> ::= SET SESSION AUTHORIZATION <value specification>
 
---h3 18.3 <set role statement> (p909)
---/h3
 
---p
-Set the current role name for the current SQL-session context.
---/p
 
 <set role statement> ::= SET ROLE <role specification>
 
 <role specification> ::= <value specification> | NONE
 
---h3 18.4 <set local time zone statement> (p911)
---/h3
 
---p
-Set the default local time zone displacement for the current SQL-session.
---/p
 
 <set local time zone statement> ::= SET TIME ZONE <set time zone value>
 
 <set time zone value> ::= <interval value expression> | LOCAL
 
---h3 18.5 <set catalog statement> (p912)
---/h3
 
---p
-Set the default catalog name for unqualified <schema name>s in <preparable statement>s that
-are prepared in the current SQL-session by an <execute immediate statement> or a <prepare
-statement> and in <direct SQL statement>s that are invoked directly.
---/p
 
 <set catalog statement> ::= SET <catalog name characteristic>
 
 <catalog name characteristic> ::= CATALOG <value specification>
 
---h3 18.6 <set schema statement> (p913)
---/h3
 
---p
-Set the default schema name for unqualified <schema qualified name>s in <preparable statement>s
-that are prepared in the current SQL-session by an <execute immediate statement> or a <prepare
-statement> and in <direct SQL statement>s that are invoked directly.
---/p
 
 <set schema statement> ::= SET <schema name characteristic>
 
 <schema name characteristic> ::= SCHEMA <value specification>
 
---h3 18.7 <set names statement> (p915)
---/h3
 
---p
-Set the default character set name for <character string literal>s in <preparable statement>s that
-are prepared in the current SQL-session by an <execute immediate statement> or a <prepare
-statement> and in <direct SQL statement>s that are invoked directly.
---/p
 
 <set names statement> ::= SET <character set name characteristic>
 
 <character set name characteristic> ::= NAMES <value specification>
 
---h3 18.8 <set path statement> (p916)
---/h3
 
---p
-Set the SQL-path used to determine the subject routine of <routine invocation>s with unqualified
-<routine name>s in <preparable statement>s that are prepared in the current SQL-session by
-an <execute immediate statement> or a <prepare statement> and in <direct SQL statement>s,
-respectively, that are invoked directly. The SQL-path remains the current SQL-path of the SQLsession
-until another SQL-path is successfully set.
---/p
 
 <set path statement> ::= SET <SQL-path characteristic>
 
 <SQL-path characteristic> ::= PATH <value specification>
 
---h3 18.9 <set transform group statement> (p917)
---/h3
 
---p
-Set the group name that identifies the group of transform functions for
-mapping values of userdefined types to predefined data types.
---/p
 
 <set transform group statement> ::= SET <transform group characteristic>
 
@@ -5288,15 +3925,7 @@ mapping values of userdefined types to predefined data types.
         DEFAULT TRANSFORM GROUP <value specification>
     |   TRANSFORM GROUP FOR TYPE <path-resolved user-defined type name> <value specification>
 
---h3 18.10 <set session collation statement> (p918)
---/h3
 
---p
-Set the SQL-session collation of the SQL-session for one or more
-character sets.  An SQL-session collation remains effective until
-another SQL-session collation for the same character set is successfully
-set.
---/p
 
 <set session collation statement> ::=
         SET COLLATION <collation specification> [ FOR <character set specification list> ]
@@ -5306,38 +3935,19 @@ set.
 
 <collation specification> ::= <value specification>
 
---hr
---h2 19 Dynamic SQL
 
---h3 19.1 Description of SQL descriptor areas (p921)
---/h3
 
---h3 19.2 <allocate descriptor statement> (p931)
---/h3
 
---p
-Allocate an SQL descriptor area.
---/p
 
 <allocate descriptor statement> ::= ALLOCATE [ SQL ] DESCRIPTOR <descriptor name> [ WITH MAX <occurrences> ]
 
 <occurrences> ::= <simple value specification>
 
---h3 19.3 <deallocate descriptor statement> (p933)
---/h3
 
---p
-Deallocate an SQL descriptor area.
---/p
 
 <deallocate descriptor statement> ::= DEALLOCATE [ SQL ] DESCRIPTOR <descriptor name>
 
---h3 19.4 <get descriptor statement> (p934)
---/h3
 
---p
-Get information from an SQL descriptor area.
---/p
 
 <get descriptor statement> ::= GET [ SQL ] DESCRIPTOR <descriptor name> <get descriptor information>
 
@@ -5396,12 +4006,7 @@ Get information from an SQL descriptor area.
     |   USER_DEFINED_TYPE_SCHEMA
     |   USER_DEFINED_TYPE_CODE
 
---h3 19.5 <set descriptor statement> (p937)
---/h3
 
---p
-Set information in an SQL descriptor area.
---/p
 
 <set descriptor statement> ::= SET [ SQL ] DESCRIPTOR <descriptor name> <set descriptor information>
 
@@ -5419,12 +4024,7 @@ Set information in an SQL descriptor area.
 
 <item number> ::= <simple value specification>
 
---h3 19.6 <prepare statement> (p941)
---/h3
 
---p
-Prepare a statement for execution.
---/p
 
 <prepare statement> ::=
         PREPARE <SQL statement name> [ <attributes specification> ] FROM <SQL statement variable>
@@ -5465,12 +4065,7 @@ Prepare a statement for execution.
 
 <preparable implementation-defined statement> ::= !! See the Syntax Rules.
 
---h3 19.7 <cursor attributes> (p953)
---/h3
 
---p
-Specify a list of cursor attributes.
---/p
 
 <cursor attributes> ::= <cursor attribute>...
 
@@ -5480,22 +4075,11 @@ Specify a list of cursor attributes.
     |   <cursor holdability>
     |   <cursor returnability>
 
---h3 19.8 <deallocate prepared statement> (p954)
---/h3
 
---p
-Deallocate SQL-statements that have been prepared with a <prepare statement>.
---/p
 
 <deallocate prepared statement> ::= DEALLOCATE PREPARE <SQL statement name>
 
---h3 19.9 <describe statement> (p955)
---/h3
 
---p
-Obtain information about the <select list> columns or <dynamic parameter specification>s contained
-in a prepared statement or about the columns of the result set associated with a cursor.
---/p
 
 <describe statement> ::= <describe input statement> | <describe output statement>
 
@@ -5511,12 +4095,7 @@ in a prepared statement or about the columns of the result set associated with a
         <SQL statement name>
     |   CURSOR <extended cursor name> STRUCTURE
 
---h3 19.10 <input using clause> (p961)
---/h3
 
---p
-Supply input values for an <SQL dynamic statement>.
---/p
 
 <input using clause> ::= <using arguments> | <using input descriptor>
 
@@ -5526,12 +4105,7 @@ Supply input values for an <SQL dynamic statement>.
 
 <using input descriptor> ::= <using descriptor>
 
---h3 19.11 <output using clause> (p965)
---/h3
 
---p
-Supply output variables for an <SQL dynamic statement>.
---/p
 
 <output using clause> ::= <into arguments> | <into descriptor>
 
@@ -5541,13 +4115,7 @@ Supply output variables for an <SQL dynamic statement>.
 
 <into descriptor> ::= INTO [ SQL ] DESCRIPTOR <descriptor name>
 
---h3 19.12 <execute statement> (p970)
---/h3
 
---p
-Associate input SQL parameters and output targets with a prepared statement and execute the
-statement.
---/p
 
 <execute statement> ::= EXECUTE <SQL statement name> [ <result using clause> ] [ <parameter using clause> ]
 
@@ -5555,34 +4123,17 @@ statement.
 
 <parameter using clause> ::= <input using clause>
 
---h3 19.13 <execute immediate statement> (p972)
---/h3
 
---p
-Dynamically prepare and execute a preparable statement.
---/p
 
 <execute immediate statement> ::= EXECUTE IMMEDIATE <SQL statement variable>
 
---h3 19.14 <dynamic declare cursor> (p973)
---/h3
 
---p
-Declare a cursor to be associated with a <statement name>, which may in turn be associated with a
-<cursor specification>.
---/p
 
 <dynamic declare cursor> ::=
         DECLARE <cursor name> [ <cursor sensitivity> ] [ <cursor scrollability> ] CURSOR
         [ <cursor holdability> ] [ <cursor returnability> ] FOR <statement name>
 
---h3 19.15 <allocate cursor statement> (p974)
---/h3
 
---p
-Define a cursor based on a prepared statement for a <cursor specification> or assign a cursor to the
-ordered set of result sets returned from an SQL-invoked procedure.
---/p
 
 <allocate cursor statement> ::= ALLOCATE <extended cursor name> <cursor intent>
 
@@ -5594,91 +4145,43 @@ ordered set of result sets returned from an SQL-invoked procedure.
 
 <result set cursor> ::= FOR PROCEDURE <specific routine designator>
 
---h3 19.16 <dynamic open statement> (p976)
---/h3
 
---p
-Associate input dynamic parameters with a <cursor specification> and open the cursor.
---/p
 
 <dynamic open statement> ::= OPEN <dynamic cursor name> [ <input using clause> ]
 
---h3 19.17 <dynamic fetch statement> (p977)
---/h3
 
---p
-Fetch a row for a cursor declared with a <dynamic declare cursor>.
---/p
 
 <dynamic fetch statement> ::= FETCH [ [ <fetch orientation> ] FROM ] <dynamic cursor name> <output using clause>
 
---h3 19.18 <dynamic single row select statement> (p978)
---/h3
 
---p
-Retrieve values from a dynamically-specified row of a table.
---/p
 
 <dynamic single row select statement> ::= <query specification>
 
---h3 19.19 <dynamic close statement> (p979)
---/h3
 
---p
-Close a cursor.
---/p
 
 <dynamic close statement> ::= CLOSE <dynamic cursor name>
 
---h3 19.20 <dynamic delete statement: positioned> (p980)
---/h3
 
---p
-Delete a row of a table.
---/p
 
 <dynamic delete statement: positioned> ::= DELETE FROM <target table> WHERE CURRENT OF <dynamic cursor name>
 
---h3 19.21 <dynamic update statement: positioned> (p982)
---/h3
 
---p
-Update a row of a table.
---/p
 
 <dynamic update statement: positioned> ::=
         UPDATE <target table> SET <set clause list> WHERE CURRENT OF <dynamic cursor name>
 
---h3 19.22 <preparable dynamic delete statement: positioned> (p984)
---/h3
 
---p
-Delete a row of a table through a dynamic cursor.
---/p
 
 <preparable dynamic delete statement: positioned> ::=
         DELETE [ FROM <target table> ] WHERE CURRENT OF [ <scope option> ] <cursor name>
 
---h3 19.23 <preparable dynamic update statement: positioned> (p986)
---/h3
 
---p
-Update a row of a table through a dynamic cursor.
---/p
 
 <preparable dynamic update statement: positioned> ::=
         UPDATE [ <target table> ] SET <set clause list> WHERE CURRENT OF [ <scope option> ] <cursor name>
 
---hr
---h2 20 Embedded SQL
---/h2
 
---h3 20.1 <embedded SQL host program> (p989)
---/h3
 
---p
-Specify an <embedded SQL host program>.
---/p
 
 <embedded SQL host program> ::=
         <embedded SQL Ada program>
@@ -5756,13 +4259,7 @@ Specify an <embedded SQL host program>.
     |   <Pascal host identifier>
     |   <PL/I host identifier>
 
---h3 20.2 <embedded exception declaration> (p1001)
---/h3
 
---p
-Specify the action to be taken when an SQL-statement causes a specific class of condition to be
-raised.
---/p
 
 <embedded exception declaration> ::= WHENEVER <condition> <condition action>
 
@@ -5794,12 +4291,7 @@ raised.
 
 <host PL/I label variable> ::= !! See the Syntax Rules.
 
---h3 20.3 <embedded SQL Ada program> (p1005)
---/h3
 
---p
-Specify an <embedded SQL Ada program>.
---/p
 
 <embedded SQL Ada program> ::= !! See the Syntax Rules.
 
@@ -5870,12 +4362,7 @@ Specify an <embedded SQL Ada program>.
 
 <Ada multiset locator variable> ::= SQL TYPE IS <multiset type> AS LOCATOR
 
---h3 20.4 <embedded SQL C program> (p1011)
---/h3
 
---p
-Specify an <embedded SQL C program>.
---/p
 
 <embedded SQL C program> ::= !! See the Syntax Rules.
 
@@ -5887,14 +4374,6 @@ Specify an <embedded SQL C program>.
 
 <C class modifier> ::= const | volatile
 
---p
---small
---i
-It is curious that the C types in SQL 2003 don't include the C keywords int or signed.
-It is slightly less surprising that the grammar doesn't include C99 keywords such as restrict.
---/i
---/small
---/p
 
 <C numeric variable> ::=
         { long long | long | short | float | double } <C host identifier> [ <C initial value> ]
@@ -5993,12 +4472,7 @@ It is slightly less surprising that the grammar doesn't include C99 keywords suc
 
 <C initial value> ::= <equals operator> <character representation>...
 
---h3 20.5 <embedded SQL COBOL program> (p1019)
---/h3
 
---p
-Specify an <embedded SQL COBOL program>.
---/p
 
 <embedded SQL COBOL program> ::= !! See the Syntax Rules.
 
@@ -6082,12 +4556,7 @@ Specify an <embedded SQL COBOL program>.
 
 <COBOL nines> ::= { 9 [ <left paren> <length> <right paren> ] }...
 
---h3 20.6 <embedded SQL Fortran program> (p1025)
---/h3
 
---p
-Specify an <embedded SQL Fortran program>.
---/p
 
 <embedded SQL Fortran program> ::= !! See the Syntax Rules.
 
@@ -6138,12 +4607,7 @@ Specify an <embedded SQL Fortran program>.
 
 <Fortran REF variable> ::= SQL TYPE IS <reference type>
 
---h3 20.7 <embedded SQL MUMPS program> (p1030)
---/h3
 
---p
-Specify an <embedded SQL MUMPS program>.
---/p
 
 <embedded SQL MUMPS program> ::= !! See the Syntax Rules.
 
@@ -6198,12 +4662,7 @@ Specify an <embedded SQL MUMPS program>.
 
 <MUMPS REF variable> ::= SQL TYPE IS <reference type>
 
---h3 20.8 <embedded SQL Pascal program> (p1035)
---/h3
 
---p
-Specify an <embedded SQL Pascal program>.
---/p
 
 <embedded SQL Pascal program> ::= !! See the Syntax Rules.
 
@@ -6252,12 +4711,7 @@ Specify an <embedded SQL Pascal program>.
 
 <Pascal REF variable> ::= SQL TYPE IS <reference type>
 
---h3 20.9 <embedded SQL PL/I program> (p1040)
---/h3
 
---p
-Specify an <embedded SQL PL/I program>.
---/p
 
 <embedded SQL PL/I program> ::= !! See the Syntax Rules.
 
@@ -6318,16 +4772,8 @@ Specify an <embedded SQL PL/I program>.
         { BIN | BINARY } FLOAT
     |   FLOAT { BIN | BINARY }
 
---hr
---h2 21 Direct invocation of SQL
---/h2
 
---h3 21.1 <direct SQL statement> (p1047)
---/h3
 
---p
-Specify direct execution of SQL.
---/p
 
 <direct SQL statement> ::= <directly executable statement> <semicolon>
 
@@ -6349,23 +4795,11 @@ Specify direct execution of SQL.
 
 <direct implementation-defined statement> ::= !! See the Syntax Rules.
 
---h3 21.2 <direct select statement: multiple rows> (p1051)
---/h3
 
---p
-Specify a statement to retrieve multiple rows from a specified table.
---/p
 
 <direct select statement: multiple rows> ::= <cursor specification>
 
---hr
---h2 22 Diagnostics management
---h3 22.1 <get diagnostics statement> (p1053)
---/h3
 
---p
-Get exception or completion condition information from a diagnostics area.
---/p
 
 <get diagnostics statement> ::= GET DIAGNOSTICS <SQL diagnostics information>
 
@@ -6423,329 +4857,21 @@ Get exception or completion condition information from a diagnostics area.
 
 <condition number> ::= <simple value specification>
 
---h3 22.2 Pushing and popping the diagnostics area stack (p1068)
---/h3
-
---hr
---h2 23 Status codes
---/h2
-
---h3 23.1 SQLSTATE (p1069)
---/h3
-
---p
-The character string value returned in an SQLSTATE parameter comprises a
-2-character class value followed by a 3-character subclass value, each
-with an implementation-defined character set that has a one-octet
-character encoding form and is restricted to <digit>s and
-<simple Latin upper case letter>s.
-Table 31, 'SQLSTATE class and subclass values', specifies the class
-value for each condition and the subclass value or values for each class
-value.
---/p
---p
-Class values that begin with one of the <digit>s '0', '1', '2', '3', or
-'4' or one of the <simple Latin upper case letter>s 'A', 'B', 'C', 'D',
-'E', 'F', 'G', or 'H' are returned only for conditions defined in
-ISO/IEC 9075 or in any other International Standard.
-The range of such class values are called standard-defined
-classes.
-Some such class codes are reserved for use by specific International
-Standards, as specified elsewhere in this Clause.
-Subclass values associated with such classes that also begin with one of
-those 13 characters are returned only for conditions defined in ISO/IEC
-9075 or some
-other International Standard.
-The range of such class values are called standard-defined classes.
-Subclass values associated with such classes that begin with one of the
-<digit>s '5', '6', '7', '8', or '9' or one of the <simple Latin upper
-case letter>s 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-'T', 'U', 'V', 'W', 'X', 'Y', or 'Z' are reserved for
-implementation-specified conditions and are called
-implementation-defined subclasses.
---/p
---p
-Class values that begin with one of the <digit>s '5', '6', '7', '8', or
-'9' or one of the <simple Latin upper case letter>s 'I', 'J', 'K', 'L',
-'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', or 'Z'
-are reserved for implementation-specified exception conditions and are
-called implementation-defined classes.
-All subclass values except '000', which means no subclass, associated
-with such classes are reserved for implementation-specified conditions
-and are called implementation-defined subclasses.
-An implementation-defined completion condition shall be indicated by
-returning an implementation-defined subclass in conjunction with one of
-the classes successful completion, warning, or no data.
---/p
 
 
---p
-The 'Category' column has the following meanings: 'S' means that the class value given corresponds
-to successful completion and is a completion condition; 'W' means that the class value given
-corresponds to a successful completion but with a warning and is a completion condition; 'N' means
-that the class value given corresponds to a no-data situation and is a completion condition; 'X'
-means that the class value given corresponds to an exception condition.
---/p
-
---p
-Table 31 - SQLSTATE class and subclass values
---/p
-
---## <table border=1>
---## <tr><th> Category </th><th> Condition </th><th> Class </th><th> Subcondition </th><th> Subclass </th></tr>
---## <tr><td> X </td><td> ambiguous cursor name </td><td> 3C </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> attempt to assign to non-updatable column </td><td> 0U </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> attempt to assign to ordering column </td><td> 0V </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> cardinality violation </td><td> 21 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> connection exception </td><td> 08 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> connection does not exist </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> connection failure </td><td> 006 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> connection name in use </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> SQL-client unable to establish SQL-connection </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> SQL-server rejected establishment of SQL-connection </td><td> 004 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> transaction resolution unknown </td><td> 007 </td></tr>
---## <tr><td> X </td><td> cursor sensitivity exception </td><td> 36 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> request failed </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> request rejected </td><td> 001 </td></tr>
---## <tr><td> X </td><td> data exception </td><td> 22 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> array data, right truncation </td><td> 02F </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> array element error </td><td> 02E </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> character not in repertoire </td><td> 021 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> datetime field overflow </td><td> 008 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> division by zero </td><td> 012 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> error in assignment </td><td> 005 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> escape character conflict </td><td> 00B </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> indicator overflow </td><td> 022 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> interval field overflow </td><td> 015 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid argument for natural logarithm </td><td> 01E </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid argument for power function </td><td> 01F </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid argument for width bucket function </td><td> 01G </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid character value for cast </td><td> 018 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid datetime format </td><td> 007 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid escape character </td><td> 019 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid escape octet </td><td> 00D </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid escape sequence </td><td> 025 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid indicator parameter value </td><td> 010 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid interval format </td><td> 006 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid parameter value </td><td> 023 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid preceding or following size in window function </td><td> 013 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid regular expression </td><td> 01B </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid repeat argument in a sample clause </td><td> 02G </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid sample size </td><td> 02H </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid time zone displacement value </td><td> 009 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid use of escape character </td><td> 00C </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> most specific type mismatch </td><td> 00G </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> noncharacter in UCS string </td><td> 029 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value substituted for mutator subject parameter </td><td> 02D </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null row not permitted in table </td><td> 01C </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value in array target </td><td> 00E </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value, no indicator parameter </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value not allowed </td><td> 004 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> numeric value out of range </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> sequence generator limit exceeded </td><td> 00H </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> string data, length mismatch </td><td> 026 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> string data, right truncation </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> substring error </td><td> 011 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> trim error </td><td> 027 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> unterminated C string </td><td> 024 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> zero-length character string </td><td> 00F </td></tr>
---## <tr><td> X </td><td> dependent privilege descriptors still exist </td><td> 2B </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> diagnostics exception </td><td> 0Z </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> maximum number of stacked diagnostics areas exceeded </td><td> 001 </td></tr>
---## <tr><td> X </td><td> dynamic SQL error </td><td> 07 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> cursor specification cannot be executed </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> data type transform function violation </td><td> 00B </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid DATA target </td><td> 00D </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid DATETIME_INTERVAL_CODE </td><td> 00F </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid descriptor count </td><td> 008 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid descriptor index </td><td> 009 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid LEVEL value </td><td> 00E </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> prepared statement not a cursor specification </td><td> 005 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> restricted data type attribute violation </td><td> 006 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> undefined DATA value </td><td> 00C </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> using clause does not match dynamic parameter specifications </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> using clause does not match target specifications </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> using clause required for dynamic parameters </td><td> 004 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> using clause required for result fields </td><td> 007 </td></tr>
---## <tr><td> X </td><td> external routine exception </td><td> 38 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> containing SQL not permitted </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> modifying SQL-data not permitted </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> prohibited SQL-statement attempted </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> reading SQL-data not permitted </td><td> 004 </td></tr>
---## <tr><td> X </td><td> external routine invocation exception </td><td> 39 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid SQLSTATE returned </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value not allowed </td><td> 004 </td></tr>
---## <tr><td> X </td><td> feature not supported </td><td> 0A </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> multiple server transactions </td><td> 001 </td></tr>
---## <tr><td> X </td><td> integrity constraint violation </td><td> 23 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> restrict violation </td><td> 001 </td></tr>
---## <tr><td> X </td><td> invalid authorization specification </td><td> 28 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid catalog name </td><td> 3D </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid character set name </td><td> 2C </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid condition number </td><td> 35 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid connection name </td><td> 2E </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid cursor name </td><td> 34 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid cursor state </td><td> 24 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid grantor </td><td> 0L </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid role specification </td><td> 0P </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid schema name </td><td> 3F </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid schema name list specification </td><td> 0E </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid session collation specification </td><td> 2H </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid SQL descriptor name </td><td> 33 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid SQL-invoked procedure reference </td><td> 0M </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid SQL statement name </td><td> 26 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid SQL statement identifier </td><td> 30 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid target type specification </td><td> 0D </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid transaction initiation </td><td> 0B </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid transaction state </td><td> 25 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> active SQL-transaction </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> branch transaction already active </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> held cursor requires same isolation level </td><td> 008 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> inappropriate access mode for branch transaction </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> inappropriate isolation level for branch transaction </td><td> 004 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> no active SQL-transaction for branch transaction </td><td> 005 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> read-only SQL-transaction </td><td> 006 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> schema and data statement mixing not supported </td><td> 007 </td></tr>
---## <tr><td> X </td><td> invalid transaction termination </td><td> 2D </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> invalid transform group name specification </td><td> 0S </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> locator exception </td><td> 0F </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid specification </td><td> 001 </td></tr>
---## <tr><td> N </td><td> no data </td><td> 02 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> no additional dynamic result sets returned </td><td> 001 </td></tr>
---## <tr><td> X </td><td> prohibited statement encountered during trigger execution </td><td> 0W </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> Remote Database Access </td><td> HZ </td><td> (See Table 32, 'SQLSTATE class codes for RDA', for the definition of protocol subconditions and subclass code values) </td><td> &nbsp; </td></tr>
---## <tr><td> X </td><td> savepoint exception </td><td> 3B </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> invalid specification </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> too many </td><td> 002 </td></tr>
---## <tr><td> X </td><td> SQL routine exception </td><td> 2F </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> function executed no return statement </td><td> 005 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> modifying SQL-data not permitted </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> prohibited SQL-statement attempted </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> reading SQL-data not permitted </td><td> 004 </td></tr>
---## <tr><td> S </td><td> successful completion </td><td> 00 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> syntax error or access rule violation </td><td> 42 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> target table disagrees with cursor specification </td><td> 0T </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> transaction rollback </td><td> 40 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> integrity constraint violation </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> serialization failure </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> statement completion unknown </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> triggered action exception </td><td> 004 </td></tr>
---## <tr><td> X </td><td> triggered action exception </td><td> 09 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> X </td><td> triggered data change violation </td><td> 27 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> W </td><td> warning </td><td> 01 </td><td> (no subclass) </td><td> 000 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> additional result sets returned </td><td> 00D </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> array data, right truncation </td><td> 02F </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> attempt to return too many result sets </td><td> 00E </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> cursor operation conflict </td><td> 001 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> default value too long for information schema </td><td> 00B </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> disconnect error </td><td> 002 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> dynamic result sets returned </td><td> 00C </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> external routine warning (the value of xx to be chosen by the author of the external routine) </td><td> Hxx </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> insufficient item descriptor areas </td><td> 005 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> null value eliminated in set function </td><td> 003 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> privilege not granted </td><td> 007 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> privilege not revoked </td><td> 006 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> query expression too long for information schema </td><td> 00A </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> search condition too long for information schema </td><td> 009 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> statement too long for information schema </td><td> 008 </td></tr>
---## <tr><td> &nbsp; </td><td> &nbsp; </td><td> &nbsp; </td><td> string data, right truncation </td><td> 004 </td></tr>
---## <tr><td> X </td><td> with check option violation </td><td> 44 </td><td> (no subclass) </td><td> 000 </td></tr>
---## </table>
 
 
---hr
---h2 24 Conformance
---/h2
-
---h3 24.1 General Conformance Requirements (p1079)
---/h3
-
---p
-Table 33 - Implied feature relationships
---/p
-
---## <table border=1>
---## <tr><th> Feature ID </th><th> Feature Description </th><th> Implied Feature </th><th> ID Implied Feature Description </th></tr>
---## <tr><td> B032 </td><td> Extended dynamic SQL </td><td> B031 </td><td> Basic dynamic SQL </td></tr>
---## <tr><td> B034 </td><td> Dynamic specification of cursor attributes </td><td> B031 </td><td> Basic dynamic SQL </td></tr>
---## <tr><td> F381 </td><td> Extended schema manipulation </td><td> F491 </td><td> Constraint management </td></tr>
---## <tr><td> F451 </td><td> Character set definition </td><td> F461 </td><td> Named character sets </td></tr>
---## <tr><td> F711 </td><td> ALTER domain </td><td> F251 </td><td> Domain support </td></tr>
---## <tr><td> F801 </td><td> Full set function </td><td> F441 </td><td> Extended set function support </td></tr>
---## <tr><td> S024 </td><td> Enhanced structured types </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S041 </td><td> Basic reference types </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S041 </td><td> Basic reference types </td><td> S051 </td><td> Create table of type </td></tr>
---## <tr><td> S043 </td><td> Enhanced reference types </td><td> S041 </td><td> Basic reference types </td></tr>
---## <tr><td> S051 </td><td> Create table of type </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S081 </td><td> Subtables </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S081 </td><td> Subtables </td><td> S051 </td><td> Create table of type </td></tr>
---## <tr><td> S092 </td><td> Arrays of user-defined types </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S094 </td><td> Arrays of reference types </td><td> S041 </td><td> Basic reference types </td></tr>
---## <tr><td> S094 </td><td> Arrays of reference types </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S095 </td><td> Array constructors by query </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S096 </td><td> Optional array bounds </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S111 </td><td> ONLY in query expressions </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S111 </td><td> ONLY in query expressions </td><td> S051 </td><td> Create table of type </td></tr>
---## <tr><td> S201 </td><td> SQL-invoked routines on arrays </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S202 </td><td> SQL-invoked routines on multisets </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> S231 </td><td> Structured type locators </td><td> S023 </td><td> Basic structured types </td></tr>
---## <tr><td> S232 </td><td> Array locators </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> S233 </td><td> Multiset locators </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> S242 </td><td> Alter transform statement </td><td> S241 </td><td> Transform functions </td></tr>
---## <tr><td> S272 </td><td> Multisets of user-defined types </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> S274 </td><td> Multisets of reference types </td><td> S041 </td><td> Basic reference types </td></tr>
---## <tr><td> S274 </td><td> Multisets of reference types </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> S275 </td><td> Advanced multiset support </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> T042 </td><td> Extended LOB data type support </td><td> T041 </td><td> Basic LOB data type support </td></tr>
---## <tr><td> T061 </td><td> UCS Support </td><td> F461 </td><td> Named character sets </td></tr>
---## <tr><td> T071 </td><td> BIGINT data type </td><td> E001-01 </td><td> INTEGER and SMALLINT data types (including all spellings) </td></tr>
---## <tr><td> T131 </td><td> Recursive query </td><td> T121 </td><td> WITH (excluding RECURSIVE) in query expression </td></tr>
---## <tr><td> T173 </td><td> Extended LIKE clause in table definition </td><td> T171 </td><td> LIKE clause in table definition </td></tr>
---## <tr><td> T212 </td><td> Enhanced trigger capability </td><td> T211 </td><td> Basic trigger capability </td></tr>
---## <tr><td> T332 </td><td> Extended roles </td><td> T331 </td><td> Basic roles </td></tr>
---## <tr><td> T511 </td><td> Transaction counts </td><td> F121 </td><td> Basic diagnostics management </td></tr>
---## <tr><td> T571 </td><td> Array-returning external SQL-invoked functions </td><td> S091 </td><td> Basic array support </td></tr>
---## <tr><td> T571 </td><td> Array-returning external SQL-invoked functions </td><td> S201 </td><td> SQL-invoked routines on arrays </td></tr>
---## <tr><td> T572 </td><td> Multiset-returning external SQLinvoked functions </td><td> S202 </td><td> SQL-invoked routines on multisets </td></tr>
---## <tr><td> T572 </td><td> Multiset-returning external SQLinvoked functions </td><td> S271 </td><td> Basic multiset support </td></tr>
---## <tr><td> T612 </td><td> Advanced OLAP operations </td><td> T611 </td><td> Elementary OLAP operations </td></tr>
---## </table>
 
 
---hr
---h2 END OF SQL-2003 Part 2 (SQL/Foundation) GRAMMAR
---/h2
 
---h2 Notes on Automatically Converting the SQL Grammar to a YACC Grammar
---/h2
 
---p
-Automatic translation of this grammar is non-trivial for a number of
-reasons.
-One is that the grammar has a number of actions '!!
-See the Syntax Rules' which cannot be translated automatically.
-Another is that the grammar contains rules that are usually better
-handled by the lexical analyzer than the grammar proper.
-Then there are incomplete rules such as those which reference parts 6
-to 10 (they are not defined; indeed, part 7, which was going to be
-SQL/Temporal, is in complete abeyance), and the packages (almost
-completely undefined in the grammar).
-It is not clear whether these can be ignored, or annotated out of the
-way.
---/p
 
---p
-Another complication is automatically generating rules to deal with
-optional components and repetitive components in the grammar.
-Square brackets do not contain alternative non-terminals; all those
-expressions are contained within curly brackets within the square
-brackets.
-However, some square brackets do contain alternative terminals.
-Curly brackets contain and group mandatory elements.
-However, they are usually used in conjunction with the 'one or more
-times' repeater ellipsis '...' mark.
---/p
 
---hr
---h2 END OF SQL 2003-2 (SQL/FOUNDATION) GRAMMAR
---/h2
+
+
+
+
+
+
+
+
