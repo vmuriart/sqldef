@@ -11,13 +11,14 @@
 # the file is generated.
 
 
-from __future__ import print_function, division, absolute_import, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
 from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 6, 29, 1, 3, 24, 2)
+__version__ = (2016, 6, 29, 1, 3, 53, 2)
 
 __all__ = [
     'SqlParser',
