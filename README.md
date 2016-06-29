@@ -49,10 +49,10 @@ path = r'.\sql92.ebnf'
 with open(path) as f:
     b = f.read()
 
-regex = re.compile(r'.(\n+<[\w]+> =)')
+regex = re.compile(r'.(\n+<[\w]+> ::=)')
 found = regex.findall(b)
 for old in found:
-    b = b.replace(old, ';' + old)
+    b = b.replace(old, '\n        ;' + old)
 print(found)
 print(b)
 

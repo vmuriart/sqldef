@@ -9,3 +9,9 @@
 1. Replace `(<.*): (.*>)` with `\1_\2` to remove colons
 1. Replace `(<.*)-(.*>)` with `\1_\2` to remove hyphens- apply multiple times. note END-EXEC was mistakely changed. will fix later
 1. use script from readme to remove all spaces from rule names
+1. use `([^'<])\b(\w+)\b([^'>])` to quote with `\1'\2'\3` apply multiple times
+1. manually quote symbols
+1. add semicolong to defintions
+1. add spaces between >< '< >'
+1. remove <...> replace ::=
+used `<(\w+)>` `\L$1` for lowercase and remove <>
