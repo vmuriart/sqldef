@@ -29,12 +29,12 @@ start =
         direct_sql_statement
         ;
 
-simple_latin_letter =
-        /[A-Za-z]/
+letter =
+        /[a-z]/
         ;
 
-digit =
-        /\d/
+integer =
+        /\d+/
         ;
 
 whitespace =
@@ -50,29 +50,11 @@ right_bracket_or_trigraph =
         ;
 
 regular_identifier =
-        identifier_body
-        ;
-
-identifier_body =
-        identifier_start [{identifier_part}+]
-        ;
-
-identifier_part =
-        identifier_start | identifier_extend
-        ;
-
-# SEE_THE_SYNTAX_RULES
-identifier_start =
-        simple_latin_letter
-        ;
-
-# SEE_THE_SYNTAX_RULES
-identifier_extend =
-        digit | '_'
+        /[a-z]\w*/
         ;
 
 large_object_length_token =
-        {digit}+ multiplier
+        {integer}+ multiplier
         ;
 
 multiplier =
@@ -88,7 +70,7 @@ delimited_identifier_body =
         ;
 
 delimited_identifier_part =
-        nondoublequote_character | '""'
+        letter | '""'
         ;
 
 unicode_escape_value =
@@ -111,14 +93,10 @@ unicode_character_escape_value =
 
 # SEE_THE_SYNTAX_RULES
 unicode_escape_character =
-        "\u"
+        '\u'
         ;
 
 # SEE_THE_SYNTAX_RULES
-nondoublequote_character =
-        simple_latin_letter
-        ;
-
 separator =
         {comment | whitespace}+
         ;
@@ -185,7 +163,7 @@ character_representation =
 
 # SEE_THE_SYNTAX_RULES
 nonquote_character =
-        simple_latin_letter
+        letter
         ;
 
 national_character_string_literal =
@@ -223,8 +201,8 @@ unsigned_numeric_literal =
         ;
 
 exact_numeric_literal =
-        unsigned_integer ['.' [unsigned_integer]]
-    |   '.' unsigned_integer
+        integer ['.' [integer]]
+    |   '.' integer
         ;
 
 sign =
@@ -244,11 +222,7 @@ exponent =
         ;
 
 signed_integer =
-        [sign] unsigned_integer
-        ;
-
-unsigned_integer =
-        {digit}+
+        [sign] integer
         ;
 
 datetime_literal =
@@ -358,15 +332,15 @@ seconds_value =
         ;
 
 seconds_integer_value =
-        unsigned_integer
+        integer
         ;
 
 seconds_fraction =
-        unsigned_integer
+        integer
         ;
 
 datetime_value =
-        unsigned_integer
+        integer
         ;
 
 boolean_literal =
@@ -379,18 +353,6 @@ identifier =
 
 actual_identifier =
         regular_identifier | delimited_identifier
-        ;
-
-sql_language_identifier =
-        sql_language_identifier_start [{'_' | sql_language_identifier_part}+]
-        ;
-
-sql_language_identifier_start =
-        simple_latin_letter
-        ;
-
-sql_language_identifier_part =
-        simple_latin_letter | digit
         ;
 
 authorization_identifier =
@@ -494,7 +456,7 @@ collation_name =
         ;
 
 character_set_name =
-        [schema_name '.'] sql_language_identifier
+        [schema_name '.'] regular_identifier
         ;
 
 transliteration_name =
@@ -652,11 +614,11 @@ approximate_numeric_type =
         ;
 
 length =
-        unsigned_integer
+        integer
         ;
 
 large_object_length =
-        unsigned_integer [multiplier] [char_length_units]
+        integer [multiplier] [char_length_units]
     |   large_object_length_token [char_length_units]
         ;
 
@@ -665,11 +627,11 @@ char_length_units =
         ;
 
 precision =
-        unsigned_integer
+        integer
         ;
 
 scale =
-        unsigned_integer
+        integer
         ;
 
 boolean_type =
@@ -695,7 +657,7 @@ timestamp_precision =
         ;
 
 time_fractional_seconds_precision =
-        unsigned_integer
+        integer
         ;
 
 interval_type =
@@ -731,7 +693,7 @@ collection_type =
         ;
 
 array_type =
-        data_type 'ARRAY' [left_bracket_or_trigraph unsigned_integer right_bracket_or_trigraph]
+        data_type 'ARRAY' [left_bracket_or_trigraph integer right_bracket_or_trigraph]
         ;
 
 multiset_type =
@@ -842,24 +804,16 @@ current_collation_specification =
         ;
 
 contextually_typed_value_specification =
-        implicitly_typed_value_specification | default_specification
+        implicitly_typed_value_specification | 'DEFAULT'
         ;
 
 implicitly_typed_value_specification =
-        null_specification | empty_specification
-        ;
-
-null_specification =
-        'NULL'
+        'NULL' | empty_specification
         ;
 
 empty_specification =
         'ARRAY' left_bracket_or_trigraph right_bracket_or_trigraph
     |   'MULTISET' left_bracket_or_trigraph right_bracket_or_trigraph
-        ;
-
-default_specification =
-        'DEFAULT'
         ;
 
 identifier_chain =
@@ -2277,11 +2231,11 @@ upper_limit =
         ;
 
 low_value =
-        unsigned_integer
+        integer
         ;
 
 high_value =
-        unsigned_integer
+        integer
         ;
 
 regular_primary =
@@ -2297,7 +2251,7 @@ character_specifier =
 
 # SEE_THE_SYNTAX_RULES
 non_escaped_character =
-        simple_latin_letter
+        letter
         ;
 
 # SEE_THE_SYNTAX_RULES
@@ -2496,11 +2450,11 @@ non_second_primary_datetime_field =
         ;
 
 interval_fractional_seconds_precision =
-        unsigned_integer
+        integer
         ;
 
 interval_leading_field_precision =
-        unsigned_integer
+        integer
         ;
 
 language_clause =
@@ -3618,7 +3572,7 @@ null_call_clause =
         ;
 
 maximum_dynamic_result_sets =
-        unsigned_integer
+        integer
         ;
 
 transform_group_specification =

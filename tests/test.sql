@@ -1,1 +1,1 @@
-SELECT 1 a FROM dual t WHERE 1 = 4
+SELECT 1 FROM dual t WHERE 1 = 4

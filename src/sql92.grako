@@ -23,22 +23,20 @@
 @@ignorecase :: True
 @@whitespace :: /[\s]+/
 @@eol_comments :: /--.*?$/
+@@keyword :: SELECT FROM WHERE
 
 
 start =
         direct_sql_statement
         ;
 
-SPACE =
+space =
         /\s/
         ;
 
-REGULAR_IDENTIFIER =
-        IDENTIFIER_BODY
-        ;
-
-IDENTIFIER_BODY =
-        /[A-Za-z]\w*/
+@name
+regular_identifier =
+        /[a-z]\w*/
         ;
 
 unsigned_numeric_literal =
@@ -47,11 +45,11 @@ unsigned_numeric_literal =
         ;
 
 exact_numeric_literal =
-        INTEGER ['.' [INTEGER]]
-    |   '.' INTEGER
+        integer ['.' [integer]]
+    |   '.' integer
         ;
 
-INTEGER =
+integer =
         /\d+/
         ;
 
@@ -68,7 +66,7 @@ exponent =
         ;
 
 signed_integer =
-        [sign] INTEGER
+        [sign] integer
         ;
 
 sign =
@@ -81,12 +79,12 @@ national_character_string_literal =
         ;
 
 character_representation =
-        /[A-Za-z]/
+        /[a-z]/
     |   "''"
         ;
 
 separator =
-        {SPACE}*
+        {space}+
         ;
 
 bit_string_literal =
@@ -102,7 +100,7 @@ hex_string_literal =
         ;
 
 hexit =
-        /[\dA-Fa-f]+/
+        /[a-f\d]+/
         ;
 
 character_string_literal =
@@ -110,7 +108,7 @@ character_string_literal =
         ;
 
 character_set_name =
-        [schema_name '.'] IDENTIFIER_BODY
+        [schema_name '.'] regular_identifier
         ;
 
 schema_name =
@@ -118,33 +116,33 @@ schema_name =
         ;
 
 catalog_name =
-        IDENTIFIER
+        identifier
         ;
 
-IDENTIFIER =
-        ['_' character_set_name] actual_IDENTIFIER
+identifier =
+        ['_' character_set_name] actual_identifier
         ;
 
-actual_IDENTIFIER =
-        REGULAR_IDENTIFIER
-    |   delimited_IDENTIFIER
+actual_identifier =
+        regular_identifier
+    |   delimited_identifier
         ;
 
-delimited_IDENTIFIER =
-        '"' delimited_IDENTIFIER_BODY '"'
+delimited_identifier =
+        '"' delimited_identifier_body '"'
         ;
 
-delimited_IDENTIFIER_BODY =
-        {delimited_IDENTIFIER_PART}+
+delimited_identifier_body =
+        {delimited_identifier_part}+
         ;
 
-delimited_IDENTIFIER_PART =
-        /[A-Za-z]/
+delimited_identifier_part =
+        /[a-z]/
     |   '""'
         ;
 
 unqualified_schema_name =
-        IDENTIFIER
+        identifier
         ;
 
 date_string =
@@ -160,7 +158,7 @@ years_value =
         ;
 
 datetime_value =
-        INTEGER
+        integer
         ;
 
 months_value =
@@ -192,11 +190,11 @@ seconds_value =
         ;
 
 seconds_integer_value =
-        INTEGER
+        integer
         ;
 
 seconds_fraction =
-        INTEGER
+        integer
         ;
 
 time_zone_interval =
@@ -204,7 +202,7 @@ time_zone_interval =
         ;
 
 timestamp_string =
-        "'" date_value SPACE time_value [time_zone_interval] "'"
+        "'" date_value space time_value [time_zone_interval] "'"
         ;
 
 interval_string =
@@ -222,7 +220,7 @@ day_time_literal =
         ;
 
 day_time_interval =
-        days_value [SPACE hours_value [':' minutes_value [':' seconds_value]]]
+        days_value [space hours_value [':' minutes_value [':' seconds_value]]]
         ;
 
 time_interval =
@@ -231,8 +229,8 @@ time_interval =
     |   seconds_value
         ;
 
-authorization_IDENTIFIER =
-        IDENTIFIER
+authorization_identifier =
+        identifier
         ;
 
 temporary_table_declaration =
@@ -244,15 +242,15 @@ qualified_local_table_name =
         ;
 
 local_table_name =
-        qualified_IDENTIFIER
+        qualified_identifier
         ;
 
-qualified_IDENTIFIER =
-        IDENTIFIER
+qualified_identifier =
+        identifier
         ;
 
 table_element_list =
-        '(' table_element [{',' table_element}+ ] ')'
+        '(' ','.{table_element} ')'
         ;
 
 table_element =
@@ -265,7 +263,7 @@ column_definition =
         ;
 
 column_name =
-        IDENTIFIER
+        identifier
         ;
 
 data_type =
@@ -278,29 +276,25 @@ data_type =
         ;
 
 character_string_type =
-        'CHARACTER' ['(' length ')']
-    |   'CHAR' ['(' length ')']
-    |   'CHARACTER' 'VARYING' ['(' length ')']
-    |   'CHAR' 'VARYING' ['(' length ')']
-    |   'VARCHAR' ['(' length ')']
-        ;
-
-length =
-        INTEGER
+        'CHARACTER' ['(' integer ')']
+    |   'CHAR' ['(' integer ')']
+    |   'CHARACTER' 'VARYING' ['(' integer ')']
+    |   'CHAR' 'VARYING' ['(' integer ')']
+    |   'VARCHAR' ['(' integer ')']
         ;
 
 national_character_string_type =
-        'NATIONAL' 'CHARACTER' ['(' length ')']
-    |   'NATIONAL' 'CHAR' ['(' length ')']
-    |   'NCHAR' ['(' length ')']
-    |   'NATIONAL' 'CHARACTER' 'VARYING' ['(' length ')']
-    |   'NATIONAL' 'CHAR' 'VARYING' ['(' length ')']
-    |   'NCHAR' 'VARYING' ['(' length ')']
+        'NATIONAL' 'CHARACTER' ['(' integer ')']
+    |   'NATIONAL' 'CHAR' ['(' integer ')']
+    |   'NCHAR' ['(' integer ')']
+    |   'NATIONAL' 'CHARACTER' 'VARYING' ['(' integer ')']
+    |   'NATIONAL' 'CHAR' 'VARYING' ['(' integer ')']
+    |   'NCHAR' 'VARYING' ['(' integer ')']
         ;
 
 bit_string_type =
-        'BIT' ['(' length ')']
-    |   'BIT' 'VARYING' ['(' length ')']
+        'BIT' ['(' integer ')']
+    |   'BIT' 'VARYING' ['(' integer ')']
         ;
 
 numeric_type =
@@ -309,44 +303,24 @@ numeric_type =
         ;
 
 exact_numeric_type =
-        'NUMERIC' ['(' precision [',' scale] ')']
-    |   'DECIMAL' ['(' precision [',' scale] ')']
-    |   'DEC' ['(' precision [',' scale] ')']
+        'NUMERIC' ['(' integer [',' integer] ')']
+    |   'DECIMAL' ['(' integer [',' integer] ')']
+    |   'DEC' ['(' integer [',' integer] ')']
     |   'INTEGER'
     |   'INT'
     |   'SMALLINT'
         ;
 
-precision =
-        INTEGER
-        ;
-
-scale =
-        INTEGER
-        ;
-
 approximate_numeric_type =
-        'FLOAT' ['(' precision ')']
+        'FLOAT' ['(' integer ')']
     |   'REAL'
     |   'DOUBLE' 'PRECISION'
         ;
 
 datetime_type =
         'DATE'
-    |   'TIME' ['(' time_precision ')'] ['WITH' 'TIME' 'ZONE']
-    |   'TIMESTAMP' ['(' timestamp_precision ')'] ['WITH' 'TIME' 'ZONE']
-        ;
-
-time_precision =
-        time_fractional_seconds_precision
-        ;
-
-time_fractional_seconds_precision =
-        INTEGER
-        ;
-
-timestamp_precision =
-        time_fractional_seconds_precision
+    |   'TIME' ['(' integer ')'] ['WITH' 'TIME' 'ZONE']
+    |   'TIMESTAMP' ['(' integer ')'] ['WITH' 'TIME' 'ZONE']
         ;
 
 interval_type =
@@ -359,7 +333,7 @@ interval_qualifier =
         ;
 
 start_field =
-        non_second_datetime_field ['(' interval_leading_field_precision ')']
+        non_second_datetime_field ['(' integer ')']
         ;
 
 non_second_datetime_field =
@@ -370,22 +344,14 @@ non_second_datetime_field =
     |   'MINUTE'
         ;
 
-interval_leading_field_precision =
-        INTEGER
-        ;
-
 end_field =
         non_second_datetime_field
-    |   'SECOND' ['(' interval_fractional_seconds_precision ')']
-        ;
-
-interval_fractional_seconds_precision =
-        INTEGER
+    |   'SECOND' ['(' integer ')']
         ;
 
 single_datetime_field =
-        non_second_datetime_field ['(' interval_leading_field_precision ')']
-    |   'SECOND' ['(' interval_leading_field_precision [',' '(' interval_fractional_seconds_precision] ')']
+        non_second_datetime_field ['(' integer ')']
+    |   'SECOND' ['(' integer [',' '(' integer] ')']
         ;
 
 domain_name =
@@ -393,7 +359,7 @@ domain_name =
         ;
 
 qualified_name =
-        [schema_name '.'] qualified_IDENTIFIER
+        [schema_name '.'] qualified_identifier
         ;
 
 default_clause =
@@ -461,11 +427,11 @@ current_date_value_function =
         ;
 
 current_time_value_function =
-        'CURRENT_TIME' ['(' time_precision ')']
+        'CURRENT_TIME' ['(' integer ')']
         ;
 
 current_timestamp_value_function =
-        'CURRENT_TIMESTAMP' ['(' timestamp_precision ')']
+        'CURRENT_TIMESTAMP' ['(' integer ')']
         ;
 
 column_constraint_definition =
@@ -510,7 +476,7 @@ reference_column_list =
         ;
 
 column_name_list =
-        column_name [{',' column_name}+ ]
+        ','.{column_name}
         ;
 
 match_type =
@@ -589,8 +555,8 @@ row_value_constructor =
 
 row_value_constructor_element =
         value_expression
-    |   null_specification
-    |   default_specification
+    |   'NULL'
+    |   'DEFAULT'
         ;
 
 value_expression =
@@ -643,7 +609,7 @@ unsigned_literal =
 
 general_value_specification =
         parameter_specification
-    |   dynamic_parameter_specification
+    |   '?'
     |   'USER'
     |   'CURRENT_USER'
     |   'SESSION_USER'
@@ -656,15 +622,11 @@ parameter_specification =
         ;
 
 parameter_name =
-        ':' IDENTIFIER
+        ':' identifier
         ;
 
 indicator_parameter =
         ['INDICATOR'] parameter_name
-        ;
-
-dynamic_parameter_specification =
-        '?'
         ;
 
 column_reference =
@@ -677,7 +639,7 @@ qualifier =
         ;
 
 correlation_name =
-        IDENTIFIER
+        identifier
         ;
 
 set_function_specification =
@@ -743,7 +705,7 @@ query_specification =
 
 select_list =
         '*'
-    |   select_sublist [{',' select_sublist}+ ]
+    |   ','.{select_sublist}
         ;
 
 select_sublist =
@@ -767,7 +729,7 @@ table_expression =
         ;
 
 from_clause =
-        'FROM' table_reference [{',' table_reference}+ ]
+        'FROM' ','.{table_reference}
         ;
 
 table_reference =
@@ -844,7 +806,7 @@ group_by_clause =
         ;
 
 grouping_column_reference_list =
-        grouping_column_reference [{',' grouping_column_reference}+ ]
+        ','.{grouping_column_reference}
         ;
 
 grouping_column_reference =
@@ -868,7 +830,7 @@ table_value_constructor =
         ;
 
 table_value_constructor_list =
-        row_value_constructor [{',' row_value_constructor}+ ]
+        ','.{row_value_constructor}
         ;
 
 explicit_table =
@@ -1196,16 +1158,8 @@ bit_length_expression =
         'BIT_LENGTH' '(' string_value_expression ')'
         ;
 
-null_specification =
-        'NULL'
-        ;
-
-default_specification =
-        'DEFAULT'
-        ;
-
 row_value_constructor_list =
-        row_value_constructor_element [{',' row_value_constructor_element}+ ]
+        ','.{row_value_constructor_element}
         ;
 
 row_subquery =
@@ -1263,12 +1217,8 @@ quantified_comparison_predicate =
         ;
 
 quantifier =
-        all
-    |   some
-        ;
-
-all =
         'ALL'
+    |   some
         ;
 
 some =
@@ -1343,7 +1293,7 @@ order_by_clause =
         ;
 
 sort_specification_list =
-        sort_specification [{',' sort_specification}+ ]
+        ','.{sort_specification}
         ;
 
 sort_specification =
@@ -1352,7 +1302,7 @@ sort_specification =
 
 sort_key =
         column_name
-    |   INTEGER
+    |   integer
         ;
 
 ordering_specification =
@@ -1385,12 +1335,12 @@ schema_definition =
 
 schema_name_clause =
         schema_name
-    |   'AUTHORIZATION' schema_authorization_IDENTIFIER
-    |   schema_name 'AUTHORIZATION' schema_authorization_IDENTIFIER
+    |   'AUTHORIZATION' schema_authorization_identifier
+    |   schema_name 'AUTHORIZATION' schema_authorization_identifier
         ;
 
-schema_authorization_IDENTIFIER =
-        authorization_IDENTIFIER
+schema_authorization_identifier =
+        authorization_identifier
         ;
 
 schema_character_set_specification =
@@ -1436,7 +1386,7 @@ levels_clause =
         ;
 
 grant_statement =
-        'GRANT' privileges 'ON' object_name 'TO' grantee [{',' grantee}+ ] ['WITH' 'GRANT' 'OPTION']
+        'GRANT' privileges 'ON' object_name 'TO' ','.{grantee} ['WITH' 'GRANT' 'OPTION']
         ;
 
 privileges =
@@ -1445,7 +1395,7 @@ privileges =
         ;
 
 action_list =
-        action [{',' action}+ ]
+        ','.{action}
         ;
 
 action =
@@ -1471,7 +1421,7 @@ object_name =
 
 grantee =
         'PUBLIC'
-    |   authorization_IDENTIFIER
+    |   authorization_identifier
         ;
 
 assertion_definition =
@@ -1658,7 +1608,7 @@ drop_view_statement =
 
 revoke_statement =
         'REVOKE' ['GRANT' 'OPTION' 'FOR'] privileges 'ON' object_name
-            'FROM' grantee [{',' grantee}+ ] drop_behaviour
+            'FROM' ','.{grantee} drop_behaviour
         ;
 
 alter_domain_statement =
@@ -1731,7 +1681,7 @@ insert_column_list =
         ;
 
 set_clause_list =
-        set_clause [{',' set_clause}+ ]
+        ','.{set_clause}
         ;
 
 set_clause =
@@ -1744,7 +1694,7 @@ object_column =
 
 update_source =
         value_expression
-    |   null_specification
+    |   'NULL'
     |   'DEFAULT'
         ;
 
@@ -1760,7 +1710,7 @@ sql_transaction_statement =
         ;
 
 set_transaction_statement =
-        'SET' 'TRANSACTION' transaction_mode [{',' transaction_mode}+ ]
+        'SET' 'TRANSACTION' ','.{transaction_mode}
         ;
 
 transaction_mode =
@@ -1799,7 +1749,7 @@ set_constraints_mode_statement =
 
 constraint_name_list =
         'ALL'
-    |   constraint_name [{',' constraint_name}+ ]
+    |   ','.{constraint_name}
         ;
 
 commit_statement =
@@ -1860,7 +1810,7 @@ sql_session_statement =
         set_catalog_statement
     |   set_schema_statement
     |   set_names_statement
-    |   set_session_authorization_IDENTIFIER_statement
+    |   set_session_authorization_identifier_statement
     |   set_local_time_zone_statement
         ;
 
@@ -1881,7 +1831,7 @@ set_names_statement =
         'SET' 'NAMES' value_specification
         ;
 
-set_session_authorization_IDENTIFIER_statement =
+set_session_authorization_identifier_statement =
         'SET' 'SESSION' 'AUTHORIZATION' value_specification
         ;
 
