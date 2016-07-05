@@ -701,7 +701,7 @@ simple_table =
         ;
 
 query_specification =
-        select:('SELECT' ~ [set_quantifier] select_list table_expression)
+        'SELECT' ~ [set_quantifier] select_list table_expression
         ;
 
 select_list =
@@ -730,10 +730,10 @@ table_expression =
         ;
 
 from_clause =
-        from:('FROM' ','.{table_reference})
+        'FROM' ','.{table_reference}
         ;
 
-table_reference::TABLES =
+table_reference =
         table_name [correlation_specification]
     |   derived_table correlation_specification
     |   joined_table
