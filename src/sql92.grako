@@ -28,6 +28,7 @@
 
 start =
         direct_sql_statement
+        $
         ;
 
 space =
@@ -700,7 +701,7 @@ simple_table =
         ;
 
 query_specification =
-        'SELECT' [set_quantifier] select_list table_expression
+        select:('SELECT' ~ [set_quantifier] select_list table_expression)
         ;
 
 select_list =
@@ -729,10 +730,10 @@ table_expression =
         ;
 
 from_clause =
-        'FROM' ','.{table_reference}
+        from:('FROM' ','.{table_reference})
         ;
 
-table_reference =
+table_reference::TABLES =
         table_name [correlation_specification]
     |   derived_table correlation_specification
     |   joined_table
