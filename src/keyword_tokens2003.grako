@@ -1,0 +1,526 @@
+# The MIT License (MIT)
+# Copyright (c) 2016, Victor M. Uriarte
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+sign =
+        '+'
+    |   '-'
+        ;
+
+mult_div =
+        '*'
+    |   '/'
+        ;
+
+boolean_literal =
+        'TRUE'
+    |   'FALSE'
+    |   'UNKNOWN'
+        ;
+
+dereference_operator =
+        '->'
+        ;
+
+l_bracket_trigraph =
+        '['
+    |   '??('
+        ;
+
+r_bracket_trigraph =
+        ']'
+    |   '??)'
+        ;
+
+comp_op =
+        '='
+    |   '<>'
+    |   '<'
+    |   '>'
+    |   '<='
+    |   '>='
+        ;
+
+empty_grouping_set =
+        '(' ')'
+        ;
+
+
+_KW_CONSTRAINT_CHARACTERISTICS =
+        _KW_CONSTRAINT_CHECK_TIME [['NOT'] 'DEFERRABLE']
+    |   ['NOT'] 'DEFERRABLE' [_KW_CONSTRAINT_CHECK_TIME]
+        ;
+
+_KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION =
+        _KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION
+    |   'DEFAULT'
+        ;
+
+_KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION =
+        'NULL'
+    |   ('ARRAY' | 'MULTISET') l_bracket_trigraph r_bracket_trigraph
+        ;
+
+_KW_WITH_WITHOUT =
+        'WITH'
+    |   'WITHOUT'
+        ;
+
+_KW_EXTRACT_FIELD =
+        _KW_PRIMARY_DATETIME_FIELD
+    |   _KW_TIME_ZONE_FIELD
+        ;
+
+_KW_CHAR_LENGTH_UNITS =
+        'CHARACTERS'
+    |   'CODE_UNITS'
+    |   'OCTETS'
+        ;
+
+_KW_RANK_FUNCTION_TYPE =
+        'RANK'
+    |   'DENSE_RANK'
+    |   'PERCENT_RANK'
+    |   'CUME_DIST'
+        ;
+
+_KW_TIME_ZONE_FIELD =
+        'TIMEZONE_HOUR'
+    |   'TIMEZONE_MINUTE'
+        ;
+
+_KW_TRIM_SPECIFICATION =
+        'LEADING'
+    |   'TRAILING'
+    |   'BOTH'
+        ;
+
+_KW_SAMPLE_METHOD =
+        'BERNOULLI'
+    |   'SYSTEM'
+        ;
+
+_KW_WINDOW_FRAME_UNITS =
+        'ROWS'
+    |   'RANGE'
+        ;
+
+_KW_QUANTIFIER =
+        'ALL'
+    |   'SOME'
+    |   'ANY'
+        ;
+
+_KW_PRIMARY_DATETIME_FIELD =
+        _KW_NON_SECOND_PRIMARY_DATETIME_FIELD
+    |   'SECOND'
+        ;
+
+_KW_NON_SECOND_PRIMARY_DATETIME_FIELD =
+        'YEAR'
+    |   'MONTH'
+    |   'DAY'
+    |   'HOUR'
+    |   'MINUTE'
+        ;
+
+_KW_ROUTINE_TYPE =
+        'ROUTINE'
+    |   'FUNCTION'
+    |   'PROCEDURE'
+    |   ['INSTANCE' | 'STATIC' | 'CONSTRUCTOR'] 'METHOD'
+        ;
+
+_KW_CONSTRAINT_CHECK_TIME =
+        'INITIALLY' ('DEFERRED' | 'IMMEDIATE')
+        ;
+
+_KW_SET_COMPUTATIONAL_OPERATION =
+        'AVG'
+    |   'MAX'
+    |   'MIN'
+    |   'SUM'
+    |   'EVERY'
+    |   'ANY'
+    |   'SOME'
+    |   'COUNT'
+    |   'STDDEV_POP'
+    |   'STDDEV_SAMP'
+    |   'VAR_SAMP'
+    |   'VAR_POP'
+    |   'COLLECT'
+    |   'FUSION'
+    |   'INTERSECTION'
+        ;
+
+_KW_SET_QUANTIFIER =
+        'DISTINCT'
+    |   'ALL'
+        ;
+
+_KW_BINARY_SET_FUNCTION_TYPE =
+        'COVAR_POP'
+    |   'COVAR_SAMP'
+    |   'CORR'
+    |   'REGR_SLOPE'
+    |   'REGR_INTERCEPT'
+    |   'REGR_COUNT'
+    |   'REGR_R2'
+    |   'REGR_AVGX'
+    |   'REGR_AVGY'
+    |   'REGR_SXX'
+    |   'REGR_SYY'
+    |   'REGR_SXY'
+        ;
+
+_KW_INVERSE_DISTRIBUTION_FUNCTION_TYPE =
+        'PERCENTILE_CONT'
+    |   'PERCENTILE_DISC'
+        ;
+
+_KW_ORDERING_SPECIFICATION =
+        'ASC'
+    |   'DESC'
+        ;
+
+_KW_DROP_BEHAVIOR =
+        'CASCADE'
+    |   'RESTRICT'
+        ;
+
+_KW_GLOBAL_OR_LOCAL =
+        'GLOBAL'
+    |   'LOCAL'
+        ;
+
+_KW_TABLE_COMMIT_ACTION =
+        'PRESERVE'
+    |   'DELETE'
+        ;
+
+_KW_REFERENCE_GENERATION =
+        'SYSTEM' 'GENERATED'
+    |   'USER' 'GENERATED'
+    |   'DERIVED'
+        ;
+
+_KW_LIKE_OPTIONS =
+        _KW_INCLUDING_EXCLUDING 'IDENTITY'
+    |   _KW_INCLUDING_EXCLUDING 'DEFAULTS'
+        ;
+
+_KW_INCLUDING_EXCLUDING =
+        'INCLUDING'
+    |   'EXCLUDING'
+        ;
+
+_KW_UNIQUE_SPECIFICATION =
+        'UNIQUE'
+    |   'PRIMARY' 'KEY'
+        ;
+
+_KW_MATCH_TYPE =
+        'FULL'
+    |   'PARTIAL'
+    |   'SIMPLE'
+        ;
+
+_KW_REFERENTIAL_TRIGGERED_ACTION =
+        _KW_UPDATE_RULE [_KW_DELETE_RULE]
+    |   _KW_DELETE_RULE [_KW_UPDATE_RULE]
+        ;
+
+_KW_UPDATE_RULE =
+        'ON' 'UPDATE' _KW_REFERENTIAL_ACTION
+        ;
+
+_KW_DELETE_RULE =
+        'ON' 'DELETE' _KW_REFERENTIAL_ACTION
+        ;
+
+_KW_REFERENTIAL_ACTION =
+        'CASCADE'
+    |   'SET' 'NULL'
+    |   'SET' 'DEFAULT'
+    |   'RESTRICT'
+    |   'NO' 'ACTION'
+        ;
+
+_KW_DROP_DEFAULT_CLAUSE =
+        'DROP' 'DEFAULT'
+        ;
+
+_KW_LEVELS_CLAUSE =
+        'CASCADED'
+    |   'LOCAL'
+        ;
+
+_KW_PAD_CHARACTERISTIC =
+        'NO' 'PAD'
+    |   'PAD' 'SPACE'
+        ;
+
+_KW_TRIGGER_ACTION_TIME =
+        'BEFORE'
+    |   'AFTER'
+        ;
+
+_KW_METHOD_CHARACTERISTIC =
+        _KW_PARAMETER_STYLE_CLAUSE
+    |   _KW_DETERMINISTIC_CHARACTERISTIC
+    |   _KW_SQL_DATA_ACCESS_INDICATION
+    |   _KW_NULL_CALL_CLAUSE
+        ;
+
+_KW_PARAMETER_MODE =
+        'IN'
+    |   'OUT'
+    |   'INOUT'
+        ;
+
+_KW_OLD_NEW =
+        'NEW'
+    |   'OLD'
+        ;
+
+_KW_PARAMETER_STYLE_CLAUSE =
+        'PARAMETER' 'STYLE' _KW_PARAMETER_STYLE
+        ;
+
+_KW_RIGHTS_CLAUSE =
+        'SQL' 'SECURITY' ('DEFINER' | 'INVOKER')
+        ;
+
+_KW_EXTERNAL_SECURITY_CLAUSE =
+        'EXTERNAL' 'SECURITY' ('DEFINER' | 'INVOKER' | 'IMPLEMENTATION' 'DEFINED')
+        ;
+
+_KW_PARAMETER_STYLE =
+        'SQL'
+    |   'GENERAL'
+        ;
+
+_KW_DETERMINISTIC_CHARACTERISTIC =
+        ['NOT'] 'DETERMINISTIC'
+        ;
+
+_KW_SQL_DATA_ACCESS_INDICATION =
+        'NO' 'SQL'
+    |   'CONTAINS' 'SQL'
+    |   'READS' 'SQL' 'DATA'
+    |   'MODIFIES' 'SQL' 'DATA'
+        ;
+
+_KW_NULL_CALL_CLAUSE =
+        'RETURNS' 'NULL' 'ON' 'NULL' 'INPUT'
+    |   'CALLED' 'ON' 'NULL' 'INPUT'
+        ;
+
+_KW_TRANSFORM_KIND =
+        ('TO' | 'FROM') 'SQL'
+        ;
+
+_KW_GRANTOR =
+        'CURRENT_USER'
+    |   'CURRENT_ROLE'
+        ;
+
+_KW_CURSOR_SENSITIVITY =
+        'SENSITIVE'
+    |   'INSENSITIVE'
+    |   'ASENSITIVE'
+        ;
+
+_KW_OVERRIDE_CLAUSE =
+        'OVERRIDING' ('USER' | 'SYSTEM') 'VALUE'
+        ;
+
+_KW_LEVEL_OF_ISOLATION =
+        'READ' ('UNCOMMITTED' | 'COMMITTED')
+    |   'REPEATABLE' 'READ'
+    |   'SERIALIZABLE'
+        ;
+
+_KW_HEADER_ITEM_NAME =
+        'COUNT'
+    |   'KEY_TYPE'
+    |   'DYNAMIC_FUNCTION'
+    |   'DYNAMIC_FUNCTION_CODE'
+    |   'TOP_LEVEL_COUNT'
+        ;
+
+_KW_DESCRIPTOR_ITEM_NAME =
+        'CARDINALITY'
+    |   'CHARACTER_SET_CATALOG'
+    |   'CHARACTER_SET_NAME'
+    |   'CHARACTER_SET_SCHEMA'
+    |   'COLLATION_CATALOG'
+    |   'COLLATION_NAME'
+    |   'COLLATION_SCHEMA'
+    |   'DATA'
+    |   'DATETIME_INTERVAL_CODE'
+    |   'DATETIME_INTERVAL_PRECISION'
+    |   'DEGREE'
+    |   'INDICATOR'
+    |   'KEY_MEMBER'
+    |   'LENGTH'
+    |   'LEVEL'
+    |   'NAME'
+    |   'NULLABLE'
+    |   'OCTET_LENGTH'
+    |   'PARAMETER_MODE'
+    |   'PARAMETER_ORDINAL_POSITION'
+    |   'PARAMETER_SPECIFIC_CATALOG'
+    |   'PARAMETER_SPECIFIC_NAME'
+    |   'PARAMETER_SPECIFIC_SCHEMA'
+    |   'PRECISION'
+    |   'RETURNED_CARDINALITY'
+    |   'RETURNED_LENGTH'
+    |   'RETURNED_OCTET_LENGTH'
+    |   'SCALE'
+    |   'SCOPE_CATALOG'
+    |   'SCOPE_NAME'
+    |   'SCOPE_SCHEMA'
+    |   'TYPE'
+    |   'UNNAMED'
+    |   'USER_DEFINED_TYPE_CATALOG'
+    |   'USER_DEFINED_TYPE_NAME'
+    |   'USER_DEFINED_TYPE_SCHEMA'
+    |   'USER_DEFINED_TYPE_CODE'
+        ;
+
+_KW_STATEMENT_INFORMATION_ITEM =
+        'NUMBER'
+    |   'MORE'
+    |   'COMMAND_FUNCTION'
+    |   'COMMAND_FUNCTION_CODE'
+    |   'DYNAMIC_FUNCTION'
+    |   'DYNAMIC_FUNCTION_CODE'
+    |   'ROW_COUNT'
+    |   'TRANSACTIONS_COMMITTED'
+    |   'TRANSACTIONS_ROLLED_BACK'
+    |   'TRANSACTION_ACTIVE'
+        ;
+
+_KW_CONDITION_INFORMATION_ITEM =
+        'CATALOG_NAME'
+    |   'CLASS_ORIGIN'
+    |   'COLUMN_NAME'
+    |   'CONDITION_NUMBER'
+    |   'CONNECTION_NAME'
+    |   'CONSTRAINT_CATALOG'
+    |   'CONSTRAINT_NAME'
+    |   'CONSTRAINT_SCHEMA'
+    |   'CURSOR_NAME'
+    |   'MESSAGE_LENGTH'
+    |   'MESSAGE_OCTET_LENGTH'
+    |   'MESSAGE_TEXT'
+    |   'PARAMETER_MODE'
+    |   'PARAMETER_NAME'
+    |   'PARAMETER_ORDINAL_POSITION'
+    |   'RETURNED_SQLSTATE'
+    |   'ROUTINE_CATALOG'
+    |   'ROUTINE_NAME'
+    |   'ROUTINE_SCHEMA'
+    |   'SCHEMA_NAME'
+    |   'SERVER_NAME'
+    |   'SPECIFIC_NAME'
+    |   'SUBCLASS_ORIGIN'
+    |   'TABLE_NAME'
+    |   'TRIGGER_CATALOG'
+    |   'TRIGGER_NAME'
+    |   'TRIGGER_SCHEMA'
+        ;
+
+_KW_CHAR =
+        'CHARACTER'
+    |   'CHAR'
+        ;
+
+_KW_NCHAR =
+        'NATIONAL' _KW_CHAR
+    |   'NCHAR'
+        ;
+
+_KW_VCHAR =
+        _KW_CHAR 'VARYING'
+    |   'VARCHAR'
+        ;
+
+_KW_CLOB =
+        _KW_CHAR 'LARGE' 'OBJECT'
+    |   'CLOB'
+        ;
+
+_KW_NCLOB =
+        _KW_NCHAR 'LARGE' 'OBJECT'
+    |   'NCLOB'
+        ;
+
+_KW_BLOB =
+        'BINARY' 'LARGE' 'OBJECT'
+    |   'BLOB'
+    ;
+
+_KW_UNQUALIFIED_JOIN =
+        'CROSS' 'JOIN'
+    |   'UNION' 'JOIN'
+    |   'NATURAL' [_KW_JOIN_TYPE] 'JOIN'
+        ;
+
+_KW_JOIN_TYPE =
+        'INNER'
+    |   _KW_OUTER_JOIN_TYPE ['OUTER']
+        ;
+
+_KW_OUTER_JOIN_TYPE =
+        'LEFT'
+    |   'RIGHT'
+    |   'FULL'
+        ;
+
+_KW_REFERENCE_SCOPE_CHECK =
+        'REFERENCES' 'ARE' ['NOT'] 'CHECKED'
+            [_KW_DELETE_RULE]
+        ;
+
+_KW_ALL_DISTINCT =
+        'ALL'
+    |   'DISTINCT'
+        ;
+
+_KW_UNION_EXCEPT =
+        'UNION'
+    |   'EXCEPT'
+        ;
+
+
+_KW_NUMERIC_FUNCTION =
+        'CEIL'
+    |   'CEILING'
+    |   'LN'
+    |   'ABS'
+    |   'EXP'
+    |   'MOD'
+    |   'SQRT'
+    |   'FLOOR'
+    |   'POWER'
+    |   'WIDTH_BUCKET'
+        ;
