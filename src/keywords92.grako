@@ -1,0 +1,205 @@
+# The MIT License (MIT)
+# Copyright (c) 2016, Victor M. Uriarte
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+sign =
+        '+'
+    |   '-'
+        ;
+
+mult_div =
+        '*'
+    |   '/'
+        ;
+
+comp_op =
+        '='
+    |   '<>'
+    |   '<'
+    |   '>'
+    |   '<='
+    |   '>='
+        ;
+
+
+_KW_CONSTRAINT_ATTRIBUTES =
+        _KW_CONSTRAINT_CHECK_TIME [['NOT'] 'DEFERRABLE']
+    |   ['NOT'] 'DEFERRABLE' [_KW_CONSTRAINT_CHECK_TIME]
+        ;
+
+_KW_NON_SECOND_DATETIME_FIELD =
+        'YEAR'
+    |   'MONTH'
+    |   'DAY'
+    |   'HOUR'
+    |   'MINUTE'
+        ;
+
+_KW_UNIQUE_SPECIFICATION =
+        'UNIQUE'
+    |   'PRIMARY' 'KEY'
+        ;
+
+_KW_MATCH_TYPE =
+        'FULL'
+    |   'PARTIAL'
+        ;
+
+_KW_REFERENTIAL_TRIGGERED_ACTION =
+        _KW_UPDATE_RULE [_KW_DELETE_RULE]
+    |   _KW_DELETE_RULE [_KW_UPDATE_RULE]
+        ;
+
+_KW_UPDATE_RULE =
+        'ON' 'UPDATE' _KW_REFERENTIAL_ACTION
+        ;
+
+_KW_REFERENTIAL_ACTION =
+        'CASCADE'
+    |   'SET' 'NULL'
+    |   'SET' 'DEFAULT'
+    |   'NO' 'ACTION'
+        ;
+
+_KW_DELETE_RULE =
+        'ON' 'DELETE' _KW_REFERENTIAL_ACTION
+        ;
+
+_KW_SET_FUNCTION_TYPE =
+        'AVG'
+    |   'MAX'
+    |   'MIN'
+    |   'SUM'
+    |   'COUNT'
+        ;
+
+_KW_SET_QUANTIFIER =
+        'DISTINCT'
+    |   'ALL'
+        ;
+
+_KW_JOIN_TYPE =
+        'INNER'
+    |   _KW_OUTER_JOIN_TYPE ['OUTER']
+    |   'UNION'
+        ;
+
+_KW_OUTER_JOIN_TYPE =
+        'LEFT'
+    |   'RIGHT'
+    |   'FULL'
+        ;
+
+_KW_TRIM_SPECIFICATION =
+        'LEADING'
+    |   'TRAILING'
+    |   'BOTH'
+        ;
+
+_KW_EXTRACT_FIELD =
+        _KW_DATETIME_FIELD
+    |   _KW_TIME_ZONE_FIELD
+        ;
+
+_KW_DATETIME_FIELD =
+        _KW_NON_SECOND_DATETIME_FIELD
+    |   'SECOND'
+        ;
+
+_KW_TIME_ZONE_FIELD =
+        'TIMEZONE_HOUR'
+    |   'TIMEZONE_MINUTE'
+        ;
+
+_KW_QUANTIFIER =
+        'ALL'
+    |   'SOME'
+    |   'ANY'
+        ;
+
+_KW_TRUTH_VALUE =
+        'TRUE'
+    |   'FALSE'
+    |   'UNKNOWN'
+        ;
+
+_KW_CONSTRAINT_CHECK_TIME =
+        'INITIALLY' 'DEFERRED'
+    |   'INITIALLY' 'IMMEDIATE'
+        ;
+
+_KW_ORDERING_SPECIFICATION =
+        'ASC'
+    |   'DESC'
+        ;
+
+_KW_LEVELS_CLAUSE =
+        'CASCADED'
+    |   'LOCAL'
+        ;
+
+_KW_PAD_ATTRIBUTE =
+        'NO' 'PAD'
+    |   'PAD' 'SPACE'
+        ;
+
+_KW_DROP_BEHAVIOUR =
+        'CASCADE'
+    |   'RESTRICT'
+        ;
+
+_KW_DROP_DEFAULT_CLAUSE =
+        'DROP' 'DEFAULT'
+        ;
+
+_KW_LEVEL_OF_ISOLATION =
+        'READ' 'UNCOMMITTED'
+    |   'READ' 'COMMITTED'
+    |   'REPEATABLE' 'READ'
+    |   'SERIALIZABLE'
+        ;
+
+_KW_TRANSACTION_ACCESS_MODE =
+        'READ' 'ONLY'
+    |   'READ' 'WRITE'
+        ;
+
+_KW_COMMIT_STATEMENT =
+        'COMMIT' ['WORK']
+        ;
+
+_KW_ROLLBACK_STATEMENT =
+        'ROLLBACK' ['WORK']
+        ;
+
+_KW_CHAR =
+        'CHARACTER'
+    |   'CHAR'
+        ;
+
+_KW_NCHAR =
+        'NATIONAL' _KW_CHAR
+    |   'NCHAR'
+        ;
+
+_KW_VCHAR =
+        _KW_CHAR 'VARYING'
+    |   'VARCHAR'
+        ;

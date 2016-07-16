@@ -1,0 +1,13 @@
+@@grammar :: Minus
+
+start = expression $ ;
+
+expression = minus_expression | sub_expression ;
+
+sub_expression = paren_expression | value ;
+
+minus_expression = expression '-' sub_expression ;
+
+paren_expression = '(' expression ')' ;
+
+value = /[0-9]+/ ;

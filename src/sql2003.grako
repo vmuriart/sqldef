@@ -28,6 +28,7 @@
 @@keyword :: SELECT FROM WHERE
 #include :: "keyword_tokens2003.grako"
 
+
 start =
         direct_sql_statement $
         ;
@@ -53,6 +54,14 @@ delimited_identifier =
         '"' char_in_delimited_identifier '"'
         ;
 
+identifier_chain_list =
+        ','.{identifier_chain}
+        ;
+
+parameter_name_list =
+        ','.{parameter_name}
+        ;
+
 # not allowed to be empty
 char_in_delimited_identifier =
         /(""|[^"\n])+/
@@ -61,6 +70,12 @@ char_in_delimited_identifier =
 literal =
         signed_numeric_literal
     |   general_literal
+        ;
+
+simple_value_specification =
+        literal
+    |   parameter_name
+    |   identifier_chain
         ;
 
 general_literal =
@@ -157,10 +172,6 @@ identifier_chain =
         '.'.{identifier}
         ;
 
-identifier_chain_list =
-        ','.{identifier_chain}
-        ;
-
 qualified_name =
         ['MODULE' '.'] identifier_chain
         ;
@@ -169,39 +180,16 @@ parameter_name =
         ':' identifier
         ;
 
-parameter_name_list =
-        ','.{parameter_name}
-        ;
-
 par_identifier_list =
         '(' identifier_list ')'
         ;
 
-external_routine_name =
-        identifier
-    |   character_string_literal
-        ;
-
-sql_statement_name =
-        identifier
-    |   descriptor_name
-        ;
-
-dynamic_cursor_name =
-        qualified_name
-    |   descriptor_name
-        ;
-
-descriptor_name =
-        [_KW_GLOBAL_OR_LOCAL] simple_value_specification
-        ;
-
 data_type =
-        reference_type
-    |   predefined_type
-    |   identifier_chain
     |   'ROW' '(' ','.{identifier data_type [_KW_REFERENCE_SCOPE_CHECK]} ')'
     |   data_type ('ARRAY' | 'MULTISET') [l_bracket_trigraph integer r_bracket_trigraph]
+    |   predefined_type
+    |   reference_type
+    |   identifier_chain
         ;
 
 predefined_type =
@@ -217,7 +205,11 @@ predefined_type =
     |   'INTERVAL' interval_qualifier
     |   ('NUMERIC' | 'DECIMAL' | 'DEC') [par_integer_optional_integer]
     |   ('TIME' | 'TIMESTAMP') [par_integer] [_KW_WITH_WITHOUT 'TIME' 'ZONE']
-    |   char_str_type ['CHARACTER' 'SET' identifier_chain] ['COLLATE' identifier_chain]
+    |   char_str_type ['CHARACTER' 'SET' identifier_chain] [collate_clause]
+        ;
+
+collate_clause =
+        'COLLATE' identifier_chain
         ;
 
 char_str_type =
@@ -235,6 +227,16 @@ lob_length =
 
 reference_type =
         'REF' '(' identifier_chain ')' ['SCOPE' qualified_name]
+        ;
+
+interval_qualifier =
+        _KW_NON_SECOND_PRIMARY_DATETIME_FIELD [par_integer] ['TO' end_field]
+    |   'SECOND' [par_integer_optional_integer]
+        ;
+
+end_field =
+        _KW_NON_SECOND_PRIMARY_DATETIME_FIELD
+    |   'SECOND' [par_integer]
         ;
 
 value_expression_primary =
@@ -269,11 +271,6 @@ nonpar_value_expression_primary =
     |   value_expression_primary dereference_operator identifier ['(' [sql_argument_list] ')']
         ;
 
-value_specification =
-        literal
-    |   general_value_specification
-        ;
-
 unsigned_value_specification =
         unsigned_numeric_literal
     |   general_literal
@@ -281,7 +278,6 @@ unsigned_value_specification =
         ;
 
 general_value_specification =
-        parameter_specification
     |   '?'
     |   'USER'
     |   'VALUE'
@@ -293,18 +289,13 @@ general_value_specification =
     |   'CURRENT_DEFAULT_TRANSFORM_GROUP'
     |   ['CURRENT_TRANSFORM_GROUP_FOR_TYPE'] identifier_chain
     |   'CURRENT_COLLATION' '(' character_value_expression ')'
-        ;
-
-simple_value_specification =
-        literal
-    |   parameter_name
-    |   identifier_chain
+    |   parameter_specification
         ;
 
 target_specification =
-        simple_target_specification
-    |   qualified_name l_bracket_trigraph simple_value_specification r_bracket_trigraph
     |   '?'
+    |   qualified_name l_bracket_trigraph simple_value_specification r_bracket_trigraph
+    |   simple_target_specification
         ;
 
 simple_target_specification =
@@ -326,8 +317,8 @@ window_function_type =
         ;
 
 window_name_or_specification =
-        identifier
     |   window_specification
+    |   identifier
         ;
 
 value_expression_list =
@@ -360,7 +351,6 @@ when_operand =
         ;
 
 predicate_when_operand =
-        comp_op (_KW_QUANTIFIER subquery | row_value_predicand)
     |   'OVERLAPS' row_value_predicand
     |   ['NOT'] 'IN' in_predicate_value
     |   ['NOT'] ('MEMBER' | 'SUBMULTISET') ['OF'] multiset_value_expression
@@ -369,16 +359,17 @@ predicate_when_operand =
     |   'MATCH' ['UNIQUE'] ['SIMPLE' | 'PARTIAL' | 'FULL'] subquery
     |   'IS' ['NOT'] ('A' 'SET' | 'OF' '(' type_list ')' | 'NULL')
     |   'IS' 'DISTINCT' 'FROM' row_value_predicand
+    |   comp_op (_KW_QUANTIFIER subquery | row_value_predicand)
         ;
 
 result =
-        value_expression
     |   'NULL'
+    |   value_expression
         ;
 
 cast_operand =
-        value_expression
     |   _KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION
+    |   value_expression
         ;
 
 target_subtype =
@@ -450,18 +441,17 @@ datetime_interval_expr =
         ;
 
 character_value_expression =
-        [character_value_expression '||'] character_primary ['COLLATE' identifier_chain]
+        [character_value_expression '||'] character_primary [collate_clause]
         ;
 
 character_primary =
-        value_expression_primary
-    |   character_overlay_function
+        character_overlay_function
     |   character_substring_function
     |   regular_expression_substring_function
     |   ('UPPER' | 'LOWER' | 'NORMALIZE') '(' character_value_expression ')'
     |   ('CONVERT' | 'TRANSLATE') '(' character_value_expression 'USING' identifier_chain ')'
     |   'TRIM' '(' [[_KW_TRIM_SPECIFICATION] [character_value_expression] 'FROM'] character_value_expression ')'
-    |   value_expression_primary '.' 'SPECIFICTYPE'
+    |   value_expression_primary ['.' 'SPECIFICTYPE']
         ;
 
 character_substring_function =
@@ -480,8 +470,8 @@ character_overlay_function =
         ;
 
 datetime_value_expression =
-        [interval_value_expression '+'] datetime_factor
     |   datetime_value_expression sign interval_term
+    |   [interval_value_expression '+'] datetime_factor
         ;
 
 datetime_factor =
@@ -504,8 +494,8 @@ datetime_value_function =
         ;
 
 interval_value_expression =
-        [interval_value_expression sign] interval_term
     |   '(' datetime_value_expression '-' datetime_factor ')' interval_qualifier
+    |   [interval_value_expression sign] interval_term
         ;
 
 interval_term =
@@ -514,8 +504,8 @@ interval_term =
         ;
 
 interval_primary =
-        value_expression_primary [interval_qualifier]
     |   'ABS' '(' interval_value_expression ')'
+    |   value_expression_primary [interval_qualifier]
         ;
 
 boolean_value_expression =
@@ -550,8 +540,8 @@ multiset_value_expression =
         ;
 
 multiset_term =
-        [multiset_term 'MULTISET' 'INTERSECT' [_KW_ALL_DISTINCT]]
-            multiset_primary
+        [multiset_term 'MULTISET' 'INTERSECT'
+            [_KW_ALL_DISTINCT]] multiset_primary
         ;
 
 multiset_primary =
@@ -559,45 +549,22 @@ multiset_primary =
     |   value_expression_primary
         ;
 
-explicit_row_value_constructor =
-        subquery
-    |   ['ROW'] '(' value_expression_list ')'
-        ;
-
-contextually_typed_row_value_constructor_list =
-        ','.{contextually_typed_row_value_constructor_element}
-        ;
-
-contextually_typed_row_value_constructor_element =
-        value_expression
-    |   _KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION
-        ;
-
 row_value_expression =
-        nonpar_value_expression_primary
-    |   explicit_row_value_constructor
+    |   subquery
+    |   ['ROW'] '(' value_expression_list ')'
+    |   nonpar_value_expression_primary
         ;
 
 table_row_value_expression =
-        nonpar_value_expression_primary
+        row_value_expression
     |   common_value_expression
     |   boolean_value_expression
-    |   explicit_row_value_constructor
-        ;
-
-contextually_typed_row_value_expression =
-        nonpar_value_expression_primary
-    |   common_value_expression
-    |   boolean_value_expression
-    |   _KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION
-    |   ['ROW'] '(' contextually_typed_row_value_constructor_list ')'
         ;
 
 row_value_predicand =
-        nonpar_value_expression_primary
+        row_value_expression
     |   common_value_expression
     |   boolean_predicand
-    |   explicit_row_value_constructor
         ;
 
 table_expression =
@@ -627,11 +594,11 @@ sample_clause =
         ;
 
 table_primary =
-        qualified_name [as_clause [par_identifier_list]]
     |   'ONLY' '(' qualified_name ')' [as_clause [par_identifier_list]]
     |   ['LATERAL'] subquery as_clause [par_identifier_list]
     |   ('UNNEST' | 'TABLE') '(' collection_value_expression ')' ['WITH' 'ORDINALITY'] as_clause [par_identifier_list]
     |   '(' joined_table ')'
+    |   qualified_name [as_clause [par_identifier_list]]
         ;
 
 joined_table =
@@ -660,10 +627,10 @@ group_by_clause =
         ;
 
 grouping_element =
-        ordinary_grouping_set
     |   ('ROLLUP' | 'CUBE') '(' ordinary_grouping_set_list ')'
-    |   empty_grouping_set
     |   'GROUPING' 'SETS' '(' ','.{grouping_element} ')'
+    |   ordinary_grouping_set
+    |   empty_grouping_set
         ;
 
 ordinary_grouping_set =
@@ -672,7 +639,7 @@ ordinary_grouping_set =
         ;
 
 grouping_column_reference =
-        qualified_name ['COLLATE' identifier_chain]
+        qualified_name [collate_clause]
         ;
 
 grouping_column_reference_list =
@@ -710,19 +677,19 @@ window_frame_clause =
         ;
 
 window_frame_extent =
-        window_frame_start
     |   'BETWEEN' window_frame_bound 'AND' window_frame_bound
+    |   window_frame_start
         ;
 
 window_frame_start =
-        'UNBOUNDED' 'PRECEDING'
-    |   unsigned_value_specification 'PRECEDING'
+    |   'UNBOUNDED' 'PRECEDING'
     |   'CURRENT' 'ROW'
+    |   unsigned_value_specification 'PRECEDING'
         ;
 
 window_frame_bound =
-        window_frame_start
     |   'UNBOUNDED' 'FOLLOWING'
+    |   window_frame_start
     |   unsigned_value_specification 'FOLLOWING'
         ;
 
@@ -732,9 +699,9 @@ select_list =
         ;
 
 select_sublist =
-        value_expression [as_clause]
-    |   identifier_chain '.' '*'
     |   value_expression_primary '.' '*' ['AS' par_identifier_list]
+    |   identifier_chain '.' '*'
+    |   value_expression [as_clause]
         ;
 
 as_clause =
@@ -814,14 +781,14 @@ subquery =
         ;
 
 predicate =
-        row_value_predicand predicate_when_operand
-    |   character_value_expression 'IS' ['NOT'] 'NORMALIZED'
     |   ('EXISTS' | 'UNIQUE') subquery
+    |   row_value_predicand predicate_when_operand
+    |   character_value_expression 'IS' ['NOT'] 'NORMALIZED'
         ;
 
 in_predicate_value =
-        subquery
     |   '(' in_value_list ')'
+    |   subquery
         ;
 
 in_value_list =
@@ -830,16 +797,6 @@ in_value_list =
 
 type_list =
         ','.{['ONLY'] identifier_chain}
-        ;
-
-interval_qualifier =
-        _KW_NON_SECOND_PRIMARY_DATETIME_FIELD [par_integer] ['TO' end_field]
-    |   'SECOND' [par_integer_optional_integer]
-        ;
-
-end_field =
-        _KW_NON_SECOND_PRIMARY_DATETIME_FIELD
-    |   'SECOND' [par_integer]
         ;
 
 routine_invocation =
@@ -853,15 +810,6 @@ sql_argument_list =
 sql_argument =
         value_expression ['AS' identifier_chain]
     |   target_specification
-        ;
-
-specific_routine_designator =
-        'SPECIFIC' _KW_ROUTINE_TYPE identifier_chain
-    |   _KW_ROUTINE_TYPE identifier_chain ['(' [data_type_list] ')'] ['FOR' identifier_chain]
-        ;
-
-data_type_list =
-        ','.{data_type}
         ;
 
 aggregate_function =
@@ -881,21 +829,42 @@ within_group_specification =
         ;
 
 sort_specification_list =
-        ','.{value_expression [_KW_ORDERING_SPECIFICATION] ['NULLS' ('FIRST' | 'LAST')]}
+        ','.{value_expression [_KW_ORDERING_SPECIFICATION]
+            ['NULLS' ('FIRST' | 'LAST')]}
         ;
 
-schema_character_set_or_path =
-        schema_character_set_specification ['PATH' identifier_chain_list]
-    |   'PATH' identifier_chain_list [schema_character_set_specification]
+order_by_clause =
+        'ORDER' 'BY' sort_specification_list
         ;
 
-schema_name_clause =
-        identifier_chain
-    |   [identifier_chain] 'AUTHORIZATION' identifier
+select_statement =
+        query_expression [order_by_clause]
+            ['FOR' ('READ' 'ONLY' | 'UPDATE' ['OF' identifier_list])]
         ;
 
-schema_character_set_specification =
-        'DEFAULT' 'CHARACTER' 'SET' identifier_chain
+directly_executable_statement =
+        direct_sql_data_statement
+    |   sql_schema_statement
+    |   sql_session_statement
+    |   sql_connection_statement
+    |   sql_transaction_statement
+        ;
+
+direct_sql_statement =
+        ';'.{directly_executable_statement} [';']
+        ;
+
+direct_sql_data_statement =
+        select_statement
+    |   data_manipulation_statement
+    |   temporary_table_declaration
+        ;
+
+data_manipulation_statement =
+        insert_statement
+    |   merge_statement
+    |   delete_statement_searched
+    |   update_statement_searched
         ;
 
 schema_element =
@@ -915,6 +884,91 @@ schema_element =
     |   user_defined_cast_definition
     |   user_defined_type_definition
     |   user_defined_ordering_definition
+        ;
+
+sql_executable_statement =
+        sql_schema_statement
+    |   sql_data_statement
+    |   sql_control_statement
+    |   sql_session_statement
+    |   sql_dynamic_statement
+    |   sql_connection_statement
+    |   sql_transaction_statement
+    |   sql_diagnostics_statement
+        ;
+
+sql_schema_statement =
+        sql_schema_definition_statement
+    |   sql_schema_manipulation_statement
+        ;
+
+sql_schema_definition_statement =
+        schema_definition
+    |   schema_element
+        ;
+
+external_routine_name =
+        identifier
+    |   character_string_literal
+        ;
+
+sql_statement_name =
+        identifier
+    |   descriptor_name
+        ;
+
+dynamic_cursor_name =
+        qualified_name
+    |   descriptor_name
+        ;
+
+descriptor_name =
+        [_KW_GLOBAL_OR_LOCAL] simple_value_specification
+        ;
+
+value_specification =
+        literal
+    |   general_value_specification
+        ;
+
+contextually_typed_row_value_constructor_list =
+        ','.{contextually_typed_row_value_constructor_element}
+        ;
+
+contextually_typed_row_value_constructor_element =
+        value_expression
+    |   _KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION
+        ;
+
+contextually_typed_row_value_expression =
+        nonpar_value_expression_primary
+    |   common_value_expression
+    |   boolean_value_expression
+    |   _KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION
+    |   ['ROW'] '(' contextually_typed_row_value_constructor_list ')'
+        ;
+
+specific_routine_designator =
+        'SPECIFIC' _KW_ROUTINE_TYPE identifier_chain
+    |   _KW_ROUTINE_TYPE identifier_chain ['(' [data_type_list] ')'] ['FOR' identifier_chain]
+        ;
+
+data_type_list =
+        ','.{data_type}
+        ;
+
+schema_character_set_or_path =
+        schema_character_set_specification ['PATH' identifier_chain_list]
+    |   'PATH' identifier_chain_list [schema_character_set_specification]
+        ;
+
+schema_name_clause =
+        identifier_chain
+    |   [identifier_chain] 'AUTHORIZATION' identifier
+        ;
+
+schema_character_set_specification =
+        'DEFAULT' 'CHARACTER' 'SET' identifier_chain
         ;
 
 table_definition =
@@ -948,7 +1002,7 @@ self_referencing_column_specification =
 column_definition =
         identifier [data_type | identifier_chain] [_KW_REFERENCE_SCOPE_CHECK]
             [default_clause | identity_column_specification | 'GENERATED' 'ALWAYS' 'AS' par_value_expression]
-            [{column_constraint_definition}+] ['COLLATE' identifier_chain]
+            [{column_constraint_definition}+] [collate_clause]
         ;
 
 column_constraint_definition =
@@ -1042,7 +1096,7 @@ view_element =
 domain_definition =
         'CREATE' 'DOMAIN' identifier_chain ['AS'] data_type
             [default_clause] [{domain_constraint}+]
-            ['COLLATE' identifier_chain]
+            [collate_clause]
         ;
 
 domain_constraint =
@@ -1060,7 +1114,7 @@ alter_domain_action =
 
 character_set_definition =
         'CREATE' 'CHARACTER' 'SET' identifier_chain ['AS']
-            'GET' identifier_chain ['COLLATE' identifier_chain]
+            'GET' identifier_chain [collate_clause]
         ;
 
 collation_definition =
@@ -1177,7 +1231,7 @@ partial_method_specification =
 
 attribute_definition =
         identifier data_type [_KW_REFERENCE_SCOPE_CHECK]
-            [default_clause] ['COLLATE' identifier_chain]
+            [default_clause] [collate_clause]
         ;
 
 alter_type_action =
@@ -1415,27 +1469,6 @@ grantee_list =
         ','.{grantee}
         ;
 
-sql_executable_statement =
-        sql_schema_statement
-    |   sql_data_statement
-    |   sql_control_statement
-    |   sql_session_statement
-    |   sql_dynamic_statement
-    |   sql_connection_statement
-    |   sql_transaction_statement
-    |   sql_diagnostics_statement
-        ;
-
-sql_schema_statement =
-        sql_schema_definition_statement
-    |   sql_schema_manipulation_statement
-        ;
-
-sql_schema_definition_statement =
-        schema_definition
-    |   schema_element
-        ;
-
 sql_schema_manipulation_statement =
         'REVOKE' revoke_privilege_statement _KW_DROP_BEHAVIOR
     |   'REVOKE' revoke_role_statement _KW_DROP_BEHAVIOR
@@ -1533,10 +1566,6 @@ system_descriptor_statement =
     |   'DEALLOCATE' ['SQL'] 'DESCRIPTOR' descriptor_name
     |   'SET' ['SQL'] 'DESCRIPTOR' descriptor_name set_descriptor_information
     |   'GET' ['SQL'] 'DESCRIPTOR' descriptor_name get_descriptor_information
-        ;
-
-order_by_clause =
-        'ORDER' 'BY' sort_specification_list
         ;
 
 fetch_statement =
@@ -1728,36 +1757,6 @@ statement_cursor =
         [_KW_CURSOR_SENSITIVITY] [['NO'] 'SCROLL'] 'CURSOR'
             [_KW_WITH_WITHOUT 'HOLD'] [_KW_WITH_WITHOUT 'RETURN']
             'FOR' descriptor_name
-        ;
-
-direct_sql_statement =
-        ';'.{directly_executable_statement} [';']
-        ;
-
-directly_executable_statement =
-        direct_sql_data_statement
-    |   sql_schema_statement
-    |   sql_session_statement
-    |   sql_connection_statement
-    |   sql_transaction_statement
-        ;
-
-direct_sql_data_statement =
-        direct_select_statement_multiple_rows
-    |   data_manipulation_statement
-    |   temporary_table_declaration
-        ;
-
-data_manipulation_statement =
-        insert_statement
-    |   merge_statement
-    |   delete_statement_searched
-    |   update_statement_searched
-        ;
-
-direct_select_statement_multiple_rows =
-        query_expression [order_by_clause]
-            ['FOR' ('READ' 'ONLY' | 'UPDATE' ['OF' identifier_list])]
         ;
 
 sql_diagnostics_statement =
