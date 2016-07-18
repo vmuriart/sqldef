@@ -30,3 +30,5 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 
 1. use for more generic version of above `(.*)[\n\s]+\[[\n\s]+{[\n\s]+<comma>[\n\s]+\1[\n\s]+}[\n\s]+\.\.\.[\n\s]+\]`
 1. but first format `\[\n\s+` with `[ `
+1. use `(?<!\.){(.*?)}(?!\+)` to remove left over {}
+`(?<!\.){([\w \|']+?)}(?!\+)`

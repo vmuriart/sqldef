@@ -65,7 +65,7 @@ parameter_name_list =
 # not allowed to be empty
 char_in_delimited_identifier =
         /(""|[^"\n])+/
-        ;  #";  syntax highlither bug
+        ;
 
 literal =
         signed_numeric_literal
@@ -93,7 +93,7 @@ character_string_literal =
 
 char_in_string =
         /(''|[^'\n])+/
-        ;  #';  syntax highlither bug
+        ;
 
 signed_numeric_literal =
         [sign] unsigned_numeric_literal
