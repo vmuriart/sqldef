@@ -22,3 +22,11 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 1. Replace `(<.*):(.*>)` with `\1_\2` to remove colons
 1. Replace `(<.*)-(.*>)` with `\1_\2` to remove hyphens- apply multiple times. note END-EXEC was mistakely changed. will fix later
 1. use (^\d+ .*) to format all headers
+1. use to select words to put quotes around (?<!['<])\b([A-Z_\-]+)\b(?!['>])
+1. (?<!::=\s)    continuetions
+1. use (^[^\n#].*)\n\n to add ; to the end of defintnions with \1\n    ;\n\n
+1. use <(\w+)> \.\.\. to select ellipses after a rule. use {\1}+ to replace it
+1, use `<(\w+)>[\n\s]+\[[\n\s]+{[\n\s]+<comma>[\n\s]+<\1>[\n\s]+}[\n\s]+\.\.\.[\n\s]+\]` to replace list chains with `<comma>.{\1}`
+
+1. use for more generic version of above `(.*)[\n\s]+\[[\n\s]+{[\n\s]+<comma>[\n\s]+\1[\n\s]+}[\n\s]+\.\.\.[\n\s]+\]`
+1. but first format `\[\n\s+` with `[ `
