@@ -7797,6 +7797,10 @@ set_session_collation_statement =
   | 'SET' 'NO' 'COLLATION' ['FOR' character_set_specification_list]
     ;
 
+collation_specification =
+    value_specification
+    ;
+
 session_characteristic_list =
     ','.{session_characteristic}
     ;
