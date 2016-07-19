@@ -4581,14 +4581,12 @@
     <unsigned_integer>
     ;
 
-10.2 <language_clause>
-    ;
+# 10.2 <language_clause>
 
-Function
-Specify a programming language.
-    ;
+# Function
+# Specify a programming language.
 
-Format
+# Format
 <language_clause> ::=
     'LANGUAGE' <language_name>
     ;
@@ -8564,7 +8562,7 @@ Format
 
 <sql_condition> ::=
     <major_category>
-  | 'SQLSTATE' ( <sqlstate_class_value> [ , <sqlstate_subclass_value> ] )
+  | 'SQLSTATE' ( <sqlstate_class_value> [ ',' <sqlstate_subclass_value> ] )
   | 'CONSTRAINT' <constraint_name>
     ;
 
@@ -9020,7 +9018,7 @@ Format
 <fortran_type_specification> ::=
     'CHARACTER' [ <asterisk> <character_length> ] [ 'CHARACTER' 'SET'
         [ 'IS' ] <character_set_specification> ]
-  | 'CHARACTER' 'KIND' = 'n' [ <asterisk> <character_length> ]
+  | 'CHARACTER' 'KIND' '=' 'n' [ <asterisk> <character_length> ]
         [ 'CHARACTER' 'SET' [ 'IS' ] <character_set_specification> ]
   | 'INTEGER'
   | 'REAL'
