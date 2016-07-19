@@ -7453,7 +7453,7 @@ merge_insert_value_element =
 # Update a row of a table.
 
 # Format
-updatestatement_positioned =
+update_statement_positioned =
     'UPDATE' target_table [['AS'] correlation_name]
         'SET' set_clause_list
         'WHERE' 'CURRENT' 'OF' cursor_name
@@ -7790,6 +7790,11 @@ disconnect_object =
 # Format
 set_session_characteristics_statement =
     'SET' 'SESSION' 'CHARACTERISTICS' 'AS' session_characteristic_list
+    ;
+
+set_session_collation_statement =
+    'SET' 'COLLATION' collation_specification ['FOR' character_set_specification_list]
+  | 'SET' 'NO' 'COLLATION' ['FOR' character_set_specification_list]
     ;
 
 session_characteristic_list =
