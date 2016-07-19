@@ -40,64 +40,12 @@ start =
 # Define the terminal symbols of the SQL language and the elements of strings.
 
 # Format
-sql_terminal_character =
-    sql_language_character
-    ;
-
-sql_language_character =
-    simple_latin_letter
-  | digit
-  | sql_special_character
-    ;
-
-simple_latin_letter =
-    /[a-z]/
-    ;
-
 digit =
-    /\d/
-    ;
-
-sql_special_character =
-    space
-  | double_quote
-  | percent
-  | ampersand
-  | quote
-  | left_paren
-  | right_paren
-  | asterisk
-  | plus_sign
-  | comma
-  | minus_sign
-  | period
-  | solidus
-  | colon
-  | semicolon
-  | less_than_operator
-  | equals_operator
-  | greater_than_operator
-  | question_mark
-  | left_bracket
-  | right_bracket
-  | circumflex
-  | underscore
-  | vertical_bar
-  | left_brace
-  | right_brace
-    ;
-
-# SEE_SYNTAX_RULES
-space =
-    ' '
+    /\d+/
     ;
 
 double_quote =
     '"'
-    ;
-
-percent =
-    '%'
     ;
 
 ampersand =
@@ -138,10 +86,6 @@ period =
 
 solidus =
     '/'
-    ;
-
-reverse_solidus =
-    '\'
     ;
 
 colon =
@@ -194,24 +138,8 @@ right_bracket_trigraph =
     '??)'
     ;
 
-circumflex =
-    '^'
-    ;
-
 underscore =
     '_'
-    ;
-
-vertical_bar =
-    '|'
-    ;
-
-left_brace =
-    '{'
-    ;
-
-right_brace =
-    '}'
     ;
 
 # 5.2 token and separator
@@ -221,48 +149,14 @@ right_brace =
 # language.
 
 # Format
-token =
-    nondelimiter_token
-  | delimiter_token
-    ;
-
-nondelimiter_token =
-    regular_identifier
-  | keyword
-  | unsigned_numeric_literal
-  | national_character_string_literal
-  | binary_string_literal
-  | large_object_length_token
-  | unicode_delimited_identifier
-  | unicode_character_string_literal
-  | sql_language_identifier
-    ;
-
+# SEE_SYNTAX_RULES
+@name
 regular_identifier =
-    identifier_body
-    ;
-
-identifier_body =
-    identifier_start [{identifier_part}+]
-    ;
-
-identifier_part =
-    identifier_start
-  | identifier_extend
-    ;
-
-# SEE_SYNTAX_RULES
-identifier_start =
-    simple_latin_letter
-    ;
-
-# SEE_SYNTAX_RULES
-identifier_extend =
-    /\w/
+    /[a-z]\w*/
     ;
 
 large_object_length_token =
-    {digit}+ multiplier
+    digit multiplier
     ;
 
 multiplier =
@@ -281,9 +175,9 @@ delimited_identifier_body =
     {delimited_identifier_part}+
     ;
 
+# SEE_SYNTAX_RULES
 delimited_identifier_part =
-    nondoublequote_character
-  | doublequote_symbol
+    /(""|[^"\n])/
     ;
 
 unicode_delimited_identifier =
@@ -328,36 +222,6 @@ unicode_escape_character =
     '\U'
     ;
 
-# SEE_SYNTAX_RULES
-nondoublequote_character =
-    /[^"\n]/
-    ;
-
-# SEE_SYNTAX_RULES
-doublequote_symbol =
-    '""'
-    ;
-
-delimiter_token =
-    character_string_literal
-  | date_string
-  | time_string
-  | timestamp_string
-  | interval_string
-  | delimited_identifier
-  | sql_special_character
-  | not_equals_operator
-  | greater_than_or_equals_operator
-  | less_than_or_equals_operator
-  | concatenation_operator
-  | right_arrow
-  | left_bracket_trigraph
-  | right_bracket_trigraph
-  | double_colon
-  | double_period
-  | named_argument_assignment_token
-    ;
-
 not_equals_operator =
     '<>'
     ;
@@ -382,658 +246,8 @@ double_colon =
     '::'
     ;
 
-double_period =
-    '..'
-    ;
-
 named_argument_assignment_token =
     '=>'
-    ;
-
-separator =
-    {comment | whitespace}+
-    ;
-
-# SEE_SYNTAX_RULES
-whitespace =
-    /\s/
-    ;
-
-comment =
-    simple_comment
-  | bracketed_comment
-    ;
-
-simple_comment =
-    simple_comment_introducer [{comment_character}+] newline
-    ;
-
-simple_comment_introducer =
-    minus_sign minus_sign
-    ;
-
-bracketed_comment =
-    bracketed_comment_introducer
-        bracketed_comment_contents
-        bracketed_comment_terminator
-    ;
-
-bracketed_comment_introducer =
-    '/*'
-    ;
-
-bracketed_comment_terminator =
-    '*/'
-    ;
-
-# SEE_SYNTAX_RULES
-bracketed_comment_contents =
-    [{comment_character | separator}+]
-    ;
-
-comment_character =
-    nonquote_character
-  | quote
-    ;
-
-# SEE_SYNTAX_RULES
-newline =
-    /\n/
-    ;
-
-keyword =
-    reserved_word
-  | non_reserved_word
-    ;
-
-non_reserved_word =
-    'A'
-  | 'ABSOLUTE'
-  | 'ACTION'
-  | 'ADA'
-  | 'ADD'
-  | 'ADMIN'
-  | 'AFTER'
-  | 'ALWAYS'
-  | 'ASC'
-  | 'ASSERTION'
-  | 'ASSIGNMENT'
-  | 'ATTRIBUTE'
-  | 'ATTRIBUTES'
-
-  | 'BEFORE'
-  | 'BERNOULLI'
-  | 'BREADTH'
-
-  | 'C'
-  | 'CASCADE'
-  | 'CATALOG'
-  | 'CATALOG_NAME'
-  | 'CHAIN'
-  | 'CHARACTER_SET_CATALOG'
-  | 'CHARACTER_SET_NAME'
-  | 'CHARACTER_SET_SCHEMA'
-  | 'CHARACTERISTICS'
-  | 'CHARACTERS'
-  | 'CLASS_ORIGIN'
-  | 'COBOL'
-  | 'COLLATION'
-  | 'COLLATION_CATALOG'
-  | 'COLLATION_NAME'
-  | 'COLLATION_SCHEMA'
-  | 'COLUMN_NAME'
-  | 'COMMAND_FUNCTION'
-  | 'COMMAND_FUNCTION_CODE'
-  | 'COMMITTED'
-  | 'CONDITION_NUMBER'
-  | 'CONNECTION'
-  | 'CONNECTION_NAME'
-  | 'CONSTRAINT_CATALOG'
-  | 'CONSTRAINT_NAME'
-  | 'CONSTRAINT_SCHEMA'
-  | 'CONSTRAINTS'
-  | 'CONSTRUCTOR'
-  | 'CONTINUE'
-  | 'CURSOR_NAME'
-
-  | 'DATA'
-  | 'DATETIME_INTERVAL_CODE'
-  | 'DATETIME_INTERVAL_PRECISION'
-  | 'DEFAULTS'
-  | 'DEFERRABLE'
-  | 'DEFERRED'
-  | 'DEFINED'
-  | 'DEFINER'
-  | 'DEGREE'
-  | 'DEPTH'
-  | 'DERIVED'
-  | 'DESC'
-  | 'DESCRIPTOR'
-  | 'DIAGNOSTICS'
-  | 'DISPATCH'
-  | 'DOMAIN'
-  | 'DYNAMIC_FUNCTION'
-  | 'DYNAMIC_FUNCTION_CODE'
-
-  | 'ENFORCED'
-  | 'EXCLUDE'
-  | 'EXCLUDING'
-  | 'EXPRESSION'
-
-  | 'FINAL'
-  | 'FIRST'
-  | 'FLAG'
-  | 'FOLLOWING'
-  | 'FORTRAN'
-  | 'FOUND'
-
-  | 'G'
-  | 'GENERAL'
-  | 'GENERATED'
-  | 'GO'
-  | 'GOTO'
-  | 'GRANTED'
-
-  | 'HIERARCHY'
-
-  | 'IGNORE'
-  | 'IMMEDIATE'
-  | 'IMMEDIATELY'
-  | 'IMPLEMENTATION'
-  | 'INCLUDING'
-  | 'INCREMENT'
-  | 'INITIALLY'
-  | 'INPUT'
-  | 'INSTANCE'
-  | 'INSTANTIABLE'
-  | 'INSTEAD'
-  | 'INVOKER'
-  | 'ISOLATION'
-
-  | 'K'
-  | 'KEY'
-  | 'KEY_MEMBER'
-  | 'KEY_TYPE'
-
-  | 'LAST'
-  | 'LENGTH'
-  | 'LEVEL'
-  | 'LOCATOR'
-
-  | 'M'
-  | 'MAP'
-  | 'MATCHED'
-  | 'MAXVALUE'
-  | 'MESSAGE_LENGTH'
-  | 'MESSAGE_OCTET_LENGTH'
-  | 'MESSAGE_TEXT'
-  | 'MINVALUE'
-  | 'MORE'
-  | 'MUMPS'
-
-  | 'NAME'
-  | 'NAMES'
-  | 'NESTING'
-  | 'NEXT'
-  | 'NFC'
-  | 'NFD'
-  | 'NFKC'
-  | 'NFKD'
-  | 'NORMALIZED'
-  | 'NULLABLE'
-  | 'NULLS'
-  | 'NUMBER'
-
-  | 'OBJECT'
-  | 'OCTETS'
-  | 'OPTION'
-  | 'OPTIONS'
-  | 'ORDERING'
-  | 'ORDINALITY'
-  | 'OTHERS'
-  | 'OUTPUT'
-  | 'OVERRIDING'
-
-  | 'P'
-  | 'PAD'
-  | 'PARAMETER_MODE'
-  | 'PARAMETER_NAME'
-  | 'PARAMETER_ORDINAL_POSITION'
-  | 'PARAMETER_SPECIFIC_CATALOG'
-  | 'PARAMETER_SPECIFIC_NAME'
-  | 'PARAMETER_SPECIFIC_SCHEMA'
-  | 'PARTIAL'
-  | 'PASCAL'
-  | 'PATH'
-  | 'PLACING'
-  | 'PLI'
-  | 'PRECEDING'
-  | 'PRESERVE'
-  | 'PRIOR'
-  | 'PRIVILEGES'
-  | 'PUBLIC'
-
-  | 'READ'
-  | 'RELATIVE'
-  | 'REPEATABLE'
-  | 'RESPECT'
-  | 'RESTART'
-  | 'RESTRICT'
-  | 'RETURNED_CARDINALITY'
-  | 'RETURNED_LENGTH'
-  | 'RETURNED_OCTET_LENGTH'
-  | 'RETURNED_SQLSTATE'
-  | 'ROLE'
-  | 'ROUTINE'
-  | 'ROUTINE_CATALOG'
-  | 'ROUTINE_NAME'
-  | 'ROUTINE_SCHEMA'
-  | 'ROW_COUNT'
-  | 'SCALE'
-  | 'SCHEMA'
-  | 'SCHEMA_NAME'
-  | 'SCOPE_CATALOG'
-  | 'SCOPE_NAME'
-  | 'SCOPE_SCHEMA'
-  | 'SECTION'
-  | 'SECURITY'
-  | 'SELF'
-  | 'SEQUENCE'
-  | 'SERIALIZABLE'
-  | 'SERVER_NAME'
-  | 'SESSION'
-  | 'SETS'
-  | 'SIMPLE'
-  | 'SIZE'
-  | 'SOURCE'
-  | 'SPACE'
-  | 'SPECIFIC_NAME'
-  | 'STATE'
-  | 'STATEMENT'
-  | 'STRUCTURE'
-  | 'STYLE'
-  | 'SUBCLASS_ORIGIN'
-
-  | 'T'
-  | 'TABLE_NAME'
-  | 'TEMPORARY'
-  | 'TIES'
-  | 'TOP_LEVEL_COUNT'
-  | 'TRANSACTION'
-  | 'TRANSACTION_ACTIVE'
-  | 'TRANSACTIONS_COMMITTED'
-  | 'TRANSACTIONS_ROLLED_BACK'
-  | 'TRANSFORM'
-  | 'TRANSFORMS'
-  | 'TRIGGER_CATALOG'
-  | 'TRIGGER_NAME'
-  | 'TRIGGER_SCHEMA'
-  | 'TYPE'
-
-  | 'UNBOUNDED'
-  | 'UNCOMMITTED'
-  | 'UNDER'
-  | 'UNNAMED'
-  | 'USAGE'
-  | 'USER_DEFINED_TYPE_CATALOG'
-  | 'USER_DEFINED_TYPE_CODE'
-  | 'USER_DEFINED_TYPE_NAME'
-  | 'USER_DEFINED_TYPE_SCHEMA'
-
-  | 'VIEW'
-
-  | 'WORK'
-  | 'WRITE'
-
-  | 'ZONE'
-    ;
-
-reserved_word =
-    'ABS'
-  | 'ALL'
-  | 'ALLOCATE'
-  | 'ALTER'
-  | 'AND'
-  | 'ANY'
-  | 'ARE'
-  | 'ARRAY'
-  | 'ARRAY_AGG'
-  | 'ARRAY_MAX_CARDINALITY'
-  | 'AS'
-  | 'ASENSITIVE'
-  | 'ASYMMETRIC'
-  | 'AT'
-  | 'ATOMIC'
-  | 'AUTHORIZATION'
-  | 'AVG'
-
-  | 'BEGIN'
-  | 'BEGIN_FRAME'
-  | 'BEGIN_PARTITION'
-  | 'BETWEEN'
-  | 'BIGINT'
-  | 'BINARY'
-  | 'BLOB'
-  | 'BOOLEAN'
-  | 'BOTH'
-  | 'BY'
-
-  | 'CALL'
-  | 'CALLED'
-  | 'CARDINALITY'
-  | 'CASCADED'
-  | 'CASE'
-  | 'CAST'
-  | 'CEIL'
-  | 'CEILING'
-  | 'CHAR'
-  | 'CHAR_LENGTH'
-  | 'CHARACTER'
-  | 'CHARACTER_LENGTH'
-  | 'CHECK'
-  | 'CLOB'
-  | 'CLOSE'
-  | 'COALESCE'
-  | 'COLLATE'
-  | 'COLLECT'
-  | 'COLUMN'
-  | 'COMMIT'
-  | 'CONDITION'
-  | 'CONNECT'
-  | 'CONSTRAINT'
-  | 'CONTAINS'
-  | 'CONVERT'
-  | 'CORR'
-  | 'CORRESPONDING'
-  | 'COUNT'
-  | 'COVAR_POP'
-  | 'COVAR_SAMP'
-  | 'CREATE'
-  | 'CROSS'
-  | 'CUBE'
-  | 'CUME_DIST'
-  | 'CURRENT'
-  | 'CURRENT_CATALOG'
-  | 'CURRENT_DATE'
-  | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
-  | 'CURRENT_PATH'
-  | 'CURRENT_ROLE'
-  | 'CURRENT_ROW'
-  | 'CURRENT_SCHEMA'
-  | 'CURRENT_TIME'
-  | 'CURRENT_TIMESTAMP'
-  | 'CURRENT_TRANSFORM_GROUP_FOR_TYPE'
-  | 'CURRENT_USER'
-  | 'CURSOR'
-  | 'CYCLE'
-
-  | 'DATE'
-  | 'DAY'
-  | 'DEALLOCATE'
-  | 'DEC'
-  | 'DECIMAL'
-  | 'DECLARE'
-  | 'DEFAULT'
-  | 'DELETE'
-  | 'DENSE_RANK'
-  | 'DEREF'
-  | 'DESCRIBE'
-  | 'DETERMINISTIC'
-  | 'DISCONNECT'
-  | 'DISTINCT'
-  | 'DOUBLE'
-  | 'DROP'
-  | 'DYNAMIC'
-
-  | 'EACH'
-  | 'ELEMENT'
-  | 'ELSE'
-  | 'END'
-  | 'END_FRAME'
-  | 'END_PARTITION'
-  | 'END-EXEC'
-  | 'EQUALS'
-  | 'ESCAPE'
-  | 'EVERY'
-  | 'EXCEPT'
-  | 'EXEC'
-  | 'EXECUTE'
-  | 'EXISTS'
-  | 'EXP'
-  | 'EXTERNAL'
-  | 'EXTRACT'
-
-  | 'FALSE'
-  | 'FETCH'
-  | 'FILTER'
-  | 'FIRST_VALUE'
-  | 'FLOAT'
-  | 'FLOOR'
-  | 'FOR'
-  | 'FOREIGN'
-  | 'FRAME_ROW'
-  | 'FREE'
-  | 'FROM'
-  | 'FULL'
-  | 'FUNCTION'
-  | 'FUSION'
-
-  | 'GET'
-  | 'GLOBAL'
-  | 'GRANT'
-  | 'GROUP'
-  | 'GROUPING'
-  | 'GROUPS'
-
-  | 'HAVING'
-  | 'HOLD'
-  | 'HOUR'
-
-  | 'IDENTITY'
-  | 'IN'
-  | 'INDICATOR'
-  | 'INNER'
-  | 'INOUT'
-  | 'INSENSITIVE'
-  | 'INSERT'
-  | 'INT'
-  | 'INTEGER'
-  | 'INTERSECT'
-  | 'INTERSECTION'
-  | 'INTERVAL'
-  | 'INTO'
-  | 'IS'
-
-  | 'JOIN'
-
-  | 'LAG'
-  | 'LANGUAGE'
-  | 'LARGE'
-  | 'LAST_VALUE'
-  | 'LATERAL'
-  | 'LEAD'
-  | 'LEADING'
-  | 'LEFT'
-  | 'LIKE'
-  | 'LIKE_REGEX'
-  | 'LN'
-  | 'LOCAL'
-  | 'LOCALTIME'
-  | 'LOCALTIMESTAMP'
-  | 'LOWER'
-
-  | 'MATCH'
-  | 'MAX'
-  | 'MEMBER'
-  | 'MERGE'
-  | 'METHOD'
-  | 'MIN'
-  | 'MINUTE'
-  | 'MOD'
-  | 'MODIFIES'
-  | 'MODULE'
-  | 'MONTH'
-  | 'MULTISET'
-
-  | 'NATIONAL'
-  | 'NATURAL'
-  | 'NCHAR'
-  | 'NCLOB'
-  | 'NEW'
-  | 'NO'
-  | 'NONE'
-  | 'NORMALIZE'
-  | 'NOT'
-  | 'NTH_VALUE'
-  | 'NTILE'
-  | 'NULL'
-  | 'NULLIF'
-  | 'NUMERIC'
-
-  | 'OCTET_LENGTH'
-  | 'OCCURRENCES_REGEX'
-  | 'OF'
-  | 'OFFSET'
-  | 'OLD'
-  | 'ON'
-  | 'ONLY'
-  | 'OPEN'
-  | 'OR'
-  | 'ORDER'
-  | 'OUT'
-  | 'OUTER'
-  | 'OVER'
-  | 'OVERLAPS'
-  | 'OVERLAY'
-
-  | 'PARAMETER'
-  | 'PARTITION'
-  | 'PERCENT'
-  | 'PERCENT_RANK'
-  | 'PERCENTILE_CONT'
-  | 'PERCENTILE_DISC'
-  | 'PERIOD'
-  | 'PORTION'
-  | 'POSITION'
-  | 'POSITION_REGEX'
-  | 'POWER'
-  | 'PRECEDES'
-  | 'PRECISION'
-  | 'PREPARE'
-  | 'PRIMARY'
-  | 'PROCEDURE'
-
-  | 'RANGE'
-  | 'RANK'
-  | 'READS'
-  | 'REAL'
-  | 'RECURSIVE'
-  | 'REF'
-  | 'REFERENCES'
-  | 'REFERENCING'
-  | 'REGR_AVGX'
-  | 'REGR_AVGY'
-  | 'REGR_COUNT'
-  | 'REGR_INTERCEPT'
-  | 'REGR_R2'
-  | 'REGR_SLOPE'
-  | 'REGR_SXX'
-  | 'REGR_SXY'
-  | 'REGR_SYY'
-  | 'RELEASE'
-  | 'RESULT'
-  | 'RETURN'
-  | 'RETURNS'
-  | 'REVOKE'
-  | 'RIGHT'
-  | 'ROLLBACK'
-  | 'ROLLUP'
-  | 'ROW'
-  | 'ROW_NUMBER'
-  | 'ROWS'
-
-  | 'SAVEPOINT'
-  | 'SCOPE'
-  | 'SCROLL'
-  | 'SEARCH'
-  | 'SECOND'
-  | 'SELECT'
-  | 'SENSITIVE'
-  | 'SESSION_USER'
-  | 'SET'
-  | 'SIMILAR'
-  | 'SMALLINT'
-  | 'SOME'
-  | 'SPECIFIC'
-  | 'SPECIFICTYPE'
-  | 'SQL'
-  | 'SQLEXCEPTION'
-  | 'SQLSTATE'
-  | 'SQLWARNING'
-  | 'SQRT'
-  | 'START'
-  | 'STATIC'
-  | 'STDDEV_POP'
-  | 'STDDEV_SAMP'
-  | 'SUBMULTISET'
-  | 'SUBSTRING'
-  | 'SUBSTRING_REGEX'
-  | 'SUCCEEDS'
-  | 'SUM'
-  | 'SYMMETRIC'
-  | 'SYSTEM'
-  | 'SYSTEM_TIME'
-  | 'SYSTEM_USER'
-
-  | 'TABLE'
-  | 'TABLESAMPLE'
-  | 'THEN'
-  | 'TIME'
-  | 'TIMESTAMP'
-  | 'TIMEZONE_HOUR'
-  | 'TIMEZONE_MINUTE'
-  | 'TO'
-  | 'TRAILING'
-  | 'TRANSLATE'
-  | 'TRANSLATE_REGEX'
-  | 'TRANSLATION'
-  | 'TREAT'
-  | 'TRIGGER'
-  | 'TRUNCATE'
-  | 'TRIM'
-  | 'TRIM_ARRAY'
-  | 'TRUE'
-
-  | 'UESCAPE'
-  | 'UNION'
-  | 'UNIQUE'
-  | 'UNKNOWN'
-  | 'UNNEST'
-  | 'UPDATE'
-  | 'UPPER'
-  | 'USER'
-  | 'USING'
-
-  | 'VALUE'
-  | 'VALUES'
-  | 'VALUE_OF'
-  | 'VAR_POP'
-  | 'VAR_SAMP'
-  | 'VARBINARY'
-  | 'VARCHAR'
-  | 'VARYING'
-  | 'VERSIONING'
-
-  | 'WHEN'
-  | 'WHENEVER'
-  | 'WHERE'
-  | 'WIDTH_BUCKET'
-  | 'WINDOW'
-  | 'WITH'
-  | 'WITHIN'
-  | 'WITHOUT'
-
-  | 'YEAR'
     ;
 
 # 5.3 literal
@@ -1064,34 +278,25 @@ general_literal =
 
 character_string_literal =
     [introducer character_set_specification]
-        (separator).{quote [{character_representation}+] quote}
+        {quote [{character_representation}+] quote}+
     ;
 
 introducer =
     underscore
     ;
 
-character_representation =
-    nonquote_character
-  | quote_symbol
-    ;
-
 # SEE_SYNTAX_RULES
-nonquote_character =
-    /[^'\n]/
-    ;
-
-quote_symbol =
-    quote quote
+character_representation =
+    /(''|[^'\n])/
     ;
 
 national_character_string_literal =
-    'N' (separator).{quote [{character_representation}+] quote}
+    'N' {quote [{character_representation}+] quote}+
     ;
 
 unicode_character_string_literal =
     [introducer character_set_specification]
-        'U' ampersand (separator).{quote [{unicode_representation}+] quote}
+        'U' ampersand {quote [{unicode_representation}+] quote}+
         unicode_escape_specifier
     ;
 
@@ -1101,7 +306,7 @@ unicode_representation =
     ;
 
 binary_string_literal =
-    'X' (separator).{quote [{space}+] [{hexit [{space}+] hexit [{space}+]}+] quote}
+    'X' {quote [{hexit hexit}+] quote}+
     ;
 
 hexit =
@@ -1144,7 +349,7 @@ signed_integer =
     ;
 
 unsigned_integer =
-    {digit}+
+    digit
     ;
 
 datetime_literal =
@@ -1206,7 +411,7 @@ unquoted_time_string =
     ;
 
 unquoted_timestamp_string =
-    unquoted_date_string space unquoted_time_string
+    unquoted_date_string unquoted_time_string
     ;
 
 unquoted_interval_string =
@@ -1224,7 +429,7 @@ day_time_literal =
     ;
 
 day_time_interval =
-    days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+    days_value [hours_value [colon minutes_value [colon seconds_value]]]
     ;
 
 time_interval =
@@ -1292,17 +497,7 @@ actual_identifier =
     ;
 
 sql_language_identifier =
-    sql_language_identifier_start [{sql_language_identifier_part}+]
-    ;
-
-sql_language_identifier_start =
-    simple_latin_letter
-    ;
-
-sql_language_identifier_part =
-    simple_latin_letter
-  | digit
-  | underscore
+    regular_identifier
     ;
 
 authorization_identifier =
@@ -1356,14 +551,6 @@ correlation_name =
     ;
 
 query_name =
-    identifier
-    ;
-
-sql_client_module_name =
-    identifier
-    ;
-
-procedure_name =
     identifier
     ;
 
@@ -1784,7 +971,6 @@ general_value_specification =
     host_parameter_specification
   | sql_parameter_reference
   | dynamic_parameter_specification
-  | embedded_variable_specification
   | current_collation_specification
   | 'CURRENT_CATALOG'
   | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
@@ -1803,7 +989,6 @@ simple_value_specification =
     literal
   | host_parameter_name
   | sql_parameter_reference
-  | embedded_variable_name
     ;
 
 target_specification =
@@ -1812,14 +997,12 @@ target_specification =
   | column_reference
   | target_array_element_specification
   | dynamic_parameter_specification
-  | embedded_variable_specification
     ;
 
 simple_target_specification =
     host_parameter_name
   | sql_parameter_reference
   | column_reference
-  | embedded_variable_name
     ;
 
 host_parameter_specification =
@@ -1828,14 +1011,6 @@ host_parameter_specification =
 
 dynamic_parameter_specification =
     question_mark
-    ;
-
-embedded_variable_specification =
-    embedded_variable_name [indicator_variable]
-    ;
-
-indicator_variable =
-    ['INDICATOR'] embedded_variable_name
     ;
 
 indicator_parameter =
@@ -2245,14 +1420,6 @@ generalized_invocation =
         period method_name [sql_argument_list]
     ;
 
-method_selection =
-    routine_invocation
-    ;
-
-constructor_method_selection =
-    routine_invocation
-    ;
-
 # 6.18 static_method_invocation
 
 # Function
@@ -2264,10 +1431,6 @@ static_method_invocation =
         [sql_argument_list]
     ;
 
-static_method_selection =
-    routine_invocation
-    ;
-
 # 6.19 new_specification
 
 # Function
@@ -2276,11 +1439,6 @@ static_method_selection =
 # Format
 new_specification =
     'NEW' path_resolved_user_defined_type_name sql_argument_list
-    ;
-
-new_invocation =
-    method_invocation
-  | routine_invocation
     ;
 
 # 6.20 attribute_or_method_reference
@@ -2297,27 +1455,6 @@ attribute_or_method_reference =
 
 dereference_operator =
     right_arrow
-    ;
-
-# 6.21 dereference_operation
-
-# Function
-# Access a column of the row identified by a value of a reference type.
-
-# Format
-dereference_operation =
-    reference_value_expression dereference_operator attribute_name
-    ;
-
-# 6.22 method_reference
-
-# Function
-# Return a value acquired from invoking an SQL-invoked routine that is a
-# method.
-
-# Format
-method_reference =
-    value_expression_primary dereference_operator method_name sql_argument_list
     ;
 
 # 6.23 reference_resolution
@@ -4057,97 +3194,6 @@ similar_predicate_part_2 =
 
 similar_pattern =
     character_value_expression
-    ;
-
-regular_expression =
-    regular_term
-  | regular_expression vertical_bar regular_term
-    ;
-
-regular_term =
-    regular_factor
-  | regular_term regular_factor
-    ;
-
-regular_factor =
-    regular_primary
-  | regular_primary asterisk
-  | regular_primary plus_sign
-  | regular_primary question_mark
-  | regular_primary repeat_factor
-    ;
-
-repeat_factor =
-    left_brace low_value [upper_limit] right_brace
-    ;
-
-upper_limit =
-    comma [high_value]
-    ;
-
-low_value =
-    unsigned_integer
-    ;
-
-high_value =
-    unsigned_integer
-    ;
-
-regular_primary =
-    character_specifier
-  | percent
-  | regular_character_set
-  | left_paren regular_expression right_paren
-    ;
-
-character_specifier =
-    non_escaped_character
-  | escaped_character
-    ;
-
-# SEE_SYNTAX_RULES
-non_escaped_character =
-    /[^\[\]\(\)\|\^\-\+\*%_\?\{\n]/
-    ;
-
-# SEE_SYNTAX_RULES
-escaped_character =
-    escape_char special_character
-  | escape_char escape_char
-    ;
-
-escape_char =
-    /\\/
-    ;
-
-special_character =
-    /\[\]\(\)\|\^\-\+\*%_\?\{/
-    ;
-
-regular_character_set =
-    underscore
-  | left_bracket {character_enumeration}+ right_bracket
-  | left_bracket circumflex {character_enumeration}+ right_bracket
-  | left_bracket {character_enumeration_include}+
-        circumflex {character_enumeration_exclude}+ right_bracket
-    ;
-
-character_enumeration_include =
-    character_enumeration
-    ;
-
-character_enumeration_exclude =
-    character_enumeration
-    ;
-
-character_enumeration =
-    character_specifier
-  | character_specifier minus_sign character_specifier
-  | left_bracket colon regular_character_set_identifier colon right_bracket
-    ;
-
-regular_character_set_identifier =
-    identifier
     ;
 
 # 8.7 regex_like_predicate
@@ -6926,94 +5972,8 @@ role_revoked =
 # Define an SQL-client module.
 
 # Format
-sql_client_module_definition =
-    module_name_clause language_clause module_authorization_clause
-        [module_path_specification]
-        [module_transform_group_specification]
-        [module_collations]
-        [{temporary_table_declaration}+]
-        {module_contents}+
-    ;
-
-module_authorization_clause =
-    'SCHEMA' schema_name
-  | 'AUTHORIZATION' module_authorization_identifier
-        ['FOR' 'STATIC' ('ONLY' | 'AND' 'DYNAMIC')]
-  | 'SCHEMA' schema_name 'AUTHORIZATION' module_authorization_identifier
-        ['FOR' 'STATIC' ('ONLY' | 'AND' 'DYNAMIC')]
-    ;
-
-module_authorization_identifier =
-    authorization_identifier
-    ;
-
-module_path_specification =
-    path_specification
-    ;
-
-module_transform_group_specification =
-    transform_group_specification
-    ;
-
-module_collations =
-    {module_collation_specification}+
-    ;
-
-module_collation_specification =
-    'COLLATION' collation_name ['FOR' character_set_specification_list]
-    ;
-
 character_set_specification_list =
     ','.{character_set_specification}
-    ;
-
-module_contents =
-    declare_cursor
-  | dynamic_declare_cursor
-  | externally_invoked_procedure
-    ;
-
-# 13.2 module_name_clause
-
-# Function
-# Name an SQL-client module.
-
-# Format
-module_name_clause =
-    'MODULE' [sql_client_module_name]
-        [module_character_set_specification]
-    ;
-
-module_character_set_specification =
-    'NAMES' 'ARE' character_set_specification
-    ;
-
-# 13.3 externally_invoked_procedure
-
-# Function
-# Define an externally-invoked procedure.
-
-# Format
-externally_invoked_procedure =
-    'PROCEDURE' procedure_name host_parameter_declaration_list semicolon
-        sql_procedure_statement semicolon
-    ;
-
-host_parameter_declaration_list =
-    left_paren ','.{host_parameter_declaration} right_paren
-    ;
-
-host_parameter_declaration =
-    host_parameter_name host_parameter_data_type
-  | status_parameter
-    ;
-
-host_parameter_data_type =
-    data_type [locator_indication]
-    ;
-
-status_parameter =
-    'SQLSTATE'
     ;
 
 # 13.4 sql_procedure_statement
@@ -7174,17 +6134,6 @@ sql_descriptor_statement =
     ;
 
 # 14 Data manipulation
-
-# 14.1 declare_cursor
-
-# Function
-# Declare a standing cursor.
-
-# Format
-declare_cursor =
-    'DECLARE' cursor_name cursor_properties
-        'FOR' cursor_specification
-    ;
 
 # 14.2 cursor_properties
 
@@ -7554,7 +6503,6 @@ free_locator_statement =
 
 locator_reference =
     host_parameter_name
-  | embedded_variable_name
   | dynamic_parameter_specification
     ;
 
@@ -8104,71 +7052,6 @@ sql_statement_variable =
     simple_value_specification
     ;
 
-preparable_statement =
-    preparable_sql_data_statement
-  | preparable_sql_schema_statement
-  | preparable_sql_transaction_statement
-  | preparable_sql_control_statement
-  | preparable_sql_session_statement
-  | preparable_implementation_defined_statement
-    ;
-
-preparable_sql_data_statement =
-    delete_statement_searched
-  | dynamic_single_row_select_statement
-  | insert_statement
-  | dynamic_select_statement
-  | update_statement_searched
-  | truncate_table_statement
-  | merge_statement
-  | preparable_dynamic_delete_statement_positioned
-  | preparable_dynamic_update_statement_positioned
-  | hold_locator_statement
-  | free_locator_statement
-    ;
-
-preparable_sql_schema_statement =
-    sql_schema_statement
-    ;
-
-preparable_sql_transaction_statement =
-    sql_transaction_statement
-    ;
-
-preparable_sql_control_statement =
-    sql_control_statement
-    ;
-
-preparable_sql_session_statement =
-    sql_session_statement
-    ;
-
-dynamic_select_statement =
-    cursor_specification
-    ;
-
-# SEE_SYNTAX_RULES
-preparable_implementation_defined_statement =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-# 20.7 cursor_attributes
-
-# Function
-# Specify a list of cursor attributes.
-
-# Format
-cursor_attributes =
-    {cursor_attribute}+
-    ;
-
-cursor_attribute =
-    cursor_sensitivity
-  | cursor_scrollability
-  | cursor_holdability
-  | cursor_returnability
-    ;
-
 # 20.8 deallocate_prepared_statement
 
 # Function
@@ -8295,19 +7178,6 @@ execute_immediate_statement =
     'EXECUTE' 'IMMEDIATE' sql_statement_variable
     ;
 
-# 20.14 dynamic_declare_cursor
-
-# Function
-# Declare a declared dynamic cursor to be associated with a statement_name,
-# which may in turn be associated with a cursor_specification.
-
-# Format
-dynamic_declare_cursor =
-    'DECLARE' cursor_name
-        cursor_properties
-        'FOR' statement_name
-    ;
-
 # 20.15 allocate_extended_dynamic_cursor_statement
 
 # Function
@@ -8354,16 +7224,6 @@ dynamic_fetch_statement =
         output_using_clause
     ;
 
-# 20.19 dynamic_single_row_select_statement
-
-# Function
-# Retrieve values from a dynamically-specified row of a table.
-
-# Format
-dynamic_single_row_select_statement =
-    query_specification
-    ;
-
 # 20.20 dynamic_close_statement
 
 # Function
@@ -8381,7 +7241,8 @@ dynamic_close_statement =
 
 # Format
 dynamic_delete_statement_positioned =
-    'DELETE' 'FROM' target_table 'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
+    'DELETE' 'FROM' target_table
+        'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
     ;
 
 # 20.22 dynamic_update_statement_positioned
@@ -8393,1005 +7254,6 @@ dynamic_delete_statement_positioned =
 dynamic_update_statement_positioned =
     'UPDATE' target_table 'SET' set_clause_list
         'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
-    ;
-
-# 20.23 preparable_dynamic_delete_statement_positioned
-
-# Function
-# Delete a row of a table through a dynamic cursor.
-
-# Format
-preparable_dynamic_delete_statement_positioned =
-    'DELETE' ['FROM' target_table]
-        'WHERE' 'CURRENT' 'OF' preparable_dynamic_cursor_name
-    ;
-
-# 20.24 preparable_dynamic_cursor_name
-
-# Function
-# Specify the cursor of a preparable_dynamic_delete_statement_positioned or a
-# preparable_dynamic_update_statement_positioned.
-
-# Format
-preparable_dynamic_cursor_name =
-    [scope_option] cursor_name
-    ;
-
-# 20.25 preparable_dynamic_update_statement_positioned
-
-# Function
-# Update a row of a table through a dynamic cursor.
-
-# Format
-preparable_dynamic_update_statement_positioned =
-    'UPDATE' [target_table] 'SET' set_clause_list
-        'WHERE' 'CURRENT' 'OF' preparable_dynamic_cursor_name
-    ;
-
-# 21 Embedded SQL
-
-# 21.1 embedded_sql_host_program
-
-# Function
-# Specify an embedded_sql_host_program.
-
-# Format
-embedded_sql_host_program =
-    embedded_sql_ada_program
-  | embedded_sql_c_program
-  | embedded_sql_cobol_program
-  | embedded_sql_fortran_program
-  | embedded_sql_mumps_program
-  | embedded_sql_pascal_program
-  | embedded_sql_pl_i_program
-    ;
-
-embedded_sql_statement =
-    sql_prefix statement_or_declaration [sql_terminator]
-    ;
-
-statement_or_declaration =
-    declare_cursor
-  | dynamic_declare_cursor
-  | temporary_table_declaration
-  | embedded_authorization_declaration
-  | embedded_path_specification
-  | embedded_transform_group_specification
-  | embedded_collation_specification
-  | embedded_exception_declaration
-  | sql_procedure_statement
-    ;
-
-sql_prefix =
-    'EXEC' 'SQL'
-  | ampersand'SQL' left_paren
-    ;
-
-sql_terminator =
-    'END-EXEC'
-  | semicolon
-  | right_paren
-    ;
-
-embedded_authorization_declaration =
-    'DECLARE' embedded_authorization_clause
-    ;
-
-embedded_authorization_clause =
-    'SCHEMA' schema_name
-  | 'AUTHORIZATION' embedded_authorization_identifier
-        ['FOR' 'STATIC' ('ONLY' | 'AND' 'DYNAMIC')]
-  | 'SCHEMA' schema_name 'AUTHORIZATION' embedded_authorization_identifier
-        ['FOR' 'STATIC' ('ONLY' | 'AND' 'DYNAMIC')]
-    ;
-
-embedded_authorization_identifier =
-    module_authorization_identifier
-    ;
-
-embedded_path_specification =
-    path_specification
-    ;
-
-embedded_transform_group_specification =
-    transform_group_specification
-    ;
-
-embedded_collation_specification =
-    module_collations
-    ;
-
-embedded_sql_declare_section =
-    embedded_sql_begin_declare
-        [embedded_character_set_declaration]
-        [{host_variable_definition}+]
-        embedded_sql_end_declare
-  | embedded_sql_mumps_declare
-    ;
-
-embedded_character_set_declaration =
-    'SQL' 'NAMES' 'ARE' character_set_specification
-    ;
-
-embedded_sql_begin_declare =
-    sql_prefix 'BEGIN' 'DECLARE' 'SECTION' [sql_terminator]
-    ;
-
-embedded_sql_end_declare =
-    sql_prefix 'END' 'DECLARE' 'SECTION' [sql_terminator]
-    ;
-
-embedded_sql_mumps_declare =
-    sql_prefix
-        'BEGIN' 'DECLARE' 'SECTION'
-        [embedded_character_set_declaration]
-        [{host_variable_definition}+]
-        'END' 'DECLARE' 'SECTION'
-        sql_terminator
-    ;
-
-host_variable_definition =
-    ada_variable_definition
-  | c_variable_definition
-  | cobol_variable_definition
-  | fortran_variable_definition
-  | mumps_variable_definition
-  | pascal_variable_definition
-  | pl_i_variable_definition
-    ;
-
-embedded_variable_name =
-    colon host_identifier
-    ;
-
-host_identifier =
-    ada_host_identifier
-  | c_host_identifier
-  | cobol_host_identifier
-  | fortran_host_identifier
-  | mumps_host_identifier
-  | pascal_host_identifier
-  | pl_i_host_identifier
-    ;
-
-# 21.2 embedded_exception_declaration
-
-# Function
-# Specify the action to be taken when an SQL-statement causes a specific class
-# of condition to be raised.
-
-# Format
-embedded_exception_declaration =
-    'WHENEVER' condition condition_action
-    ;
-
-condition =
-    sql_condition
-    ;
-
-sql_condition =
-    major_category
-  | 'SQLSTATE' (sqlstate_class_value [',' sqlstate_subclass_value])
-  | 'CONSTRAINT' constraint_name
-    ;
-
-major_category =
-    'SQLEXCEPTION'
-  | 'SQLWARNING'
-  | 'NOT' 'FOUND'
-    ;
-
-# SEE_SYNTAX_RULES
-sqlstate_class_value =
-    sqlstate_char sqlstate_char
-    ;
-
-# SEE_SYNTAX_RULES
-sqlstate_subclass_value =
-    sqlstate_char sqlstate_char sqlstate_char
-    ;
-
-sqlstate_char =
-    simple_latin_letter
-  | digit
-    ;
-
-condition_action =
-    'CONTINUE'
-  | go_to
-    ;
-
-go_to =
-    ('GOTO' | 'GO' 'TO') goto_target
-    ;
-
-goto_target =
-    host_label_identifier
-  | unsigned_integer
-  | host_pl_i_label_variable
-    ;
-
-# SEE_SYNTAX_RULES
-host_label_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-# SEE_SYNTAX_RULES
-host_pl_i_label_variable =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-# 21.3 embedded_sql_ada_program
-
-# Function
-# Specify an embedded_sql_ada_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_ada_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-ada_variable_definition =
-    ','.{ada_host_identifier} colon
-        ada_type_specification [ada_initial_value]
-    ;
-
-ada_initial_value =
-    ada_assignment_operator {character_representation}+
-    ;
-
-ada_assignment_operator =
-    colon equals_operator
-    ;
-
-# SEE_SYNTAX_RULES
-ada_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-ada_type_specification =
-    ada_qualified_type_specification
-  | ada_unqualified_type_specification
-  | ada_derived_type_specification
-    ;
-
-ada_qualified_type_specification =
-    'Interfaces' '.' 'SQL' '.' 'CHAR'
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        left_paren '1' double_period character_length right_paren
-  | 'Interfaces' '.' 'SQL' '.' 'SMALLINT'
-  | 'Interfaces' '.' 'SQL' '.' 'INT'
-  | 'Interfaces' '.' 'SQL' '.' 'BIGINT'
-  | 'Interfaces' '.' 'SQL' '.' 'REAL'
-  | 'Interfaces' '.' 'SQL' '.' 'DOUBLE_PRECISION'
-  | 'Interfaces' '.' 'SQL' '.' 'BOOLEAN'
-  | 'Interfaces' '.' 'SQL' '.' 'SQLSTATE_TYPE'
-  | 'Interfaces' '.' 'SQL' '.' 'INDICATOR_TYPE'
-    ;
-
-ada_unqualified_type_specification =
-    'CHAR' left_paren '1' double_period character_length right_paren
-  | 'SMALLINT'
-  | 'INT'
-  | 'BIGINT'
-  | 'REAL'
-  | 'DOUBLE_PRECISION'
-  | 'BOOLEAN'
-  | 'SQLSTATE_TYPE'
-  | 'INDICATOR_TYPE'
-    ;
-
-ada_derived_type_specification =
-    ada_clob_variable
-  | ada_clob_locator_variable
-  | ada_binary_variable
-  | ada_varbinary_variable
-  | ada_blob_variable
-  | ada_blob_locator_variable
-  | ada_user_defined_type_variable
-  | ada_user_defined_type_locator_variable
-  | ada_ref_variable
-  | ada_array_locator_variable
-  | ada_multiset_locator_variable
-    ;
-
-ada_clob_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-ada_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-ada_binary_variable =
-    'SQL' 'TYPE' 'IS' 'BINARY' left_paren length right_paren
-    ;
-
-ada_varbinary_variable =
-    'SQL' 'TYPE' 'IS' 'VARBINARY' left_paren length right_paren
-    ;
-
-ada_blob_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-    ;
-
-ada_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-ada_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-    ;
-
-ada_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-ada_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-ada_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-    ;
-
-ada_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-    ;
-
-# 21.4 embedded_sql_c_program
-
-# Function
-# Specify an embedded_sql_c_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_c_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-c_variable_definition =
-    [c_storage_class] [c_class_modifier]
-        c_variable_specification semicolon
-    ;
-
-c_variable_specification =
-    c_numeric_variable
-  | c_character_variable
-  | c_derived_variable
-    ;
-
-c_storage_class =
-    'auto'
-  | 'extern'
-  | 'static'
-    ;
-
-c_class_modifier =
-    'const'
-  | 'volatile'
-    ;
-
-c_numeric_variable =
-    ('long' 'long' | 'long' | 'short' | 'float' | 'double')
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_character_variable =
-    c_character_type ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier c_array_specification [c_initial_value]}
-    ;
-
-c_character_type =
-    'char'
-  | 'unsigned' 'char'
-  | 'unsigned' 'short'
-    ;
-
-c_array_specification =
-    left_bracket character_length right_bracket
-    ;
-
-# SEE_SYNTAX_RULES
-c_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-c_derived_variable =
-    c_varchar_variable
-  | c_nchar_variable
-  | c_nchar_varying_variable
-  | c_clob_variable
-  | c_nclob_variable
-  | c_binary_variable
-  | c_varbinary_variable
-  | c_blob_variable
-  | c_user_defined_type_variable
-  | c_clob_locator_variable
-  | c_blob_locator_variable
-  | c_array_locator_variable
-  | c_multiset_locator_variable
-  | c_user_defined_type_locator_variable
-  | c_ref_variable
-    ;
-
-c_varchar_variable =
-    'VARCHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier c_array_specification [c_initial_value]}
-    ;
-
-c_nchar_variable =
-    'NCHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier c_array_specification [c_initial_value]}
-    ;
-
-c_nchar_varying_variable =
-    'NCHAR' 'VARYING' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier c_array_specification [c_initial_value]}
-    ;
-
-c_clob_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_nclob_variable =
-    'SQL' 'TYPE' 'IS' 'NCLOB' left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_binary_variable =
-    'SQL' 'TYPE' 'IS' 'BINARY' left_paren length right_paren
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_varbinary_variable =
-    'SQL' 'TYPE' 'IS' 'VARBINARY' left_paren length right_paren
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_blob_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-        ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type ','.{c_host_identifier [c_initial_value]}
-    ;
-
-c_initial_value =
-    equals_operator {character_representation}+
-    ;
-
-# 21.5 embedded_sql_cobol_program
-
-# Function
-# Specify an embedded_sql_cobol_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_cobol_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-cobol_variable_definition =
-    ('01' | '77') cobol_host_identifier
-        cobol_type_specification [{character_representation}+] period
-    ;
-
-# SEE_SYNTAX_RULES
-cobol_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-cobol_type_specification =
-    cobol_character_type
-  | cobol_national_character_type
-  | cobol_numeric_type
-  | cobol_integer_type
-  | cobol_derived_type_specification
-    ;
-
-cobol_derived_type_specification =
-    cobol_clob_variable
-  | cobol_nclob_variable
-  | cobol_binary_variable
-  | cobol_blob_variable
-  | cobol_user_defined_type_variable
-  | cobol_clob_locator_variable
-  | cobol_blob_locator_variable
-  | cobol_array_locator_variable
-  | cobol_multiset_locator_variable
-  | cobol_user_defined_type_locator_variable
-  | cobol_ref_variable
-    ;
-
-cobol_character_type =
-    ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ('PIC' | 'PICTURE') ['IS']
-        {'X' [left_paren character_length right_paren]}+
-    ;
-
-cobol_national_character_type =
-    ['CHARACTER' 'SET' ['IS'] character_set_specification]
-        ('PIC' | 'PICTURE') ['IS']
-        {'N' [left_paren character_length right_paren]}+
-    ;
-
-cobol_clob_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'CLOB'
-        left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-cobol_nclob_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'NCLOB'
-        left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-cobol_binary_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'BINARY'
-        left_paren length right_paren
-    ;
-
-cobol_blob_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'BLOB'
-        left_paren large_object_length right_paren
-    ;
-
-cobol_user_defined_type_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS'
-        path_resolved_user_defined_type_name
-        'AS' predefined_type
-    ;
-
-cobol_clob_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-cobol_blob_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-cobol_array_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS'
-        array_type 'AS' 'LOCATOR'
-    ;
-
-cobol_multiset_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS'
-        multiset_type 'AS' 'LOCATOR'
-    ;
-
-cobol_user_defined_type_locator_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS'
-        path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-cobol_ref_variable =
-    ['USAGE' ['IS']] 'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-cobol_numeric_type =
-    ('PIC' | 'PICTURE') ['IS'] 'S' cobol_nines_specification
-        ['USAGE' ['IS']] 'DISPLAY' 'SIGN' 'LEADING' 'SEPARATE'
-    ;
-
-cobol_nines_specification =
-    cobol_nines ['V' [cobol_nines]]
-  | 'V' cobol_nines
-    ;
-
-cobol_integer_type =
-    ('PIC' | 'PICTURE') ['IS'] 'S' cobol_nines
-        ['USAGE' ['IS']] 'BINARY'
-    ;
-
-cobol_nines =
-    {'9' [left_paren length right_paren]}+
-    ;
-
-# 21.6 embedded_sql_fortran_program
-
-# Function
-# Specify an embedded_sql_fortran_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_fortran_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-fortran_variable_definition =
-    fortran_type_specification ','.{fortran_host_identifier}
-    ;
-
-# SEE_SYNTAX_RULES
-fortran_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-fortran_type_specification =
-    'CHARACTER' [asterisk character_length]
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'CHARACTER' 'KIND' '=' 'n' [asterisk character_length]
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'INTEGER'
-  | 'REAL'
-  | 'DOUBLE' 'PRECISION'
-  | 'LOGICAL'
-  | fortran_derived_type_specification
-    ;
-
-fortran_derived_type_specification =
-    fortran_clob_variable
-  | fortran_binary_variable
-  | fortran_varbinary_variable
-  | fortran_blob_variable
-  | fortran_user_defined_type_variable
-  | fortran_clob_locator_variable
-  | fortran_blob_locator_variable
-  | fortran_user_defined_type_locator_variable
-  | fortran_array_locator_variable
-  | fortran_multiset_locator_variable
-  | fortran_ref_variable
-    ;
-
-fortran_clob_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB'
-        left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-fortran_binary_variable =
-    'SQL' 'TYPE' 'IS' 'BINARY' left_paren length right_paren
-    ;
-
-fortran_varbinary_variable =
-    'SQL' 'TYPE' 'IS' 'VARBINARY' left_paren length right_paren
-    ;
-
-fortran_blob_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-    ;
-
-fortran_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-    ;
-
-fortran_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-fortran_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-fortran_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-fortran_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-    ;
-
-fortran_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-    ;
-
-fortran_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-# 21.7 embedded_sql_mumps_program
-
-# Function
-# Specify an embedded_sql_mumps_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_mumps_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-mumps_variable_definition =
-    mumps_numeric_variable semicolon
-  | mumps_character_variable semicolon
-  | mumps_derived_type_specification mumps_host_identifier semicolon
-    ;
-
-mumps_character_variable =
-    'VARCHAR' ','.{mumps_character_variable_specifier}
-    ;
-
-mumps_character_variable_specifier =
-    mumps_host_identifier mumps_length_specification
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-# SEE_SYNTAX_RULES
-mumps_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-mumps_length_specification =
-    left_paren character_length right_paren
-    ;
-
-mumps_numeric_variable =
-    mumps_type_specification ','.{mumps_host_identifier}
-    ;
-
-mumps_type_specification =
-    'INT'
-  | 'DEC' [left_paren precision [comma scale] right_paren]
-  | 'REAL'
-    ;
-
-mumps_derived_type_specification =
-    mumps_user_defined_type_variable
-  | mumps_clob_locator_variable
-  | mumps_blob_locator_variable
-  | mumps_user_defined_type_locator_variable
-  | mumps_array_locator_variable
-  | mumps_multiset_locator_variable
-  | mumps_ref_variable
-    ;
-
-mumps_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name
-        'AS' predefined_type
-    ;
-
-mumps_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-mumps_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-mumps_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-mumps_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-    ;
-
-mumps_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-    ;
-
-mumps_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-# 21.8 embedded_sql_pascal_program
-
-# Function
-# Specify an embedded_sql_pascal_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_pascal_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-pascal_variable_definition =
-    ','.{pascal_host_identifier} colon
-        pascal_type_specification semicolon
-    ;
-
-# SEE_SYNTAX_RULES
-pascal_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-pascal_type_specification =
-    'PACKED' 'ARRAY' left_bracket '1'
-        double_period character_length right_bracket
-        'OF' 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'INTEGER'
-  | 'REAL'
-  | 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'BOOLEAN'
-  | pascal_derived_type_specification
-    ;
-
-pascal_derived_type_specification =
-    pascal_clob_variable
-  | pascal_binary_variable
-  | pascal_blob_variable
-  | pascal_user_defined_type_variable
-  | pascal_clob_locator_variable
-  | pascal_blob_locator_variable
-  | pascal_user_defined_type_locator_variable
-  | pascal_array_locator_variable
-  | pascal_multiset_locator_variable
-  | pascal_ref_variable
-    ;
-
-pascal_clob_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB'
-        left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-pascal_binary_variable =
-    'SQL' 'TYPE' 'IS' 'BINARY' left_paren length right_paren
-    ;
-
-pascal_blob_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-    ;
-
-pascal_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-pascal_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-    ;
-
-pascal_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-pascal_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-pascal_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-    ;
-
-pascal_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-    ;
-
-pascal_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-# 21.9 embedded_sql_pl_i_program
-
-# Function
-# Specify an embedded_sql_pl_i_program.
-
-# Format
-# SEE_SYNTAX_RULES
-embedded_sql_pl_i_program =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-pl_i_variable_definition =
-    ('DCL' | 'DECLARE') pl_i_type_specification [{character_representation}+] semicolon
-  | (pl_i_host_identifier | left_paren ','.{pl_i_host_identifier} right_paren)
-        pl_i_type_specification [{character_representation}+] semicolon
-    ;
-
-# SEE_SYNTAX_RULES
-pl_i_host_identifier =
-    '# SEE_SYNTAX_RULES'
-    ;
-
-pl_i_type_specification =
-    ('CHAR' | 'CHARACTER') ['VARYING'] left_paren character_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | pl_i_type_fixed_decimal left_paren precision [comma scale] right_paren
-  | pl_i_type_fixed_binary [left_paren precision right_paren]
-  | pl_i_type_float_binary left_paren precision right_paren
-  | pl_i_derived_type_specification
-    ;
-
-pl_i_derived_type_specification =
-    pl_i_clob_variable
-  | pl_i_binary_variable
-  | pl_i_varbinary_variable
-  | pl_i_blob_variable
-  | pl_i_user_defined_type_variable
-  | pl_i_clob_locator_variable
-  | pl_i_blob_locator_variable
-  | pl_i_user_defined_type_locator_variable
-  | pl_i_array_locator_variable
-  | pl_i_multiset_locator_variable
-  | pl_i_ref_variable
-    ;
-
-pl_i_clob_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' left_paren character_large_object_length right_paren
-        ['CHARACTER' 'SET' ['IS'] character_set_specification]
-    ;
-
-pl_i_binary_variable =
-    'SQL' 'TYPE' 'IS' 'BINARY' left_paren length right_paren
-    ;
-
-pl_i_varbinary_variable =
-    'SQL' 'TYPE' 'IS' 'VARBINARY' left_paren length right_paren
-    ;
-
-pl_i_blob_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' left_paren large_object_length right_paren
-    ;
-
-pl_i_user_defined_type_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' predefined_type
-    ;
-
-pl_i_clob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'CLOB' 'AS' 'LOCATOR'
-    ;
-
-pl_i_blob_locator_variable =
-    'SQL' 'TYPE' 'IS' 'BLOB' 'AS' 'LOCATOR'
-    ;
-
-pl_i_user_defined_type_locator_variable =
-    'SQL' 'TYPE' 'IS' path_resolved_user_defined_type_name 'AS' 'LOCATOR'
-    ;
-
-pl_i_array_locator_variable =
-    'SQL' 'TYPE' 'IS' array_type 'AS' 'LOCATOR'
-    ;
-
-pl_i_multiset_locator_variable =
-    'SQL' 'TYPE' 'IS' multiset_type 'AS' 'LOCATOR'
-    ;
-
-pl_i_ref_variable =
-    'SQL' 'TYPE' 'IS' reference_type
-    ;
-
-pl_i_type_fixed_decimal =
-    ('DEC' | 'DECIMAL') 'FIXED'
-  | 'FIXED' ('DEC' | 'DECIMAL')
-    ;
-
-pl_i_type_fixed_binary =
-    ('BIN' | 'BINARY') 'FIXED'
-  | 'FIXED' ('BIN' | 'BINARY')
-    ;
-
-pl_i_type_float_binary =
-    ('BIN' | 'BINARY') 'FLOAT'
-  | 'FLOAT' ('BIN' | 'BINARY')
     ;
 
 # 22 Direct invocation of SQL
@@ -9412,7 +7274,6 @@ directly_executable_statement =
   | sql_transaction_statement
   | sql_connection_statement
   | sql_session_statement
-  | direct_implementation_defined_statement
     ;
 
 direct_sql_data_statement =
@@ -9423,11 +7284,6 @@ direct_sql_data_statement =
   | truncate_table_statement
   | merge_statement
   | temporary_table_declaration
-    ;
-
-# SEE_SYNTAX_RULES
-direct_implementation_defined_statement =
-    '# SEE_SYNTAX_RULES'
     ;
 
 # 22.2 direct_select_statement_multiple_rows

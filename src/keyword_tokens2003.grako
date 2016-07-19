@@ -29,7 +29,7 @@ mult_div =
     |   '/'
         ;
 
-boolean_literal =
+_KW_BOOL =
         'TRUE'
     |   'FALSE'
     |   'UNKNOWN'

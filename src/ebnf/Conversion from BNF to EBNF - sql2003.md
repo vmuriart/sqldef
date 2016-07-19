@@ -32,3 +32,7 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 1. but first format `\[\n\s+` with `[ `
 1. use `(?<!\.){(.*?)}(?!\+)` to remove left over {}
 `(?<!\.){([\w \|']+?)}(?!\+)`
+1. remove rules that have no context anymomre (rules werent being used)
+
+
+1. `        (.*)\n    \|   ` to `    |   \1\n    |   ` to add leading | to options
