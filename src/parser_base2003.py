@@ -17,7 +17,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 7, 11, 6, 33, 3, 0)
+__version__ = (2016, 7, 29, 1, 17, 35, 4)
 
 __all__ = [
     'SqlParser',
@@ -56,28 +56,37 @@ class SqlParser(Parser):
         )
 
     @graken()
-    def _start_(self):
-        self._direct_sql_statement_()
-        self._check_eof()
+    def _sign_(self):
+        with self._choice():
+            with self._option():
+                self._token('+')
+            with self._option():
+                self._token('-')
+            self._error('expecting one of: + -')
 
     @graken()
-    def _integer_(self):
-        self._pattern(r'\d+')
+    def _mult_div_(self):
+        with self._choice():
+            with self._option():
+                self._token('*')
+            with self._option():
+                self._token('/')
+            self._error('expecting one of: * /')
 
     @graken()
-    def _par_integer_(self):
-        self._token('(')
-        self._integer_()
-        self._token(')')
+    def __KW_BOOL_(self):
+        with self._choice():
+            with self._option():
+                self._token('TRUE')
+            with self._option():
+                self._token('FALSE')
+            with self._option():
+                self._token('UNKNOWN')
+            self._error('expecting one of: FALSE TRUE UNKNOWN')
 
     @graken()
-    def _par_integer_optional_integer_(self):
-        self._token('(')
-        self._integer_()
-        with self._optional():
-            self._token(',')
-            self._integer_()
-        self._token(')')
+    def _dereference_operator_(self):
+        self._token('->')
 
     @graken()
     def _l_bracket_trigraph_(self):
@@ -98,2463 +107,6 @@ class SqlParser(Parser):
             self._error('expecting one of: ??) ]')
 
     @graken()
-    def _regular_identifier_(self):
-        self._pattern(r'[a-z]\w*')
-        self._check_name()
-
-    @graken()
-    def _multiplier_(self):
-        with self._choice():
-            with self._option():
-                self._token('K')
-            with self._option():
-                self._token('M')
-            with self._option():
-                self._token('G')
-            self._error('expecting one of: G K M')
-
-    @graken()
-    def _delimited_identifier_(self):
-        self._token('"')
-        self._char_in_delimited_identifier_()
-        self._token('"')
-
-    @graken()
-    def _char_in_delimited_identifier_(self):
-        self._pattern(r'(""|[^"\n])+')
-
-    @graken()
-    def _literal_(self):
-        with self._choice():
-            with self._option():
-                self._signed_numeric_literal_()
-            with self._option():
-                self._general_literal_()
-            self._error('no available options')
-
-    @graken()
-    def _unsigned_literal_(self):
-        with self._choice():
-            with self._option():
-                self._unsigned_numeric_literal_()
-            with self._option():
-                self._general_literal_()
-            self._error('no available options')
-
-    @graken()
-    def _general_literal_(self):
-        with self._choice():
-            with self._option():
-                self._character_string_literal_()
-            with self._option():
-                self._datetime_literal_()
-            with self._option():
-                self._interval_literal_()
-            with self._option():
-                self._boolean_literal_()
-            self._error('no available options')
-
-    @graken()
-    def _character_string_literal_(self):
-        self._token("'")
-        with self._optional():
-            self._char_in_string_()
-        self._token("'")
-
-    @graken()
-    def _char_in_string_(self):
-        self._pattern(r"(''|[^'\n])+")
-
-    @graken()
-    def _signed_numeric_literal_(self):
-        with self._optional():
-            self._sign_()
-        self._unsigned_numeric_literal_()
-
-    @graken()
-    def _unsigned_numeric_literal_(self):
-        self._exact_numeric_literal_()
-        with self._optional():
-            self._token('E')
-            with self._optional():
-                self._sign_()
-            self._integer_()
-
-    @graken()
-    def _proper_decimal_(self):
-        self._integer_()
-        with self._optional():
-            self._token('.')
-            with self._optional():
-                self._integer_()
-
-    @graken()
-    def _exact_numeric_literal_(self):
-        with self._choice():
-            with self._option():
-                self._proper_decimal_()
-            with self._option():
-                self._token('.')
-                self._integer_()
-            self._error('no available options')
-
-    @graken()
-    def _sign_(self):
-        with self._choice():
-            with self._option():
-                self._token('+')
-            with self._option():
-                self._token('-')
-            self._error('expecting one of: + -')
-
-    @graken()
-    def _mult_div_(self):
-        with self._choice():
-            with self._option():
-                self._token('*')
-            with self._option():
-                self._token('/')
-            self._error('expecting one of: * /')
-
-    @graken()
-    def _datetime_literal_(self):
-        with self._choice():
-            with self._option():
-                self._token('DATE')
-                self._token("'")
-                self._date_value_()
-                self._token("'")
-            with self._option():
-                self._token('TIME')
-                self._token("'")
-                self._unquoted_time_string_()
-                self._token("'")
-            with self._option():
-                self._token('TIMESTAMP')
-                self._token("'")
-                self._unquoted_timestamp_string_()
-                self._token("'")
-            self._error('no available options')
-
-    @graken()
-    def _time_zone_interval_(self):
-        self._sign_()
-        self._integer_()
-        self._token(':')
-        self._integer_()
-
-    @graken()
-    def _date_value_(self):
-        self._integer_()
-        self._token('-')
-        self._integer_()
-        self._token('-')
-        self._integer_()
-
-    @graken()
-    def _time_value_(self):
-        self._integer_()
-        self._token(':')
-        self._integer_()
-        self._token(':')
-        self._proper_decimal_()
-
-    @graken()
-    def _interval_literal_(self):
-        self._token('INTERVAL')
-        with self._optional():
-            self._sign_()
-        self._token("'")
-        self._unquoted_interval_string_()
-        self._token("'")
-        self._interval_qualifier_()
-
-    @graken()
-    def _unquoted_time_string_(self):
-        self._time_value_()
-        with self._optional():
-            self._time_zone_interval_()
-
-    @graken()
-    def _unquoted_timestamp_string_(self):
-        self._date_value_()
-        self._unquoted_time_string_()
-
-    @graken()
-    def _unquoted_interval_string_(self):
-        with self._optional():
-            self._sign_()
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._year_month_literal_()
-                with self._option():
-                    self._day_time_literal_()
-                self._error('no available options')
-
-    @graken()
-    def _year_month_literal_(self):
-        with self._optional():
-            self._integer_()
-            self._token('-')
-        self._integer_()
-
-    @graken()
-    def _day_time_literal_(self):
-        with self._choice():
-            with self._option():
-                self._day_time_interval_()
-            with self._option():
-                self._time_interval_()
-            self._error('no available options')
-
-    @graken()
-    def _day_time_interval_(self):
-        self._integer_()
-        with self._optional():
-            self._integer_()
-            with self._optional():
-                self._token(':')
-                self._integer_()
-                with self._optional():
-                    self._token(':')
-                    self._proper_decimal_()
-
-    @graken()
-    def _time_interval_(self):
-        with self._choice():
-            with self._option():
-                self._integer_()
-                with self._optional():
-                    self._token(':')
-                    self._integer_()
-                    with self._optional():
-                        self._token(':')
-                        self._proper_decimal_()
-            with self._option():
-                self._integer_()
-                with self._optional():
-                    self._token(':')
-                    self._proper_decimal_()
-            with self._option():
-                self._proper_decimal_()
-            self._error('no available options')
-
-    @graken()
-    def _boolean_literal_(self):
-        with self._choice():
-            with self._option():
-                self._token('TRUE')
-            with self._option():
-                self._token('FALSE')
-            with self._option():
-                self._token('UNKNOWN')
-            self._error('expecting one of: FALSE TRUE UNKNOWN')
-
-    @graken()
-    def _identifier_(self):
-        with self._choice():
-            with self._option():
-                self._regular_identifier_()
-            with self._option():
-                self._delimited_identifier_()
-            self._error('no available options')
-
-    @graken()
-    def _identifier_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._identifier_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _identifier_chain_(self):
-
-        def sep0():
-            self._token('.')
-
-        def block0():
-            self._identifier_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _identifier_chain_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._identifier_chain_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _qualified_name_(self):
-        with self._optional():
-            self._token('MODULE')
-            self._token('.')
-        self._identifier_chain_()
-
-    @graken()
-    def _parameter_name_(self):
-        self._token(':')
-        self._identifier_()
-
-    @graken()
-    def _parameter_name_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._parameter_name_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _par_identifier_list_(self):
-        self._token('(')
-        self._identifier_list_()
-        self._token(')')
-
-    @graken()
-    def _external_routine_name_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_()
-            with self._option():
-                self._character_string_literal_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_statement_name_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_()
-            with self._option():
-                self._descriptor_name_()
-            self._error('no available options')
-
-    @graken()
-    def _dynamic_cursor_name_(self):
-        with self._choice():
-            with self._option():
-                self._qualified_name_()
-            with self._option():
-                self._descriptor_name_()
-            self._error('no available options')
-
-    @graken()
-    def _descriptor_name_(self):
-        with self._optional():
-            self.__KW_GLOBAL_OR_LOCAL_()
-        self._simple_value_specification_()
-
-    @graken()
-    def _data_type_(self):
-        with self._choice():
-            with self._option():
-                self._reference_type_()
-            with self._option():
-                self._predefined_type_()
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                self._token('ROW')
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._identifier_()
-                    self._data_type_()
-                    with self._optional():
-                        self.__KW_REFERENCE_SCOPE_CHECK_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-            with self._option():
-                self._data_type_()
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('ARRAY')
-                        with self._option():
-                            self._token('MULTISET')
-                        self._error('expecting one of: ARRAY MULTISET')
-                with self._optional():
-                    self._l_bracket_trigraph_()
-                    self._integer_()
-                    self._r_bracket_trigraph_()
-            self._error('no available options')
-
-    @graken()
-    def _predefined_type_(self):
-        with self._choice():
-            with self._option():
-                self._token('INT')
-            with self._option():
-                self._token('DATE')
-            with self._option():
-                self._token('REAL')
-            with self._option():
-                self._token('BIGINT')
-            with self._option():
-                self._token('BOOLEAN')
-            with self._option():
-                self._token('INTEGER')
-            with self._option():
-                self._token('SMALLINT')
-            with self._option():
-                self._token('DOUBLE')
-                self._token('PRECISION')
-            with self._option():
-                self._token('FLOAT')
-                with self._optional():
-                    self._par_integer_()
-            with self._option():
-                self._token('INTERVAL')
-                self._interval_qualifier_()
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('NUMERIC')
-                        with self._option():
-                            self._token('DECIMAL')
-                        with self._option():
-                            self._token('DEC')
-                        self._error('expecting one of: DEC DECIMAL NUMERIC')
-                with self._optional():
-                    self._par_integer_optional_integer_()
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('TIME')
-                        with self._option():
-                            self._token('TIMESTAMP')
-                        self._error('expecting one of: TIME TIMESTAMP')
-                with self._optional():
-                    self._par_integer_()
-                with self._optional():
-                    self.__KW_WITH_WITHOUT_()
-                    self._token('TIME')
-                    self._token('ZONE')
-            with self._option():
-                self._char_str_type_()
-                with self._optional():
-                    self._token('CHARACTER')
-                    self._token('SET')
-                    self._identifier_chain_()
-                with self._optional():
-                    self._token('COLLATE')
-                    self._identifier_chain_()
-            self._error('expecting one of: BIGINT BOOLEAN DATE DEC DECIMAL DOUBLE FLOAT INT INTEGER NUMERIC REAL SMALLINT TIME TIMESTAMP')
-
-    @graken()
-    def _char_str_type_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_CHAR_()
-                with self._optional():
-                    self._par_integer_()
-            with self._option():
-                self.__KW_VCHAR_()
-                self._par_integer_()
-            with self._option():
-                self.__KW_NCLOB_()
-                with self._optional():
-                    self._lob_length_()
-            with self._option():
-                self.__KW_CLOB_()
-                with self._optional():
-                    self._lob_length_()
-            with self._option():
-                self.__KW_BLOB_()
-                with self._optional():
-                    self._lob_length_()
-            with self._option():
-                self.__KW_NCHAR_()
-                with self._optional():
-                    self._token('VARYING')
-                with self._optional():
-                    self._par_integer_()
-            self._error('no available options')
-
-    @graken()
-    def _lob_length_(self):
-        self._token('(')
-        self._integer_()
-        with self._optional():
-            self._multiplier_()
-        with self._optional():
-            self.__KW_CHAR_LENGTH_UNITS_()
-        self._token(')')
-
-    @graken()
-    def _reference_type_(self):
-        self._token('REF')
-        self._token('(')
-        self._identifier_chain_()
-        self._token(')')
-        with self._optional():
-            self._token('SCOPE')
-            self._qualified_name_()
-
-    @graken()
-    def _value_expression_primary_(self):
-        with self._choice():
-            with self._option():
-                self._par_value_expression_()
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _par_value_expression_(self):
-        self._token('(')
-        self._value_expression_()
-        self._token(')')
-
-    @graken()
-    def _nonpar_value_expression_primary_(self):
-        with self._choice():
-            with self._option():
-                self._subquery_()
-            with self._option():
-                self._qualified_name_()
-            with self._option():
-                self._case_expression_()
-            with self._option():
-                self._window_function_()
-            with self._option():
-                self._method_invocation_()
-            with self._option():
-                self._set_function_specification_()
-            with self._option():
-                self._unsigned_value_specification_()
-            with self._option():
-                self._collection_value_constructor_()
-            with self._option():
-                self._value_expression_primary_()
-                self._token('.')
-                self._identifier_()
-            with self._option():
-                with self._optional():
-                    self._token('NEW')
-                self._routine_invocation_()
-            with self._option():
-                self._token('NEXT')
-                self._token('VALUE')
-                self._token('FOR')
-                self._identifier_chain_()
-            with self._option():
-                self._token('DEREF')
-                self._token('(')
-                self._value_expression_primary_()
-                self._token(')')
-            with self._option():
-                self._token('ELEMENT')
-                self._token('(')
-                self._multiset_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('CAST')
-                self._token('(')
-                self._cast_operand_()
-                self._token('AS')
-                self._cast_target_()
-                self._token(')')
-            with self._option():
-                self._token('TREAT')
-                self._token('(')
-                self._value_expression_()
-                self._token('AS')
-                self._target_subtype_()
-                self._token(')')
-            with self._option():
-                self._identifier_chain_()
-                self._token('::')
-                self._identifier_()
-                with self._optional():
-                    self._token('(')
-                    with self._optional():
-                        self._sql_argument_list_()
-                    self._token(')')
-            with self._option():
-                self._array_value_expression_()
-                self._l_bracket_trigraph_()
-                self._numeric_value_expression_()
-                self._r_bracket_trigraph_()
-            with self._option():
-                self._value_expression_primary_()
-                self._dereference_operator_()
-                self._identifier_()
-                with self._optional():
-                    self._token('(')
-                    with self._optional():
-                        self._sql_argument_list_()
-                    self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _value_specification_(self):
-        with self._choice():
-            with self._option():
-                self._literal_()
-            with self._option():
-                self._general_value_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _unsigned_value_specification_(self):
-        with self._choice():
-            with self._option():
-                self._unsigned_literal_()
-            with self._option():
-                self._general_value_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _general_value_specification_(self):
-        with self._choice():
-            with self._option():
-                self._parameter_specification_()
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                self._token('?')
-            with self._option():
-                self._token('CURRENT_COLLATION')
-                self._token('(')
-                self._string_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('CURRENT_DEFAULT_TRANSFORM_GROUP')
-            with self._option():
-                self._token('CURRENT_PATH')
-            with self._option():
-                self._token('CURRENT_ROLE')
-            with self._option():
-                self._token('CURRENT_TRANSFORM_GROUP_FOR_TYPE')
-                self._identifier_chain_()
-            with self._option():
-                self._token('CURRENT_USER')
-            with self._option():
-                self._token('SESSION_USER')
-            with self._option():
-                self._token('SYSTEM_USER')
-            with self._option():
-                self._token('USER')
-            with self._option():
-                self._token('VALUE')
-            self._error('expecting one of: ? CURRENT_DEFAULT_TRANSFORM_GROUP CURRENT_PATH CURRENT_ROLE CURRENT_USER SESSION_USER SYSTEM_USER USER VALUE')
-
-    @graken()
-    def _simple_value_specification_(self):
-        with self._choice():
-            with self._option():
-                self._literal_()
-            with self._option():
-                self._parameter_name_()
-            with self._option():
-                self._identifier_chain_()
-            self._error('no available options')
-
-    @graken()
-    def _target_specification_(self):
-        with self._choice():
-            with self._option():
-                self._simple_target_specification_()
-            with self._option():
-                self._qualified_name_()
-                self._l_bracket_trigraph_()
-                self._simple_value_specification_()
-                self._r_bracket_trigraph_()
-            with self._option():
-                self._token('?')
-            self._error('expecting one of: ?')
-
-    @graken()
-    def _simple_target_specification_(self):
-        with self._choice():
-            with self._option():
-                self._parameter_specification_()
-            with self._option():
-                self._qualified_name_()
-            self._error('no available options')
-
-    @graken()
-    def _parameter_specification_(self):
-        self._parameter_name_()
-        with self._optional():
-            with self._optional():
-                self._token('INDICATOR')
-            self._parameter_name_()
-
-    @graken()
-    def _set_function_specification_(self):
-        with self._choice():
-            with self._option():
-                self._aggregate_function_()
-            with self._option():
-                self._token('GROUPING')
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._qualified_name_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _window_function_(self):
-        self._window_function_type_()
-        self._token('OVER')
-        self._window_name_or_specification_()
-
-    @graken()
-    def _window_function_type_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_RANK_FUNCTION_TYPE_()
-                self._empty_grouping_set_()
-            with self._option():
-                self._token('ROW_NUMBER')
-                self._empty_grouping_set_()
-            with self._option():
-                self._aggregate_function_()
-            self._error('no available options')
-
-    @graken()
-    def _window_name_or_specification_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_()
-            with self._option():
-                self._window_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _case_expression_(self):
-        with self._choice():
-            with self._option():
-                self._case_abbreviation_()
-            with self._option():
-                self._case_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _case_abbreviation_(self):
-        with self._choice():
-            with self._option():
-                self._token('NULLIF')
-                self._token('(')
-                self._value_expression_()
-                self._token(',')
-                self._value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('COALESCE')
-                self._token('(')
-                self._value_expression_list_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _value_expression_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._value_expression_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _case_specification_(self):
-        with self._choice():
-            with self._option():
-                self._simple_case_()
-            with self._option():
-                self._searched_case_()
-            self._error('no available options')
-
-    @graken()
-    def _simple_case_(self):
-        self._token('CASE')
-        self._case_operand_()
-
-        def block0():
-            self._simple_when_clause_()
-        self._positive_closure(block0)
-        with self._optional():
-            self._else_clause_()
-        self._token('END')
-
-    @graken()
-    def _searched_case_(self):
-        self._token('CASE')
-
-        def block0():
-            self._searched_when_clause_()
-        self._positive_closure(block0)
-        with self._optional():
-            self._else_clause_()
-        self._token('END')
-
-    @graken()
-    def _simple_when_clause_(self):
-        self._token('WHEN')
-        self._when_operand_()
-        self._token('THEN')
-        self._result_()
-
-    @graken()
-    def _searched_when_clause_(self):
-        self._token('WHEN')
-        self._boolean_value_expression_()
-        self._token('THEN')
-        self._result_()
-
-    @graken()
-    def _else_clause_(self):
-        self._token('ELSE')
-        self._result_()
-
-    @graken()
-    def _case_operand_(self):
-        with self._choice():
-            with self._option():
-                self._row_value_predicand_()
-            with self._option():
-                self._overlaps_predicate_()
-            self._error('no available options')
-
-    @graken()
-    def _when_operand_(self):
-        with self._choice():
-            with self._option():
-                self._row_value_predicand_()
-            with self._option():
-                self._comp_op_()
-                self._row_value_predicand_()
-            with self._option():
-                self._comp_op_()
-                self.__KW_QUANTIFIER_()
-                self._subquery_()
-            with self._option():
-                self._token('OVERLAPS')
-                self._row_value_predicand_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('IN')
-                self._in_predicate_value_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('MEMBER')
-                with self._optional():
-                    self._token('OF')
-                self._multiset_value_expression_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('SUBMULTISET')
-                with self._optional():
-                    self._token('OF')
-                self._multiset_value_expression_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('LIKE')
-                self._blob_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._blob_value_expression_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('LIKE')
-                self._character_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._character_value_expression_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('SIMILAR')
-                self._token('TO')
-                self._character_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._character_value_expression_()
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('BETWEEN')
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('ASYMMETRIC')
-                        with self._option():
-                            self._token('SYMMETRIC')
-                        self._error('expecting one of: ASYMMETRIC SYMMETRIC')
-                self._row_value_predicand_()
-                self._token('AND')
-                self._row_value_predicand_()
-            with self._option():
-                self._token('MATCH')
-                with self._optional():
-                    self._token('UNIQUE')
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('SIMPLE')
-                        with self._option():
-                            self._token('PARTIAL')
-                        with self._option():
-                            self._token('FULL')
-                        self._error('expecting one of: FULL PARTIAL SIMPLE')
-                self._subquery_()
-            with self._option():
-                self._token('IS')
-                self._token('DISTINCT')
-                self._token('FROM')
-                self._row_value_predicand_()
-            with self._option():
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('OF')
-                self._token('(')
-                self._type_list_()
-                self._token(')')
-            with self._option():
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('A')
-                self._token('SET')
-            with self._option():
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('NULL')
-            self._error('expecting one of: IS')
-
-    @graken()
-    def _result_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_()
-            with self._option():
-                self._token('NULL')
-            self._error('expecting one of: NULL')
-
-    @graken()
-    def _cast_operand_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_()
-            with self._option():
-                self.__KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION_()
-            self._error('no available options')
-
-    @graken()
-    def _cast_target_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                self._data_type_()
-            self._error('no available options')
-
-    @graken()
-    def _target_subtype_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                self._reference_type_()
-            self._error('no available options')
-
-    @graken()
-    def _method_invocation_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_primary_()
-                self._token('.')
-                self._identifier_()
-                with self._optional():
-                    self._token('(')
-                    with self._optional():
-                        self._sql_argument_list_()
-                    self._token(')')
-            with self._option():
-                self._token('(')
-                self._value_expression_primary_()
-                self._token('AS')
-                self._data_type_()
-                self._token(')')
-                self._token('.')
-                self._identifier_()
-                with self._optional():
-                    self._token('(')
-                    with self._optional():
-                        self._sql_argument_list_()
-                    self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _dereference_operator_(self):
-        self._token('->')
-
-    @graken()
-    def _value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._common_value_expression_()
-            with self._option():
-                self._boolean_value_expression_()
-            with self._option():
-                self._row_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _common_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._numeric_value_expression_()
-            with self._option():
-                self._string_value_expression_()
-            with self._option():
-                self._datetime_value_expression_()
-            with self._option():
-                self._interval_value_expression_()
-            with self._option():
-                self._value_expression_primary_()
-            with self._option():
-                self._value_expression_primary_()
-            with self._option():
-                self._collection_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _collection_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._array_value_expression_()
-            with self._option():
-                self._multiset_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _collection_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._array_value_constructor_()
-            with self._option():
-                self._multiset_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _numeric_value_expression_(self):
-        with self._optional():
-            self._numeric_value_expression_()
-            self._sign_()
-        self._term_()
-
-    @graken()
-    def _par_numeric_value_expression_(self):
-        self._token('(')
-        self._numeric_value_expression_()
-        self._token(')')
-
-    @graken()
-    def _term_(self):
-        with self._optional():
-            self._term_()
-            self._mult_div_()
-        self._factor_()
-
-    @graken()
-    def _factor_(self):
-        with self._optional():
-            self._sign_()
-        self._numeric_primary_()
-
-    @graken()
-    def _numeric_primary_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_primary_()
-            with self._option():
-                self._numeric_value_function_()
-            self._error('no available options')
-
-    @graken()
-    def _numeric_value_function_(self):
-        with self._choice():
-            with self._option():
-                self._position_expression_()
-            with self._option():
-                self._length_expression_()
-            with self._option():
-                self._token('LN')
-                self._par_numeric_value_expression_()
-            with self._option():
-                self._token('ABS')
-                self._par_numeric_value_expression_()
-            with self._option():
-                self._token('EXP')
-                self._par_numeric_value_expression_()
-            with self._option():
-                self._token('SQRT')
-                self._par_numeric_value_expression_()
-            with self._option():
-                self._token('FLOOR')
-                self._par_numeric_value_expression_()
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('CEIL')
-                        with self._option():
-                            self._token('CEILING')
-                        self._error('expecting one of: CEIL CEILING')
-                self._par_numeric_value_expression_()
-            with self._option():
-                self._token('CARDINALITY')
-                self._token('(')
-                self._collection_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('EXTRACT')
-                self._token('(')
-                self.__KW_EXTRACT_FIELD_()
-                self._token('FROM')
-                self._extract_source_()
-                self._token(')')
-            with self._option():
-                self._token('MOD')
-                self._token('(')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('POWER')
-                self._token('(')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('WIDTH_BUCKET')
-                self._token('(')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _position_expression_(self):
-        with self._choice():
-            with self._option():
-                self._token('POSITION')
-                self._token('(')
-                self._string_value_expression_()
-                self._token('IN')
-                self._string_value_expression_()
-                with self._optional():
-                    self._token('USING')
-                    self.__KW_CHAR_LENGTH_UNITS_()
-                self._token(')')
-            with self._option():
-                self._token('POSITION')
-                self._token('(')
-                self._blob_value_expression_()
-                self._token('IN')
-                self._blob_value_expression_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _length_expression_(self):
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('CHAR_LENGTH')
-                with self._option():
-                    self._token('CHARACTER_LENGTH')
-                with self._option():
-                    self._token('OCTET_LENGTH')
-                self._error('expecting one of: CHARACTER_LENGTH CHAR_LENGTH OCTET_LENGTH')
-        self._token('(')
-        self._string_value_expression_()
-        with self._optional():
-            self._token('USING')
-            self.__KW_CHAR_LENGTH_UNITS_()
-        self._token(')')
-
-    @graken()
-    def _extract_source_(self):
-        with self._choice():
-            with self._option():
-                self._datetime_value_expression_()
-            with self._option():
-                self._interval_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _string_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._character_value_expression_()
-            with self._option():
-                self._blob_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _character_value_expression_(self):
-        with self._optional():
-            self._character_value_expression_()
-            self._token('||')
-        self._character_primary_()
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _character_primary_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_primary_()
-            with self._option():
-                self._string_value_function_()
-            self._error('no available options')
-
-    @graken()
-    def _blob_value_expression_(self):
-        with self._optional():
-            self._blob_value_expression_()
-            self._token('||')
-        self._character_primary_()
-
-    @graken()
-    def _string_value_function_(self):
-        with self._choice():
-            with self._option():
-                self._character_value_function_()
-            with self._option():
-                self._blob_value_function_()
-            self._error('no available options')
-
-    @graken()
-    def _character_value_function_(self):
-        with self._choice():
-            with self._option():
-                self._character_overlay_function_()
-            with self._option():
-                self._character_substring_function_()
-            with self._option():
-                self._regular_expression_substring_function_()
-            with self._option():
-                self._token('NORMALIZE')
-                self._token('(')
-                self._character_value_expression_()
-                self._token(')')
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('UPPER')
-                        with self._option():
-                            self._token('LOWER')
-                        self._error('expecting one of: LOWER UPPER')
-                self._token('(')
-                self._character_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('CONVERT')
-                self._token('(')
-                self._character_value_expression_()
-                self._token('USING')
-                self._identifier_chain_()
-                self._token(')')
-            with self._option():
-                self._token('TRANSLATE')
-                self._token('(')
-                self._character_value_expression_()
-                self._token('USING')
-                self._identifier_chain_()
-                self._token(')')
-            with self._option():
-                self._token('TRIM')
-                self._token('(')
-                with self._optional():
-                    with self._optional():
-                        self.__KW_TRIM_SPECIFICATION_()
-                    with self._optional():
-                        self._character_value_expression_()
-                    self._token('FROM')
-                self._character_value_expression_()
-                self._token(')')
-            with self._option():
-                self._value_expression_primary_()
-                self._token('.')
-                self._token('SPECIFICTYPE')
-            self._error('no available options')
-
-    @graken()
-    def _character_substring_function_(self):
-        self._token('SUBSTRING')
-        self._token('(')
-        self._character_value_expression_()
-        self._token('FROM')
-        self._numeric_value_expression_()
-        with self._optional():
-            self._token('FOR')
-            self._numeric_value_expression_()
-        with self._optional():
-            self._token('USING')
-            self.__KW_CHAR_LENGTH_UNITS_()
-        self._token(')')
-
-    @graken()
-    def _regular_expression_substring_function_(self):
-        self._token('SUBSTRING')
-        self._token('(')
-        self._character_value_expression_()
-        self._token('SIMILAR')
-        self._character_value_expression_()
-        self._token('ESCAPE')
-        self._character_value_expression_()
-        self._token(')')
-
-    @graken()
-    def _character_overlay_function_(self):
-        self._token('OVERLAY')
-        self._token('(')
-        self._character_value_expression_()
-        self._token('PLACING')
-        self._character_value_expression_()
-        self._token('FROM')
-        self._numeric_value_expression_()
-        with self._optional():
-            self._token('FOR')
-            self._numeric_value_expression_()
-        with self._optional():
-            self._token('USING')
-            self.__KW_CHAR_LENGTH_UNITS_()
-        self._token(')')
-
-    @graken()
-    def _blob_value_function_(self):
-        with self._choice():
-            with self._option():
-                self._token('SUBSTRING')
-                self._token('(')
-                self._blob_value_expression_()
-                self._token('FROM')
-                self._numeric_value_expression_()
-                with self._optional():
-                    self._token('FOR')
-                    self._numeric_value_expression_()
-                self._token(')')
-            with self._option():
-                self._token('TRIM')
-                self._token('(')
-                with self._optional():
-                    with self._optional():
-                        self.__KW_TRIM_SPECIFICATION_()
-                    with self._optional():
-                        self._blob_value_expression_()
-                    self._token('FROM')
-                self._blob_value_expression_()
-                self._token(')')
-            with self._option():
-                self._blob_overlay_function_()
-            self._error('no available options')
-
-    @graken()
-    def _blob_overlay_function_(self):
-        self._token('OVERLAY')
-        self._token('(')
-        self._blob_value_expression_()
-        self._token('PLACING')
-        self._blob_value_expression_()
-        self._token('FROM')
-        self._numeric_value_expression_()
-        with self._optional():
-            self._token('FOR')
-            self._numeric_value_expression_()
-        self._token(')')
-
-    @graken()
-    def _datetime_value_expression_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._interval_value_expression_()
-                    self._token('+')
-                self._datetime_factor_()
-            with self._option():
-                self._datetime_value_expression_()
-                self._sign_()
-                self._interval_term_()
-            self._error('no available options')
-
-    @graken()
-    def _datetime_factor_(self):
-        self._datetime_primary_()
-        with self._optional():
-            self._token('AT')
-            self._time_zone_specifier_()
-
-    @graken()
-    def _datetime_primary_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_primary_()
-            with self._option():
-                self._datetime_value_function_()
-            self._error('no available options')
-
-    @graken()
-    def _time_zone_specifier_(self):
-        with self._choice():
-            with self._option():
-                self._token('LOCAL')
-            with self._option():
-                self._token('TIME')
-                self._token('ZONE')
-                self._interval_primary_()
-            self._error('expecting one of: LOCAL')
-
-    @graken()
-    def _datetime_value_function_(self):
-        with self._choice():
-            with self._option():
-                self._token('CURRENT_DATE')
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('CURRENT_TIME')
-                        with self._option():
-                            self._token('CURRENT_TIMESTAMP')
-                        with self._option():
-                            self._token('LOCALTIME')
-                        with self._option():
-                            self._token('LOCALTIMESTAMP')
-                        self._error('expecting one of: CURRENT_TIME CURRENT_TIMESTAMP LOCALTIME LOCALTIMESTAMP')
-                with self._optional():
-                    self._par_integer_()
-            self._error('expecting one of: CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP LOCALTIME LOCALTIMESTAMP')
-
-    @graken()
-    def _interval_value_expression_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._interval_value_expression_()
-                    self._sign_()
-                self._interval_term_()
-            with self._option():
-                self._token('(')
-                self._datetime_value_expression_()
-                self._token('-')
-                self._datetime_factor_()
-                self._token(')')
-                self._interval_qualifier_()
-            self._error('no available options')
-
-    @graken()
-    def _interval_term_(self):
-        with self._choice():
-            with self._option():
-                self._interval_term_()
-                self._mult_div_()
-                self._factor_()
-            with self._option():
-                with self._optional():
-                    self._term_()
-                    self._token('*')
-                with self._optional():
-                    self._sign_()
-                self._interval_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _interval_primary_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_primary_()
-                with self._optional():
-                    self._interval_qualifier_()
-            with self._option():
-                self._token('ABS')
-                self._token('(')
-                self._interval_value_expression_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _boolean_value_expression_(self):
-        with self._optional():
-            self._boolean_value_expression_()
-            self._token('OR')
-        self._boolean_term_()
-
-    @graken()
-    def _boolean_term_(self):
-        with self._optional():
-            self._boolean_term_()
-            self._token('AND')
-        with self._optional():
-            self._token('NOT')
-        self._boolean_primary_()
-        with self._optional():
-            self._token('IS')
-            with self._optional():
-                self._token('NOT')
-            self._boolean_literal_()
-
-    @graken()
-    def _boolean_primary_(self):
-        with self._choice():
-            with self._option():
-                self._predicate_()
-            with self._option():
-                self._boolean_predicand_()
-            self._error('no available options')
-
-    @graken()
-    def _boolean_predicand_(self):
-        with self._choice():
-            with self._option():
-                self._par_boolean_value_expression_()
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _par_boolean_value_expression_(self):
-        self._token('(')
-        self._boolean_value_expression_()
-        self._token(')')
-
-    @graken()
-    def _array_value_expression_(self):
-        with self._optional():
-            self._array_value_expression_()
-            self._token('||')
-        self._value_expression_primary_()
-
-    @graken()
-    def _array_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._token('ARRAY')
-                self._l_bracket_trigraph_()
-                self._value_expression_list_()
-                self._r_bracket_trigraph_()
-            with self._option():
-                self._token('ARRAY')
-                self._token('(')
-                self._query_expression_()
-                with self._optional():
-                    self._order_by_clause_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _multiset_value_expression_(self):
-        with self._optional():
-            self._multiset_value_expression_()
-            self._token('MULTISET')
-            self.__KW_UNION_EXCEPT_()
-            with self._optional():
-                self.__KW_ALL_DISTINCT_()
-        self._multiset_term_()
-
-    @graken()
-    def _multiset_term_(self):
-        with self._optional():
-            self._multiset_term_()
-            self._token('MULTISET')
-            self._token('INTERSECT')
-            with self._optional():
-                self.__KW_ALL_DISTINCT_()
-        self._multiset_primary_()
-
-    @graken()
-    def _multiset_primary_(self):
-        with self._choice():
-            with self._option():
-                self._token('SET')
-                self._token('(')
-                self._multiset_value_expression_()
-                self._token(')')
-            with self._option():
-                self._value_expression_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _multiset_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._token('MULTISET')
-                self._l_bracket_trigraph_()
-                self._value_expression_list_()
-                self._r_bracket_trigraph_()
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('MULTISET')
-                        with self._option():
-                            self._token('TABLE')
-                        self._error('expecting one of: MULTISET TABLE')
-                self._token('(')
-                self._query_expression_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _row_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._common_value_expression_()
-            with self._option():
-                self._boolean_value_expression_()
-            with self._option():
-                self._explicit_row_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _explicit_row_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._token('(')
-                self._value_expression_()
-                self._token(',')
-                self._value_expression_list_()
-                self._token(')')
-            with self._option():
-                self._token('ROW')
-                self._token('(')
-                self._value_expression_list_()
-                self._token(')')
-            with self._option():
-                self._subquery_()
-            self._error('no available options')
-
-    @graken()
-    def _contextually_typed_row_value_constructor_(self):
-        with self._choice():
-            with self._option():
-                self._common_value_expression_()
-            with self._option():
-                self._boolean_value_expression_()
-            with self._option():
-                self.__KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION_()
-            with self._option():
-                self._token('(')
-                self._contextually_typed_row_value_constructor_element_()
-                self._token(',')
-                self._contextually_typed_row_value_constructor_list_()
-                self._token(')')
-            with self._option():
-                self._token('ROW')
-                self._token('(')
-                self._contextually_typed_row_value_constructor_list_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _contextually_typed_row_value_constructor_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._contextually_typed_row_value_constructor_element_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _contextually_typed_row_value_constructor_element_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_()
-            with self._option():
-                self.__KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION_()
-            self._error('no available options')
-
-    @graken()
-    def _row_value_constructor_predicand_(self):
-        with self._choice():
-            with self._option():
-                self._common_value_expression_()
-            with self._option():
-                self._boolean_predicand_()
-            with self._option():
-                self._explicit_row_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _row_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            with self._option():
-                self._explicit_row_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _table_row_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            with self._option():
-                self._row_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _contextually_typed_row_value_expression_(self):
-        with self._choice():
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            with self._option():
-                self._contextually_typed_row_value_constructor_()
-            self._error('no available options')
-
-    @graken()
-    def _row_value_predicand_(self):
-        with self._choice():
-            with self._option():
-                self._nonpar_value_expression_primary_()
-            with self._option():
-                self._row_value_constructor_predicand_()
-            self._error('no available options')
-
-    @graken()
-    def _table_expression_(self):
-        self._from_clause_()
-        with self._optional():
-            self._where_clause_()
-        with self._optional():
-            self._group_by_clause_()
-        with self._optional():
-            self._having_clause_()
-        with self._optional():
-            self._window_clause_()
-
-    @graken()
-    def _from_clause_(self):
-        self._token('FROM')
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._table_reference_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _table_reference_(self):
-        self._table_primary_or_joined_table_()
-        with self._optional():
-            self._sample_clause_()
-
-    @graken()
-    def _table_primary_or_joined_table_(self):
-        with self._choice():
-            with self._option():
-                self._table_primary_()
-            with self._option():
-                self._joined_table_()
-            self._error('no available options')
-
-    @graken()
-    def _sample_clause_(self):
-        self._token('TABLESAMPLE')
-        self.__KW_SAMPLE_METHOD_()
-        self._par_numeric_value_expression_()
-        with self._optional():
-            self._repeatable_clause_()
-
-    @graken()
-    def _repeatable_clause_(self):
-        self._token('REPEATABLE')
-        self._par_numeric_value_expression_()
-
-    @graken()
-    def _table_primary_(self):
-        with self._choice():
-            with self._option():
-                self._qualified_name_()
-                with self._optional():
-                    self._as_clause_()
-                    with self._optional():
-                        self._par_identifier_list_()
-            with self._option():
-                self._subquery_()
-                self._as_clause_()
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('LATERAL')
-                self._subquery_()
-                self._as_clause_()
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('UNNEST')
-                self._token('(')
-                self._collection_value_expression_()
-                self._token(')')
-                with self._optional():
-                    self._token('WITH')
-                    self._token('ORDINALITY')
-                self._as_clause_()
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('TABLE')
-                self._token('(')
-                self._collection_value_expression_()
-                self._token(')')
-                self._as_clause_()
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('ONLY')
-                self._token('(')
-                self._qualified_name_()
-                self._token(')')
-                with self._optional():
-                    self._as_clause_()
-                    with self._optional():
-                        self._par_identifier_list_()
-            with self._option():
-                self._token('(')
-                self._joined_table_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _joined_table_(self):
-        self._table_reference_()
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._qualified_join_()
-                with self._option():
-                    self._unqualified_join_()
-                self._error('no available options')
-
-    @graken()
-    def _unqualified_join_(self):
-        self.__KW_UNQUALIFIED_JOIN_()
-        self._table_primary_()
-
-    @graken()
-    def _qualified_join_(self):
-        with self._optional():
-            self.__KW_JOIN_TYPE_()
-        self._token('JOIN')
-        self._table_reference_()
-        self._join_specification_()
-
-    @graken()
-    def _join_specification_(self):
-        with self._choice():
-            with self._option():
-                self._token('ON')
-                self._boolean_value_expression_()
-            with self._option():
-                self._token('USING')
-                self._par_identifier_list_()
-            self._error('no available options')
-
-    @graken()
-    def _where_clause_(self):
-        self._token('WHERE')
-        self._boolean_value_expression_()
-
-    @graken()
-    def _group_by_clause_(self):
-        self._token('GROUP')
-        self._token('BY')
-        with self._optional():
-            self.__KW_SET_QUANTIFIER_()
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._grouping_element_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _grouping_element_(self):
-        with self._choice():
-            with self._option():
-                self._ordinary_grouping_set_()
-            with self._option():
-                self._cube_list_()
-            with self._option():
-                self._rollup_list_()
-            with self._option():
-                self._empty_grouping_set_()
-            with self._option():
-                self._grouping_sets_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _ordinary_grouping_set_(self):
-        with self._choice():
-            with self._option():
-                self._grouping_column_reference_()
-            with self._option():
-                self._token('(')
-                self._grouping_column_reference_list_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _grouping_column_reference_(self):
-        self._qualified_name_()
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _grouping_column_reference_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._grouping_column_reference_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _rollup_list_(self):
-        self._token('ROLLUP')
-        self._token('(')
-        self._ordinary_grouping_set_list_()
-        self._token(')')
-
-    @graken()
-    def _ordinary_grouping_set_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._ordinary_grouping_set_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _cube_list_(self):
-        self._token('CUBE')
-        self._token('(')
-        self._ordinary_grouping_set_list_()
-        self._token(')')
-
-    @graken()
-    def _grouping_sets_specification_(self):
-        self._token('GROUPING')
-        self._token('SETS')
-        self._token('(')
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._grouping_set_()
-        self._positive_closure(block0, prefix=sep0)
-        self._token(')')
-
-    @graken()
-    def _grouping_set_(self):
-        with self._choice():
-            with self._option():
-                self._ordinary_grouping_set_()
-            with self._option():
-                self._rollup_list_()
-            with self._option():
-                self._cube_list_()
-            with self._option():
-                self._grouping_sets_specification_()
-            with self._option():
-                self._empty_grouping_set_()
-            self._error('no available options')
-
-    @graken()
-    def _empty_grouping_set_(self):
-        self._token('(')
-        self._token(')')
-
-    @graken()
-    def _having_clause_(self):
-        self._token('HAVING')
-        self._boolean_value_expression_()
-
-    @graken()
-    def _window_clause_(self):
-        self._token('WINDOW')
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._window_definition_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _window_definition_(self):
-        self._identifier_()
-        self._token('AS')
-        self._window_specification_()
-
-    @graken()
-    def _window_specification_(self):
-        self._token('(')
-        with self._optional():
-            self._identifier_()
-        with self._optional():
-            self._window_partition_clause_()
-        with self._optional():
-            self._order_by_clause_()
-        with self._optional():
-            self._window_frame_clause_()
-        self._token(')')
-
-    @graken()
-    def _window_partition_clause_(self):
-        self._token('PARTITION')
-        self._token('BY')
-        self._grouping_column_reference_list_()
-
-    @graken()
-    def _window_frame_clause_(self):
-        self.__KW_WINDOW_FRAME_UNITS_()
-        self._window_frame_extent_()
-        with self._optional():
-            self._token('EXCLUDE')
-            with self._optional():
-                with self._choice():
-                    with self._option():
-                        self._token('CURRENT')
-                        self._token('ROW')
-                    with self._option():
-                        self._token('GROUP')
-                    with self._option():
-                        self._token('TIES')
-                    with self._option():
-                        self._token('NO')
-                        self._token('OTHERS')
-                    self._error('expecting one of: CURRENT GROUP NO TIES')
-
-    @graken()
-    def _window_frame_extent_(self):
-        with self._choice():
-            with self._option():
-                self._window_frame_start_()
-            with self._option():
-                self._token('BETWEEN')
-                self._window_frame_bound_()
-                self._token('AND')
-                self._window_frame_bound_()
-            self._error('no available options')
-
-    @graken()
-    def _window_frame_start_(self):
-        with self._choice():
-            with self._option():
-                self._token('UNBOUNDED')
-                self._token('PRECEDING')
-            with self._option():
-                self._unsigned_value_specification_()
-                self._token('PRECEDING')
-            with self._option():
-                self._token('CURRENT')
-                self._token('ROW')
-            self._error('expecting one of: CURRENT UNBOUNDED')
-
-    @graken()
-    def _window_frame_bound_(self):
-        with self._choice():
-            with self._option():
-                self._window_frame_start_()
-            with self._option():
-                self._token('UNBOUNDED')
-                self._token('FOLLOWING')
-            with self._option():
-                self._unsigned_value_specification_()
-                self._token('FOLLOWING')
-            self._error('expecting one of: UNBOUNDED')
-
-    @graken()
-    def _select_list_(self):
-        with self._choice():
-            with self._option():
-                self._token('*')
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._select_sublist_()
-                self._positive_closure(block0, prefix=sep0)
-            self._error('expecting one of: *')
-
-    @graken()
-    def _select_sublist_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_()
-                with self._optional():
-                    self._as_clause_()
-            with self._option():
-                self._qualified_asterisk_()
-            self._error('no available options')
-
-    @graken()
-    def _qualified_asterisk_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_chain_()
-                self._token('.')
-                self._token('*')
-            with self._option():
-                self._value_expression_primary_()
-                self._token('.')
-                self._token('*')
-                with self._optional():
-                    self._token('AS')
-                    self._par_identifier_list_()
-            self._error('no available options')
-
-    @graken()
-    def _as_clause_(self):
-        with self._optional():
-            self._token('AS')
-        self._identifier_()
-
-    @graken()
-    def _query_expression_(self):
-        with self._optional():
-            self._with_clause_()
-        self._query_expression_body_()
-
-    @graken()
-    def _with_clause_(self):
-        self._token('WITH')
-        with self._optional():
-            self._token('RECURSIVE')
-        self._with_list_()
-
-    @graken()
-    def _with_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._with_element_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _with_element_(self):
-        self._identifier_()
-        with self._optional():
-            self._par_identifier_list_()
-        self._token('AS')
-        self._token('(')
-        self._query_expression_()
-        self._token(')')
-        with self._optional():
-            self._search_or_cycle_clause_()
-
-    @graken()
-    def _query_expression_body_(self):
-        with self._choice():
-            with self._option():
-                self._non_join_query_expression_()
-            with self._option():
-                self._joined_table_()
-            self._error('no available options')
-
-    @graken()
-    def _non_join_query_expression_(self):
-        with self._choice():
-            with self._option():
-                self._non_join_query_term_()
-            with self._option():
-                self._query_expression_body_()
-                self.__KW_UNION_EXCEPT_()
-                with self._optional():
-                    self.__KW_ALL_DISTINCT_()
-                with self._optional():
-                    self._corresponding_spec_()
-                self._query_term_()
-            self._error('no available options')
-
-    @graken()
-    def _query_term_(self):
-        with self._choice():
-            with self._option():
-                self._non_join_query_term_()
-            with self._option():
-                self._joined_table_()
-            self._error('no available options')
-
-    @graken()
-    def _non_join_query_term_(self):
-        with self._choice():
-            with self._option():
-                self._non_join_query_primary_()
-            with self._option():
-                self._query_term_()
-                self._token('INTERSECT')
-                with self._optional():
-                    self.__KW_ALL_DISTINCT_()
-                with self._optional():
-                    self._corresponding_spec_()
-                self._query_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _query_primary_(self):
-        with self._choice():
-            with self._option():
-                self._non_join_query_primary_()
-            with self._option():
-                self._joined_table_()
-            self._error('no available options')
-
-    @graken()
-    def _non_join_query_primary_(self):
-        with self._choice():
-            with self._option():
-                self._simple_table_()
-            with self._option():
-                self._token('(')
-                self._non_join_query_expression_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _simple_table_(self):
-        with self._choice():
-            with self._option():
-                self._token('SELECT')
-                with self._optional():
-                    self.__KW_SET_QUANTIFIER_()
-                self._select_list_()
-                self._table_expression_()
-            with self._option():
-                self._token('VALUES')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._table_row_value_expression_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                self._token('TABLE')
-                self._qualified_name_()
-            self._error('no available options')
-
-    @graken()
-    def _corresponding_spec_(self):
-        self._token('CORRESPONDING')
-        with self._optional():
-            self._token('BY')
-            self._par_identifier_list_()
-
-    @graken()
-    def _search_or_cycle_clause_(self):
-        with self._choice():
-            with self._option():
-                self._token('SEARCH')
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('DEPTH')
-                        with self._option():
-                            self._token('BREADTH')
-                        self._error('expecting one of: BREADTH DEPTH')
-                self._token('FIRST')
-                self._token('BY')
-                self._sort_specification_list_()
-                self._token('SET')
-                self._identifier_()
-                with self._optional():
-                    self._cycle_clause_()
-            with self._option():
-                self._cycle_clause_()
-            self._error('no available options')
-
-    @graken()
-    def _cycle_clause_(self):
-        self._token('CYCLE')
-        self._identifier_list_()
-        self._token('SET')
-        self._identifier_()
-        self._token('TO')
-        self._value_expression_()
-        self._token('DEFAULT')
-        self._value_expression_()
-        self._token('USING')
-        self._identifier_()
-
-    @graken()
-    def _subquery_(self):
-        self._token('(')
-        self._query_expression_()
-        self._token(')')
-
-    @graken()
-    def _predicate_(self):
-        with self._choice():
-            with self._option():
-                self._row_value_predicand_()
-                self._comp_op_()
-                self._row_value_predicand_()
-            with self._option():
-                self._row_value_predicand_()
-                self._comp_op_()
-                self.__KW_QUANTIFIER_()
-                self._subquery_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('IN')
-                self._in_predicate_value_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('BETWEEN')
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('ASYMMETRIC')
-                        with self._option():
-                            self._token('SYMMETRIC')
-                        self._error('expecting one of: ASYMMETRIC SYMMETRIC')
-                self._row_value_predicand_()
-                self._token('AND')
-                self._row_value_predicand_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('SIMILAR')
-                self._token('TO')
-                self._character_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._character_value_expression_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('SUBMULTISET')
-                with self._optional():
-                    self._token('OF')
-                self._multiset_value_expression_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('MEMBER')
-                with self._optional():
-                    self._token('OF')
-                self._multiset_value_expression_()
-            with self._option():
-                self._row_value_predicand_()
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('NULL')
-            with self._option():
-                self._row_value_predicand_()
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('A')
-                self._token('SET')
-            with self._option():
-                self._row_value_predicand_()
-                self._token('IS')
-                self._token('DISTINCT')
-                self._token('FROM')
-                self._row_value_predicand_()
-            with self._option():
-                self._row_value_predicand_()
-                self._token('MATCH')
-                with self._optional():
-                    self._token('UNIQUE')
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('SIMPLE')
-                        with self._option():
-                            self._token('PARTIAL')
-                        with self._option():
-                            self._token('FULL')
-                        self._error('expecting one of: FULL PARTIAL SIMPLE')
-                self._subquery_()
-            with self._option():
-                self._string_value_expression_()
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('NORMALIZED')
-            with self._option():
-                self._token('EXISTS')
-                self._subquery_()
-            with self._option():
-                self._token('UNIQUE')
-                self._subquery_()
-            with self._option():
-                self._overlaps_predicate_()
-            with self._option():
-                self._like_predicate_()
-            with self._option():
-                self._row_value_predicand_()
-                self._token('IS')
-                with self._optional():
-                    self._token('NOT')
-                self._token('OF')
-                self._token('(')
-                self._type_list_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
     def _comp_op_(self):
         with self._choice():
             with self._option():
@@ -2572,2999 +124,9 @@ class SqlParser(Parser):
             self._error('expecting one of: < <= <> = > >=')
 
     @graken()
-    def _in_predicate_value_(self):
-        with self._choice():
-            with self._option():
-                self._subquery_()
-            with self._option():
-                self._token('(')
-                self._in_value_list_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _in_value_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._row_value_expression_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _like_predicate_(self):
-        with self._choice():
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('LIKE')
-                self._character_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._character_value_expression_()
-            with self._option():
-                self._row_value_predicand_()
-                with self._optional():
-                    self._token('NOT')
-                self._token('LIKE')
-                self._blob_value_expression_()
-                with self._optional():
-                    self._token('ESCAPE')
-                    self._blob_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _regular_expression_(self):
-        with self._optional():
-            self._regular_expression_()
-            self._token('|')
-        self._regular_term_()
-
-    @graken()
-    def _regular_term_(self):
-        with self._optional():
-            self._regular_term_()
-        self._regular_factor_()
-
-    @graken()
-    def _regular_factor_(self):
-        self._regular_primary_()
-        with self._optional():
-            with self._choice():
-                with self._option():
-                    self._token('*')
-                with self._option():
-                    self._token('+')
-                with self._option():
-                    self._token('?')
-                with self._option():
-                    self._repeat_factor_()
-                self._error('expecting one of: * + ?')
-
-    @graken()
-    def _repeat_factor_(self):
-        self._token('{')
-        self._integer_()
-        with self._optional():
-            self._token(',')
-            with self._optional():
-                self._integer_()
-        self._token('}')
-
-    @graken()
-    def _regular_primary_(self):
-        with self._choice():
-            with self._option():
-                self._character_specifier_()
-            with self._option():
-                self._token('%')
-            with self._option():
-                self._regular_character_set_()
-            with self._option():
-                self._token('(')
-                self._regular_expression_()
-                self._token(')')
-            self._error('expecting one of: %')
-
-    @graken()
-    def _character_specifier_(self):
-        with self._choice():
-            with self._option():
-                self._pattern(r'[^\n]')
-            with self._option():
-                self._token('\\')
-            self._error('expecting one of: [^\\n] \\')
-
-    @graken()
-    def _regular_character_set_(self):
-        with self._choice():
-            with self._option():
-                self._token('_')
-            with self._option():
-                self._token('[')
-                with self._optional():
-                    self._token('^')
-
-                def block0():
-                    self._character_enumeration_()
-                self._positive_closure(block0)
-                self._token(']')
-            with self._option():
-                self._token('[')
-
-                def block1():
-                    self._character_enumeration_()
-                self._positive_closure(block1)
-                self._token('^')
-
-                def block2():
-                    self._character_enumeration_()
-                self._positive_closure(block2)
-                self._token(']')
-            self._error('expecting one of: _')
-
-    @graken()
-    def _character_enumeration_(self):
-        with self._choice():
-            with self._option():
-                self._character_specifier_()
-                with self._optional():
-                    self._token('-')
-                    self._character_specifier_()
-            with self._option():
-                self._token('[')
-                self._token(':')
-                self._identifier_()
-                self._token(':')
-                self._token(']')
-            self._error('no available options')
-
-    @graken()
-    def _overlaps_predicate_(self):
-        self._row_value_predicand_()
-        self._token('OVERLAPS')
-        self._row_value_predicand_()
-
-    @graken()
-    def _type_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            with self._optional():
-                self._token('ONLY')
-            self._identifier_chain_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _interval_qualifier_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_NON_SECOND_PRIMARY_DATETIME_FIELD_()
-                with self._optional():
-                    self._par_integer_()
-                self._token('TO')
-                self._end_field_()
-            with self._option():
-                self._single_datetime_field_()
-            self._error('no available options')
-
-    @graken()
-    def _end_field_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_NON_SECOND_PRIMARY_DATETIME_FIELD_()
-            with self._option():
-                self._token('SECOND')
-                with self._optional():
-                    self._par_integer_()
-            self._error('expecting one of: SECOND')
-
-    @graken()
-    def _single_datetime_field_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_NON_SECOND_PRIMARY_DATETIME_FIELD_()
-                with self._optional():
-                    self._par_integer_()
-            with self._option():
-                self._token('SECOND')
-                with self._optional():
-                    self._par_integer_optional_integer_()
-            self._error('expecting one of: SECOND')
-
-    @graken()
-    def _path_specification_(self):
-        self._token('PATH')
-        self._identifier_chain_list_()
-
-    @graken()
-    def _routine_invocation_(self):
-        self._identifier_chain_()
+    def _empty_grouping_set_(self):
         self._token('(')
-        with self._optional():
-            self._sql_argument_list_()
         self._token(')')
-
-    @graken()
-    def _sql_argument_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._sql_argument_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _sql_argument_(self):
-        with self._choice():
-            with self._option():
-                self._value_expression_()
-                with self._optional():
-                    self._token('AS')
-                    self._identifier_chain_()
-            with self._option():
-                self._target_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _specific_routine_designator_(self):
-        with self._choice():
-            with self._option():
-                self._token('SPECIFIC')
-                self.__KW_ROUTINE_TYPE_()
-                self._identifier_chain_()
-            with self._option():
-                self.__KW_ROUTINE_TYPE_()
-                self._identifier_chain_()
-                with self._optional():
-                    self._token('(')
-                    with self._optional():
-                        self._data_type_list_()
-                    self._token(')')
-                with self._optional():
-                    self._token('FOR')
-                    self._identifier_chain_()
-            self._error('no available options')
-
-    @graken()
-    def _data_type_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._data_type_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _aggregate_function_(self):
-        with self._choice():
-            with self._option():
-                self._token('COUNT')
-                self._token('(')
-                self._token('*')
-                self._token(')')
-                with self._optional():
-                    self._filter_clause_()
-            with self._option():
-                self.__KW_SET_COMPUTATIONAL_OPERATION_()
-                self._token('(')
-                with self._optional():
-                    self.__KW_SET_QUANTIFIER_()
-                self._value_expression_()
-                self._token(')')
-                with self._optional():
-                    self._filter_clause_()
-            with self._option():
-                self.__KW_BINARY_SET_FUNCTION_TYPE_()
-                self._token('(')
-                self._numeric_value_expression_()
-                self._token(',')
-                self._numeric_value_expression_()
-                self._token(')')
-                with self._optional():
-                    self._filter_clause_()
-            with self._option():
-                self._ordered_set_function_()
-                with self._optional():
-                    self._filter_clause_()
-            self._error('expecting one of: COUNT')
-
-    @graken()
-    def _filter_clause_(self):
-        self._token('FILTER')
-        self._token('(')
-        self._token('WHERE')
-        self._boolean_value_expression_()
-        self._token(')')
-
-    @graken()
-    def _ordered_set_function_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_RANK_FUNCTION_TYPE_()
-                self._token('(')
-                self._value_expression_list_()
-                self._token(')')
-                self._within_group_specification_()
-            with self._option():
-                self.__KW_INVERSE_DISTRIBUTION_FUNCTION_TYPE_()
-                self._par_numeric_value_expression_()
-                self._within_group_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _within_group_specification_(self):
-        self._token('WITHIN')
-        self._token('GROUP')
-        self._token('(')
-        self._token('ORDER')
-        self._token('BY')
-        self._sort_specification_list_()
-        self._token(')')
-
-    @graken()
-    def _sort_specification_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._value_expression_()
-            with self._optional():
-                self.__KW_ORDERING_SPECIFICATION_()
-            with self._optional():
-                self._token('NULLS')
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('FIRST')
-                        with self._option():
-                            self._token('LAST')
-                        self._error('expecting one of: FIRST LAST')
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _schema_character_set_or_path_(self):
-        with self._choice():
-            with self._option():
-                self._schema_character_set_specification_()
-                with self._optional():
-                    self._path_specification_()
-            with self._option():
-                self._path_specification_()
-                with self._optional():
-                    self._schema_character_set_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _schema_name_clause_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                with self._optional():
-                    self._identifier_chain_()
-                self._token('AUTHORIZATION')
-                self._identifier_()
-            self._error('no available options')
-
-    @graken()
-    def _schema_character_set_specification_(self):
-        self._token('DEFAULT')
-        self._token('CHARACTER')
-        self._token('SET')
-        self._identifier_chain_()
-
-    @graken()
-    def _schema_element_(self):
-        with self._choice():
-            with self._option():
-                self._table_definition_()
-            with self._option():
-                self._view_definition_()
-            with self._option():
-                self._domain_definition_()
-            with self._option():
-                self._character_set_definition_()
-            with self._option():
-                self._collation_definition_()
-            with self._option():
-                self._transliteration_definition_()
-            with self._option():
-                self._assertion_definition_()
-            with self._option():
-                self._trigger_definition_()
-            with self._option():
-                self._user_defined_type_definition_()
-            with self._option():
-                self._user_defined_cast_definition_()
-            with self._option():
-                self._user_defined_ordering_definition_()
-            with self._option():
-                self._transform_definition_()
-            with self._option():
-                self._schema_routine_()
-            with self._option():
-                self._sequence_generator_definition_()
-            with self._option():
-                self._grant_statement_()
-            with self._option():
-                self._role_definition_()
-            self._error('no available options')
-
-    @graken()
-    def _table_definition_(self):
-        self._token('CREATE')
-        with self._optional():
-            self.__KW_GLOBAL_OR_LOCAL_()
-            self._token('TEMPORARY')
-        self._token('TABLE')
-        self._qualified_name_()
-        self._table_contents_source_()
-        with self._optional():
-            self._token('ON')
-            self._token('COMMIT')
-            self.__KW_TABLE_COMMIT_ACTION_()
-            self._token('ROWS')
-
-    @graken()
-    def _table_contents_source_(self):
-        with self._choice():
-            with self._option():
-                self._token('(')
-                self._table_element_list_()
-                self._token(')')
-            with self._option():
-                self._token('OF')
-                self._identifier_chain_()
-                with self._optional():
-                    self._subtable_clause_()
-                with self._optional():
-                    self._token('(')
-                    self._table_element_list_()
-                    self._token(')')
-            with self._option():
-                with self._optional():
-                    self._par_identifier_list_()
-                self._token('AS')
-                self._subquery_()
-                self._token('WITH')
-                with self._optional():
-                    self._token('NO')
-                self._token('DATA')
-            self._error('no available options')
-
-    @graken()
-    def _table_element_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._table_element_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _table_element_(self):
-        with self._choice():
-            with self._option():
-                self._column_definition_()
-            with self._option():
-                self._table_constraint_definition_()
-            with self._option():
-                self._token('LIKE')
-                self._qualified_name_()
-                with self._optional():
-                    self.__KW_LIKE_OPTIONS_()
-            with self._option():
-                self._self_referencing_column_specification_()
-            with self._option():
-                self._identifier_()
-                self._token('WITH')
-                self._token('OPTIONS')
-                with self._optional():
-                    self._token('SCOPE')
-                    self._qualified_name_()
-                with self._optional():
-                    self._default_clause_()
-                with self._optional():
-
-                    def block0():
-                        self._column_constraint_definition_()
-                    self._positive_closure(block0)
-            self._error('no available options')
-
-    @graken()
-    def _self_referencing_column_specification_(self):
-        self._token('REF')
-        self._token('IS')
-        self._identifier_()
-        self.__KW_REFERENCE_GENERATION_()
-
-    @graken()
-    def _subtable_clause_(self):
-        self._token('UNDER')
-        self._qualified_name_()
-
-    @graken()
-    def _column_definition_(self):
-        self._identifier_()
-        with self._optional():
-            with self._choice():
-                with self._option():
-                    self._data_type_()
-                with self._option():
-                    self._identifier_chain_()
-                self._error('no available options')
-        with self._optional():
-            self.__KW_REFERENCE_SCOPE_CHECK_()
-        with self._optional():
-            with self._choice():
-                with self._option():
-                    self._default_clause_()
-                with self._option():
-                    self._identity_column_specification_()
-                with self._option():
-                    self._token('GENERATED')
-                    self._token('ALWAYS')
-                    self._token('AS')
-                    self._par_value_expression_()
-                self._error('no available options')
-        with self._optional():
-
-            def block2():
-                self._column_constraint_definition_()
-            self._positive_closure(block2)
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _column_constraint_definition_(self):
-        with self._optional():
-            self._token('CONSTRAINT')
-            self._identifier_chain_()
-        self._column_constraint_()
-        with self._optional():
-            self.__KW_CONSTRAINT_CHARACTERISTICS_()
-
-    @graken()
-    def _column_constraint_(self):
-        with self._choice():
-            with self._option():
-                self._token('NOT')
-                self._token('NULL')
-            with self._option():
-                self.__KW_UNIQUE_SPECIFICATION_()
-            with self._option():
-                self._references_specification_()
-            with self._option():
-                self._token('CHECK')
-                self._par_boolean_value_expression_()
-            self._error('expecting one of: NOT')
-
-    @graken()
-    def _identity_column_specification_(self):
-        self._token('GENERATED')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('ALWAYS')
-                with self._option():
-                    self._token('BY')
-                    self._token('DEFAULT')
-                self._error('expecting one of: ALWAYS BY')
-        self._token('AS')
-        self._token('IDENTITY')
-        with self._optional():
-            self._token('(')
-
-            def block1():
-                self._common_sequence_generator_option_()
-            self._positive_closure(block1)
-            self._token(')')
-
-    @graken()
-    def _default_clause_(self):
-        self._token('DEFAULT')
-        self._default_option_()
-
-    @graken()
-    def _default_option_(self):
-        with self._choice():
-            with self._option():
-                self._literal_()
-            with self._option():
-                self._datetime_value_function_()
-            with self._option():
-                self._token('USER')
-            with self._option():
-                self._token('CURRENT_USER')
-            with self._option():
-                self._token('CURRENT_ROLE')
-            with self._option():
-                self._token('SESSION_USER')
-            with self._option():
-                self._token('SYSTEM_USER')
-            with self._option():
-                self._token('CURRENT_PATH')
-            with self._option():
-                self.__KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION_()
-            self._error('expecting one of: CURRENT_PATH CURRENT_ROLE CURRENT_USER SESSION_USER SYSTEM_USER USER')
-
-    @graken()
-    def _table_constraint_definition_(self):
-        with self._optional():
-            self._token('CONSTRAINT')
-            self._identifier_chain_()
-        self._table_constraint_()
-        with self._optional():
-            self.__KW_CONSTRAINT_CHARACTERISTICS_()
-
-    @graken()
-    def _table_constraint_(self):
-        with self._choice():
-            with self._option():
-                self._unique_constraint_definition_()
-            with self._option():
-                self._token('FOREIGN')
-                self._token('KEY')
-                self._par_identifier_list_()
-                self._references_specification_()
-            with self._option():
-                self._token('CHECK')
-                self._par_boolean_value_expression_()
-            self._error('no available options')
-
-    @graken()
-    def _unique_constraint_definition_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_UNIQUE_SPECIFICATION_()
-                self._par_identifier_list_()
-            with self._option():
-                self._token('UNIQUE')
-                self._token('VALUE')
-            self._error('expecting one of: UNIQUE')
-
-    @graken()
-    def _references_specification_(self):
-        self._token('REFERENCES')
-        self._qualified_name_()
-        with self._optional():
-            self._par_identifier_list_()
-        with self._optional():
-            self._token('MATCH')
-            self.__KW_MATCH_TYPE_()
-        with self._optional():
-            self.__KW_REFERENTIAL_TRIGGERED_ACTION_()
-
-    @graken()
-    def _alter_table_action_(self):
-        with self._choice():
-            with self._option():
-                self._token('ADD')
-                with self._optional():
-                    self._token('COLUMN')
-                self._column_definition_()
-            with self._option():
-                self._token('ALTER')
-                with self._optional():
-                    self._token('COLUMN')
-                self._identifier_()
-                self._alter_column_action_()
-            with self._option():
-                self._token('DROP')
-                with self._optional():
-                    self._token('COLUMN')
-                self._identifier_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('ADD')
-                self._table_constraint_definition_()
-            with self._option():
-                self._token('DROP')
-                self._token('CONSTRAINT')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            self._error('no available options')
-
-    @graken()
-    def _alter_column_action_(self):
-        with self._choice():
-            with self._option():
-                self._token('SET')
-                self._default_clause_()
-            with self._option():
-                self.__KW_DROP_DEFAULT_CLAUSE_()
-            with self._option():
-                self._token('ADD')
-                self._token('SCOPE')
-                self._qualified_name_()
-            with self._option():
-                self._token('DROP')
-                self._token('SCOPE')
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-
-                def block0():
-                    self._alter_identity_column_option_()
-                self._positive_closure(block0)
-            self._error('no available options')
-
-    @graken()
-    def _alter_identity_column_option_(self):
-        with self._choice():
-            with self._option():
-                self._token('RESTART')
-                self._token('WITH')
-                self._signed_numeric_literal_()
-            with self._option():
-                self._token('SET')
-                self._basic_sequence_generator_option_()
-            self._error('no available options')
-
-    @graken()
-    def _view_definition_(self):
-        self._token('CREATE')
-        with self._optional():
-            self._token('RECURSIVE')
-        self._token('VIEW')
-        self._qualified_name_()
-        self._view_specification_()
-        self._token('AS')
-        self._query_expression_()
-        with self._optional():
-            self._token('WITH')
-            with self._optional():
-                self.__KW_LEVELS_CLAUSE_()
-            self._token('CHECK')
-            self._token('OPTION')
-
-    @graken()
-    def _view_specification_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('OF')
-                self._identifier_chain_()
-                with self._optional():
-                    self._subtable_clause_()
-                with self._optional():
-                    self._token('(')
-
-                    def sep0():
-                        self._token(',')
-
-                    def block0():
-                        self._view_element_()
-                    self._positive_closure(block0, prefix=sep0)
-                    self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _view_element_(self):
-        with self._choice():
-            with self._option():
-                self._self_referencing_column_specification_()
-            with self._option():
-                self._identifier_()
-                self._token('WITH')
-                self._token('OPTIONS')
-                self._token('SCOPE')
-                self._qualified_name_()
-            self._error('no available options')
-
-    @graken()
-    def _domain_definition_(self):
-        self._token('CREATE')
-        self._token('DOMAIN')
-        self._identifier_chain_()
-        with self._optional():
-            self._token('AS')
-        self._data_type_()
-        with self._optional():
-            self._default_clause_()
-        with self._optional():
-
-            def block0():
-                self._domain_constraint_()
-            self._positive_closure(block0)
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _domain_constraint_(self):
-        with self._optional():
-            self._token('CONSTRAINT')
-            self._identifier_chain_()
-        self._token('CHECK')
-        self._par_boolean_value_expression_()
-        with self._optional():
-            self.__KW_CONSTRAINT_CHARACTERISTICS_()
-
-    @graken()
-    def _alter_domain_action_(self):
-        with self._choice():
-            with self._option():
-                self._token('SET')
-                self._default_clause_()
-            with self._option():
-                self.__KW_DROP_DEFAULT_CLAUSE_()
-            with self._option():
-                self._token('ADD')
-                self._domain_constraint_()
-            with self._option():
-                self._token('DROP')
-                self._token('CONSTRAINT')
-                self._identifier_chain_()
-            self._error('no available options')
-
-    @graken()
-    def _character_set_definition_(self):
-        self._token('CREATE')
-        self._token('CHARACTER')
-        self._token('SET')
-        self._identifier_chain_()
-        with self._optional():
-            self._token('AS')
-        self._token('GET')
-        self._identifier_chain_()
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _collation_definition_(self):
-        self._token('CREATE')
-        self._token('COLLATION')
-        self._identifier_chain_()
-        self._token('FOR')
-        self._identifier_chain_()
-        self._token('FROM')
-        self._identifier_chain_()
-        with self._optional():
-            self.__KW_PAD_CHARACTERISTIC_()
-
-    @graken()
-    def _transliteration_definition_(self):
-        self._token('CREATE')
-        self._token('TRANSLATION')
-        self._identifier_chain_()
-        self._token('FOR')
-        self._identifier_chain_()
-        self._token('TO')
-        self._identifier_chain_()
-        self._token('FROM')
-        self._transliteration_source_()
-
-    @graken()
-    def _transliteration_source_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_chain_()
-            with self._option():
-                self._specific_routine_designator_()
-            self._error('no available options')
-
-    @graken()
-    def _assertion_definition_(self):
-        self._token('CREATE')
-        self._token('ASSERTION')
-        self._identifier_chain_()
-        self._token('CHECK')
-        self._par_boolean_value_expression_()
-        with self._optional():
-            self.__KW_CONSTRAINT_CHARACTERISTICS_()
-
-    @graken()
-    def _trigger_definition_(self):
-        self._token('CREATE')
-        self._token('TRIGGER')
-        self._identifier_chain_()
-        self.__KW_TRIGGER_ACTION_TIME_()
-        self._trigger_event_()
-        self._token('ON')
-        self._qualified_name_()
-        with self._optional():
-            self._token('REFERENCING')
-
-            def block0():
-                self.__KW_OLD_NEW_()
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('ROW')
-                        with self._option():
-                            self._token('TABLE')
-                        self._error('expecting one of: ROW TABLE')
-                self._as_clause_()
-            self._positive_closure(block0)
-        self._triggered_action_()
-
-    @graken()
-    def _trigger_event_(self):
-        with self._choice():
-            with self._option():
-                self._token('INSERT')
-            with self._option():
-                self._token('DELETE')
-            with self._option():
-                self._token('UPDATE')
-                with self._optional():
-                    self._token('OF')
-                    self._identifier_list_()
-            self._error('expecting one of: DELETE INSERT UPDATE')
-
-    @graken()
-    def _triggered_action_(self):
-        with self._optional():
-            self._token('FOR')
-            self._token('EACH')
-            with self._group():
-                with self._choice():
-                    with self._option():
-                        self._token('ROW')
-                    with self._option():
-                        self._token('STATEMENT')
-                    self._error('expecting one of: ROW STATEMENT')
-        with self._optional():
-            self._token('WHEN')
-            self._par_boolean_value_expression_()
-        self._triggered_sql_statement_()
-
-    @graken()
-    def _triggered_sql_statement_(self):
-        with self._choice():
-            with self._option():
-                self._sql_executable_statement_()
-            with self._option():
-                self._token('BEGIN')
-                self._token('ATOMIC')
-
-                def block0():
-                    self._sql_executable_statement_()
-                    self._token(';')
-                self._positive_closure(block0)
-                self._token('END')
-            self._error('no available options')
-
-    @graken()
-    def _user_defined_type_definition_(self):
-        self._token('CREATE')
-        self._token('TYPE')
-        self._user_defined_type_body_()
-
-    @graken()
-    def _user_defined_type_body_(self):
-        self._identifier_chain_()
-        with self._optional():
-            self._token('UNDER')
-            self._identifier_chain_()
-        with self._optional():
-            self._token('AS')
-            self._representation_()
-        with self._optional():
-
-            def block0():
-                self._user_defined_type_option_()
-            self._positive_closure(block0)
-        with self._optional():
-
-            def sep1():
-                self._token(',')
-
-            def block1():
-                self._method_specification_()
-            self._positive_closure(block1, prefix=sep1)
-
-    @graken()
-    def _user_defined_type_option_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('INSTANTIABLE')
-            with self._option():
-                with self._optional():
-                    self._token('NOT')
-                self._token('FINAL')
-            with self._option():
-                self._reference_type_specification_()
-            with self._option():
-                with self._optional():
-                    self._token('CAST')
-                    self._token('(')
-                    self._token('SOURCE')
-                    self._token('AS')
-                    self._token('REF')
-                    self._token(')')
-                    self._token('WITH')
-                    self._identifier_()
-                with self._optional():
-                    self._cast_to_type_()
-            with self._option():
-                with self._optional():
-                    self._cast_to_distinct_()
-                with self._optional():
-                    self._cast_to_source_()
-            self._error('expecting one of: FINAL INSTANTIABLE NOT')
-
-    @graken()
-    def _representation_(self):
-        with self._choice():
-            with self._option():
-                self._predefined_type_()
-            with self._option():
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._attribute_definition_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _reference_type_specification_(self):
-        with self._choice():
-            with self._option():
-                self._token('REF')
-                self._token('USING')
-                self._predefined_type_()
-            with self._option():
-                self._token('REF')
-                self._token('FROM')
-                self._par_identifier_list_()
-            with self._option():
-                self._token('REF')
-                self._token('IS')
-                self._token('SYSTEM')
-                self._token('GENERATED')
-            self._error('expecting one of: REF')
-
-    @graken()
-    def _cast_to_type_(self):
-        self._token('CAST')
-        self._token('(')
-        self._token('REF')
-        self._token('AS')
-        self._token('SOURCE')
-        self._token(')')
-        self._token('WITH')
-        self._identifier_()
-
-    @graken()
-    def _cast_to_distinct_(self):
-        self._token('CAST')
-        self._token('(')
-        self._token('SOURCE')
-        self._token('AS')
-        self._token('DISTINCT')
-        self._token(')')
-        self._token('WITH')
-        self._identifier_()
-
-    @graken()
-    def _cast_to_source_(self):
-        self._token('CAST')
-        self._token('(')
-        self._token('DISTINCT')
-        self._token('AS')
-        self._token('SOURCE')
-        self._token(')')
-        self._token('WITH')
-        self._identifier_()
-
-    @graken()
-    def _method_specification_(self):
-        with self._choice():
-            with self._option():
-                self._original_method_specification_()
-            with self._option():
-                self._token('OVERRIDING')
-                self._partial_method_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _original_method_specification_(self):
-        self._partial_method_specification_()
-        with self._optional():
-            self._token('SELF')
-            self._token('AS')
-            self._token('RESULT')
-        with self._optional():
-            self._token('SELF')
-            self._token('AS')
-            self._token('LOCATOR')
-        with self._optional():
-
-            def block0():
-                self.__KW_METHOD_CHARACTERISTIC_()
-            self._positive_closure(block0)
-
-    @graken()
-    def _partial_method_specification_(self):
-        with self._optional():
-            with self._choice():
-                with self._option():
-                    self._token('INSTANCE')
-                with self._option():
-                    self._token('STATIC')
-                with self._option():
-                    self._token('CONSTRUCTOR')
-                self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
-        self._token('METHOD')
-        self._identifier_()
-        self._token('(')
-        with self._optional():
-            self._sql_parameter_declaration_list_()
-        self._token(')')
-        self._token('RETURNS')
-        self._returns_type_()
-        with self._optional():
-            self._token('SPECIFIC')
-            self._identifier_chain_()
-
-    @graken()
-    def _attribute_definition_(self):
-        self._identifier_()
-        self._data_type_()
-        with self._optional():
-            self.__KW_REFERENCE_SCOPE_CHECK_()
-        with self._optional():
-            self._default_clause_()
-        with self._optional():
-            self._token('COLLATE')
-            self._identifier_chain_()
-
-    @graken()
-    def _alter_type_action_(self):
-        with self._choice():
-            with self._option():
-                self._token('ADD')
-                self._token('ATTRIBUTE')
-                self._attribute_definition_()
-            with self._option():
-                self._token('DROP')
-                self._token('ATTRIBUTE')
-                self._identifier_()
-                self._token('RESTRICT')
-            with self._option():
-                self._token('ADD')
-                self._method_specification_()
-            with self._option():
-                self._token('DROP')
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('INSTANCE')
-                        with self._option():
-                            self._token('STATIC')
-                        with self._option():
-                            self._token('CONSTRUCTOR')
-                        self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
-                self._token('METHOD')
-                self._identifier_()
-                self._token('(')
-                with self._optional():
-                    self._data_type_list_()
-                self._token(')')
-                self._token('RESTRICT')
-            self._error('no available options')
-
-    @graken()
-    def _schema_routine_(self):
-        with self._choice():
-            with self._option():
-                self._token('CREATE')
-                self._token('PROCEDURE')
-                self._identifier_chain_()
-                self._token('(')
-                with self._optional():
-                    self._sql_parameter_declaration_list_()
-                self._token(')')
-                with self._optional():
-
-                    def block0():
-                        self._routine_characteristic_()
-                    self._positive_closure(block0)
-                self._routine_body_()
-            with self._option():
-                self._token('CREATE')
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._function_specification_()
-                        with self._option():
-                            self._method_specification_designator_()
-                        self._error('no available options')
-                self._routine_body_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_parameter_declaration_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            with self._optional():
-                self.__KW_PARAMETER_MODE_()
-            with self._optional():
-                self._identifier_()
-            self._parameter_type_()
-            with self._optional():
-                self._token('RESULT')
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _parameter_type_(self):
-        self._data_type_()
-        with self._optional():
-            self._token('AS')
-            self._token('LOCATOR')
-
-    @graken()
-    def _function_specification_(self):
-        self._token('FUNCTION')
-        self._identifier_chain_()
-        self._token('(')
-        with self._optional():
-            self._sql_parameter_declaration_list_()
-        self._token(')')
-        self._token('RETURNS')
-        self._returns_type_()
-        with self._optional():
-
-            def block0():
-                self._routine_characteristic_()
-            self._positive_closure(block0)
-        with self._optional():
-            self._token('STATIC')
-            self._token('DISPATCH')
-
-    @graken()
-    def _method_specification_designator_(self):
-        with self._choice():
-            with self._option():
-                self._token('SPECIFIC')
-                self._token('METHOD')
-                self._identifier_chain_()
-            with self._option():
-                with self._optional():
-                    with self._choice():
-                        with self._option():
-                            self._token('INSTANCE')
-                        with self._option():
-                            self._token('STATIC')
-                        with self._option():
-                            self._token('CONSTRUCTOR')
-                        self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
-                self._token('METHOD')
-                self._identifier_()
-                self._token('(')
-                with self._optional():
-                    self._sql_parameter_declaration_list_()
-                self._token(')')
-                with self._optional():
-                    self._token('RETURNS')
-                    self._returns_type_()
-                self._token('FOR')
-                self._identifier_chain_()
-            self._error('no available options')
-
-    @graken()
-    def _routine_characteristic_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_PARAMETER_STYLE_CLAUSE_()
-            with self._option():
-                self._token('SPECIFIC')
-                self._identifier_chain_()
-            with self._option():
-                self.__KW_DETERMINISTIC_CHARACTERISTIC_()
-            with self._option():
-                self.__KW_SQL_DATA_ACCESS_INDICATION_()
-            with self._option():
-                self.__KW_NULL_CALL_CLAUSE_()
-            with self._option():
-                self._token('DYNAMIC')
-                self._token('RESULT')
-                self._token('SETS')
-                self._integer_()
-            with self._option():
-                self.__KW_OLD_NEW_()
-                self._token('SAVEPOINT')
-                self._token('LEVEL')
-            self._error('no available options')
-
-    @graken()
-    def _returns_type_(self):
-        with self._choice():
-            with self._option():
-                self._parameter_type_()
-                with self._optional():
-                    self._token('CAST')
-                    self._token('FROM')
-                    self._parameter_type_()
-            with self._option():
-                self._token('TABLE')
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._identifier_()
-                    self._data_type_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _routine_body_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self.__KW_RIGHTS_CLAUSE_()
-                self._sql_executable_statement_()
-            with self._option():
-                self._external_body_reference_()
-            self._error('no available options')
-
-    @graken()
-    def _external_body_reference_(self):
-        self._token('EXTERNAL')
-        with self._optional():
-            self._token('NAME')
-            self._external_routine_name_()
-        with self._optional():
-            self.__KW_PARAMETER_STYLE_CLAUSE_()
-        with self._optional():
-            self._token('TRANSFORM')
-            self._token('GROUP')
-            with self._group():
-                with self._choice():
-                    with self._option():
-                        self._identifier_()
-                    with self._option():
-                        self._multiple_group_specification_()
-                    self._error('no available options')
-        with self._optional():
-            self.__KW_EXTERNAL_SECURITY_CLAUSE_()
-
-    @graken()
-    def _multiple_group_specification_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._identifier_()
-            self._token('FOR')
-            self._token('TYPE')
-            self._identifier_chain_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _alter_routine_statement_(self):
-        self._token('ALTER')
-        self._specific_routine_designator_()
-
-        def block0():
-            self._alter_routine_characteristic_()
-        self._positive_closure(block0)
-        self._token('RESTRICT')
-
-    @graken()
-    def _alter_routine_characteristic_(self):
-        with self._choice():
-            with self._option():
-                self.__KW_PARAMETER_STYLE_CLAUSE_()
-            with self._option():
-                self.__KW_SQL_DATA_ACCESS_INDICATION_()
-            with self._option():
-                self.__KW_NULL_CALL_CLAUSE_()
-            with self._option():
-                self._token('DYNAMIC')
-                self._token('RESULT')
-                self._token('SETS')
-                self._integer_()
-            with self._option():
-                self._token('NAME')
-                self._external_routine_name_()
-            self._error('no available options')
-
-    @graken()
-    def _user_defined_cast_definition_(self):
-        self._token('CREATE')
-        self._token('CAST')
-        self._token('(')
-        self._data_type_()
-        self._token('AS')
-        self._data_type_()
-        self._token(')')
-        self._token('WITH')
-        self._specific_routine_designator_()
-        with self._optional():
-            self._token('AS')
-            self._token('ASSIGNMENT')
-
-    @graken()
-    def _drop_user_defined_cast_statement_(self):
-        self._token('DROP')
-        self._token('CAST')
-        self._token('(')
-        self._data_type_()
-        self._token('AS')
-        self._data_type_()
-        self._token(')')
-        self.__KW_DROP_BEHAVIOR_()
-
-    @graken()
-    def _user_defined_ordering_definition_(self):
-        self._token('CREATE')
-        self._token('ORDERING')
-        self._token('FOR')
-        self._identifier_chain_()
-        self._ordering_form_()
-
-    @graken()
-    def _ordering_form_(self):
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('EQUALS')
-                    self._token('ONLY')
-                with self._option():
-                    self._token('ORDER')
-                    self._token('FULL')
-                self._error('expecting one of: EQUALS ORDER')
-        self._token('BY')
-        self._ordering_category_()
-
-    @graken()
-    def _ordering_category_(self):
-        with self._choice():
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('RELATIVE')
-                        with self._option():
-                            self._token('MAP')
-                        self._error('expecting one of: MAP RELATIVE')
-                self._token('WITH')
-                self._specific_routine_designator_()
-            with self._option():
-                self._token('STATE')
-                with self._optional():
-                    self._identifier_chain_()
-            self._error('expecting one of: STATE')
-
-    @graken()
-    def _transform_definition_(self):
-        self._token('CREATE')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('TRANSFORM')
-                with self._option():
-                    self._token('TRANSFORMS')
-                self._error('expecting one of: TRANSFORM TRANSFORMS')
-        self._token('FOR')
-        self._identifier_chain_()
-
-        def block1():
-            self._identifier_()
-            self._token('(')
-            self._transform_element_list_()
-            self._token(')')
-        self._positive_closure(block1)
-
-    @graken()
-    def _transform_element_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self.__KW_TRANSFORM_KIND_()
-            self._token('WITH')
-            self._specific_routine_designator_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _alter_transform_statement_(self):
-        self._token('ALTER')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('TRANSFORM')
-                with self._option():
-                    self._token('TRANSFORMS')
-                self._error('expecting one of: TRANSFORM TRANSFORMS')
-        self._token('FOR')
-        self._identifier_chain_()
-
-        def block1():
-            self._identifier_()
-            self._token('(')
-
-            def sep2():
-                self._token(',')
-
-            def block2():
-                self._alter_transform_action_()
-            self._positive_closure(block2, prefix=sep2)
-            self._token(')')
-        self._positive_closure(block1)
-
-    @graken()
-    def _alter_transform_action_(self):
-        with self._choice():
-            with self._option():
-                self._token('ADD')
-                self._token('(')
-                self._transform_element_list_()
-                self._token(')')
-            with self._option():
-                self._token('DROP')
-                self._token('(')
-                self.__KW_TRANSFORM_KIND_()
-                with self._optional():
-                    self._token(',')
-                    self.__KW_TRANSFORM_KIND_()
-                self.__KW_DROP_BEHAVIOR_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _drop_transform_statement_(self):
-        self._token('DROP')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('TRANSFORM')
-                with self._option():
-                    self._token('TRANSFORMS')
-                self._error('expecting one of: TRANSFORM TRANSFORMS')
-        self._transforms_to_be_dropped_()
-        self._token('FOR')
-        self._identifier_chain_()
-        self.__KW_DROP_BEHAVIOR_()
-
-    @graken()
-    def _transforms_to_be_dropped_(self):
-        with self._choice():
-            with self._option():
-                self._token('ALL')
-            with self._option():
-                self._identifier_()
-            self._error('expecting one of: ALL')
-
-    @graken()
-    def _sequence_generator_definition_(self):
-        self._token('CREATE')
-        self._token('SEQUENCE')
-        self._identifier_chain_()
-        with self._optional():
-
-            def block0():
-                self._sequence_generator_option_()
-            self._positive_closure(block0)
-
-    @graken()
-    def _sequence_generator_option_(self):
-        with self._choice():
-            with self._option():
-                self._token('AS')
-                self._data_type_()
-            with self._option():
-
-                def block0():
-                    self._common_sequence_generator_option_()
-                self._positive_closure(block0)
-            self._error('no available options')
-
-    @graken()
-    def _common_sequence_generator_option_(self):
-        with self._choice():
-            with self._option():
-                self._token('START')
-                self._token('WITH')
-                self._signed_numeric_literal_()
-            with self._option():
-                self._basic_sequence_generator_option_()
-            self._error('no available options')
-
-    @graken()
-    def _basic_sequence_generator_option_(self):
-        with self._choice():
-            with self._option():
-                self._token('INCREMENT')
-                self._token('BY')
-                self._signed_numeric_literal_()
-            with self._option():
-                self._sequence_generator_max_min_value_option_()
-            with self._option():
-                with self._optional():
-                    self._token('NO')
-                self._token('CYCLE')
-            self._error('expecting one of: CYCLE NO')
-
-    @graken()
-    def _sequence_generator_max_min_value_option_(self):
-        with self._choice():
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('MAXVALUE')
-                        with self._option():
-                            self._token('MINVALUE')
-                        self._error('expecting one of: MAXVALUE MINVALUE')
-                self._signed_numeric_literal_()
-            with self._option():
-                self._token('NO')
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('MAXVALUE')
-                        with self._option():
-                            self._token('MINVALUE')
-                        self._error('expecting one of: MAXVALUE MINVALUE')
-            self._error('expecting one of: NO')
-
-    @graken()
-    def _alter_sequence_generator_option_(self):
-        with self._choice():
-            with self._option():
-                self._token('RESTART')
-                self._token('WITH')
-                self._signed_numeric_literal_()
-            with self._option():
-                self._basic_sequence_generator_option_()
-            self._error('no available options')
-
-    @graken()
-    def _grant_statement_(self):
-        with self._choice():
-            with self._option():
-                self._grant_privilege_statement_()
-            with self._option():
-                self._grant_role_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _grant_privilege_statement_(self):
-        self._token('GRANT')
-        self._privileges_()
-        self._token('TO')
-        self._grantee_list_()
-        with self._optional():
-            self._token('WITH')
-            self._token('HIERARCHY')
-            self._token('OPTION')
-        with self._optional():
-            self._token('WITH')
-            self._token('GRANT')
-            self._token('OPTION')
-        with self._optional():
-            self._token('GRANTED')
-            self._token('BY')
-            self.__KW_GRANTOR_()
-
-    @graken()
-    def _privileges_(self):
-        self._object_privileges_()
-        self._token('ON')
-        self._object_name_()
-
-    @graken()
-    def _object_name_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._token('TABLE')
-                self._qualified_name_()
-            with self._option():
-                self._token('DOMAIN')
-                self._identifier_chain_()
-            with self._option():
-                self._token('COLLATION')
-                self._identifier_chain_()
-            with self._option():
-                self._token('CHARACTER')
-                self._token('SET')
-                self._identifier_chain_()
-            with self._option():
-                self._token('TRANSLATION')
-                self._identifier_chain_()
-            with self._option():
-                self._token('TYPE')
-                self._identifier_chain_()
-            with self._option():
-                self._token('SEQUENCE')
-                self._identifier_chain_()
-            with self._option():
-                self._specific_routine_designator_()
-            self._error('no available options')
-
-    @graken()
-    def _object_privileges_(self):
-        with self._choice():
-            with self._option():
-                self._token('ALL')
-                self._token('PRIVILEGES')
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._action_()
-                self._positive_closure(block0, prefix=sep0)
-            self._error('expecting one of: ALL')
-
-    @graken()
-    def _action_(self):
-        with self._choice():
-            with self._option():
-                self._token('SELECT')
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('INSERT')
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('UPDATE')
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('REFERENCES')
-                with self._optional():
-                    self._par_identifier_list_()
-            with self._option():
-                self._token('SELECT')
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._specific_routine_designator_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-            with self._option():
-                self._token('DELETE')
-            with self._option():
-                self._token('USAGE')
-            with self._option():
-                self._token('TRIGGER')
-            with self._option():
-                self._token('UNDER')
-            with self._option():
-                self._token('EXECUTE')
-            self._error('expecting one of: DELETE EXECUTE INSERT REFERENCES SELECT TRIGGER UNDER UPDATE USAGE')
-
-    @graken()
-    def _grantee_(self):
-        with self._choice():
-            with self._option():
-                self._token('PUBLIC')
-            with self._option():
-                self._identifier_()
-            self._error('expecting one of: PUBLIC')
-
-    @graken()
-    def _role_definition_(self):
-        self._token('CREATE')
-        self._token('ROLE')
-        self._identifier_()
-        with self._optional():
-            self._token('WITH')
-            self._token('ADMIN')
-            self.__KW_GRANTOR_()
-
-    @graken()
-    def _grant_role_statement_(self):
-        self._token('GRANT')
-        self._identifier_list_()
-        self._token('TO')
-        self._grantee_list_()
-        with self._optional():
-            self._token('WITH')
-            self._token('ADMIN')
-            self._token('OPTION')
-        with self._optional():
-            self._token('GRANTED')
-            self._token('BY')
-            self.__KW_GRANTOR_()
-
-    @graken()
-    def _revoke_statement_(self):
-        with self._choice():
-            with self._option():
-                self._revoke_privilege_statement_()
-            with self._option():
-                self._revoke_role_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _revoke_privilege_statement_(self):
-        self._token('REVOKE')
-        with self._optional():
-            with self._group():
-                with self._choice():
-                    with self._option():
-                        self._token('GRANT')
-                    with self._option():
-                        self._token('HIERARCHY')
-                    self._error('expecting one of: GRANT HIERARCHY')
-            self._token('OPTION')
-            self._token('FOR')
-        self._privileges_()
-        self._token('FROM')
-        self._grantee_list_()
-        with self._optional():
-            self._token('GRANTED')
-            self._token('BY')
-            self.__KW_GRANTOR_()
-        self.__KW_DROP_BEHAVIOR_()
-
-    @graken()
-    def _revoke_role_statement_(self):
-        self._token('REVOKE')
-        with self._optional():
-            self._token('ADMIN')
-            self._token('OPTION')
-            self._token('FOR')
-        self._identifier_list_()
-        self._token('FROM')
-        self._grantee_list_()
-        with self._optional():
-            self._token('GRANTED')
-            self._token('BY')
-            self.__KW_GRANTOR_()
-        self.__KW_DROP_BEHAVIOR_()
-
-    @graken()
-    def _schema_definition_(self):
-        self._token('CREATE')
-        self._token('SCHEMA')
-        self._schema_name_clause_()
-        with self._optional():
-            self._schema_character_set_or_path_()
-        with self._optional():
-
-            def block0():
-                self._schema_element_()
-            self._positive_closure(block0)
-
-    @graken()
-    def _grantee_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._grantee_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _sql_executable_statement_(self):
-        with self._choice():
-            with self._option():
-                self._sql_schema_statement_()
-            with self._option():
-                self._sql_data_statement_()
-            with self._option():
-                self._sql_control_statement_()
-            with self._option():
-                self._sql_transaction_statement_()
-            with self._option():
-                self._sql_connection_statement_()
-            with self._option():
-                self._sql_session_statement_()
-            with self._option():
-                self._sql_diagnostics_statement_()
-            with self._option():
-                self._sql_dynamic_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_schema_statement_(self):
-        with self._choice():
-            with self._option():
-                self._sql_schema_definition_statement_()
-            with self._option():
-                self._sql_schema_manipulation_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_schema_definition_statement_(self):
-        with self._choice():
-            with self._option():
-                self._schema_definition_()
-            with self._option():
-                self._table_definition_()
-            with self._option():
-                self._view_definition_()
-            with self._option():
-                self._schema_routine_()
-            with self._option():
-                self._grant_statement_()
-            with self._option():
-                self._role_definition_()
-            with self._option():
-                self._domain_definition_()
-            with self._option():
-                self._character_set_definition_()
-            with self._option():
-                self._collation_definition_()
-            with self._option():
-                self._transliteration_definition_()
-            with self._option():
-                self._assertion_definition_()
-            with self._option():
-                self._trigger_definition_()
-            with self._option():
-                self._user_defined_type_definition_()
-            with self._option():
-                self._user_defined_cast_definition_()
-            with self._option():
-                self._user_defined_ordering_definition_()
-            with self._option():
-                self._transform_definition_()
-            with self._option():
-                self._sequence_generator_definition_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_schema_manipulation_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('DROP')
-                self._token('SCHEMA')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('ALTER')
-                self._token('TABLE')
-                self._qualified_name_()
-                self._alter_table_action_()
-            with self._option():
-                self._token('DROP')
-                self._token('TABLE')
-                self._qualified_name_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('DROP')
-                self._token('VIEW')
-                self._qualified_name_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._alter_routine_statement_()
-            with self._option():
-                self._token('DROP')
-                self._specific_routine_designator_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._drop_user_defined_cast_statement_()
-            with self._option():
-                self._revoke_statement_()
-            with self._option():
-                self._token('DROP')
-                self._token('ROLE')
-                self._identifier_()
-            with self._option():
-                self._token('ALTER')
-                self._token('DOMAIN')
-                self._identifier_chain_()
-                self._alter_domain_action_()
-            with self._option():
-                self._token('DROP')
-                self._token('DOMAIN')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('DROP')
-                self._token('CHARACTER')
-                self._token('SET')
-                self._identifier_chain_()
-            with self._option():
-                self._token('DROP')
-                self._token('COLLATION')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('DROP')
-                self._token('TRANSLATION')
-                self._identifier_chain_()
-            with self._option():
-                self._token('DROP')
-                self._token('ASSERTION')
-                self._identifier_chain_()
-            with self._option():
-                self._token('DROP')
-                self._token('TRIGGER')
-                self._identifier_chain_()
-            with self._option():
-                self._token('ALTER')
-                self._token('TYPE')
-                self._identifier_chain_()
-                self._alter_type_action_()
-            with self._option():
-                self._token('DROP')
-                self._token('TYPE')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._token('DROP')
-                self._token('ORDERING')
-                self._token('FOR')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            with self._option():
-                self._alter_transform_statement_()
-            with self._option():
-                self._drop_transform_statement_()
-            with self._option():
-                self._token('ALTER')
-                self._token('SEQUENCE')
-                self._identifier_chain_()
-
-                def block0():
-                    self._alter_sequence_generator_option_()
-                self._positive_closure(block0)
-            with self._option():
-                self._token('DROP')
-                self._token('SEQUENCE')
-                self._identifier_chain_()
-                self.__KW_DROP_BEHAVIOR_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_data_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('OPEN')
-                self._qualified_name_()
-            with self._option():
-                self._token('CLOSE')
-                self._qualified_name_()
-            with self._option():
-                self._fetch_statement_()
-            with self._option():
-                self._select_statement_single_row_()
-            with self._option():
-                self._token('FREE')
-                self._token('LOCATOR')
-                self._parameter_name_list_()
-            with self._option():
-                self._token('HOLD')
-                self._token('LOCATOR')
-                self._parameter_name_list_()
-            with self._option():
-                self._sql_data_change_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_data_change_statement_(self):
-        with self._choice():
-            with self._option():
-                self._delete_statement_positioned_()
-            with self._option():
-                self._delete_statement_searched_()
-            with self._option():
-                self._insert_statement_()
-            with self._option():
-                self._update_statement_positioned_()
-            with self._option():
-                self._update_statement_searched_()
-            with self._option():
-                self._merge_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_control_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('CALL')
-                self._routine_invocation_()
-            with self._option():
-                self._token('RETURN')
-                self._result_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_transaction_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('START')
-                self._token('TRANSACTION')
-                with self._optional():
-                    self._transaction_mode_list_()
-            with self._option():
-                self._token('SET')
-                with self._optional():
-                    self._token('LOCAL')
-                self._transaction_characteristics_()
-            with self._option():
-                self._token('SET')
-                self._token('CONSTRAINTS')
-                self._constraint_name_list_()
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('DEFERRED')
-                        with self._option():
-                            self._token('IMMEDIATE')
-                        self._error('expecting one of: DEFERRED IMMEDIATE')
-            with self._option():
-                self._token('SAVEPOINT')
-                self._identifier_()
-            with self._option():
-                self._token('RELEASE')
-                self._token('SAVEPOINT')
-                self._identifier_()
-            with self._option():
-                self._token('COMMIT')
-                with self._optional():
-                    self._token('WORK')
-                with self._optional():
-                    self._token('AND')
-                    with self._optional():
-                        self._token('NO')
-                    self._token('CHAIN')
-            with self._option():
-                self._token('ROLLBACK')
-                with self._optional():
-                    self._token('WORK')
-                with self._optional():
-                    self._token('AND')
-                    with self._optional():
-                        self._token('NO')
-                    self._token('CHAIN')
-                with self._optional():
-                    self._token('TO')
-                    self._token('SAVEPOINT')
-                    self._identifier_()
-            self._error('expecting one of: COMMIT ROLLBACK START')
-
-    @graken()
-    def _sql_connection_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('CONNECT')
-                self._token('TO')
-                self._connection_target_()
-            with self._option():
-                self._token('SET')
-                self._token('CONNECTION')
-                self._connection_object_()
-            with self._option():
-                self._token('DISCONNECT')
-                self._disconnect_object_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_session_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('SET')
-                self._token('SESSION')
-                self._token('AUTHORIZATION')
-                self._value_specification_()
-            with self._option():
-                self._token('SET')
-                self._token('ROLE')
-                self._role_specification_()
-            with self._option():
-                self._token('SET')
-                self._token('TIME')
-                self._token('ZONE')
-                self._set_time_zone_value_()
-            with self._option():
-                self._token('SET')
-                self._token('SESSION')
-                self._token('CHARACTERISTICS')
-                self._token('AS')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._transaction_characteristics_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                self._token('SET')
-                self._token('CATALOG')
-                self._value_specification_()
-            with self._option():
-                self._token('SET')
-                self._token('SCHEMA')
-                self._value_specification_()
-            with self._option():
-                self._token('SET')
-                self._token('NAMES')
-                self._value_specification_()
-            with self._option():
-                self._token('SET')
-                self._token('PATH')
-                self._value_specification_()
-            with self._option():
-                self._token('SET')
-                self._transform_group_characteristic_()
-            with self._option():
-                self._set_session_collation_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_dynamic_statement_(self):
-        with self._choice():
-            with self._option():
-                self._system_descriptor_statement_()
-            with self._option():
-                self._token('PREPARE')
-                self._sql_statement_name_()
-                with self._optional():
-                    self._token('ATTRIBUTES')
-                    self._simple_value_specification_()
-                self._token('FROM')
-                self._simple_value_specification_()
-            with self._option():
-                self._token('DEALLOCATE')
-                self._token('PREPARE')
-                self._sql_statement_name_()
-            with self._option():
-                self._describe_statement_()
-            with self._option():
-                self._token('EXECUTE')
-                self._sql_statement_name_()
-                with self._optional():
-                    self._output_using_clause_()
-                with self._optional():
-                    self._input_using_clause_()
-            with self._option():
-                self._token('EXECUTE')
-                self._token('IMMEDIATE')
-                self._simple_value_specification_()
-            with self._option():
-                self._sql_dynamic_data_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _sql_dynamic_data_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('ALLOCATE')
-                self._descriptor_name_()
-                self._cursor_intent_()
-            with self._option():
-                self._token('OPEN')
-                self._dynamic_cursor_name_()
-                with self._optional():
-                    self._input_using_clause_()
-            with self._option():
-                self._token('FETCH')
-                with self._optional():
-                    with self._optional():
-                        self._fetch_orientation_()
-                    self._token('FROM')
-                self._dynamic_cursor_name_()
-                self._output_using_clause_()
-            with self._option():
-                self._token('CLOSE')
-                self._dynamic_cursor_name_()
-            with self._option():
-                self._token('DELETE')
-                self._token('FROM')
-                self._target_table_()
-                self._token('WHERE')
-                self._token('CURRENT')
-                self._token('OF')
-                self._dynamic_cursor_name_()
-            with self._option():
-                self._token('UPDATE')
-                self._target_table_()
-                self._token('SET')
-                self._set_clause_list_()
-                self._token('WHERE')
-                self._token('CURRENT')
-                self._token('OF')
-                self._dynamic_cursor_name_()
-            self._error('no available options')
-
-    @graken()
-    def _system_descriptor_statement_(self):
-        with self._choice():
-            with self._option():
-                self._token('ALLOCATE')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-                with self._optional():
-                    self._token('WITH')
-                    self._token('MAX')
-                    self._simple_value_specification_()
-            with self._option():
-                self._token('DEALLOCATE')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-            with self._option():
-                self._token('SET')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-                self._set_descriptor_information_()
-            with self._option():
-                self._token('GET')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-                self._get_descriptor_information_()
-            self._error('no available options')
-
-    @graken()
-    def _order_by_clause_(self):
-        self._token('ORDER')
-        self._token('BY')
-        self._sort_specification_list_()
-
-    @graken()
-    def _fetch_statement_(self):
-        self._token('FETCH')
-        with self._optional():
-            with self._optional():
-                self._fetch_orientation_()
-            self._token('FROM')
-        self._qualified_name_()
-        self._token('INTO')
-        self._target_specification_list_()
-
-    @graken()
-    def _fetch_orientation_(self):
-        with self._choice():
-            with self._option():
-                self._token('NEXT')
-            with self._option():
-                self._token('PRIOR')
-            with self._option():
-                self._token('FIRST')
-            with self._option():
-                self._token('LAST')
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('ABSOLUTE')
-                        with self._option():
-                            self._token('RELATIVE')
-                        self._error('expecting one of: ABSOLUTE RELATIVE')
-                self._simple_value_specification_()
-            self._error('expecting one of: FIRST LAST NEXT PRIOR')
-
-    @graken()
-    def _select_statement_single_row_(self):
-        self._token('SELECT')
-        with self._optional():
-            self.__KW_SET_QUANTIFIER_()
-        self._select_list_()
-        self._token('INTO')
-        self._target_specification_list_()
-        self._table_expression_()
-
-    @graken()
-    def _delete_statement_positioned_(self):
-        self._token('DELETE')
-        self._token('FROM')
-        self._target_table_()
-        self._token('WHERE')
-        self._token('CURRENT')
-        self._token('OF')
-        self._qualified_name_()
-
-    @graken()
-    def _target_table_(self):
-        with self._choice():
-            with self._option():
-                self._qualified_name_()
-            with self._option():
-                self._token('ONLY')
-                self._token('(')
-                self._qualified_name_()
-                self._token(')')
-            self._error('no available options')
-
-    @graken()
-    def _delete_statement_searched_(self):
-        self._token('DELETE')
-        self._token('FROM')
-        self._target_table_()
-        with self._optional():
-            self._token('WHERE')
-            self._boolean_value_expression_()
-
-    @graken()
-    def _insert_statement_(self):
-        self._token('INSERT')
-        self._token('INTO')
-        self._qualified_name_()
-        self._insert_columns_and_source_()
-
-    @graken()
-    def _insert_columns_and_source_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._par_identifier_list_()
-                with self._optional():
-                    self.__KW_OVERRIDE_CLAUSE_()
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._query_expression_()
-                        with self._option():
-                            self._token('VALUES')
-
-                            def sep0():
-                                self._token(',')
-
-                            def block0():
-                                self._contextually_typed_row_value_expression_()
-                            self._positive_closure(block0, prefix=sep0)
-                        self._error('no available options')
-            with self._option():
-                self._token('DEFAULT')
-                self._token('VALUES')
-            self._error('expecting one of: DEFAULT')
-
-    @graken()
-    def _merge_statement_(self):
-        self._token('MERGE')
-        self._token('INTO')
-        self._target_table_()
-        with self._optional():
-            self._as_clause_()
-        self._token('USING')
-        self._table_reference_()
-        self._token('ON')
-        self._boolean_value_expression_()
-
-        def block0():
-            self._merge_when_clause_()
-        self._positive_closure(block0)
-
-    @graken()
-    def _merge_when_clause_(self):
-        with self._choice():
-            with self._option():
-                self._token('WHEN')
-                self._token('MATCHED')
-                self._token('THEN')
-                self._token('UPDATE')
-                self._token('SET')
-                self._set_clause_list_()
-            with self._option():
-                self._token('WHEN')
-                self._token('NOT')
-                self._token('MATCHED')
-                self._token('THEN')
-                self._merge_insert_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _merge_insert_specification_(self):
-        self._token('INSERT')
-        with self._optional():
-            self._par_identifier_list_()
-        with self._optional():
-            self.__KW_OVERRIDE_CLAUSE_()
-        self._token('VALUES')
-        self._token('(')
-        self._contextually_typed_row_value_constructor_list_()
-        self._token(')')
-
-    @graken()
-    def _update_statement_positioned_(self):
-        self._token('UPDATE')
-        self._target_table_()
-        self._token('SET')
-        self._set_clause_list_()
-        self._token('WHERE')
-        self._token('CURRENT')
-        self._token('OF')
-        self._qualified_name_()
-
-    @graken()
-    def _update_statement_searched_(self):
-        self._token('UPDATE')
-        self._target_table_()
-        self._token('SET')
-        self._set_clause_list_()
-        with self._optional():
-            self._token('WHERE')
-            self._boolean_value_expression_()
-
-    @graken()
-    def _set_clause_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._set_clause_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _set_clause_(self):
-        with self._choice():
-            with self._option():
-                self._token('(')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._set_target_()
-                self._positive_closure(block0, prefix=sep0)
-                self._token(')')
-                self._token('=')
-                self._contextually_typed_row_value_expression_()
-            with self._option():
-                self._set_target_()
-                self._token('=')
-                self._contextually_typed_row_value_constructor_element_()
-            self._error('no available options')
-
-    @graken()
-    def _set_target_(self):
-        with self._choice():
-            with self._option():
-                self._identifier_()
-                with self._optional():
-                    self._l_bracket_trigraph_()
-                    self._simple_value_specification_()
-                    self._r_bracket_trigraph_()
-            with self._option():
-                self._identifier_chain_()
-            self._error('no available options')
-
-    @graken()
-    def _temporary_table_declaration_(self):
-        self._token('DECLARE')
-        self._token('LOCAL')
-        self._token('TEMPORARY')
-        self._token('TABLE')
-        self._qualified_name_()
-        self._token('(')
-        self._table_element_list_()
-        self._token(')')
-        with self._optional():
-            self._token('ON')
-            self._token('COMMIT')
-            self.__KW_TABLE_COMMIT_ACTION_()
-            self._token('ROWS')
-
-    @graken()
-    def _transaction_mode_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._transaction_mode_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _transaction_mode_(self):
-        with self._choice():
-            with self._option():
-                self._token('ISOLATION')
-                self._token('LEVEL')
-                self.__KW_LEVEL_OF_ISOLATION_()
-            with self._option():
-                self._token('READ')
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('ONLY')
-                        with self._option():
-                            self._token('WRITE')
-                        self._error('expecting one of: ONLY WRITE')
-            with self._option():
-                self._token('DIAGNOSTICS')
-                self._token('SIZE')
-                self._simple_value_specification_()
-            self._error('expecting one of: READ')
-
-    @graken()
-    def _transaction_characteristics_(self):
-        self._token('TRANSACTION')
-        self._transaction_mode_list_()
-
-    @graken()
-    def _constraint_name_list_(self):
-        with self._choice():
-            with self._option():
-                self._token('ALL')
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._identifier_chain_()
-                self._positive_closure(block0, prefix=sep0)
-            self._error('expecting one of: ALL')
-
-    @graken()
-    def _connection_target_(self):
-        with self._choice():
-            with self._option():
-                self._simple_value_specification_()
-                with self._optional():
-                    self._token('AS')
-                    self._simple_value_specification_()
-                with self._optional():
-                    self._token('USER')
-                    self._simple_value_specification_()
-            with self._option():
-                self._token('DEFAULT')
-            self._error('expecting one of: DEFAULT')
-
-    @graken()
-    def _connection_object_(self):
-        with self._choice():
-            with self._option():
-                self._token('DEFAULT')
-            with self._option():
-                self._simple_value_specification_()
-            self._error('expecting one of: DEFAULT')
-
-    @graken()
-    def _disconnect_object_(self):
-        with self._choice():
-            with self._option():
-                self._connection_object_()
-            with self._option():
-                self._token('ALL')
-            with self._option():
-                self._token('CURRENT')
-            self._error('expecting one of: ALL CURRENT')
-
-    @graken()
-    def _role_specification_(self):
-        with self._choice():
-            with self._option():
-                self._value_specification_()
-            with self._option():
-                self._token('NONE')
-            self._error('expecting one of: NONE')
-
-    @graken()
-    def _set_time_zone_value_(self):
-        with self._choice():
-            with self._option():
-                self._interval_value_expression_()
-            with self._option():
-                self._token('LOCAL')
-            self._error('expecting one of: LOCAL')
-
-    @graken()
-    def _transform_group_characteristic_(self):
-        with self._choice():
-            with self._option():
-                self._token('DEFAULT')
-                self._token('TRANSFORM')
-                self._token('GROUP')
-                self._value_specification_()
-            with self._option():
-                self._token('TRANSFORM')
-                self._token('GROUP')
-                self._token('FOR')
-                self._token('TYPE')
-                self._identifier_chain_()
-                self._value_specification_()
-            self._error('no available options')
-
-    @graken()
-    def _set_session_collation_statement_(self):
-        self._token('SET')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('NO')
-                    self._token('COLLATION')
-                with self._option():
-                    self._token('COLLATION')
-                    self._value_specification_()
-                self._error('expecting one of: NO')
-        with self._optional():
-            self._token('FOR')
-            self._identifier_chain_list_()
-
-    @graken()
-    def _get_descriptor_information_(self):
-        with self._choice():
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._simple_target_specification_()
-                    self._token('=')
-                    self.__KW_HEADER_ITEM_NAME_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                self._token('VALUE')
-                self._simple_value_specification_()
-
-                def sep1():
-                    self._token(',')
-
-                def block1():
-                    self._simple_target_specification_()
-                    self._token('=')
-                    self.__KW_DESCRIPTOR_ITEM_NAME_()
-                self._positive_closure(block1, prefix=sep1)
-            self._error('no available options')
-
-    @graken()
-    def _set_descriptor_information_(self):
-        with self._choice():
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self.__KW_HEADER_ITEM_NAME_()
-                    self._token('=')
-                    self._simple_value_specification_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                self._token('VALUE')
-                self._simple_value_specification_()
-
-                def sep1():
-                    self._token(',')
-
-                def block1():
-                    self.__KW_DESCRIPTOR_ITEM_NAME_()
-                    self._token('=')
-                    self._simple_value_specification_()
-                self._positive_closure(block1, prefix=sep1)
-            self._error('no available options')
-
-    @graken()
-    def _describe_statement_(self):
-        self._token('DESCRIBE')
-        with self._group():
-            with self._choice():
-                with self._option():
-                    self._token('INPUT')
-                    self._sql_statement_name_()
-                with self._option():
-                    with self._optional():
-                        self._token('OUTPUT')
-                    self._described_object_()
-                self._error('no available options')
-        self._token('USING')
-        with self._optional():
-            self._token('SQL')
-        self._token('DESCRIPTOR')
-        self._descriptor_name_()
-        with self._optional():
-            self.__KW_WITH_WITHOUT_()
-            self._token('NESTING')
-
-    @graken()
-    def _described_object_(self):
-        with self._choice():
-            with self._option():
-                self._sql_statement_name_()
-            with self._option():
-                self._token('CURSOR')
-                self._descriptor_name_()
-                self._token('STRUCTURE')
-            self._error('no available options')
-
-    @graken()
-    def _input_using_clause_(self):
-        with self._choice():
-            with self._option():
-                self._token('USING')
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._general_value_specification_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                self._token('USING')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-            self._error('no available options')
-
-    @graken()
-    def _output_using_clause_(self):
-        with self._choice():
-            with self._option():
-                self._token('INTO')
-                self._target_specification_list_()
-            with self._option():
-                self._token('INTO')
-                with self._optional():
-                    self._token('SQL')
-                self._token('DESCRIPTOR')
-                self._descriptor_name_()
-            self._error('no available options')
-
-    @graken()
-    def _target_specification_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._target_specification_()
-        self._positive_closure(block0, prefix=sep0)
-
-    @graken()
-    def _cursor_intent_(self):
-        with self._choice():
-            with self._option():
-                self._statement_cursor_()
-            with self._option():
-                self._token('FOR')
-                self._token('PROCEDURE')
-                self._specific_routine_designator_()
-            self._error('no available options')
-
-    @graken()
-    def _statement_cursor_(self):
-        with self._optional():
-            self.__KW_CURSOR_SENSITIVITY_()
-        with self._optional():
-            with self._optional():
-                self._token('NO')
-            self._token('SCROLL')
-        self._token('CURSOR')
-        with self._optional():
-            self.__KW_WITH_WITHOUT_()
-            self._token('HOLD')
-        with self._optional():
-            self.__KW_WITH_WITHOUT_()
-            self._token('RETURN')
-        self._token('FOR')
-        self._descriptor_name_()
-
-    @graken()
-    def _direct_sql_statement_(self):
-
-        def sep0():
-            self._token(';')
-
-        def block0():
-            self._directly_executable_statement_()
-        self._positive_closure(block0, prefix=sep0)
-        with self._optional():
-            self._token(';')
-
-    @graken()
-    def _directly_executable_statement_(self):
-        with self._choice():
-            with self._option():
-                self._direct_sql_data_statement_()
-            with self._option():
-                self._sql_schema_statement_()
-            with self._option():
-                self._sql_transaction_statement_()
-            with self._option():
-                self._sql_connection_statement_()
-            with self._option():
-                self._sql_session_statement_()
-            self._error('no available options')
-
-    @graken()
-    def _direct_sql_data_statement_(self):
-        with self._choice():
-            with self._option():
-                self._delete_statement_searched_()
-            with self._option():
-                self._direct_select_statement_multiple_rows_()
-            with self._option():
-                self._insert_statement_()
-            with self._option():
-                self._update_statement_searched_()
-            with self._option():
-                self._merge_statement_()
-            with self._option():
-                self._temporary_table_declaration_()
-            self._error('no available options')
-
-    @graken()
-    def _direct_select_statement_multiple_rows_(self):
-        self._query_expression_()
-        with self._optional():
-            self._order_by_clause_()
-        with self._optional():
-            self._token('FOR')
-            with self._group():
-                with self._choice():
-                    with self._option():
-                        self._token('READ')
-                        self._token('ONLY')
-                    with self._option():
-                        self._token('UPDATE')
-                        with self._optional():
-                            self._token('OF')
-                            self._identifier_list_()
-                    self._error('expecting one of: READ UPDATE')
-
-    @graken()
-    def _sql_diagnostics_statement_(self):
-        self._token('GET')
-        self._token('DIAGNOSTICS')
-        self._sql_diagnostics_information_()
-
-    @graken()
-    def _sql_diagnostics_information_(self):
-        with self._choice():
-            with self._option():
-
-                def sep0():
-                    self._token(',')
-
-                def block0():
-                    self._simple_target_specification_()
-                    self._token('=')
-                    self.__KW_STATEMENT_INFORMATION_ITEM_()
-                self._positive_closure(block0, prefix=sep0)
-            with self._option():
-                with self._group():
-                    with self._choice():
-                        with self._option():
-                            self._token('EXCEPTION')
-                        with self._option():
-                            self._token('CONDITION')
-                        self._error('expecting one of: CONDITION EXCEPTION')
-                self._simple_value_specification_()
-
-                def sep2():
-                    self._token(',')
-
-                def block2():
-                    self._simple_target_specification_()
-                    self._token('=')
-                    self.__KW_CONDITION_INFORMATION_ITEM_()
-                self._positive_closure(block2, prefix=sep2)
-            self._error('no available options')
 
     @graken()
     def __KW_CONSTRAINT_CHARACTERISTICS_(self):
@@ -6470,9 +1032,7 @@ class SqlParser(Parser):
             self._token('NOT')
         self._token('CHECKED')
         with self._optional():
-            self._token('ON')
-            self._token('DELETE')
-            self.__KW_REFERENTIAL_ACTION_()
+            self.__KW_DELETE_RULE_()
 
     @graken()
     def __KW_ALL_DISTINCT_(self):
@@ -6492,18 +1052,4707 @@ class SqlParser(Parser):
                 self._token('EXCEPT')
             self._error('expecting one of: EXCEPT UNION')
 
+    @graken()
+    def __KW_NUMERIC_FUNCTION_(self):
+        with self._choice():
+            with self._option():
+                self._token('CEIL')
+            with self._option():
+                self._token('CEILING')
+            with self._option():
+                self._token('LN')
+            with self._option():
+                self._token('ABS')
+            with self._option():
+                self._token('EXP')
+            with self._option():
+                self._token('MOD')
+            with self._option():
+                self._token('SQRT')
+            with self._option():
+                self._token('FLOOR')
+            with self._option():
+                self._token('POWER')
+            with self._option():
+                self._token('WIDTH_BUCKET')
+            self._error('expecting one of: ABS CEIL CEILING EXP FLOOR LN MOD POWER SQRT WIDTH_BUCKET')
+
+    @graken()
+    def _start_(self):
+        self._direct_sql_stmt_()
+        self._check_eof()
+
+    @graken()
+    def _integer_(self):
+        self._pattern(r'\d+')
+
+    @graken()
+    def _par_integer_list_(self):
+        self._token('(')
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._integer_()
+        self._positive_closure(block0, prefix=sep0)
+        self._token(')')
+
+    @graken()
+    def _regular_identifier_(self):
+        self._pattern(r'[a-z]\w*')
+        self._check_name()
+
+    @graken()
+    def _identifier_(self):
+        with self._choice():
+            with self._option():
+                self._regular_identifier_()
+            with self._option():
+                self._delimited_identifier_()
+            self._error('no available options')
+
+    @graken()
+    def _identifier_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._identifier_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _identifier_chain_(self):
+        with self._optional():
+            self._token('MODULE')
+            self._token('.')
+
+        def sep0():
+            self._token('.')
+
+        def block0():
+            self._identifier_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _parameter_name_(self):
+        self._token(':')
+        self._identifier_()
+
+    @graken()
+    def _par_identifier_list_(self):
+        self._token('(')
+        self._identifier_list_()
+        self._token(')')
+
+    @graken()
+    def _delimited_identifier_(self):
+        self._token('"')
+        self._char_in_delimited_identifier_()
+        self._token('"')
+
+    @graken()
+    def _char_in_delimited_identifier_(self):
+        self._pattern(r'(""|[^"\n])+')
+
+    @graken()
+    def _identifier_chain_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._identifier_chain_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _parameter_name_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._parameter_name_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _literal_(self):
+        with self._choice():
+            with self._option():
+                self._signed_numeric_literal_()
+            with self._option():
+                self._general_literal_()
+            self._error('no available options')
+
+    @graken()
+    def _simple_value_spec_(self):
+        with self._choice():
+            with self._option():
+                self._literal_()
+            with self._option():
+                self._parameter_name_()
+            with self._option():
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _general_literal_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_BOOL_()
+            with self._option():
+                self._token('INTERVAL')
+                with self._optional():
+                    self._sign_()
+                self._character_string_literal_()
+                self._interval_qualifier_()
+            with self._option():
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('DATE')
+                        with self._option():
+                            self._token('TIME')
+                        with self._option():
+                            self._token('TIMESTAMP')
+                        self._error('expecting one of: DATE TIME TIMESTAMP')
+                self._character_string_literal_()
+            self._error('no available options')
+
+    @graken()
+    def _character_string_literal_(self):
+        self._token("'")
+        with self._optional():
+            self._char_in_string_()
+        self._token("'")
+
+    @graken()
+    def _char_in_string_(self):
+        self._pattern(r"(''|[^'\n])+")
+
+    @graken()
+    def _signed_numeric_literal_(self):
+        with self._optional():
+            self._sign_()
+        self._unsigned_numeric_literal_()
+
+    @graken()
+    def _unsigned_numeric_literal_(self):
+        self._exact_numeric_literal_()
+        with self._optional():
+            self._token('E')
+            with self._optional():
+                self._sign_()
+            self._integer_()
+
+    @graken()
+    def _proper_decimal_(self):
+        self._integer_()
+        with self._optional():
+            self._token('.')
+            with self._optional():
+                self._integer_()
+
+    @graken()
+    def _exact_numeric_literal_(self):
+        with self._choice():
+            with self._option():
+                self._proper_decimal_()
+            with self._option():
+                self._token('.')
+                self._integer_()
+            self._error('no available options')
+
+    @graken()
+    def _data_type_(self):
+        with self._choice():
+            with self._option():
+                self._token('ROW')
+                self._token('(')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._identifier_()
+                    self._data_type_()
+                    with self._optional():
+                        self.__KW_REFERENCE_SCOPE_CHECK_()
+                self._positive_closure(block0, prefix=sep0)
+                self._token(')')
+            with self._option():
+                self._data_type_()
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('ARRAY')
+                        with self._option():
+                            self._token('MULTISET')
+                        self._error('expecting one of: ARRAY MULTISET')
+                with self._optional():
+                    self._l_bracket_trigraph_()
+                    self._integer_()
+                    self._r_bracket_trigraph_()
+            with self._option():
+                self._predefined_type_()
+            with self._option():
+                self._reference_type_()
+            with self._option():
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _predefined_type_(self):
+        with self._choice():
+            with self._option():
+                self._token('INT')
+            with self._option():
+                self._token('DATE')
+            with self._option():
+                self._token('REAL')
+            with self._option():
+                self._token('BIGINT')
+            with self._option():
+                self._token('BOOLEAN')
+            with self._option():
+                self._token('INTEGER')
+            with self._option():
+                self._token('SMALLINT')
+            with self._option():
+                self._token('DOUBLE')
+                self._token('PRECISION')
+            with self._option():
+                self._token('INTERVAL')
+                self._interval_qualifier_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('NUMERIC')
+                        with self._option():
+                            self._token('DECIMAL')
+                        with self._option():
+                            self._token('DEC')
+                        with self._option():
+                            self._token('FLOAT')
+                        self._error('expecting one of: DEC DECIMAL FLOAT NUMERIC')
+                with self._optional():
+                    self._par_integer_list_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('TIME')
+                        with self._option():
+                            self._token('TIMESTAMP')
+                        self._error('expecting one of: TIME TIMESTAMP')
+                with self._optional():
+                    self._par_integer_list_()
+                with self._optional():
+                    self.__KW_WITH_WITHOUT_()
+                    self._token('TIME')
+                    self._token('ZONE')
+            with self._option():
+                self._char_str_type_()
+                with self._optional():
+                    self._token('CHARACTER')
+                    self._token('SET')
+                    self._identifier_chain_()
+                with self._optional():
+                    self._collate_clause_()
+            self._error('expecting one of: BIGINT BOOLEAN DATE DEC DECIMAL DOUBLE FLOAT INT INTEGER NUMERIC REAL SMALLINT TIME TIMESTAMP')
+
+    @graken()
+    def _collate_clause_(self):
+        self._token('COLLATE')
+        self._identifier_chain_()
+
+    @graken()
+    def _char_str_type_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_CHAR_()
+                with self._optional():
+                    self._par_integer_list_()
+            with self._option():
+                self.__KW_VCHAR_()
+                self._par_integer_list_()
+            with self._option():
+                self.__KW_NCLOB_()
+                with self._optional():
+                    self._lob_length_()
+            with self._option():
+                self.__KW_CLOB_()
+                with self._optional():
+                    self._lob_length_()
+            with self._option():
+                self.__KW_BLOB_()
+                with self._optional():
+                    self._lob_length_()
+            with self._option():
+                self.__KW_NCHAR_()
+                with self._optional():
+                    self._token('VARYING')
+                with self._optional():
+                    self._par_integer_list_()
+            self._error('no available options')
+
+    @graken()
+    def _lob_length_(self):
+        self._token('(')
+        self._integer_()
+        with self._optional():
+            with self._choice():
+                with self._option():
+                    self._token('K')
+                with self._option():
+                    self._token('M')
+                with self._option():
+                    self._token('G')
+                self._error('expecting one of: G K M')
+        with self._optional():
+            self.__KW_CHAR_LENGTH_UNITS_()
+        self._token(')')
+
+    @graken()
+    def _reference_type_(self):
+        self._token('REF')
+        self._token('(')
+        self._identifier_chain_()
+        self._token(')')
+        with self._optional():
+            self._token('SCOPE')
+            self._identifier_chain_()
+
+    @graken()
+    def _interval_qualifier_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_NON_SECOND_PRIMARY_DATETIME_FIELD_()
+                with self._optional():
+                    self._par_integer_list_()
+                with self._optional():
+                    self._token('TO')
+                    self._end_field_()
+            with self._option():
+                self._token('SECOND')
+                with self._optional():
+                    self._par_integer_list_()
+            self._error('expecting one of: SECOND')
+
+    @graken()
+    def _end_field_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_NON_SECOND_PRIMARY_DATETIME_FIELD_()
+            with self._option():
+                self._token('SECOND')
+                with self._optional():
+                    self._par_integer_list_()
+            self._error('expecting one of: SECOND')
+
+    @graken()
+    def _value_expr_primary_(self):
+        with self._choice():
+            with self._option():
+                self._par_value_expr_()
+            with self._option():
+                self._nonpar_value_expr_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _par_value_expr_(self):
+        self._token('(')
+        self._value_expr_()
+        self._token(')')
+
+    @graken()
+    def _nonpar_value_expr_primary_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('NULLIF')
+                        with self._option():
+                            self._token('COALESCE')
+                        self._error('expecting one of: COALESCE NULLIF')
+                self._token('(')
+                self._value_expr_list_()
+                self._token(')')
+            with self._option():
+                self._case_spec_()
+            with self._option():
+                self._window_func_()
+            with self._option():
+                self._aggregate_func_()
+            with self._option():
+                self._token('GROUPING')
+                self._token('(')
+
+                def sep1():
+                    self._token(',')
+
+                def block1():
+                    self._identifier_chain_()
+                self._positive_closure(block1, prefix=sep1)
+                self._token(')')
+            with self._option():
+                self._identifier_chain_()
+            with self._option():
+                self._method_invocation_()
+            with self._option():
+                self._unsigned_value_spec_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('MULTISET')
+                        with self._option():
+                            self._token('ARRAY')
+                        self._error('expecting one of: ARRAY MULTISET')
+                self._l_bracket_trigraph_()
+                self._value_expr_list_()
+                self._r_bracket_trigraph_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('TABLE')
+                        with self._option():
+                            self._token('MULTISET')
+                        with self._option():
+                            self._token('ARRAY')
+                        self._error('expecting one of: ARRAY MULTISET TABLE')
+                self._subquery_()
+            with self._option():
+                self._value_expr_primary_()
+                self._token('.')
+                self._identifier_()
+            with self._option():
+                with self._optional():
+                    self._token('NEW')
+                self._routine_invocation_()
+            with self._option():
+                self._token('NEXT')
+                self._token('VALUE')
+                self._token('FOR')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DEREF')
+                self._token('(')
+                self._value_expr_primary_()
+                self._token(')')
+            with self._option():
+                self._token('ELEMENT')
+                self._token('(')
+                self._multiset_value_expr_()
+                self._token(')')
+            with self._option():
+                self._token('CAST')
+                self._token('(')
+                self._cast_operand_()
+                self._token('AS')
+                self._data_type_()
+                self._token(')')
+            with self._option():
+                self._token('TREAT')
+                self._token('(')
+                self._value_expr_()
+                self._token('AS')
+                self._target_subtype_()
+                self._token(')')
+            with self._option():
+                self._identifier_chain_()
+                self._token('::')
+                self._identifier_()
+                with self._optional():
+                    self._token('(')
+                    with self._optional():
+                        self._sql_argument_list_()
+                    self._token(')')
+            with self._option():
+                self._array_value_expr_()
+                self._l_bracket_trigraph_()
+                self._numeric_value_expr_()
+                self._r_bracket_trigraph_()
+            with self._option():
+                self._value_expr_primary_()
+                self._dereference_operator_()
+                self._identifier_()
+                with self._optional():
+                    self._token('(')
+                    with self._optional():
+                        self._sql_argument_list_()
+                    self._token(')')
+            with self._option():
+                self._subquery_()
+            self._error('no available options')
+
+    @graken()
+    def _unsigned_value_spec_(self):
+        with self._choice():
+            with self._option():
+                self._general_value_spec_()
+            with self._option():
+                self._unsigned_numeric_literal_()
+            with self._option():
+                self._general_literal_()
+            self._error('no available options')
+
+    @graken()
+    def _general_value_spec_(self):
+        with self._choice():
+            with self._option():
+                self._token('?')
+            with self._option():
+                self._token('USER')
+            with self._option():
+                self._token('VALUE')
+            with self._option():
+                self._token('SYSTEM_USER')
+            with self._option():
+                self._token('SESSION_USER')
+            with self._option():
+                self._token('CURRENT_PATH')
+            with self._option():
+                self._token('CURRENT_ROLE')
+            with self._option():
+                self._token('CURRENT_USER')
+            with self._option():
+                self._token('CURRENT_DEFAULT_TRANSFORM_GROUP')
+            with self._option():
+                self._token('CURRENT_TRANSFORM_GROUP_FOR_TYPE')
+                self._identifier_chain_()
+            with self._option():
+                self._token('CURRENT_COLLATION')
+                self._token('(')
+                self._character_value_expr_()
+                self._token(')')
+            with self._option():
+                self._parameter_spec_()
+            with self._option():
+                self._identifier_chain_()
+            self._error('expecting one of: ? CURRENT_DEFAULT_TRANSFORM_GROUP CURRENT_PATH CURRENT_ROLE CURRENT_USER SESSION_USER SYSTEM_USER USER VALUE')
+
+    @graken()
+    def _target_spec_(self):
+        with self._choice():
+            with self._option():
+                self._token('?')
+            with self._option():
+                self._identifier_chain_()
+                self._l_bracket_trigraph_()
+                self._simple_value_spec_()
+                self._r_bracket_trigraph_()
+            with self._option():
+                self._simple_target_spec_()
+            self._error('expecting one of: ?')
+
+    @graken()
+    def _simple_target_spec_(self):
+        with self._choice():
+            with self._option():
+                self._parameter_spec_()
+            with self._option():
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _parameter_spec_(self):
+        self._parameter_name_()
+        with self._optional():
+            with self._optional():
+                self._token('INDICATOR')
+            self._parameter_name_()
+
+    @graken()
+    def _window_func_(self):
+        self._window_func_type_()
+        self._token('OVER')
+        self._window_name_or_spec_()
+
+    @graken()
+    def _window_func_type_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self.__KW_RANK_FUNCTION_TYPE_()
+                        with self._option():
+                            self._token('ROW_NUMBER')
+                        self._error('expecting one of: ROW_NUMBER')
+                self._empty_grouping_set_()
+            with self._option():
+                self._aggregate_func_()
+            self._error('no available options')
+
+    @graken()
+    def _window_name_or_spec_(self):
+        with self._choice():
+            with self._option():
+                self._window_spec_()
+            with self._option():
+                self._identifier_()
+            self._error('no available options')
+
+    @graken()
+    def _value_expr_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._value_expr_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _case_spec_(self):
+        self._token('CASE')
+        with self._optional():
+            self._case_operand_()
+
+        def block0():
+            self._when_clause_()
+        self._positive_closure(block0)
+        with self._optional():
+            self._else_clause_()
+        self._token('END')
+
+    @graken()
+    def _when_clause_(self):
+        self._token('WHEN')
+        self._when_operand_()
+        self._token('THEN')
+        self._result_()
+
+    @graken()
+    def _else_clause_(self):
+        self._token('ELSE')
+        self._result_()
+
+    @graken()
+    def _case_operand_(self):
+        self._row_value_predicand_()
+        with self._optional():
+            self._token('OVERLAPS')
+            self._row_value_predicand_()
+
+    @graken()
+    def _when_operand_(self):
+        with self._choice():
+            with self._option():
+                self._row_value_predicand_()
+            with self._option():
+                self._predicate_when_operand_()
+            with self._option():
+                self._boolean_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _predicate_when_operand_(self):
+        with self._choice():
+            with self._option():
+                self._token('OVERLAPS')
+                self._row_value_predicand_()
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                self._token('IN')
+                self._in_predicate_value_()
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('MEMBER')
+                        with self._option():
+                            self._token('SUBMULTISET')
+                        self._error('expecting one of: MEMBER SUBMULTISET')
+                with self._optional():
+                    self._token('OF')
+                self._multiset_value_expr_()
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('LIKE')
+                        with self._option():
+                            self._token('SIMILAR')
+                            self._token('TO')
+                        self._error('expecting one of: LIKE SIMILAR')
+                self._character_value_expr_()
+                with self._optional():
+                    self._token('ESCAPE')
+                    self._character_value_expr_()
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                self._token('BETWEEN')
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('ASYMMETRIC')
+                        with self._option():
+                            self._token('SYMMETRIC')
+                        self._error('expecting one of: ASYMMETRIC SYMMETRIC')
+                self._row_value_predicand_()
+                self._token('AND')
+                self._row_value_predicand_()
+            with self._option():
+                self._token('MATCH')
+                with self._optional():
+                    self._token('UNIQUE')
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('SIMPLE')
+                        with self._option():
+                            self._token('PARTIAL')
+                        with self._option():
+                            self._token('FULL')
+                        self._error('expecting one of: FULL PARTIAL SIMPLE')
+                self._subquery_()
+            with self._option():
+                self._token('IS')
+                with self._optional():
+                    self._token('NOT')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('A')
+                            self._token('SET')
+                        with self._option():
+                            self._token('OF')
+                            self._token('(')
+                            self._type_list_()
+                            self._token(')')
+                        with self._option():
+                            self._token('NULL')
+                        self._error('expecting one of: A NULL')
+            with self._option():
+                self._token('IS')
+                self._token('DISTINCT')
+                self._token('FROM')
+                self._row_value_predicand_()
+            with self._option():
+                self._comp_op_()
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self.__KW_QUANTIFIER_()
+                            self._subquery_()
+                        with self._option():
+                            self._row_value_predicand_()
+                        self._error('no available options')
+            self._error('expecting one of: IS')
+
+    @graken()
+    def _result_(self):
+        with self._choice():
+            with self._option():
+                self._token('NULL')
+            with self._option():
+                self._value_expr_()
+            self._error('expecting one of: NULL')
+
+    @graken()
+    def _cast_operand_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION_()
+            with self._option():
+                self._value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _target_subtype_(self):
+        with self._choice():
+            with self._option():
+                self._reference_type_()
+            with self._option():
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _method_invocation_(self):
+        with self._choice():
+            with self._option():
+                self._token('(')
+                self._value_expr_primary_()
+                self._token('AS')
+                self._data_type_()
+                self._token(')')
+                self._token('.')
+                self._identifier_()
+                with self._optional():
+                    self._token('(')
+                    with self._optional():
+                        self._sql_argument_list_()
+                    self._token(')')
+            with self._option():
+                self._value_expr_primary_()
+                self._token('.')
+                self._identifier_()
+                with self._optional():
+                    self._token('(')
+                    with self._optional():
+                        self._sql_argument_list_()
+                    self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._common_value_expr_()
+            with self._option():
+                self._boolean_value_expr_()
+            with self._option():
+                self._row_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _common_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._numeric_value_expr_()
+            with self._option():
+                self._value_expr_primary_()
+            with self._option():
+                self._datetime_interval_expr_()
+            with self._option():
+                self._character_value_expr_()
+            with self._option():
+                self._collection_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _collection_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._array_value_expr_()
+            with self._option():
+                self._multiset_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _numeric_value_expr_(self):
+        with self._optional():
+            self._numeric_value_expr_()
+            self._sign_()
+        self._term_()
+
+    @graken()
+    def _par_numeric_value_expr_list_(self):
+        self._token('(')
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._numeric_value_expr_()
+        self._positive_closure(block0, prefix=sep0)
+        self._token(')')
+
+    @graken()
+    def _term_(self):
+        with self._optional():
+            self._term_()
+            self._mult_div_()
+        self._factor_()
+
+    @graken()
+    def _factor_(self):
+        with self._optional():
+            self._sign_()
+        self._numeric_primary_()
+
+    @graken()
+    def _numeric_primary_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_NUMERIC_FUNCTION_()
+                self._par_numeric_value_expr_list_()
+            with self._option():
+                self._token('CARDINALITY')
+                self._token('(')
+                self._collection_value_expr_()
+                self._token(')')
+            with self._option():
+                self._token('EXTRACT')
+                self._token('(')
+                self.__KW_EXTRACT_FIELD_()
+                self._token('FROM')
+                self._datetime_interval_expr_()
+                self._token(')')
+            with self._option():
+                self._position_expr_()
+            with self._option():
+                self._length_expr_()
+            with self._option():
+                self._value_expr_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _position_expr_(self):
+        self._token('POSITION')
+        self._token('(')
+        self._character_value_expr_()
+        self._token('IN')
+        self._character_value_expr_()
+        with self._optional():
+            self._token('USING')
+            self.__KW_CHAR_LENGTH_UNITS_()
+        self._token(')')
+
+    @graken()
+    def _length_expr_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('CHAR_LENGTH')
+                with self._option():
+                    self._token('CHARACTER_LENGTH')
+                with self._option():
+                    self._token('OCTET_LENGTH')
+                self._error('expecting one of: CHARACTER_LENGTH CHAR_LENGTH OCTET_LENGTH')
+        self._token('(')
+        self._character_value_expr_()
+        with self._optional():
+            self._token('USING')
+            self.__KW_CHAR_LENGTH_UNITS_()
+        self._token(')')
+
+    @graken()
+    def _datetime_interval_expr_(self):
+        with self._choice():
+            with self._option():
+                self._datetime_value_expr_()
+            with self._option():
+                self._interval_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _character_value_expr_(self):
+        with self._optional():
+            self._character_value_expr_()
+            self._token('||')
+        self._character_primary_()
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _character_primary_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('UPPER')
+                        with self._option():
+                            self._token('LOWER')
+                        with self._option():
+                            self._token('NORMALIZE')
+                        self._error('expecting one of: LOWER NORMALIZE UPPER')
+                self._token('(')
+                self._character_value_expr_()
+                self._token(')')
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('CONVERT')
+                        with self._option():
+                            self._token('TRANSLATE')
+                        self._error('expecting one of: CONVERT TRANSLATE')
+                self._token('(')
+                self._character_value_expr_()
+                self._token('USING')
+                self._identifier_chain_()
+                self._token(')')
+            with self._option():
+                self._token('TRIM')
+                self._token('(')
+                with self._optional():
+                    with self._optional():
+                        self.__KW_TRIM_SPECIFICATION_()
+                    with self._optional():
+                        self._character_value_expr_()
+                    self._token('FROM')
+                self._character_value_expr_()
+                self._token(')')
+            with self._option():
+                self._character_overlay_func_()
+            with self._option():
+                self._character_substring_func_()
+            with self._option():
+                self._regular_expr_substring_func_()
+            with self._option():
+                self._value_expr_primary_()
+                with self._optional():
+                    self._token('.')
+                    self._token('SPECIFICTYPE')
+            self._error('no available options')
+
+    @graken()
+    def _character_substring_func_(self):
+        self._token('SUBSTRING')
+        self._token('(')
+        self._character_value_expr_()
+        self._token('FROM')
+        self._numeric_value_expr_()
+        with self._optional():
+            self._token('FOR')
+            self._numeric_value_expr_()
+        with self._optional():
+            self._token('USING')
+            self.__KW_CHAR_LENGTH_UNITS_()
+        self._token(')')
+
+    @graken()
+    def _regular_expr_substring_func_(self):
+        self._token('SUBSTRING')
+        self._token('(')
+        self._character_value_expr_()
+        self._token('SIMILAR')
+        self._character_value_expr_()
+        self._token('ESCAPE')
+        self._character_value_expr_()
+        self._token(')')
+
+    @graken()
+    def _character_overlay_func_(self):
+        self._token('OVERLAY')
+        self._token('(')
+        self._character_value_expr_()
+        self._token('PLACING')
+        self._character_value_expr_()
+        self._token('FROM')
+        self._numeric_value_expr_()
+        with self._optional():
+            self._token('FOR')
+            self._numeric_value_expr_()
+        with self._optional():
+            self._token('USING')
+            self.__KW_CHAR_LENGTH_UNITS_()
+        self._token(')')
+
+    @graken()
+    def _datetime_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._datetime_value_expr_()
+                self._sign_()
+                self._interval_term_()
+            with self._option():
+                with self._optional():
+                    self._interval_value_expr_()
+                    self._token('+')
+                self._datetime_factor_()
+            self._error('no available options')
+
+    @graken()
+    def _datetime_factor_(self):
+        self._datetime_primary_()
+        with self._optional():
+            self._token('AT')
+            self._time_zone_specifier_()
+
+    @graken()
+    def _datetime_primary_(self):
+        with self._choice():
+            with self._option():
+                self._value_expr_primary_()
+            with self._option():
+                self._datetime_value_func_()
+            self._error('no available options')
+
+    @graken()
+    def _time_zone_specifier_(self):
+        with self._choice():
+            with self._option():
+                self._token('LOCAL')
+            with self._option():
+                self._token('TIME')
+                self._token('ZONE')
+                self._interval_primary_()
+            self._error('expecting one of: LOCAL')
+
+    @graken()
+    def _datetime_value_func_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('CURRENT_TIME')
+                with self._option():
+                    self._token('CURRENT_TIMESTAMP')
+                with self._option():
+                    self._token('LOCALTIME')
+                with self._option():
+                    self._token('LOCALTIMESTAMP')
+                with self._option():
+                    self._token('CURRENT_DATE')
+                self._error('expecting one of: CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP LOCALTIME LOCALTIMESTAMP')
+        with self._optional():
+            self._par_integer_list_()
+
+    @graken()
+    def _interval_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._token('(')
+                self._datetime_value_expr_()
+                self._token('-')
+                self._datetime_factor_()
+                self._token(')')
+                self._interval_qualifier_()
+            with self._option():
+                with self._optional():
+                    self._interval_value_expr_()
+                    self._sign_()
+                self._interval_term_()
+            self._error('no available options')
+
+    @graken()
+    def _interval_term_(self):
+        with self._choice():
+            with self._option():
+                self._interval_term_()
+                self._mult_div_()
+                self._factor_()
+            with self._option():
+                with self._optional():
+                    self._term_()
+                    self._token('*')
+                with self._optional():
+                    self._sign_()
+                self._interval_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _interval_primary_(self):
+        with self._choice():
+            with self._option():
+                self._token('ABS')
+                self._token('(')
+                self._interval_value_expr_()
+                self._token(')')
+            with self._option():
+                self._value_expr_primary_()
+                with self._optional():
+                    self._interval_qualifier_()
+            self._error('no available options')
+
+    @graken()
+    def _boolean_value_expr_(self):
+        with self._optional():
+            self._boolean_value_expr_()
+            self._token('OR')
+        self._boolean_term_()
+
+    @graken()
+    def _boolean_term_(self):
+        with self._optional():
+            self._boolean_term_()
+            self._token('AND')
+        with self._optional():
+            self._token('NOT')
+        self._boolean_primary_()
+        with self._optional():
+            self._token('IS')
+            with self._optional():
+                self._token('NOT')
+            self.__KW_BOOL_()
+
+    @graken()
+    def _boolean_primary_(self):
+        with self._choice():
+            with self._option():
+                self._predicate_()
+            with self._option():
+                self._boolean_predicand_()
+            self._error('no available options')
+
+    @graken()
+    def _boolean_predicand_(self):
+        with self._choice():
+            with self._option():
+                self._par_boolean_value_expr_()
+            with self._option():
+                self._nonpar_value_expr_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _par_boolean_value_expr_(self):
+        self._token('(')
+        self._boolean_value_expr_()
+        self._token(')')
+
+    @graken()
+    def _array_value_expr_(self):
+        with self._optional():
+            self._array_value_expr_()
+            self._token('||')
+        self._value_expr_primary_()
+
+    @graken()
+    def _multiset_value_expr_(self):
+        with self._optional():
+            self._multiset_value_expr_()
+            self._token('MULTISET')
+            self.__KW_UNION_EXCEPT_()
+            with self._optional():
+                self.__KW_ALL_DISTINCT_()
+        self._multiset_term_()
+
+    @graken()
+    def _multiset_term_(self):
+        with self._optional():
+            self._multiset_term_()
+            self._token('MULTISET')
+            self._token('INTERSECT')
+            with self._optional():
+                self.__KW_ALL_DISTINCT_()
+        self._multiset_primary_()
+
+    @graken()
+    def _multiset_primary_(self):
+        with self._choice():
+            with self._option():
+                self._token('SET')
+                self._token('(')
+                self._multiset_value_expr_()
+                self._token(')')
+            with self._option():
+                self._value_expr_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _row_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._subquery_()
+            with self._option():
+                with self._optional():
+                    self._token('ROW')
+                self._token('(')
+                self._value_expr_list_()
+                self._token(')')
+            with self._option():
+                self._nonpar_value_expr_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _table_row_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._row_value_expr_()
+            with self._option():
+                self._common_value_expr_()
+            with self._option():
+                self._boolean_value_expr_()
+            self._error('no available options')
+
+    @graken()
+    def _row_value_predicand_(self):
+        with self._choice():
+            with self._option():
+                self._common_value_expr_()
+            with self._option():
+                self._row_value_expr_()
+            with self._option():
+                self._boolean_predicand_()
+            self._error('no available options')
+
+    @graken()
+    def _table_expr_(self):
+        self._from_clause_()
+        with self._optional():
+            self._where_clause_()
+        with self._optional():
+            self._group_by_clause_()
+        with self._optional():
+            self._having_clause_()
+        with self._optional():
+            self._window_clause_()
+
+    @graken()
+    def _from_clause_(self):
+        self._token('FROM')
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._table_reference_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _table_reference_(self):
+        self._table_primary_or_joined_table_()
+        with self._optional():
+            self._sample_clause_()
+
+    @graken()
+    def _table_primary_or_joined_table_(self):
+        with self._choice():
+            with self._option():
+                self._table_primary_()
+            with self._option():
+                self._joined_table_()
+            self._error('no available options')
+
+    @graken()
+    def _sample_clause_(self):
+        self._token('TABLESAMPLE')
+        self.__KW_SAMPLE_METHOD_()
+        self._par_numeric_value_expr_list_()
+        with self._optional():
+            self._token('REPEATABLE')
+            self._par_numeric_value_expr_list_()
+
+    @graken()
+    def _table_primary_(self):
+        with self._choice():
+            with self._option():
+                self._target_table_()
+                with self._optional():
+                    self._as_clause_()
+                    with self._optional():
+                        self._par_identifier_list_()
+            with self._option():
+                with self._optional():
+                    self._token('LATERAL')
+                self._subquery_()
+                self._as_clause_()
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('UNNEST')
+                        with self._option():
+                            self._token('TABLE')
+                        self._error('expecting one of: TABLE UNNEST')
+                self._token('(')
+                self._collection_value_expr_()
+                self._token(')')
+                with self._optional():
+                    self._token('WITH')
+                    self._token('ORDINALITY')
+                self._as_clause_()
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('(')
+                self._joined_table_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _joined_table_(self):
+        self._table_reference_()
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._qualified_join_()
+                with self._option():
+                    self._unqualified_join_()
+                self._error('no available options')
+
+    @graken()
+    def _unqualified_join_(self):
+        self.__KW_UNQUALIFIED_JOIN_()
+        self._table_primary_()
+
+    @graken()
+    def _qualified_join_(self):
+        with self._optional():
+            self.__KW_JOIN_TYPE_()
+        self._token('JOIN')
+        self._table_reference_()
+        self._join_spec_()
+
+    @graken()
+    def _join_spec_(self):
+        with self._choice():
+            with self._option():
+                self._token('ON')
+                self._boolean_value_expr_()
+            with self._option():
+                self._token('USING')
+                self._par_identifier_list_()
+            self._error('no available options')
+
+    @graken()
+    def _where_clause_(self):
+        self._token('WHERE')
+        self._boolean_value_expr_()
+
+    @graken()
+    def _group_by_clause_(self):
+        self._token('GROUP')
+        self._token('BY')
+        with self._optional():
+            self.__KW_SET_QUANTIFIER_()
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._grouping_element_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _grouping_element_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('ROLLUP')
+                        with self._option():
+                            self._token('CUBE')
+                        self._error('expecting one of: CUBE ROLLUP')
+                self._token('(')
+                self._ordinary_grouping_set_list_()
+                self._token(')')
+            with self._option():
+                self._token('GROUPING')
+                self._token('SETS')
+                self._token('(')
+
+                def sep1():
+                    self._token(',')
+
+                def block1():
+                    self._grouping_element_()
+                self._positive_closure(block1, prefix=sep1)
+                self._token(')')
+            with self._option():
+                self._ordinary_grouping_set_()
+            with self._option():
+                self._empty_grouping_set_()
+            self._error('no available options')
+
+    @graken()
+    def _ordinary_grouping_set_(self):
+        with self._choice():
+            with self._option():
+                self._grouping_column_reference_()
+            with self._option():
+                self._token('(')
+                self._grouping_column_reference_list_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _grouping_column_reference_(self):
+        self._identifier_chain_()
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _grouping_column_reference_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._grouping_column_reference_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _ordinary_grouping_set_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._ordinary_grouping_set_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _having_clause_(self):
+        self._token('HAVING')
+        self._boolean_value_expr_()
+
+    @graken()
+    def _window_clause_(self):
+        self._token('WINDOW')
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._window_def_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _window_def_(self):
+        self._identifier_()
+        self._token('AS')
+        self._window_spec_()
+
+    @graken()
+    def _window_spec_(self):
+        self._token('(')
+        with self._optional():
+            self._identifier_()
+        with self._optional():
+            self._window_partition_clause_()
+        with self._optional():
+            self._order_by_clause_()
+        with self._optional():
+            self._window_frame_clause_()
+        self._token(')')
+
+    @graken()
+    def _window_partition_clause_(self):
+        self._token('PARTITION')
+        self._token('BY')
+        self._grouping_column_reference_list_()
+
+    @graken()
+    def _window_frame_clause_(self):
+        self.__KW_WINDOW_FRAME_UNITS_()
+        self._window_frame_extent_()
+        with self._optional():
+            self._token('EXCLUDE')
+            with self._optional():
+                with self._choice():
+                    with self._option():
+                        self._token('CURRENT')
+                        self._token('ROW')
+                    with self._option():
+                        self._token('GROUP')
+                    with self._option():
+                        self._token('TIES')
+                    with self._option():
+                        self._token('NO')
+                        self._token('OTHERS')
+                    self._error('expecting one of: CURRENT GROUP NO TIES')
+
+    @graken()
+    def _window_frame_extent_(self):
+        with self._choice():
+            with self._option():
+                self._token('BETWEEN')
+                self._window_frame_bound_()
+                self._token('AND')
+                self._window_frame_bound_()
+            with self._option():
+                self._window_frame_start_()
+            self._error('no available options')
+
+    @graken()
+    def _window_frame_start_(self):
+        with self._choice():
+            with self._option():
+                self._token('UNBOUNDED')
+                self._token('PRECEDING')
+            with self._option():
+                self._token('CURRENT')
+                self._token('ROW')
+            with self._option():
+                self._unsigned_value_spec_()
+                self._token('PRECEDING')
+            self._error('expecting one of: CURRENT UNBOUNDED')
+
+    @graken()
+    def _window_frame_bound_(self):
+        with self._choice():
+            with self._option():
+                self._token('UNBOUNDED')
+                self._token('FOLLOWING')
+            with self._option():
+                self._window_frame_start_()
+            with self._option():
+                self._unsigned_value_spec_()
+                self._token('FOLLOWING')
+            self._error('expecting one of: UNBOUNDED')
+
+    @graken()
+    def _select_list_(self):
+        with self._choice():
+            with self._option():
+                self._token('*')
+            with self._option():
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._select_sublist_()
+                self._positive_closure(block0, prefix=sep0)
+            self._error('expecting one of: *')
+
+    @graken()
+    def _select_sublist_(self):
+        with self._choice():
+            with self._option():
+                self._value_expr_primary_()
+                self._token('.')
+                self._token('*')
+                with self._optional():
+                    self._token('AS')
+                    self._par_identifier_list_()
+            with self._option():
+                self._identifier_chain_()
+                self._token('.')
+                self._token('*')
+            with self._option():
+                self._value_expr_()
+                with self._optional():
+                    self._as_clause_()
+            self._error('no available options')
+
+    @graken()
+    def _as_clause_(self):
+        with self._optional():
+            self._token('AS')
+        self._identifier_()
+
+    @graken()
+    def _query_expr_(self):
+        with self._optional():
+            self._with_clause_()
+        self._query_expr_body_()
+
+    @graken()
+    def _with_clause_(self):
+        self._token('WITH')
+        with self._optional():
+            self._token('RECURSIVE')
+        self._with_list_()
+
+    @graken()
+    def _with_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._with_element_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _with_element_(self):
+        self._identifier_()
+        with self._optional():
+            self._par_identifier_list_()
+        self._token('AS')
+        self._subquery_()
+        with self._optional():
+            self._search_or_cycle_clause_()
+
+    @graken()
+    def _query_expr_body_(self):
+        with self._choice():
+            with self._option():
+                self._non_join_query_expr_()
+            with self._option():
+                self._joined_table_()
+            self._error('no available options')
+
+    @graken()
+    def _non_join_query_expr_(self):
+        with self._choice():
+            with self._option():
+                self._query_expr_body_()
+                self.__KW_UNION_EXCEPT_()
+                with self._optional():
+                    self.__KW_ALL_DISTINCT_()
+                with self._optional():
+                    self._token('CORRESPONDING')
+                    with self._optional():
+                        self._token('BY')
+                        self._par_identifier_list_()
+                self._query_term_()
+            with self._option():
+                self._non_join_query_term_()
+            self._error('no available options')
+
+    @graken()
+    def _query_term_(self):
+        with self._choice():
+            with self._option():
+                self._non_join_query_term_()
+            with self._option():
+                self._joined_table_()
+            self._error('no available options')
+
+    @graken()
+    def _non_join_query_term_(self):
+        with self._choice():
+            with self._option():
+                self._query_term_()
+                self._token('INTERSECT')
+                with self._optional():
+                    self.__KW_ALL_DISTINCT_()
+                with self._optional():
+                    self._token('CORRESPONDING')
+                    with self._optional():
+                        self._token('BY')
+                        self._par_identifier_list_()
+                self._query_primary_()
+            with self._option():
+                self._non_join_query_primary_()
+            self._error('no available options')
+
+    @graken()
+    def _query_primary_(self):
+        with self._choice():
+            with self._option():
+                self._non_join_query_primary_()
+            with self._option():
+                self._joined_table_()
+            self._error('no available options')
+
+    @graken()
+    def _non_join_query_primary_(self):
+        with self._choice():
+            with self._option():
+                self._token('SELECT')
+                with self._optional():
+                    self.__KW_SET_QUANTIFIER_()
+                self._select_list_()
+                self._table_expr_()
+            with self._option():
+                self._token('VALUES')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._table_row_value_expr_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                self._token('TABLE')
+                self._identifier_chain_()
+            with self._option():
+                self._token('(')
+                self._non_join_query_expr_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _search_or_cycle_clause_(self):
+        with self._choice():
+            with self._option():
+                self._search_clause_()
+            with self._option():
+                self._cycle_clause_()
+            self._error('no available options')
+
+    @graken()
+    def _search_clause_(self):
+        self._token('SEARCH')
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('DEPTH')
+                with self._option():
+                    self._token('BREADTH')
+                self._error('expecting one of: BREADTH DEPTH')
+        self._token('FIRST')
+        self._token('BY')
+        self._sort_spec_list_()
+        self._token('SET')
+        self._identifier_()
+        with self._optional():
+            self._cycle_clause_()
+
+    @graken()
+    def _cycle_clause_(self):
+        self._token('CYCLE')
+        self._identifier_list_()
+        self._token('SET')
+        self._identifier_()
+        self._token('TO')
+        self._value_expr_()
+        self._token('DEFAULT')
+        self._value_expr_()
+        self._token('USING')
+        self._identifier_()
+
+    @graken()
+    def _subquery_(self):
+        self._token('(')
+        self._query_expr_()
+        self._token(')')
+
+    @graken()
+    def _predicate_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('EXISTS')
+                        with self._option():
+                            self._token('UNIQUE')
+                        self._error('expecting one of: EXISTS UNIQUE')
+                self._subquery_()
+            with self._option():
+                self._row_value_predicand_()
+                self._predicate_when_operand_()
+            with self._option():
+                self._character_value_expr_()
+                self._token('IS')
+                with self._optional():
+                    self._token('NOT')
+                self._token('NORMALIZED')
+            self._error('no available options')
+
+    @graken()
+    def _in_predicate_value_(self):
+        with self._choice():
+            with self._option():
+                self._token('(')
+                self._in_value_list_()
+                self._token(')')
+            with self._option():
+                self._subquery_()
+            self._error('no available options')
+
+    @graken()
+    def _in_value_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._row_value_expr_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _type_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            with self._optional():
+                self._token('ONLY')
+            self._identifier_chain_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _routine_invocation_(self):
+        self._identifier_chain_()
+        self._token('(')
+        with self._optional():
+            self._sql_argument_list_()
+        self._token(')')
+
+    @graken()
+    def _sql_argument_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._sql_argument_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _sql_argument_(self):
+        with self._choice():
+            with self._option():
+                self._value_expr_()
+                with self._optional():
+                    self._token('AS')
+                    self._identifier_chain_()
+            with self._option():
+                self._target_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _aggregate_func_(self):
+        with self._choice():
+            with self._option():
+                self._token('COUNT')
+                self._token('(')
+                self._token('*')
+                self._token(')')
+                with self._optional():
+                    self._filter_clause_()
+            with self._option():
+                self.__KW_SET_COMPUTATIONAL_OPERATION_()
+                self._token('(')
+                with self._optional():
+                    self.__KW_SET_QUANTIFIER_()
+                self._value_expr_()
+                self._token(')')
+                with self._optional():
+                    self._filter_clause_()
+            with self._option():
+                self.__KW_BINARY_SET_FUNCTION_TYPE_()
+                self._par_numeric_value_expr_list_()
+                with self._optional():
+                    self._filter_clause_()
+            with self._option():
+                self.__KW_RANK_FUNCTION_TYPE_()
+                self._token('(')
+                self._value_expr_list_()
+                self._token(')')
+                self._within_group_spec_()
+                with self._optional():
+                    self._filter_clause_()
+            with self._option():
+                self.__KW_INVERSE_DISTRIBUTION_FUNCTION_TYPE_()
+                self._par_numeric_value_expr_list_()
+                self._within_group_spec_()
+                with self._optional():
+                    self._filter_clause_()
+            self._error('expecting one of: COUNT')
+
+    @graken()
+    def _filter_clause_(self):
+        self._token('FILTER')
+        self._token('(')
+        self._where_clause_()
+        self._token(')')
+
+    @graken()
+    def _within_group_spec_(self):
+        self._token('WITHIN')
+        self._token('GROUP')
+        self._token('(')
+        self._order_by_clause_()
+        self._token(')')
+
+    @graken()
+    def _sort_spec_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._value_expr_()
+            with self._optional():
+                self.__KW_ORDERING_SPECIFICATION_()
+            with self._optional():
+                self._token('NULLS')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('FIRST')
+                        with self._option():
+                            self._token('LAST')
+                        self._error('expecting one of: FIRST LAST')
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _order_by_clause_(self):
+        self._token('ORDER')
+        self._token('BY')
+        self._sort_spec_list_()
+
+    @graken()
+    def _select_stmt_(self):
+        self._query_expr_()
+        with self._optional():
+            self._order_by_clause_()
+        with self._optional():
+            self._token('FOR')
+            with self._group():
+                with self._choice():
+                    with self._option():
+                        self._token('READ')
+                        self._token('ONLY')
+                    with self._option():
+                        self._token('UPDATE')
+                        with self._optional():
+                            self._token('OF')
+                            self._identifier_list_()
+                    self._error('expecting one of: READ UPDATE')
+
+    @graken()
+    def _directly_executable_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._direct_sql_data_stmt_()
+            with self._option():
+                self._sql_schema_stmt_()
+            with self._option():
+                self._sql_session_stmt_()
+            with self._option():
+                self._sql_connection_stmt_()
+            with self._option():
+                self._sql_transaction_stmt_()
+            self._error('no available options')
+
+    @graken()
+    def _direct_sql_stmt_(self):
+
+        def sep0():
+            self._token(';')
+
+        def block0():
+            self._directly_executable_stmt_()
+        self._positive_closure(block0, prefix=sep0)
+        with self._optional():
+            self._token(';')
+
+    @graken()
+    def _direct_sql_data_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._select_stmt_()
+            with self._option():
+                self._data_manipulation_stmt_()
+            with self._option():
+                self._temporary_table_declaration_()
+            self._error('no available options')
+
+    @graken()
+    def _data_manipulation_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._insert_stmt_()
+            with self._option():
+                self._merge_stmt_()
+            with self._option():
+                self._delete_stmt_searched_()
+            with self._option():
+                self._update_stmt_searched_()
+            self._error('no available options')
+
+    @graken()
+    def _schema_element_(self):
+        with self._choice():
+            with self._option():
+                self._table_def_()
+            with self._option():
+                self._schema_routine_()
+            with self._option():
+                self._view_def_()
+            with self._option():
+                self._grant_stmt_()
+            with self._option():
+                self._role_def_()
+            with self._option():
+                self._domain_def_()
+            with self._option():
+                self._trigger_def_()
+            with self._option():
+                self._assertion_def_()
+            with self._option():
+                self._collation_def_()
+            with self._option():
+                self._transform_def_()
+            with self._option():
+                self._character_set_def_()
+            with self._option():
+                self._transliteration_def_()
+            with self._option():
+                self._sequence_generator_def_()
+            with self._option():
+                self._user_defined_cast_def_()
+            with self._option():
+                self._user_defined_type_def_()
+            with self._option():
+                self._user_defined_ordering_def_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_executable_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._sql_schema_stmt_()
+            with self._option():
+                self._sql_data_stmt_()
+            with self._option():
+                self._sql_control_stmt_()
+            with self._option():
+                self._sql_session_stmt_()
+            with self._option():
+                self._sql_dynamic_stmt_()
+            with self._option():
+                self._sql_connection_stmt_()
+            with self._option():
+                self._sql_transaction_stmt_()
+            with self._option():
+                self._sql_diagnostics_stmt_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_schema_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._sql_schema_def_stmt_()
+            with self._option():
+                self._sql_schema_manipulation_stmt_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_schema_def_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._schema_def_()
+            with self._option():
+                self._schema_element_()
+            self._error('no available options')
+
+    @graken()
+    def _external_routine_name_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_()
+            with self._option():
+                self._character_string_literal_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_stmt_name_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_()
+            with self._option():
+                self._descriptor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _dynamic_cursor_name_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_chain_()
+            with self._option():
+                self._descriptor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _descriptor_name_(self):
+        with self._optional():
+            self.__KW_GLOBAL_OR_LOCAL_()
+        self._simple_value_spec_()
+
+    @graken()
+    def _value_spec_(self):
+        with self._choice():
+            with self._option():
+                self._literal_()
+            with self._option():
+                self._general_value_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _contextually_typed_row_value_constructor_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._contextually_typed_row_value_constructor_element_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _contextually_typed_row_value_constructor_element_(self):
+        with self._choice():
+            with self._option():
+                self._value_expr_()
+            with self._option():
+                self.__KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION_()
+            self._error('no available options')
+
+    @graken()
+    def _contextually_typed_row_value_expr_(self):
+        with self._choice():
+            with self._option():
+                self._nonpar_value_expr_primary_()
+            with self._option():
+                self._common_value_expr_()
+            with self._option():
+                self._boolean_value_expr_()
+            with self._option():
+                self.__KW_CONTEXTUALLY_TYPED_VALUE_SPECIFICATION_()
+            with self._option():
+                with self._optional():
+                    self._token('ROW')
+                self._token('(')
+                self._contextually_typed_row_value_constructor_list_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _specific_routine_designator_(self):
+        with self._choice():
+            with self._option():
+                self._token('SPECIFIC')
+                self.__KW_ROUTINE_TYPE_()
+                self._identifier_chain_()
+            with self._option():
+                self.__KW_ROUTINE_TYPE_()
+                self._identifier_chain_()
+                with self._optional():
+                    self._token('(')
+                    with self._optional():
+                        self._data_type_list_()
+                    self._token(')')
+                with self._optional():
+                    self._token('FOR')
+                    self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _data_type_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._data_type_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _schema_character_set_or_path_(self):
+        with self._choice():
+            with self._option():
+                self._schema_character_set_spec_()
+                with self._optional():
+                    self._token('PATH')
+                    self._identifier_chain_list_()
+            with self._option():
+                self._token('PATH')
+                self._identifier_chain_list_()
+                with self._optional():
+                    self._schema_character_set_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _schema_name_clause_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_chain_()
+            with self._option():
+                with self._optional():
+                    self._identifier_chain_()
+                self._token('AUTHORIZATION')
+                self._identifier_()
+            self._error('no available options')
+
+    @graken()
+    def _schema_character_set_spec_(self):
+        self._token('DEFAULT')
+        self._token('CHARACTER')
+        self._token('SET')
+        self._identifier_chain_()
+
+    @graken()
+    def _table_def_(self):
+        self._token('CREATE')
+        with self._optional():
+            self.__KW_GLOBAL_OR_LOCAL_()
+            self._token('TEMPORARY')
+        self._token('TABLE')
+        self._identifier_chain_()
+        self._table_contents_source_()
+        with self._optional():
+            self._token('ON')
+            self._token('COMMIT')
+            self.__KW_TABLE_COMMIT_ACTION_()
+            self._token('ROWS')
+
+    @graken()
+    def _table_contents_source_(self):
+        with self._choice():
+            with self._option():
+                self._token('(')
+                self._table_element_list_()
+                self._token(')')
+            with self._option():
+                self._token('OF')
+                self._identifier_chain_()
+                with self._optional():
+                    self._token('UNDER')
+                    self._identifier_chain_()
+                with self._optional():
+                    self._token('(')
+                    self._table_element_list_()
+                    self._token(')')
+            with self._option():
+                with self._optional():
+                    self._par_identifier_list_()
+                self._token('AS')
+                self._subquery_()
+                self._token('WITH')
+                with self._optional():
+                    self._token('NO')
+                self._token('DATA')
+            self._error('no available options')
+
+    @graken()
+    def _table_element_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._table_element_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _table_element_(self):
+        with self._choice():
+            with self._option():
+                self._column_def_()
+            with self._option():
+                self._table_constraint_def_()
+            with self._option():
+                self._token('LIKE')
+                self._identifier_chain_()
+                with self._optional():
+                    self.__KW_LIKE_OPTIONS_()
+            with self._option():
+                self._self_referencing_column_spec_()
+            with self._option():
+                self._identifier_()
+                self._token('WITH')
+                self._token('OPTIONS')
+                with self._optional():
+                    self._token('SCOPE')
+                    self._identifier_chain_()
+                with self._optional():
+                    self._default_clause_()
+                with self._optional():
+
+                    def block0():
+                        self._column_constraint_def_()
+                    self._positive_closure(block0)
+            self._error('no available options')
+
+    @graken()
+    def _self_referencing_column_spec_(self):
+        self._token('REF')
+        self._token('IS')
+        self._identifier_()
+        self.__KW_REFERENCE_GENERATION_()
+
+    @graken()
+    def _column_def_(self):
+        self._identifier_()
+        with self._optional():
+            with self._choice():
+                with self._option():
+                    self._data_type_()
+                with self._option():
+                    self._identifier_chain_()
+                self._error('no available options')
+        with self._optional():
+            self.__KW_REFERENCE_SCOPE_CHECK_()
+        with self._optional():
+            with self._choice():
+                with self._option():
+                    self._default_clause_()
+                with self._option():
+                    self._identity_column_spec_()
+                with self._option():
+                    self._token('GENERATED')
+                    self._token('ALWAYS')
+                    self._token('AS')
+                    self._par_value_expr_()
+                self._error('no available options')
+        with self._optional():
+
+            def block2():
+                self._column_constraint_def_()
+            self._positive_closure(block2)
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _column_constraint_def_(self):
+        with self._optional():
+            self._token('CONSTRAINT')
+            self._identifier_chain_()
+        self._column_constraint_()
+        with self._optional():
+            self.__KW_CONSTRAINT_CHARACTERISTICS_()
+
+    @graken()
+    def _column_constraint_(self):
+        with self._choice():
+            with self._option():
+                self._token('NOT')
+                self._token('NULL')
+            with self._option():
+                self.__KW_UNIQUE_SPECIFICATION_()
+            with self._option():
+                self._references_spec_()
+            with self._option():
+                self._token('CHECK')
+                self._par_boolean_value_expr_()
+            self._error('expecting one of: NOT')
+
+    @graken()
+    def _identity_column_spec_(self):
+        self._token('GENERATED')
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('ALWAYS')
+                with self._option():
+                    self._token('BY')
+                    self._token('DEFAULT')
+                self._error('expecting one of: ALWAYS BY')
+        self._token('AS')
+        self._token('IDENTITY')
+        with self._optional():
+            self._token('(')
+
+            def block1():
+                self._common_sequence_generator_option_()
+            self._positive_closure(block1)
+            self._token(')')
+
+    @graken()
+    def _default_clause_(self):
+        self._token('DEFAULT')
+        self._default_option_()
+
+    @graken()
+    def _default_option_(self):
+        with self._choice():
+            with self._option():
+                self._literal_()
+            with self._option():
+                self._datetime_value_func_()
+            with self._option():
+                self._token('USER')
+            with self._option():
+                self._token('CURRENT_USER')
+            with self._option():
+                self._token('CURRENT_ROLE')
+            with self._option():
+                self._token('SESSION_USER')
+            with self._option():
+                self._token('SYSTEM_USER')
+            with self._option():
+                self._token('CURRENT_PATH')
+            with self._option():
+                self.__KW_IMPLICITLY_TYPED_VALUE_SPECIFICATION_()
+            self._error('expecting one of: CURRENT_PATH CURRENT_ROLE CURRENT_USER SESSION_USER SYSTEM_USER USER')
+
+    @graken()
+    def _table_constraint_def_(self):
+        with self._optional():
+            self._token('CONSTRAINT')
+            self._identifier_chain_()
+        self._table_constraint_()
+        with self._optional():
+            self.__KW_CONSTRAINT_CHARACTERISTICS_()
+
+    @graken()
+    def _table_constraint_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_UNIQUE_SPECIFICATION_()
+                self._par_identifier_list_()
+            with self._option():
+                self._token('UNIQUE')
+                self._token('VALUE')
+            with self._option():
+                self._token('FOREIGN')
+                self._token('KEY')
+                self._par_identifier_list_()
+                self._references_spec_()
+            with self._option():
+                self._token('CHECK')
+                self._par_boolean_value_expr_()
+            self._error('expecting one of: UNIQUE')
+
+    @graken()
+    def _references_spec_(self):
+        self._token('REFERENCES')
+        self._identifier_chain_()
+        with self._optional():
+            self._par_identifier_list_()
+        with self._optional():
+            self._token('MATCH')
+            self.__KW_MATCH_TYPE_()
+        with self._optional():
+            self.__KW_REFERENTIAL_TRIGGERED_ACTION_()
+
+    @graken()
+    def _alter_table_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('ADD')
+                with self._optional():
+                    self._token('COLUMN')
+                self._column_def_()
+            with self._option():
+                self._token('ALTER')
+                with self._optional():
+                    self._token('COLUMN')
+                self._identifier_()
+                self._alter_column_action_()
+            with self._option():
+                self._token('DROP')
+                with self._optional():
+                    self._token('COLUMN')
+                self._identifier_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('ADD')
+                self._table_constraint_def_()
+            with self._option():
+                self._token('DROP')
+                self._token('CONSTRAINT')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            self._error('no available options')
+
+    @graken()
+    def _alter_column_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('SET')
+                self._default_clause_()
+            with self._option():
+                self.__KW_DROP_DEFAULT_CLAUSE_()
+            with self._option():
+                self._token('ADD')
+                self._token('SCOPE')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DROP')
+                self._token('SCOPE')
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+
+                def block0():
+                    self._alter_identity_column_option_()
+                self._positive_closure(block0)
+            self._error('no available options')
+
+    @graken()
+    def _alter_identity_column_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('RESTART')
+                self._token('WITH')
+                self._signed_numeric_literal_()
+            with self._option():
+                self._token('SET')
+                self._basic_sequence_generator_option_()
+            self._error('no available options')
+
+    @graken()
+    def _view_def_(self):
+        self._token('CREATE')
+        with self._optional():
+            self._token('RECURSIVE')
+        self._token('VIEW')
+        self._identifier_chain_()
+        self._view_spec_()
+        self._token('AS')
+        self._query_expr_()
+        with self._optional():
+            self._token('WITH')
+            with self._optional():
+                self.__KW_LEVELS_CLAUSE_()
+            self._token('CHECK')
+            self._token('OPTION')
+
+    @graken()
+    def _view_spec_(self):
+        with self._choice():
+            with self._option():
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('OF')
+                self._identifier_chain_()
+                with self._optional():
+                    self._token('UNDER')
+                    self._identifier_chain_()
+                with self._optional():
+                    self._token('(')
+
+                    def sep0():
+                        self._token(',')
+
+                    def block0():
+                        self._view_element_()
+                    self._positive_closure(block0, prefix=sep0)
+                    self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _view_element_(self):
+        with self._choice():
+            with self._option():
+                self._self_referencing_column_spec_()
+            with self._option():
+                self._identifier_()
+                self._token('WITH')
+                self._token('OPTIONS')
+                self._token('SCOPE')
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _domain_def_(self):
+        self._token('CREATE')
+        self._token('DOMAIN')
+        self._identifier_chain_()
+        with self._optional():
+            self._token('AS')
+        self._data_type_()
+        with self._optional():
+            self._default_clause_()
+        with self._optional():
+
+            def block0():
+                self._domain_constraint_()
+            self._positive_closure(block0)
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _domain_constraint_(self):
+        with self._optional():
+            self._token('CONSTRAINT')
+            self._identifier_chain_()
+        self._token('CHECK')
+        self._par_boolean_value_expr_()
+        with self._optional():
+            self.__KW_CONSTRAINT_CHARACTERISTICS_()
+
+    @graken()
+    def _alter_domain_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('SET')
+                self._default_clause_()
+            with self._option():
+                self.__KW_DROP_DEFAULT_CLAUSE_()
+            with self._option():
+                self._token('ADD')
+                self._domain_constraint_()
+            with self._option():
+                self._token('DROP')
+                self._token('CONSTRAINT')
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _character_set_def_(self):
+        self._token('CREATE')
+        self._token('CHARACTER')
+        self._token('SET')
+        self._identifier_chain_()
+        with self._optional():
+            self._token('AS')
+        self._token('GET')
+        self._identifier_chain_()
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _collation_def_(self):
+        self._token('CREATE')
+        self._token('COLLATION')
+        self._identifier_chain_()
+        self._token('FOR')
+        self._identifier_chain_()
+        self._token('FROM')
+        self._identifier_chain_()
+        with self._optional():
+            self.__KW_PAD_CHARACTERISTIC_()
+
+    @graken()
+    def _transliteration_def_(self):
+        self._token('CREATE')
+        self._token('TRANSLATION')
+        self._identifier_chain_()
+        self._token('FOR')
+        self._identifier_chain_()
+        self._token('TO')
+        self._identifier_chain_()
+        self._token('FROM')
+        self._transliteration_source_()
+
+    @graken()
+    def _transliteration_source_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_chain_()
+            with self._option():
+                self._specific_routine_designator_()
+            self._error('no available options')
+
+    @graken()
+    def _assertion_def_(self):
+        self._token('CREATE')
+        self._token('ASSERTION')
+        self._identifier_chain_()
+        self._token('CHECK')
+        self._par_boolean_value_expr_()
+        with self._optional():
+            self.__KW_CONSTRAINT_CHARACTERISTICS_()
+
+    @graken()
+    def _trigger_def_(self):
+        self._token('CREATE')
+        self._token('TRIGGER')
+        self._identifier_chain_()
+        self.__KW_TRIGGER_ACTION_TIME_()
+        self._trigger_event_()
+        self._token('ON')
+        self._identifier_chain_()
+        with self._optional():
+            self._token('REFERENCING')
+
+            def block0():
+                self.__KW_OLD_NEW_()
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('ROW')
+                        with self._option():
+                            self._token('TABLE')
+                        self._error('expecting one of: ROW TABLE')
+                self._as_clause_()
+            self._positive_closure(block0)
+        self._triggered_action_()
+
+    @graken()
+    def _trigger_event_(self):
+        with self._choice():
+            with self._option():
+                self._token('INSERT')
+            with self._option():
+                self._token('DELETE')
+            with self._option():
+                self._token('UPDATE')
+                with self._optional():
+                    self._token('OF')
+                    self._identifier_list_()
+            self._error('expecting one of: DELETE INSERT UPDATE')
+
+    @graken()
+    def _triggered_action_(self):
+        with self._optional():
+            self._token('FOR')
+            self._token('EACH')
+            with self._group():
+                with self._choice():
+                    with self._option():
+                        self._token('ROW')
+                    with self._option():
+                        self._token('STATEMENT')
+                    self._error('expecting one of: ROW STATEMENT')
+        with self._optional():
+            self._token('WHEN')
+            self._par_boolean_value_expr_()
+        self._triggered_sql_stmt_()
+
+    @graken()
+    def _triggered_sql_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._sql_executable_stmt_()
+            with self._option():
+                self._token('BEGIN')
+                self._token('ATOMIC')
+
+                def block0():
+                    self._sql_executable_stmt_()
+                    self._token(';')
+                self._positive_closure(block0)
+                self._token('END')
+            self._error('no available options')
+
+    @graken()
+    def _user_defined_type_def_(self):
+        self._token('CREATE')
+        self._token('TYPE')
+        self._user_defined_type_body_()
+
+    @graken()
+    def _user_defined_type_body_(self):
+        self._identifier_chain_()
+        with self._optional():
+            self._token('UNDER')
+            self._identifier_chain_()
+        with self._optional():
+            self._token('AS')
+            self._representation_()
+        with self._optional():
+
+            def block0():
+                self._user_defined_type_option_()
+            self._positive_closure(block0)
+        with self._optional():
+
+            def sep1():
+                self._token(',')
+
+            def block1():
+                self._method_spec_()
+            self._positive_closure(block1, prefix=sep1)
+
+    @graken()
+    def _user_defined_type_option_(self):
+        with self._choice():
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                self._token('INSTANTIABLE')
+            with self._option():
+                with self._optional():
+                    self._token('NOT')
+                self._token('FINAL')
+            with self._option():
+                self._reference_type_spec_()
+            with self._option():
+                with self._optional():
+                    self._cast_to_distinct_()
+                with self._optional():
+                    self._cast_to_source_()
+            with self._option():
+                with self._optional():
+                    self._cast_as_ref_()
+                with self._optional():
+                    self._cast_to_type_()
+            self._error('expecting one of: FINAL INSTANTIABLE NOT')
+
+    @graken()
+    def _representation_(self):
+        with self._choice():
+            with self._option():
+                self._predefined_type_()
+            with self._option():
+                self._token('(')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._attribute_def_()
+                self._positive_closure(block0, prefix=sep0)
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _reference_type_spec_(self):
+        with self._choice():
+            with self._option():
+                self._token('REF')
+                self._token('USING')
+                self._predefined_type_()
+            with self._option():
+                self._token('REF')
+                self._token('FROM')
+                self._par_identifier_list_()
+            with self._option():
+                self._token('REF')
+                self._token('IS')
+                self._token('SYSTEM')
+                self._token('GENERATED')
+            self._error('expecting one of: REF')
+
+    @graken()
+    def _cast_as_ref_(self):
+        self._token('CAST')
+        self._token('(')
+        self._token('SOURCE')
+        self._token('AS')
+        self._token('REF')
+        self._token(')')
+        self._token('WITH')
+        self._identifier_()
+
+    @graken()
+    def _cast_to_type_(self):
+        self._token('CAST')
+        self._token('(')
+        self._token('REF')
+        self._token('AS')
+        self._token('SOURCE')
+        self._token(')')
+        self._token('WITH')
+        self._identifier_()
+
+    @graken()
+    def _cast_to_distinct_(self):
+        self._token('CAST')
+        self._token('(')
+        self._token('SOURCE')
+        self._token('AS')
+        self._token('DISTINCT')
+        self._token(')')
+        self._token('WITH')
+        self._identifier_()
+
+    @graken()
+    def _cast_to_source_(self):
+        self._token('CAST')
+        self._token('(')
+        self._token('DISTINCT')
+        self._token('AS')
+        self._token('SOURCE')
+        self._token(')')
+        self._token('WITH')
+        self._identifier_()
+
+    @graken()
+    def _method_spec_(self):
+        with self._choice():
+            with self._option():
+                self._original_method_spec_()
+            with self._option():
+                self._token('OVERRIDING')
+                self._partial_method_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _original_method_spec_(self):
+        self._partial_method_spec_()
+        with self._optional():
+            self._token('SELF')
+            self._token('AS')
+            self._token('RESULT')
+        with self._optional():
+            self._token('SELF')
+            self._token('AS')
+            self._token('LOCATOR')
+        with self._optional():
+
+            def block0():
+                self.__KW_METHOD_CHARACTERISTIC_()
+            self._positive_closure(block0)
+
+    @graken()
+    def _partial_method_spec_(self):
+        with self._optional():
+            with self._choice():
+                with self._option():
+                    self._token('INSTANCE')
+                with self._option():
+                    self._token('STATIC')
+                with self._option():
+                    self._token('CONSTRUCTOR')
+                self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
+        self._token('METHOD')
+        self._identifier_()
+        self._token('(')
+        with self._optional():
+            self._sql_parameter_declaration_list_()
+        self._token(')')
+        self._token('RETURNS')
+        self._returns_type_()
+        with self._optional():
+            self._token('SPECIFIC')
+            self._identifier_chain_()
+
+    @graken()
+    def _attribute_def_(self):
+        self._identifier_()
+        self._data_type_()
+        with self._optional():
+            self.__KW_REFERENCE_SCOPE_CHECK_()
+        with self._optional():
+            self._default_clause_()
+        with self._optional():
+            self._collate_clause_()
+
+    @graken()
+    def _alter_type_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('ADD')
+                self._token('ATTRIBUTE')
+                self._attribute_def_()
+            with self._option():
+                self._token('DROP')
+                self._token('ATTRIBUTE')
+                self._identifier_()
+                self._token('RESTRICT')
+            with self._option():
+                self._token('ADD')
+                self._method_spec_()
+            with self._option():
+                self._token('DROP')
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('INSTANCE')
+                        with self._option():
+                            self._token('STATIC')
+                        with self._option():
+                            self._token('CONSTRUCTOR')
+                        self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
+                self._token('METHOD')
+                self._identifier_()
+                self._token('(')
+                with self._optional():
+                    self._data_type_list_()
+                self._token(')')
+                self._token('RESTRICT')
+            self._error('no available options')
+
+    @graken()
+    def _schema_routine_(self):
+        with self._choice():
+            with self._option():
+                self._token('CREATE')
+                self._token('PROCEDURE')
+                self._identifier_chain_()
+                self._token('(')
+                with self._optional():
+                    self._sql_parameter_declaration_list_()
+                self._token(')')
+                with self._optional():
+
+                    def block0():
+                        self._routine_characteristic_()
+                    self._positive_closure(block0)
+                self._routine_body_()
+            with self._option():
+                self._token('CREATE')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._function_spec_()
+                        with self._option():
+                            self._method_spec_designator_()
+                        self._error('no available options')
+                self._routine_body_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_parameter_declaration_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            with self._optional():
+                self.__KW_PARAMETER_MODE_()
+            with self._optional():
+                self._identifier_()
+            self._parameter_type_()
+            with self._optional():
+                self._token('RESULT')
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _parameter_type_(self):
+        self._data_type_()
+        with self._optional():
+            self._token('AS')
+            self._token('LOCATOR')
+
+    @graken()
+    def _function_spec_(self):
+        self._token('FUNCTION')
+        self._identifier_chain_()
+        self._token('(')
+        with self._optional():
+            self._sql_parameter_declaration_list_()
+        self._token(')')
+        self._token('RETURNS')
+        self._returns_type_()
+        with self._optional():
+
+            def block0():
+                self._routine_characteristic_()
+            self._positive_closure(block0)
+        with self._optional():
+            self._token('STATIC')
+            self._token('DISPATCH')
+
+    @graken()
+    def _method_spec_designator_(self):
+        with self._choice():
+            with self._option():
+                self._token('SPECIFIC')
+                self._token('METHOD')
+                self._identifier_chain_()
+            with self._option():
+                with self._optional():
+                    with self._choice():
+                        with self._option():
+                            self._token('INSTANCE')
+                        with self._option():
+                            self._token('STATIC')
+                        with self._option():
+                            self._token('CONSTRUCTOR')
+                        self._error('expecting one of: CONSTRUCTOR INSTANCE STATIC')
+                self._token('METHOD')
+                self._identifier_()
+                self._token('(')
+                with self._optional():
+                    self._sql_parameter_declaration_list_()
+                self._token(')')
+                with self._optional():
+                    self._token('RETURNS')
+                    self._returns_type_()
+                self._token('FOR')
+                self._identifier_chain_()
+            self._error('no available options')
+
+    @graken()
+    def _routine_characteristic_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_PARAMETER_STYLE_CLAUSE_()
+            with self._option():
+                self.__KW_NULL_CALL_CLAUSE_()
+            with self._option():
+                self.__KW_OLD_NEW_()
+                self._token('SAVEPOINT')
+                self._token('LEVEL')
+            with self._option():
+                self.__KW_SQL_DATA_ACCESS_INDICATION_()
+            with self._option():
+                self.__KW_DETERMINISTIC_CHARACTERISTIC_()
+            with self._option():
+                self._token('SPECIFIC')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DYNAMIC')
+                self._token('RESULT')
+                self._token('SETS')
+                self._integer_()
+            self._error('no available options')
+
+    @graken()
+    def _returns_type_(self):
+        with self._choice():
+            with self._option():
+                self._parameter_type_()
+                with self._optional():
+                    self._token('CAST')
+                    self._token('FROM')
+                    self._parameter_type_()
+            with self._option():
+                self._token('TABLE')
+                self._token('(')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._identifier_()
+                    self._data_type_()
+                self._positive_closure(block0, prefix=sep0)
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _routine_body_(self):
+        with self._choice():
+            with self._option():
+                with self._optional():
+                    self.__KW_RIGHTS_CLAUSE_()
+                self._sql_executable_stmt_()
+            with self._option():
+                self._external_body_reference_()
+            self._error('no available options')
+
+    @graken()
+    def _external_body_reference_(self):
+        self._token('EXTERNAL')
+        with self._optional():
+            self._token('NAME')
+            self._external_routine_name_()
+        with self._optional():
+            self.__KW_PARAMETER_STYLE_CLAUSE_()
+        with self._optional():
+            self._token('TRANSFORM')
+            self._token('GROUP')
+            with self._group():
+                with self._choice():
+                    with self._option():
+                        self._identifier_()
+                    with self._option():
+                        self._multiple_group_spec_()
+                    self._error('no available options')
+        with self._optional():
+            self.__KW_EXTERNAL_SECURITY_CLAUSE_()
+
+    @graken()
+    def _multiple_group_spec_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._identifier_()
+            self._token('FOR')
+            self._token('TYPE')
+            self._identifier_chain_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _alter_routine_stmt_(self):
+        self._token('ALTER')
+        self._specific_routine_designator_()
+
+        def block0():
+            self._alter_routine_characteristic_()
+        self._positive_closure(block0)
+        self._token('RESTRICT')
+
+    @graken()
+    def _alter_routine_characteristic_(self):
+        with self._choice():
+            with self._option():
+                self.__KW_PARAMETER_STYLE_CLAUSE_()
+            with self._option():
+                self.__KW_SQL_DATA_ACCESS_INDICATION_()
+            with self._option():
+                self.__KW_NULL_CALL_CLAUSE_()
+            with self._option():
+                self._token('DYNAMIC')
+                self._token('RESULT')
+                self._token('SETS')
+                self._integer_()
+            with self._option():
+                self._token('NAME')
+                self._external_routine_name_()
+            self._error('no available options')
+
+    @graken()
+    def _user_defined_cast_def_(self):
+        self._token('CREATE')
+        self._token('CAST')
+        self._token('(')
+        self._data_type_()
+        self._token('AS')
+        self._data_type_()
+        self._token(')')
+        self._token('WITH')
+        self._specific_routine_designator_()
+        with self._optional():
+            self._token('AS')
+            self._token('ASSIGNMENT')
+
+    @graken()
+    def _drop_user_defined_cast_stmt_(self):
+        self._token('CAST')
+        self._token('(')
+        self._data_type_()
+        self._token('AS')
+        self._data_type_()
+        self._token(')')
+        self.__KW_DROP_BEHAVIOR_()
+
+    @graken()
+    def _user_defined_ordering_def_(self):
+        self._token('CREATE')
+        self._token('ORDERING')
+        self._token('FOR')
+        self._identifier_chain_()
+        self._ordering_form_()
+
+    @graken()
+    def _ordering_form_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('EQUALS')
+                    self._token('ONLY')
+                with self._option():
+                    self._token('ORDER')
+                    self._token('FULL')
+                self._error('expecting one of: EQUALS ORDER')
+        self._token('BY')
+        self._ordering_category_()
+
+    @graken()
+    def _ordering_category_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('RELATIVE')
+                        with self._option():
+                            self._token('MAP')
+                        self._error('expecting one of: MAP RELATIVE')
+                self._token('WITH')
+                self._specific_routine_designator_()
+            with self._option():
+                self._token('STATE')
+                with self._optional():
+                    self._identifier_chain_()
+            self._error('expecting one of: STATE')
+
+    @graken()
+    def _transform_def_(self):
+        self._token('CREATE')
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('TRANSFORM')
+                with self._option():
+                    self._token('TRANSFORMS')
+                self._error('expecting one of: TRANSFORM TRANSFORMS')
+        self._token('FOR')
+        self._identifier_chain_()
+
+        def block1():
+            self._identifier_()
+            self._token('(')
+            self._transform_element_list_()
+            self._token(')')
+        self._positive_closure(block1)
+
+    @graken()
+    def _transform_element_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self.__KW_TRANSFORM_KIND_()
+            self._token('WITH')
+            self._specific_routine_designator_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _alter_transform_stmt_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('TRANSFORM')
+                with self._option():
+                    self._token('TRANSFORMS')
+                self._error('expecting one of: TRANSFORM TRANSFORMS')
+        self._token('FOR')
+        self._identifier_chain_()
+
+        def block1():
+            self._identifier_()
+            self._token('(')
+
+            def sep2():
+                self._token(',')
+
+            def block2():
+                self._alter_transform_action_()
+            self._positive_closure(block2, prefix=sep2)
+            self._token(')')
+        self._positive_closure(block1)
+
+    @graken()
+    def _alter_transform_action_(self):
+        with self._choice():
+            with self._option():
+                self._token('ADD')
+                self._token('(')
+                self._transform_element_list_()
+                self._token(')')
+            with self._option():
+                self._token('DROP')
+                self._token('(')
+                self.__KW_TRANSFORM_KIND_()
+                with self._optional():
+                    self._token(',')
+                    self.__KW_TRANSFORM_KIND_()
+                self.__KW_DROP_BEHAVIOR_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _drop_transform_stmt_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('TRANSFORM')
+                with self._option():
+                    self._token('TRANSFORMS')
+                self._error('expecting one of: TRANSFORM TRANSFORMS')
+        self._transforms_to_be_dropped_()
+        self._token('FOR')
+        self._identifier_chain_()
+
+    @graken()
+    def _transforms_to_be_dropped_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALL')
+            with self._option():
+                self._identifier_()
+            self._error('expecting one of: ALL')
+
+    @graken()
+    def _sequence_generator_def_(self):
+        self._token('CREATE')
+        self._token('SEQUENCE')
+        self._identifier_chain_()
+        with self._optional():
+
+            def block0():
+                self._sequence_generator_option_()
+            self._positive_closure(block0)
+
+    @graken()
+    def _sequence_generator_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('AS')
+                self._data_type_()
+            with self._option():
+
+                def block0():
+                    self._common_sequence_generator_option_()
+                self._positive_closure(block0)
+            self._error('no available options')
+
+    @graken()
+    def _common_sequence_generator_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('START')
+                self._token('WITH')
+                self._signed_numeric_literal_()
+            with self._option():
+                self._basic_sequence_generator_option_()
+            self._error('no available options')
+
+    @graken()
+    def _basic_sequence_generator_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('INCREMENT')
+                self._token('BY')
+                self._signed_numeric_literal_()
+            with self._option():
+                self._sequence_generator_max_min_value_option_()
+            with self._option():
+                with self._optional():
+                    self._token('NO')
+                self._token('CYCLE')
+            self._error('expecting one of: CYCLE NO')
+
+    @graken()
+    def _sequence_generator_max_min_value_option_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('MAXVALUE')
+                        with self._option():
+                            self._token('MINVALUE')
+                        self._error('expecting one of: MAXVALUE MINVALUE')
+                self._signed_numeric_literal_()
+            with self._option():
+                self._token('NO')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('MAXVALUE')
+                        with self._option():
+                            self._token('MINVALUE')
+                        self._error('expecting one of: MAXVALUE MINVALUE')
+            self._error('expecting one of: NO')
+
+    @graken()
+    def _alter_sequence_generator_option_(self):
+        with self._choice():
+            with self._option():
+                self._token('RESTART')
+                self._token('WITH')
+                self._signed_numeric_literal_()
+            with self._option():
+                self._basic_sequence_generator_option_()
+            self._error('no available options')
+
+    @graken()
+    def _grant_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._grant_privilege_stmt_()
+            with self._option():
+                self._grant_role_stmt_()
+            self._error('no available options')
+
+    @graken()
+    def _grant_privilege_stmt_(self):
+        self._token('GRANT')
+        self._privileges_()
+        self._token('TO')
+        self._grantee_list_()
+        with self._optional():
+            self._token('WITH')
+            self._token('HIERARCHY')
+            self._token('OPTION')
+        with self._optional():
+            self._token('WITH')
+            self._token('GRANT')
+            self._token('OPTION')
+        with self._optional():
+            self._token('GRANTED')
+            self._token('BY')
+            self.__KW_GRANTOR_()
+
+    @graken()
+    def _privileges_(self):
+        self._object_privileges_()
+        self._token('ON')
+        self._object_name_()
+
+    @graken()
+    def _object_name_(self):
+        with self._choice():
+            with self._option():
+                with self._optional():
+                    self._token('TABLE')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DOMAIN')
+                self._identifier_chain_()
+            with self._option():
+                self._token('COLLATION')
+                self._identifier_chain_()
+            with self._option():
+                self._token('CHARACTER')
+                self._token('SET')
+                self._identifier_chain_()
+            with self._option():
+                self._token('TRANSLATION')
+                self._identifier_chain_()
+            with self._option():
+                self._token('TYPE')
+                self._identifier_chain_()
+            with self._option():
+                self._token('SEQUENCE')
+                self._identifier_chain_()
+            with self._option():
+                self._specific_routine_designator_()
+            self._error('no available options')
+
+    @graken()
+    def _object_privileges_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALL')
+                self._token('PRIVILEGES')
+            with self._option():
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._action_()
+                self._positive_closure(block0, prefix=sep0)
+            self._error('expecting one of: ALL')
+
+    @graken()
+    def _action_(self):
+        with self._choice():
+            with self._option():
+                self._token('SELECT')
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('INSERT')
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('UPDATE')
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('REFERENCES')
+                with self._optional():
+                    self._par_identifier_list_()
+            with self._option():
+                self._token('SELECT')
+                self._token('(')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._specific_routine_designator_()
+                self._positive_closure(block0, prefix=sep0)
+                self._token(')')
+            with self._option():
+                self._token('DELETE')
+            with self._option():
+                self._token('USAGE')
+            with self._option():
+                self._token('TRIGGER')
+            with self._option():
+                self._token('UNDER')
+            with self._option():
+                self._token('EXECUTE')
+            self._error('expecting one of: DELETE EXECUTE INSERT REFERENCES SELECT TRIGGER UNDER UPDATE USAGE')
+
+    @graken()
+    def _grantee_(self):
+        with self._choice():
+            with self._option():
+                self._token('PUBLIC')
+            with self._option():
+                self._identifier_()
+            self._error('expecting one of: PUBLIC')
+
+    @graken()
+    def _role_def_(self):
+        self._token('CREATE')
+        self._token('ROLE')
+        self._identifier_()
+        with self._optional():
+            self._token('WITH')
+            self._token('ADMIN')
+            self.__KW_GRANTOR_()
+
+    @graken()
+    def _grant_role_stmt_(self):
+        self._token('GRANT')
+        self._identifier_list_()
+        self._token('TO')
+        self._grantee_list_()
+        with self._optional():
+            self._token('WITH')
+            self._token('ADMIN')
+            self._token('OPTION')
+        with self._optional():
+            self._token('GRANTED')
+            self._token('BY')
+            self.__KW_GRANTOR_()
+
+    @graken()
+    def _revoke_privilege_stmt_(self):
+        with self._optional():
+            with self._group():
+                with self._choice():
+                    with self._option():
+                        self._token('GRANT')
+                    with self._option():
+                        self._token('HIERARCHY')
+                    self._error('expecting one of: GRANT HIERARCHY')
+            self._token('OPTION')
+            self._token('FOR')
+        self._privileges_()
+        self._token('FROM')
+        self._grantee_list_()
+        with self._optional():
+            self._token('GRANTED')
+            self._token('BY')
+            self.__KW_GRANTOR_()
+
+    @graken()
+    def _revoke_role_stmt_(self):
+        with self._optional():
+            self._token('ADMIN')
+            self._token('OPTION')
+            self._token('FOR')
+        self._identifier_list_()
+        self._token('FROM')
+        self._grantee_list_()
+        with self._optional():
+            self._token('GRANTED')
+            self._token('BY')
+            self.__KW_GRANTOR_()
+
+    @graken()
+    def _schema_def_(self):
+        self._token('CREATE')
+        self._token('SCHEMA')
+        self._schema_name_clause_()
+        with self._optional():
+            self._schema_character_set_or_path_()
+        with self._optional():
+
+            def block0():
+                self._schema_element_()
+            self._positive_closure(block0)
+
+    @graken()
+    def _grantee_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._grantee_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _sql_schema_manipulation_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('REVOKE')
+                self._revoke_privilege_stmt_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('REVOKE')
+                self._revoke_role_stmt_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('ALTER')
+                self._alter_routine_stmt_()
+            with self._option():
+                self._token('ALTER')
+                self._alter_transform_stmt_()
+            with self._option():
+                self._token('ALTER')
+                self._token('TABLE')
+                self._identifier_chain_()
+                self._alter_table_action_()
+            with self._option():
+                self._token('ALTER')
+                self._token('DOMAIN')
+                self._identifier_chain_()
+                self._alter_domain_action_()
+            with self._option():
+                self._token('ALTER')
+                self._token('TYPE')
+                self._identifier_chain_()
+                self._alter_type_action_()
+            with self._option():
+                self._token('ALTER')
+                self._token('SEQUENCE')
+                self._identifier_chain_()
+
+                def block0():
+                    self._alter_sequence_generator_option_()
+                self._positive_closure(block0)
+            with self._option():
+                self._token('DROP')
+                self._token('ROLE')
+                self._identifier_()
+            with self._option():
+                self._token('DROP')
+                self._token('TRIGGER')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DROP')
+                self._token('ASSERTION')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DROP')
+                self._token('TRANSLATION')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DROP')
+                self._token('CHARACTER')
+                self._token('SET')
+                self._identifier_chain_()
+            with self._option():
+                self._token('DROP')
+                self._token('VIEW')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('TABLE')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('TYPE')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('SCHEMA')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('DOMAIN')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('SEQUENCE')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('COLLATION')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._token('ORDERING')
+                self._token('FOR')
+                self._identifier_chain_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._drop_transform_stmt_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._specific_routine_designator_()
+                self.__KW_DROP_BEHAVIOR_()
+            with self._option():
+                self._token('DROP')
+                self._drop_user_defined_cast_stmt_()
+                self.__KW_DROP_BEHAVIOR_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_data_stmt_(self):
+        with self._choice():
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('OPEN')
+                        with self._option():
+                            self._token('CLOSE')
+                        self._error('expecting one of: CLOSE OPEN')
+                self._identifier_chain_()
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('FREE')
+                        with self._option():
+                            self._token('HOLD')
+                        self._error('expecting one of: FREE HOLD')
+                self._token('LOCATOR')
+                self._parameter_name_list_()
+            with self._option():
+                self._fetch_stmt_()
+            with self._option():
+                self._data_manipulation_stmt_()
+            with self._option():
+                self._delete_stmt_positioned_()
+            with self._option():
+                self._update_stmt_positioned_()
+            with self._option():
+                self._select_stmt_single_row_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_control_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('CALL')
+                self._routine_invocation_()
+            with self._option():
+                self._token('RETURN')
+                self._result_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_transaction_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('START')
+                self._token('TRANSACTION')
+                with self._optional():
+                    self._transaction_mode_list_()
+            with self._option():
+                self._token('SET')
+                with self._optional():
+                    self._token('LOCAL')
+                self._transaction_characteristics_()
+            with self._option():
+                self._token('SET')
+                self._token('CONSTRAINTS')
+                self._constraint_name_list_()
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('DEFERRED')
+                        with self._option():
+                            self._token('IMMEDIATE')
+                        self._error('expecting one of: DEFERRED IMMEDIATE')
+            with self._option():
+                self._token('SAVEPOINT')
+                self._identifier_()
+            with self._option():
+                self._token('RELEASE')
+                self._token('SAVEPOINT')
+                self._identifier_()
+            with self._option():
+                self._token('COMMIT')
+                with self._optional():
+                    self._token('WORK')
+                with self._optional():
+                    self._token('AND')
+                    with self._optional():
+                        self._token('NO')
+                    self._token('CHAIN')
+            with self._option():
+                self._token('ROLLBACK')
+                with self._optional():
+                    self._token('WORK')
+                with self._optional():
+                    self._token('AND')
+                    with self._optional():
+                        self._token('NO')
+                    self._token('CHAIN')
+                with self._optional():
+                    self._token('TO')
+                    self._token('SAVEPOINT')
+                    self._identifier_()
+            self._error('expecting one of: COMMIT ROLLBACK START')
+
+    @graken()
+    def _sql_connection_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('CONNECT')
+                self._token('TO')
+                self._connection_target_()
+            with self._option():
+                self._token('SET')
+                self._token('CONNECTION')
+                self._connection_object_()
+            with self._option():
+                self._token('DISCONNECT')
+                self._disconnect_object_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_session_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('SET')
+                self._token('SESSION')
+                self._token('AUTHORIZATION')
+                self._value_spec_()
+            with self._option():
+                self._token('SET')
+                self._token('ROLE')
+                self._role_spec_()
+            with self._option():
+                self._token('SET')
+                self._token('TIME')
+                self._token('ZONE')
+                self._set_time_zone_value_()
+            with self._option():
+                self._token('SET')
+                self._token('SESSION')
+                self._token('CHARACTERISTICS')
+                self._token('AS')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._transaction_characteristics_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                self._token('SET')
+                self._token('CATALOG')
+                self._value_spec_()
+            with self._option():
+                self._token('SET')
+                self._token('SCHEMA')
+                self._value_spec_()
+            with self._option():
+                self._token('SET')
+                self._token('NAMES')
+                self._value_spec_()
+            with self._option():
+                self._token('SET')
+                self._token('PATH')
+                self._value_spec_()
+            with self._option():
+                self._token('SET')
+                self._transform_group_characteristic_()
+            with self._option():
+                self._token('SET')
+                self._session_collation_stmt_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_dynamic_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._system_descriptor_stmt_()
+            with self._option():
+                self._sql_dynamic_data_stmt_()
+            with self._option():
+                self._describe_stmt_()
+            with self._option():
+                self._token('DEALLOCATE')
+                self._token('PREPARE')
+                self._sql_stmt_name_()
+            with self._option():
+                self._token('EXECUTE')
+                self._token('IMMEDIATE')
+                self._simple_value_spec_()
+            with self._option():
+                self._token('EXECUTE')
+                self._sql_stmt_name_()
+                with self._optional():
+                    self._output_using_clause_()
+                with self._optional():
+                    self._input_using_clause_()
+            with self._option():
+                self._token('PREPARE')
+                self._sql_stmt_name_()
+                with self._optional():
+                    self._token('ATTRIBUTES')
+                    self._simple_value_spec_()
+                self._token('FROM')
+                self._simple_value_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _sql_dynamic_data_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALLOCATE')
+                self._descriptor_name_()
+                self._cursor_intent_()
+            with self._option():
+                self._token('CLOSE')
+                self._dynamic_cursor_name_()
+            with self._option():
+                self._token('OPEN')
+                self._dynamic_cursor_name_()
+                with self._optional():
+                    self._input_using_clause_()
+            with self._option():
+                self._token('DELETE')
+                self._token('FROM')
+                self._target_table_()
+                self._token('WHERE')
+                self._token('CURRENT')
+                self._token('OF')
+                self._dynamic_cursor_name_()
+            with self._option():
+                self._token('FETCH')
+                with self._optional():
+                    with self._optional():
+                        self._fetch_orientation_()
+                    self._token('FROM')
+                self._dynamic_cursor_name_()
+                self._output_using_clause_()
+            with self._option():
+                self._token('UPDATE')
+                self._target_table_()
+                self._token('SET')
+                self._set_clause_list_()
+                self._token('WHERE')
+                self._token('CURRENT')
+                self._token('OF')
+                self._dynamic_cursor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _system_descriptor_stmt_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALLOCATE')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+                with self._optional():
+                    self._token('WITH')
+                    self._token('MAX')
+                    self._simple_value_spec_()
+            with self._option():
+                self._token('DEALLOCATE')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+            with self._option():
+                self._token('SET')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+                self._set_descriptor_information_()
+            with self._option():
+                self._token('GET')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+                self._get_descriptor_information_()
+            self._error('no available options')
+
+    @graken()
+    def _fetch_stmt_(self):
+        self._token('FETCH')
+        with self._optional():
+            with self._optional():
+                self._fetch_orientation_()
+            self._token('FROM')
+        self._identifier_chain_()
+        self._token('INTO')
+        self._target_spec_list_()
+
+    @graken()
+    def _fetch_orientation_(self):
+        with self._choice():
+            with self._option():
+                self._token('NEXT')
+            with self._option():
+                self._token('PRIOR')
+            with self._option():
+                self._token('FIRST')
+            with self._option():
+                self._token('LAST')
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('ABSOLUTE')
+                        with self._option():
+                            self._token('RELATIVE')
+                        self._error('expecting one of: ABSOLUTE RELATIVE')
+                self._simple_value_spec_()
+            self._error('expecting one of: FIRST LAST NEXT PRIOR')
+
+    @graken()
+    def _select_stmt_single_row_(self):
+        self._token('SELECT')
+        with self._optional():
+            self.__KW_SET_QUANTIFIER_()
+        self._select_list_()
+        self._token('INTO')
+        self._target_spec_list_()
+        self._table_expr_()
+
+    @graken()
+    def _delete_stmt_positioned_(self):
+        self._token('DELETE')
+        self._token('FROM')
+        self._target_table_()
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._identifier_chain_()
+
+    @graken()
+    def _target_table_(self):
+        with self._choice():
+            with self._option():
+                self._identifier_chain_()
+            with self._option():
+                self._token('ONLY')
+                self._token('(')
+                self._identifier_chain_()
+                self._token(')')
+            self._error('no available options')
+
+    @graken()
+    def _delete_stmt_searched_(self):
+        self._token('DELETE')
+        self._token('FROM')
+        self._target_table_()
+        with self._optional():
+            self._where_clause_()
+
+    @graken()
+    def _insert_stmt_(self):
+        self._token('INSERT')
+        self._token('INTO')
+        self._identifier_chain_()
+        self._insert_columns_and_source_()
+
+    @graken()
+    def _insert_columns_and_source_(self):
+        with self._choice():
+            with self._option():
+                with self._optional():
+                    self._par_identifier_list_()
+                with self._optional():
+                    self.__KW_OVERRIDE_CLAUSE_()
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._query_expr_()
+                        with self._option():
+                            self._token('VALUES')
+
+                            def sep0():
+                                self._token(',')
+
+                            def block0():
+                                self._contextually_typed_row_value_expr_()
+                            self._positive_closure(block0, prefix=sep0)
+                        self._error('no available options')
+            with self._option():
+                self._token('DEFAULT')
+                self._token('VALUES')
+            self._error('expecting one of: DEFAULT')
+
+    @graken()
+    def _merge_stmt_(self):
+        self._token('MERGE')
+        self._token('INTO')
+        self._target_table_()
+        with self._optional():
+            self._as_clause_()
+        self._token('USING')
+        self._table_reference_()
+        self._token('ON')
+        self._boolean_value_expr_()
+
+        def block0():
+            self._merge_when_clause_()
+        self._positive_closure(block0)
+
+    @graken()
+    def _merge_when_clause_(self):
+        with self._choice():
+            with self._option():
+                self._token('WHEN')
+                self._token('MATCHED')
+                self._token('THEN')
+                self._token('UPDATE')
+                self._token('SET')
+                self._set_clause_list_()
+            with self._option():
+                self._token('WHEN')
+                self._token('NOT')
+                self._token('MATCHED')
+                self._token('THEN')
+                self._merge_insert_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _merge_insert_spec_(self):
+        self._token('INSERT')
+        with self._optional():
+            self._par_identifier_list_()
+        with self._optional():
+            self.__KW_OVERRIDE_CLAUSE_()
+        self._token('VALUES')
+        self._token('(')
+        self._contextually_typed_row_value_constructor_list_()
+        self._token(')')
+
+    @graken()
+    def _update_stmt_positioned_(self):
+        self._token('UPDATE')
+        self._target_table_()
+        self._token('SET')
+        self._set_clause_list_()
+        self._token('WHERE')
+        self._token('CURRENT')
+        self._token('OF')
+        self._identifier_chain_()
+
+    @graken()
+    def _update_stmt_searched_(self):
+        self._token('UPDATE')
+        self._target_table_()
+        self._token('SET')
+        self._set_clause_list_()
+        with self._optional():
+            self._where_clause_()
+
+    @graken()
+    def _set_clause_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._set_clause_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _set_clause_(self):
+        with self._choice():
+            with self._option():
+                self._token('(')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._set_target_()
+                self._positive_closure(block0, prefix=sep0)
+                self._token(')')
+                self._token('=')
+                self._contextually_typed_row_value_expr_()
+            with self._option():
+                self._set_target_()
+                self._token('=')
+                self._contextually_typed_row_value_constructor_element_()
+            self._error('no available options')
+
+    @graken()
+    def _set_target_(self):
+        self._identifier_chain_()
+        with self._optional():
+            self._l_bracket_trigraph_()
+            self._simple_value_spec_()
+            self._r_bracket_trigraph_()
+
+    @graken()
+    def _temporary_table_declaration_(self):
+        self._token('DECLARE')
+        self._token('LOCAL')
+        self._token('TEMPORARY')
+        self._token('TABLE')
+        self._identifier_chain_()
+        self._token('(')
+        self._table_element_list_()
+        self._token(')')
+        with self._optional():
+            self._token('ON')
+            self._token('COMMIT')
+            self.__KW_TABLE_COMMIT_ACTION_()
+            self._token('ROWS')
+
+    @graken()
+    def _transaction_mode_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._transaction_mode_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _transaction_mode_(self):
+        with self._choice():
+            with self._option():
+                self._token('ISOLATION')
+                self._token('LEVEL')
+                self.__KW_LEVEL_OF_ISOLATION_()
+            with self._option():
+                self._token('READ')
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('ONLY')
+                        with self._option():
+                            self._token('WRITE')
+                        self._error('expecting one of: ONLY WRITE')
+            with self._option():
+                self._token('DIAGNOSTICS')
+                self._token('SIZE')
+                self._simple_value_spec_()
+            self._error('expecting one of: READ')
+
+    @graken()
+    def _transaction_characteristics_(self):
+        self._token('TRANSACTION')
+        self._transaction_mode_list_()
+
+    @graken()
+    def _constraint_name_list_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALL')
+            with self._option():
+                self._identifier_chain_list_()
+            self._error('expecting one of: ALL')
+
+    @graken()
+    def _connection_target_(self):
+        with self._choice():
+            with self._option():
+                self._token('DEFAULT')
+            with self._option():
+                self._simple_value_spec_()
+                with self._optional():
+                    self._token('AS')
+                    self._simple_value_spec_()
+                with self._optional():
+                    self._token('USER')
+                    self._simple_value_spec_()
+            self._error('expecting one of: DEFAULT')
+
+    @graken()
+    def _connection_object_(self):
+        with self._choice():
+            with self._option():
+                self._token('DEFAULT')
+            with self._option():
+                self._simple_value_spec_()
+            self._error('expecting one of: DEFAULT')
+
+    @graken()
+    def _disconnect_object_(self):
+        with self._choice():
+            with self._option():
+                self._token('ALL')
+            with self._option():
+                self._token('CURRENT')
+            with self._option():
+                self._connection_object_()
+            self._error('expecting one of: ALL CURRENT')
+
+    @graken()
+    def _role_spec_(self):
+        with self._choice():
+            with self._option():
+                self._token('NONE')
+            with self._option():
+                self._value_spec_()
+            self._error('expecting one of: NONE')
+
+    @graken()
+    def _set_time_zone_value_(self):
+        with self._choice():
+            with self._option():
+                self._token('LOCAL')
+            with self._option():
+                self._interval_value_expr_()
+            self._error('expecting one of: LOCAL')
+
+    @graken()
+    def _transform_group_characteristic_(self):
+        with self._choice():
+            with self._option():
+                self._token('DEFAULT')
+                self._token('TRANSFORM')
+                self._token('GROUP')
+                self._value_spec_()
+            with self._option():
+                self._token('TRANSFORM')
+                self._token('GROUP')
+                self._token('FOR')
+                self._token('TYPE')
+                self._identifier_chain_()
+                self._value_spec_()
+            self._error('no available options')
+
+    @graken()
+    def _session_collation_stmt_(self):
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('NO')
+                    self._token('COLLATION')
+                with self._option():
+                    self._token('COLLATION')
+                    self._value_spec_()
+                self._error('expecting one of: NO')
+        with self._optional():
+            self._token('FOR')
+            self._identifier_chain_list_()
+
+    @graken()
+    def _get_descriptor_information_(self):
+        with self._choice():
+            with self._option():
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._simple_target_spec_()
+                    self._token('=')
+                    self.__KW_HEADER_ITEM_NAME_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                self._token('VALUE')
+                self._simple_value_spec_()
+
+                def sep1():
+                    self._token(',')
+
+                def block1():
+                    self._simple_target_spec_()
+                    self._token('=')
+                    self.__KW_DESCRIPTOR_ITEM_NAME_()
+                self._positive_closure(block1, prefix=sep1)
+            self._error('no available options')
+
+    @graken()
+    def _set_descriptor_information_(self):
+        with self._choice():
+            with self._option():
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self.__KW_HEADER_ITEM_NAME_()
+                    self._token('=')
+                    self._simple_value_spec_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                self._token('VALUE')
+                self._simple_value_spec_()
+
+                def sep1():
+                    self._token(',')
+
+                def block1():
+                    self.__KW_DESCRIPTOR_ITEM_NAME_()
+                    self._token('=')
+                    self._simple_value_spec_()
+                self._positive_closure(block1, prefix=sep1)
+            self._error('no available options')
+
+    @graken()
+    def _describe_stmt_(self):
+        self._token('DESCRIBE')
+        with self._group():
+            with self._choice():
+                with self._option():
+                    self._token('INPUT')
+                    self._sql_stmt_name_()
+                with self._option():
+                    with self._optional():
+                        self._token('OUTPUT')
+                    self._described_object_()
+                self._error('no available options')
+        self._token('USING')
+        with self._optional():
+            self._token('SQL')
+        self._token('DESCRIPTOR')
+        self._descriptor_name_()
+        with self._optional():
+            self.__KW_WITH_WITHOUT_()
+            self._token('NESTING')
+
+    @graken()
+    def _described_object_(self):
+        with self._choice():
+            with self._option():
+                self._sql_stmt_name_()
+            with self._option():
+                self._token('CURSOR')
+                self._descriptor_name_()
+                self._token('STRUCTURE')
+            self._error('no available options')
+
+    @graken()
+    def _input_using_clause_(self):
+        with self._choice():
+            with self._option():
+                self._token('USING')
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._general_value_spec_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                self._token('USING')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _output_using_clause_(self):
+        with self._choice():
+            with self._option():
+                self._token('INTO')
+                self._target_spec_list_()
+            with self._option():
+                self._token('INTO')
+                with self._optional():
+                    self._token('SQL')
+                self._token('DESCRIPTOR')
+                self._descriptor_name_()
+            self._error('no available options')
+
+    @graken()
+    def _target_spec_list_(self):
+
+        def sep0():
+            self._token(',')
+
+        def block0():
+            self._target_spec_()
+        self._positive_closure(block0, prefix=sep0)
+
+    @graken()
+    def _cursor_intent_(self):
+        with self._choice():
+            with self._option():
+                self._statement_cursor_()
+            with self._option():
+                self._token('FOR')
+                self._token('PROCEDURE')
+                self._specific_routine_designator_()
+            self._error('no available options')
+
+    @graken()
+    def _statement_cursor_(self):
+        with self._optional():
+            self.__KW_CURSOR_SENSITIVITY_()
+        with self._optional():
+            with self._optional():
+                self._token('NO')
+            self._token('SCROLL')
+        self._token('CURSOR')
+        with self._optional():
+            self.__KW_WITH_WITHOUT_()
+            self._token('HOLD')
+        with self._optional():
+            self.__KW_WITH_WITHOUT_()
+            self._token('RETURN')
+        self._token('FOR')
+        self._descriptor_name_()
+
+    @graken()
+    def _sql_diagnostics_stmt_(self):
+        self._token('GET')
+        self._token('DIAGNOSTICS')
+        self._sql_diagnostics_information_()
+
+    @graken()
+    def _sql_diagnostics_information_(self):
+        with self._choice():
+            with self._option():
+
+                def sep0():
+                    self._token(',')
+
+                def block0():
+                    self._simple_target_spec_()
+                    self._token('=')
+                    self.__KW_STATEMENT_INFORMATION_ITEM_()
+                self._positive_closure(block0, prefix=sep0)
+            with self._option():
+                with self._group():
+                    with self._choice():
+                        with self._option():
+                            self._token('EXCEPTION')
+                        with self._option():
+                            self._token('CONDITION')
+                        self._error('expecting one of: CONDITION EXCEPTION')
+                self._simple_value_spec_()
+
+                def sep2():
+                    self._token(',')
+
+                def block2():
+                    self._simple_target_spec_()
+                    self._token('=')
+                    self.__KW_CONDITION_INFORMATION_ITEM_()
+                self._positive_closure(block2, prefix=sep2)
+            self._error('no available options')
+
 
 class SqlSemantics(object):
-    def start(self, ast):
+    def sign(self, ast):
         return ast
 
-    def integer(self, ast):
+    def mult_div(self, ast):
         return ast
 
-    def par_integer(self, ast):
+    def _KW_BOOL(self, ast):
         return ast
 
-    def par_integer_optional_integer(self, ast):
+    def dereference_operator(self, ast):
         return ast
 
     def l_bracket_trigraph(self, ast):
@@ -6512,1084 +5761,10 @@ class SqlSemantics(object):
     def r_bracket_trigraph(self, ast):
         return ast
 
-    def regular_identifier(self, ast):
-        return ast
-
-    def multiplier(self, ast):
-        return ast
-
-    def delimited_identifier(self, ast):
-        return ast
-
-    def char_in_delimited_identifier(self, ast):
-        return ast
-
-    def literal(self, ast):
-        return ast
-
-    def unsigned_literal(self, ast):
-        return ast
-
-    def general_literal(self, ast):
-        return ast
-
-    def character_string_literal(self, ast):
-        return ast
-
-    def char_in_string(self, ast):
-        return ast
-
-    def signed_numeric_literal(self, ast):
-        return ast
-
-    def unsigned_numeric_literal(self, ast):
-        return ast
-
-    def proper_decimal(self, ast):
-        return ast
-
-    def exact_numeric_literal(self, ast):
-        return ast
-
-    def sign(self, ast):
-        return ast
-
-    def mult_div(self, ast):
-        return ast
-
-    def datetime_literal(self, ast):
-        return ast
-
-    def time_zone_interval(self, ast):
-        return ast
-
-    def date_value(self, ast):
-        return ast
-
-    def time_value(self, ast):
-        return ast
-
-    def interval_literal(self, ast):
-        return ast
-
-    def unquoted_time_string(self, ast):
-        return ast
-
-    def unquoted_timestamp_string(self, ast):
-        return ast
-
-    def unquoted_interval_string(self, ast):
-        return ast
-
-    def year_month_literal(self, ast):
-        return ast
-
-    def day_time_literal(self, ast):
-        return ast
-
-    def day_time_interval(self, ast):
-        return ast
-
-    def time_interval(self, ast):
-        return ast
-
-    def boolean_literal(self, ast):
-        return ast
-
-    def identifier(self, ast):
-        return ast
-
-    def identifier_list(self, ast):
-        return ast
-
-    def identifier_chain(self, ast):
-        return ast
-
-    def identifier_chain_list(self, ast):
-        return ast
-
-    def qualified_name(self, ast):
-        return ast
-
-    def parameter_name(self, ast):
-        return ast
-
-    def parameter_name_list(self, ast):
-        return ast
-
-    def par_identifier_list(self, ast):
-        return ast
-
-    def external_routine_name(self, ast):
-        return ast
-
-    def sql_statement_name(self, ast):
-        return ast
-
-    def dynamic_cursor_name(self, ast):
-        return ast
-
-    def descriptor_name(self, ast):
-        return ast
-
-    def data_type(self, ast):
-        return ast
-
-    def predefined_type(self, ast):
-        return ast
-
-    def char_str_type(self, ast):
-        return ast
-
-    def lob_length(self, ast):
-        return ast
-
-    def reference_type(self, ast):
-        return ast
-
-    def value_expression_primary(self, ast):
-        return ast
-
-    def par_value_expression(self, ast):
-        return ast
-
-    def nonpar_value_expression_primary(self, ast):
-        return ast
-
-    def value_specification(self, ast):
-        return ast
-
-    def unsigned_value_specification(self, ast):
-        return ast
-
-    def general_value_specification(self, ast):
-        return ast
-
-    def simple_value_specification(self, ast):
-        return ast
-
-    def target_specification(self, ast):
-        return ast
-
-    def simple_target_specification(self, ast):
-        return ast
-
-    def parameter_specification(self, ast):
-        return ast
-
-    def set_function_specification(self, ast):
-        return ast
-
-    def window_function(self, ast):
-        return ast
-
-    def window_function_type(self, ast):
-        return ast
-
-    def window_name_or_specification(self, ast):
-        return ast
-
-    def case_expression(self, ast):
-        return ast
-
-    def case_abbreviation(self, ast):
-        return ast
-
-    def value_expression_list(self, ast):
-        return ast
-
-    def case_specification(self, ast):
-        return ast
-
-    def simple_case(self, ast):
-        return ast
-
-    def searched_case(self, ast):
-        return ast
-
-    def simple_when_clause(self, ast):
-        return ast
-
-    def searched_when_clause(self, ast):
-        return ast
-
-    def else_clause(self, ast):
-        return ast
-
-    def case_operand(self, ast):
-        return ast
-
-    def when_operand(self, ast):
-        return ast
-
-    def result(self, ast):
-        return ast
-
-    def cast_operand(self, ast):
-        return ast
-
-    def cast_target(self, ast):
-        return ast
-
-    def target_subtype(self, ast):
-        return ast
-
-    def method_invocation(self, ast):
-        return ast
-
-    def dereference_operator(self, ast):
-        return ast
-
-    def value_expression(self, ast):
-        return ast
-
-    def common_value_expression(self, ast):
-        return ast
-
-    def collection_value_expression(self, ast):
-        return ast
-
-    def collection_value_constructor(self, ast):
-        return ast
-
-    def numeric_value_expression(self, ast):
-        return ast
-
-    def par_numeric_value_expression(self, ast):
-        return ast
-
-    def term(self, ast):
-        return ast
-
-    def factor(self, ast):
-        return ast
-
-    def numeric_primary(self, ast):
-        return ast
-
-    def numeric_value_function(self, ast):
-        return ast
-
-    def position_expression(self, ast):
-        return ast
-
-    def length_expression(self, ast):
-        return ast
-
-    def extract_source(self, ast):
-        return ast
-
-    def string_value_expression(self, ast):
-        return ast
-
-    def character_value_expression(self, ast):
-        return ast
-
-    def character_primary(self, ast):
-        return ast
-
-    def blob_value_expression(self, ast):
-        return ast
-
-    def string_value_function(self, ast):
-        return ast
-
-    def character_value_function(self, ast):
-        return ast
-
-    def character_substring_function(self, ast):
-        return ast
-
-    def regular_expression_substring_function(self, ast):
-        return ast
-
-    def character_overlay_function(self, ast):
-        return ast
-
-    def blob_value_function(self, ast):
-        return ast
-
-    def blob_overlay_function(self, ast):
-        return ast
-
-    def datetime_value_expression(self, ast):
-        return ast
-
-    def datetime_factor(self, ast):
-        return ast
-
-    def datetime_primary(self, ast):
-        return ast
-
-    def time_zone_specifier(self, ast):
-        return ast
-
-    def datetime_value_function(self, ast):
-        return ast
-
-    def interval_value_expression(self, ast):
-        return ast
-
-    def interval_term(self, ast):
-        return ast
-
-    def interval_primary(self, ast):
-        return ast
-
-    def boolean_value_expression(self, ast):
-        return ast
-
-    def boolean_term(self, ast):
-        return ast
-
-    def boolean_primary(self, ast):
-        return ast
-
-    def boolean_predicand(self, ast):
-        return ast
-
-    def par_boolean_value_expression(self, ast):
-        return ast
-
-    def array_value_expression(self, ast):
-        return ast
-
-    def array_value_constructor(self, ast):
-        return ast
-
-    def multiset_value_expression(self, ast):
-        return ast
-
-    def multiset_term(self, ast):
-        return ast
-
-    def multiset_primary(self, ast):
-        return ast
-
-    def multiset_value_constructor(self, ast):
-        return ast
-
-    def row_value_constructor(self, ast):
-        return ast
-
-    def explicit_row_value_constructor(self, ast):
-        return ast
-
-    def contextually_typed_row_value_constructor(self, ast):
-        return ast
-
-    def contextually_typed_row_value_constructor_list(self, ast):
-        return ast
-
-    def contextually_typed_row_value_constructor_element(self, ast):
-        return ast
-
-    def row_value_constructor_predicand(self, ast):
-        return ast
-
-    def row_value_expression(self, ast):
-        return ast
-
-    def table_row_value_expression(self, ast):
-        return ast
-
-    def contextually_typed_row_value_expression(self, ast):
-        return ast
-
-    def row_value_predicand(self, ast):
-        return ast
-
-    def table_expression(self, ast):
-        return ast
-
-    def from_clause(self, ast):
-        return ast
-
-    def table_reference(self, ast):
-        return ast
-
-    def table_primary_or_joined_table(self, ast):
-        return ast
-
-    def sample_clause(self, ast):
-        return ast
-
-    def repeatable_clause(self, ast):
-        return ast
-
-    def table_primary(self, ast):
-        return ast
-
-    def joined_table(self, ast):
-        return ast
-
-    def unqualified_join(self, ast):
-        return ast
-
-    def qualified_join(self, ast):
-        return ast
-
-    def join_specification(self, ast):
-        return ast
-
-    def where_clause(self, ast):
-        return ast
-
-    def group_by_clause(self, ast):
-        return ast
-
-    def grouping_element(self, ast):
-        return ast
-
-    def ordinary_grouping_set(self, ast):
-        return ast
-
-    def grouping_column_reference(self, ast):
-        return ast
-
-    def grouping_column_reference_list(self, ast):
-        return ast
-
-    def rollup_list(self, ast):
-        return ast
-
-    def ordinary_grouping_set_list(self, ast):
-        return ast
-
-    def cube_list(self, ast):
-        return ast
-
-    def grouping_sets_specification(self, ast):
-        return ast
-
-    def grouping_set(self, ast):
-        return ast
-
-    def empty_grouping_set(self, ast):
-        return ast
-
-    def having_clause(self, ast):
-        return ast
-
-    def window_clause(self, ast):
-        return ast
-
-    def window_definition(self, ast):
-        return ast
-
-    def window_specification(self, ast):
-        return ast
-
-    def window_partition_clause(self, ast):
-        return ast
-
-    def window_frame_clause(self, ast):
-        return ast
-
-    def window_frame_extent(self, ast):
-        return ast
-
-    def window_frame_start(self, ast):
-        return ast
-
-    def window_frame_bound(self, ast):
-        return ast
-
-    def select_list(self, ast):
-        return ast
-
-    def select_sublist(self, ast):
-        return ast
-
-    def qualified_asterisk(self, ast):
-        return ast
-
-    def as_clause(self, ast):
-        return ast
-
-    def query_expression(self, ast):
-        return ast
-
-    def with_clause(self, ast):
-        return ast
-
-    def with_list(self, ast):
-        return ast
-
-    def with_element(self, ast):
-        return ast
-
-    def query_expression_body(self, ast):
-        return ast
-
-    def non_join_query_expression(self, ast):
-        return ast
-
-    def query_term(self, ast):
-        return ast
-
-    def non_join_query_term(self, ast):
-        return ast
-
-    def query_primary(self, ast):
-        return ast
-
-    def non_join_query_primary(self, ast):
-        return ast
-
-    def simple_table(self, ast):
-        return ast
-
-    def corresponding_spec(self, ast):
-        return ast
-
-    def search_or_cycle_clause(self, ast):
-        return ast
-
-    def cycle_clause(self, ast):
-        return ast
-
-    def subquery(self, ast):
-        return ast
-
-    def predicate(self, ast):
-        return ast
-
     def comp_op(self, ast):
         return ast
 
-    def in_predicate_value(self, ast):
-        return ast
-
-    def in_value_list(self, ast):
-        return ast
-
-    def like_predicate(self, ast):
-        return ast
-
-    def regular_expression(self, ast):
-        return ast
-
-    def regular_term(self, ast):
-        return ast
-
-    def regular_factor(self, ast):
-        return ast
-
-    def repeat_factor(self, ast):
-        return ast
-
-    def regular_primary(self, ast):
-        return ast
-
-    def character_specifier(self, ast):
-        return ast
-
-    def regular_character_set(self, ast):
-        return ast
-
-    def character_enumeration(self, ast):
-        return ast
-
-    def overlaps_predicate(self, ast):
-        return ast
-
-    def type_list(self, ast):
-        return ast
-
-    def interval_qualifier(self, ast):
-        return ast
-
-    def end_field(self, ast):
-        return ast
-
-    def single_datetime_field(self, ast):
-        return ast
-
-    def path_specification(self, ast):
-        return ast
-
-    def routine_invocation(self, ast):
-        return ast
-
-    def sql_argument_list(self, ast):
-        return ast
-
-    def sql_argument(self, ast):
-        return ast
-
-    def specific_routine_designator(self, ast):
-        return ast
-
-    def data_type_list(self, ast):
-        return ast
-
-    def aggregate_function(self, ast):
-        return ast
-
-    def filter_clause(self, ast):
-        return ast
-
-    def ordered_set_function(self, ast):
-        return ast
-
-    def within_group_specification(self, ast):
-        return ast
-
-    def sort_specification_list(self, ast):
-        return ast
-
-    def schema_character_set_or_path(self, ast):
-        return ast
-
-    def schema_name_clause(self, ast):
-        return ast
-
-    def schema_character_set_specification(self, ast):
-        return ast
-
-    def schema_element(self, ast):
-        return ast
-
-    def table_definition(self, ast):
-        return ast
-
-    def table_contents_source(self, ast):
-        return ast
-
-    def table_element_list(self, ast):
-        return ast
-
-    def table_element(self, ast):
-        return ast
-
-    def self_referencing_column_specification(self, ast):
-        return ast
-
-    def subtable_clause(self, ast):
-        return ast
-
-    def column_definition(self, ast):
-        return ast
-
-    def column_constraint_definition(self, ast):
-        return ast
-
-    def column_constraint(self, ast):
-        return ast
-
-    def identity_column_specification(self, ast):
-        return ast
-
-    def default_clause(self, ast):
-        return ast
-
-    def default_option(self, ast):
-        return ast
-
-    def table_constraint_definition(self, ast):
-        return ast
-
-    def table_constraint(self, ast):
-        return ast
-
-    def unique_constraint_definition(self, ast):
-        return ast
-
-    def references_specification(self, ast):
-        return ast
-
-    def alter_table_action(self, ast):
-        return ast
-
-    def alter_column_action(self, ast):
-        return ast
-
-    def alter_identity_column_option(self, ast):
-        return ast
-
-    def view_definition(self, ast):
-        return ast
-
-    def view_specification(self, ast):
-        return ast
-
-    def view_element(self, ast):
-        return ast
-
-    def domain_definition(self, ast):
-        return ast
-
-    def domain_constraint(self, ast):
-        return ast
-
-    def alter_domain_action(self, ast):
-        return ast
-
-    def character_set_definition(self, ast):
-        return ast
-
-    def collation_definition(self, ast):
-        return ast
-
-    def transliteration_definition(self, ast):
-        return ast
-
-    def transliteration_source(self, ast):
-        return ast
-
-    def assertion_definition(self, ast):
-        return ast
-
-    def trigger_definition(self, ast):
-        return ast
-
-    def trigger_event(self, ast):
-        return ast
-
-    def triggered_action(self, ast):
-        return ast
-
-    def triggered_sql_statement(self, ast):
-        return ast
-
-    def user_defined_type_definition(self, ast):
-        return ast
-
-    def user_defined_type_body(self, ast):
-        return ast
-
-    def user_defined_type_option(self, ast):
-        return ast
-
-    def representation(self, ast):
-        return ast
-
-    def reference_type_specification(self, ast):
-        return ast
-
-    def cast_to_type(self, ast):
-        return ast
-
-    def cast_to_distinct(self, ast):
-        return ast
-
-    def cast_to_source(self, ast):
-        return ast
-
-    def method_specification(self, ast):
-        return ast
-
-    def original_method_specification(self, ast):
-        return ast
-
-    def partial_method_specification(self, ast):
-        return ast
-
-    def attribute_definition(self, ast):
-        return ast
-
-    def alter_type_action(self, ast):
-        return ast
-
-    def schema_routine(self, ast):
-        return ast
-
-    def sql_parameter_declaration_list(self, ast):
-        return ast
-
-    def parameter_type(self, ast):
-        return ast
-
-    def function_specification(self, ast):
-        return ast
-
-    def method_specification_designator(self, ast):
-        return ast
-
-    def routine_characteristic(self, ast):
-        return ast
-
-    def returns_type(self, ast):
-        return ast
-
-    def routine_body(self, ast):
-        return ast
-
-    def external_body_reference(self, ast):
-        return ast
-
-    def multiple_group_specification(self, ast):
-        return ast
-
-    def alter_routine_statement(self, ast):
-        return ast
-
-    def alter_routine_characteristic(self, ast):
-        return ast
-
-    def user_defined_cast_definition(self, ast):
-        return ast
-
-    def drop_user_defined_cast_statement(self, ast):
-        return ast
-
-    def user_defined_ordering_definition(self, ast):
-        return ast
-
-    def ordering_form(self, ast):
-        return ast
-
-    def ordering_category(self, ast):
-        return ast
-
-    def transform_definition(self, ast):
-        return ast
-
-    def transform_element_list(self, ast):
-        return ast
-
-    def alter_transform_statement(self, ast):
-        return ast
-
-    def alter_transform_action(self, ast):
-        return ast
-
-    def drop_transform_statement(self, ast):
-        return ast
-
-    def transforms_to_be_dropped(self, ast):
-        return ast
-
-    def sequence_generator_definition(self, ast):
-        return ast
-
-    def sequence_generator_option(self, ast):
-        return ast
-
-    def common_sequence_generator_option(self, ast):
-        return ast
-
-    def basic_sequence_generator_option(self, ast):
-        return ast
-
-    def sequence_generator_max_min_value_option(self, ast):
-        return ast
-
-    def alter_sequence_generator_option(self, ast):
-        return ast
-
-    def grant_statement(self, ast):
-        return ast
-
-    def grant_privilege_statement(self, ast):
-        return ast
-
-    def privileges(self, ast):
-        return ast
-
-    def object_name(self, ast):
-        return ast
-
-    def object_privileges(self, ast):
-        return ast
-
-    def action(self, ast):
-        return ast
-
-    def grantee(self, ast):
-        return ast
-
-    def role_definition(self, ast):
-        return ast
-
-    def grant_role_statement(self, ast):
-        return ast
-
-    def revoke_statement(self, ast):
-        return ast
-
-    def revoke_privilege_statement(self, ast):
-        return ast
-
-    def revoke_role_statement(self, ast):
-        return ast
-
-    def schema_definition(self, ast):
-        return ast
-
-    def grantee_list(self, ast):
-        return ast
-
-    def sql_executable_statement(self, ast):
-        return ast
-
-    def sql_schema_statement(self, ast):
-        return ast
-
-    def sql_schema_definition_statement(self, ast):
-        return ast
-
-    def sql_schema_manipulation_statement(self, ast):
-        return ast
-
-    def sql_data_statement(self, ast):
-        return ast
-
-    def sql_data_change_statement(self, ast):
-        return ast
-
-    def sql_control_statement(self, ast):
-        return ast
-
-    def sql_transaction_statement(self, ast):
-        return ast
-
-    def sql_connection_statement(self, ast):
-        return ast
-
-    def sql_session_statement(self, ast):
-        return ast
-
-    def sql_dynamic_statement(self, ast):
-        return ast
-
-    def sql_dynamic_data_statement(self, ast):
-        return ast
-
-    def system_descriptor_statement(self, ast):
-        return ast
-
-    def order_by_clause(self, ast):
-        return ast
-
-    def fetch_statement(self, ast):
-        return ast
-
-    def fetch_orientation(self, ast):
-        return ast
-
-    def select_statement_single_row(self, ast):
-        return ast
-
-    def delete_statement_positioned(self, ast):
-        return ast
-
-    def target_table(self, ast):
-        return ast
-
-    def delete_statement_searched(self, ast):
-        return ast
-
-    def insert_statement(self, ast):
-        return ast
-
-    def insert_columns_and_source(self, ast):
-        return ast
-
-    def merge_statement(self, ast):
-        return ast
-
-    def merge_when_clause(self, ast):
-        return ast
-
-    def merge_insert_specification(self, ast):
-        return ast
-
-    def update_statement_positioned(self, ast):
-        return ast
-
-    def update_statement_searched(self, ast):
-        return ast
-
-    def set_clause_list(self, ast):
-        return ast
-
-    def set_clause(self, ast):
-        return ast
-
-    def set_target(self, ast):
-        return ast
-
-    def temporary_table_declaration(self, ast):
-        return ast
-
-    def transaction_mode_list(self, ast):
-        return ast
-
-    def transaction_mode(self, ast):
-        return ast
-
-    def transaction_characteristics(self, ast):
-        return ast
-
-    def constraint_name_list(self, ast):
-        return ast
-
-    def connection_target(self, ast):
-        return ast
-
-    def connection_object(self, ast):
-        return ast
-
-    def disconnect_object(self, ast):
-        return ast
-
-    def role_specification(self, ast):
-        return ast
-
-    def set_time_zone_value(self, ast):
-        return ast
-
-    def transform_group_characteristic(self, ast):
-        return ast
-
-    def set_session_collation_statement(self, ast):
-        return ast
-
-    def get_descriptor_information(self, ast):
-        return ast
-
-    def set_descriptor_information(self, ast):
-        return ast
-
-    def describe_statement(self, ast):
-        return ast
-
-    def described_object(self, ast):
-        return ast
-
-    def input_using_clause(self, ast):
-        return ast
-
-    def output_using_clause(self, ast):
-        return ast
-
-    def target_specification_list(self, ast):
-        return ast
-
-    def cursor_intent(self, ast):
-        return ast
-
-    def statement_cursor(self, ast):
-        return ast
-
-    def direct_sql_statement(self, ast):
-        return ast
-
-    def directly_executable_statement(self, ast):
-        return ast
-
-    def direct_sql_data_statement(self, ast):
-        return ast
-
-    def direct_select_statement_multiple_rows(self, ast):
-        return ast
-
-    def sql_diagnostics_statement(self, ast):
-        return ast
-
-    def sql_diagnostics_information(self, ast):
+    def empty_grouping_set(self, ast):
         return ast
 
     def _KW_CONSTRAINT_CHARACTERISTICS(self, ast):
@@ -7794,6 +5969,912 @@ class SqlSemantics(object):
         return ast
 
     def _KW_UNION_EXCEPT(self, ast):
+        return ast
+
+    def _KW_NUMERIC_FUNCTION(self, ast):
+        return ast
+
+    def start(self, ast):
+        return ast
+
+    def integer(self, ast):
+        return ast
+
+    def par_integer_list(self, ast):
+        return ast
+
+    def regular_identifier(self, ast):
+        return ast
+
+    def identifier(self, ast):
+        return ast
+
+    def identifier_list(self, ast):
+        return ast
+
+    def identifier_chain(self, ast):
+        return ast
+
+    def parameter_name(self, ast):
+        return ast
+
+    def par_identifier_list(self, ast):
+        return ast
+
+    def delimited_identifier(self, ast):
+        return ast
+
+    def char_in_delimited_identifier(self, ast):
+        return ast
+
+    def identifier_chain_list(self, ast):
+        return ast
+
+    def parameter_name_list(self, ast):
+        return ast
+
+    def literal(self, ast):
+        return ast
+
+    def simple_value_spec(self, ast):
+        return ast
+
+    def general_literal(self, ast):
+        return ast
+
+    def character_string_literal(self, ast):
+        return ast
+
+    def char_in_string(self, ast):
+        return ast
+
+    def signed_numeric_literal(self, ast):
+        return ast
+
+    def unsigned_numeric_literal(self, ast):
+        return ast
+
+    def proper_decimal(self, ast):
+        return ast
+
+    def exact_numeric_literal(self, ast):
+        return ast
+
+    def data_type(self, ast):
+        return ast
+
+    def predefined_type(self, ast):
+        return ast
+
+    def collate_clause(self, ast):
+        return ast
+
+    def char_str_type(self, ast):
+        return ast
+
+    def lob_length(self, ast):
+        return ast
+
+    def reference_type(self, ast):
+        return ast
+
+    def interval_qualifier(self, ast):
+        return ast
+
+    def end_field(self, ast):
+        return ast
+
+    def value_expr_primary(self, ast):
+        return ast
+
+    def par_value_expr(self, ast):
+        return ast
+
+    def nonpar_value_expr_primary(self, ast):
+        return ast
+
+    def unsigned_value_spec(self, ast):
+        return ast
+
+    def general_value_spec(self, ast):
+        return ast
+
+    def target_spec(self, ast):
+        return ast
+
+    def simple_target_spec(self, ast):
+        return ast
+
+    def parameter_spec(self, ast):
+        return ast
+
+    def window_func(self, ast):
+        return ast
+
+    def window_func_type(self, ast):
+        return ast
+
+    def window_name_or_spec(self, ast):
+        return ast
+
+    def value_expr_list(self, ast):
+        return ast
+
+    def case_spec(self, ast):
+        return ast
+
+    def when_clause(self, ast):
+        return ast
+
+    def else_clause(self, ast):
+        return ast
+
+    def case_operand(self, ast):
+        return ast
+
+    def when_operand(self, ast):
+        return ast
+
+    def predicate_when_operand(self, ast):
+        return ast
+
+    def result(self, ast):
+        return ast
+
+    def cast_operand(self, ast):
+        return ast
+
+    def target_subtype(self, ast):
+        return ast
+
+    def method_invocation(self, ast):
+        return ast
+
+    def value_expr(self, ast):
+        return ast
+
+    def common_value_expr(self, ast):
+        return ast
+
+    def collection_value_expr(self, ast):
+        return ast
+
+    def numeric_value_expr(self, ast):
+        return ast
+
+    def par_numeric_value_expr_list(self, ast):
+        return ast
+
+    def term(self, ast):
+        return ast
+
+    def factor(self, ast):
+        return ast
+
+    def numeric_primary(self, ast):
+        return ast
+
+    def position_expr(self, ast):
+        return ast
+
+    def length_expr(self, ast):
+        return ast
+
+    def datetime_interval_expr(self, ast):
+        return ast
+
+    def character_value_expr(self, ast):
+        return ast
+
+    def character_primary(self, ast):
+        return ast
+
+    def character_substring_func(self, ast):
+        return ast
+
+    def regular_expr_substring_func(self, ast):
+        return ast
+
+    def character_overlay_func(self, ast):
+        return ast
+
+    def datetime_value_expr(self, ast):
+        return ast
+
+    def datetime_factor(self, ast):
+        return ast
+
+    def datetime_primary(self, ast):
+        return ast
+
+    def time_zone_specifier(self, ast):
+        return ast
+
+    def datetime_value_func(self, ast):
+        return ast
+
+    def interval_value_expr(self, ast):
+        return ast
+
+    def interval_term(self, ast):
+        return ast
+
+    def interval_primary(self, ast):
+        return ast
+
+    def boolean_value_expr(self, ast):
+        return ast
+
+    def boolean_term(self, ast):
+        return ast
+
+    def boolean_primary(self, ast):
+        return ast
+
+    def boolean_predicand(self, ast):
+        return ast
+
+    def par_boolean_value_expr(self, ast):
+        return ast
+
+    def array_value_expr(self, ast):
+        return ast
+
+    def multiset_value_expr(self, ast):
+        return ast
+
+    def multiset_term(self, ast):
+        return ast
+
+    def multiset_primary(self, ast):
+        return ast
+
+    def row_value_expr(self, ast):
+        return ast
+
+    def table_row_value_expr(self, ast):
+        return ast
+
+    def row_value_predicand(self, ast):
+        return ast
+
+    def table_expr(self, ast):
+        return ast
+
+    def from_clause(self, ast):
+        return ast
+
+    def table_reference(self, ast):
+        return ast
+
+    def table_primary_or_joined_table(self, ast):
+        return ast
+
+    def sample_clause(self, ast):
+        return ast
+
+    def table_primary(self, ast):
+        return ast
+
+    def joined_table(self, ast):
+        return ast
+
+    def unqualified_join(self, ast):
+        return ast
+
+    def qualified_join(self, ast):
+        return ast
+
+    def join_spec(self, ast):
+        return ast
+
+    def where_clause(self, ast):
+        return ast
+
+    def group_by_clause(self, ast):
+        return ast
+
+    def grouping_element(self, ast):
+        return ast
+
+    def ordinary_grouping_set(self, ast):
+        return ast
+
+    def grouping_column_reference(self, ast):
+        return ast
+
+    def grouping_column_reference_list(self, ast):
+        return ast
+
+    def ordinary_grouping_set_list(self, ast):
+        return ast
+
+    def having_clause(self, ast):
+        return ast
+
+    def window_clause(self, ast):
+        return ast
+
+    def window_def(self, ast):
+        return ast
+
+    def window_spec(self, ast):
+        return ast
+
+    def window_partition_clause(self, ast):
+        return ast
+
+    def window_frame_clause(self, ast):
+        return ast
+
+    def window_frame_extent(self, ast):
+        return ast
+
+    def window_frame_start(self, ast):
+        return ast
+
+    def window_frame_bound(self, ast):
+        return ast
+
+    def select_list(self, ast):
+        return ast
+
+    def select_sublist(self, ast):
+        return ast
+
+    def as_clause(self, ast):
+        return ast
+
+    def query_expr(self, ast):
+        return ast
+
+    def with_clause(self, ast):
+        return ast
+
+    def with_list(self, ast):
+        return ast
+
+    def with_element(self, ast):
+        return ast
+
+    def query_expr_body(self, ast):
+        return ast
+
+    def non_join_query_expr(self, ast):
+        return ast
+
+    def query_term(self, ast):
+        return ast
+
+    def non_join_query_term(self, ast):
+        return ast
+
+    def query_primary(self, ast):
+        return ast
+
+    def non_join_query_primary(self, ast):
+        return ast
+
+    def search_or_cycle_clause(self, ast):
+        return ast
+
+    def search_clause(self, ast):
+        return ast
+
+    def cycle_clause(self, ast):
+        return ast
+
+    def subquery(self, ast):
+        return ast
+
+    def predicate(self, ast):
+        return ast
+
+    def in_predicate_value(self, ast):
+        return ast
+
+    def in_value_list(self, ast):
+        return ast
+
+    def type_list(self, ast):
+        return ast
+
+    def routine_invocation(self, ast):
+        return ast
+
+    def sql_argument_list(self, ast):
+        return ast
+
+    def sql_argument(self, ast):
+        return ast
+
+    def aggregate_func(self, ast):
+        return ast
+
+    def filter_clause(self, ast):
+        return ast
+
+    def within_group_spec(self, ast):
+        return ast
+
+    def sort_spec_list(self, ast):
+        return ast
+
+    def order_by_clause(self, ast):
+        return ast
+
+    def select_stmt(self, ast):
+        return ast
+
+    def directly_executable_stmt(self, ast):
+        return ast
+
+    def direct_sql_stmt(self, ast):
+        return ast
+
+    def direct_sql_data_stmt(self, ast):
+        return ast
+
+    def data_manipulation_stmt(self, ast):
+        return ast
+
+    def schema_element(self, ast):
+        return ast
+
+    def sql_executable_stmt(self, ast):
+        return ast
+
+    def sql_schema_stmt(self, ast):
+        return ast
+
+    def sql_schema_def_stmt(self, ast):
+        return ast
+
+    def external_routine_name(self, ast):
+        return ast
+
+    def sql_stmt_name(self, ast):
+        return ast
+
+    def dynamic_cursor_name(self, ast):
+        return ast
+
+    def descriptor_name(self, ast):
+        return ast
+
+    def value_spec(self, ast):
+        return ast
+
+    def contextually_typed_row_value_constructor_list(self, ast):
+        return ast
+
+    def contextually_typed_row_value_constructor_element(self, ast):
+        return ast
+
+    def contextually_typed_row_value_expr(self, ast):
+        return ast
+
+    def specific_routine_designator(self, ast):
+        return ast
+
+    def data_type_list(self, ast):
+        return ast
+
+    def schema_character_set_or_path(self, ast):
+        return ast
+
+    def schema_name_clause(self, ast):
+        return ast
+
+    def schema_character_set_spec(self, ast):
+        return ast
+
+    def table_def(self, ast):
+        return ast
+
+    def table_contents_source(self, ast):
+        return ast
+
+    def table_element_list(self, ast):
+        return ast
+
+    def table_element(self, ast):
+        return ast
+
+    def self_referencing_column_spec(self, ast):
+        return ast
+
+    def column_def(self, ast):
+        return ast
+
+    def column_constraint_def(self, ast):
+        return ast
+
+    def column_constraint(self, ast):
+        return ast
+
+    def identity_column_spec(self, ast):
+        return ast
+
+    def default_clause(self, ast):
+        return ast
+
+    def default_option(self, ast):
+        return ast
+
+    def table_constraint_def(self, ast):
+        return ast
+
+    def table_constraint(self, ast):
+        return ast
+
+    def references_spec(self, ast):
+        return ast
+
+    def alter_table_action(self, ast):
+        return ast
+
+    def alter_column_action(self, ast):
+        return ast
+
+    def alter_identity_column_option(self, ast):
+        return ast
+
+    def view_def(self, ast):
+        return ast
+
+    def view_spec(self, ast):
+        return ast
+
+    def view_element(self, ast):
+        return ast
+
+    def domain_def(self, ast):
+        return ast
+
+    def domain_constraint(self, ast):
+        return ast
+
+    def alter_domain_action(self, ast):
+        return ast
+
+    def character_set_def(self, ast):
+        return ast
+
+    def collation_def(self, ast):
+        return ast
+
+    def transliteration_def(self, ast):
+        return ast
+
+    def transliteration_source(self, ast):
+        return ast
+
+    def assertion_def(self, ast):
+        return ast
+
+    def trigger_def(self, ast):
+        return ast
+
+    def trigger_event(self, ast):
+        return ast
+
+    def triggered_action(self, ast):
+        return ast
+
+    def triggered_sql_stmt(self, ast):
+        return ast
+
+    def user_defined_type_def(self, ast):
+        return ast
+
+    def user_defined_type_body(self, ast):
+        return ast
+
+    def user_defined_type_option(self, ast):
+        return ast
+
+    def representation(self, ast):
+        return ast
+
+    def reference_type_spec(self, ast):
+        return ast
+
+    def cast_as_ref(self, ast):
+        return ast
+
+    def cast_to_type(self, ast):
+        return ast
+
+    def cast_to_distinct(self, ast):
+        return ast
+
+    def cast_to_source(self, ast):
+        return ast
+
+    def method_spec(self, ast):
+        return ast
+
+    def original_method_spec(self, ast):
+        return ast
+
+    def partial_method_spec(self, ast):
+        return ast
+
+    def attribute_def(self, ast):
+        return ast
+
+    def alter_type_action(self, ast):
+        return ast
+
+    def schema_routine(self, ast):
+        return ast
+
+    def sql_parameter_declaration_list(self, ast):
+        return ast
+
+    def parameter_type(self, ast):
+        return ast
+
+    def function_spec(self, ast):
+        return ast
+
+    def method_spec_designator(self, ast):
+        return ast
+
+    def routine_characteristic(self, ast):
+        return ast
+
+    def returns_type(self, ast):
+        return ast
+
+    def routine_body(self, ast):
+        return ast
+
+    def external_body_reference(self, ast):
+        return ast
+
+    def multiple_group_spec(self, ast):
+        return ast
+
+    def alter_routine_stmt(self, ast):
+        return ast
+
+    def alter_routine_characteristic(self, ast):
+        return ast
+
+    def user_defined_cast_def(self, ast):
+        return ast
+
+    def drop_user_defined_cast_stmt(self, ast):
+        return ast
+
+    def user_defined_ordering_def(self, ast):
+        return ast
+
+    def ordering_form(self, ast):
+        return ast
+
+    def ordering_category(self, ast):
+        return ast
+
+    def transform_def(self, ast):
+        return ast
+
+    def transform_element_list(self, ast):
+        return ast
+
+    def alter_transform_stmt(self, ast):
+        return ast
+
+    def alter_transform_action(self, ast):
+        return ast
+
+    def drop_transform_stmt(self, ast):
+        return ast
+
+    def transforms_to_be_dropped(self, ast):
+        return ast
+
+    def sequence_generator_def(self, ast):
+        return ast
+
+    def sequence_generator_option(self, ast):
+        return ast
+
+    def common_sequence_generator_option(self, ast):
+        return ast
+
+    def basic_sequence_generator_option(self, ast):
+        return ast
+
+    def sequence_generator_max_min_value_option(self, ast):
+        return ast
+
+    def alter_sequence_generator_option(self, ast):
+        return ast
+
+    def grant_stmt(self, ast):
+        return ast
+
+    def grant_privilege_stmt(self, ast):
+        return ast
+
+    def privileges(self, ast):
+        return ast
+
+    def object_name(self, ast):
+        return ast
+
+    def object_privileges(self, ast):
+        return ast
+
+    def action(self, ast):
+        return ast
+
+    def grantee(self, ast):
+        return ast
+
+    def role_def(self, ast):
+        return ast
+
+    def grant_role_stmt(self, ast):
+        return ast
+
+    def revoke_privilege_stmt(self, ast):
+        return ast
+
+    def revoke_role_stmt(self, ast):
+        return ast
+
+    def schema_def(self, ast):
+        return ast
+
+    def grantee_list(self, ast):
+        return ast
+
+    def sql_schema_manipulation_stmt(self, ast):
+        return ast
+
+    def sql_data_stmt(self, ast):
+        return ast
+
+    def sql_control_stmt(self, ast):
+        return ast
+
+    def sql_transaction_stmt(self, ast):
+        return ast
+
+    def sql_connection_stmt(self, ast):
+        return ast
+
+    def sql_session_stmt(self, ast):
+        return ast
+
+    def sql_dynamic_stmt(self, ast):
+        return ast
+
+    def sql_dynamic_data_stmt(self, ast):
+        return ast
+
+    def system_descriptor_stmt(self, ast):
+        return ast
+
+    def fetch_stmt(self, ast):
+        return ast
+
+    def fetch_orientation(self, ast):
+        return ast
+
+    def select_stmt_single_row(self, ast):
+        return ast
+
+    def delete_stmt_positioned(self, ast):
+        return ast
+
+    def target_table(self, ast):
+        return ast
+
+    def delete_stmt_searched(self, ast):
+        return ast
+
+    def insert_stmt(self, ast):
+        return ast
+
+    def insert_columns_and_source(self, ast):
+        return ast
+
+    def merge_stmt(self, ast):
+        return ast
+
+    def merge_when_clause(self, ast):
+        return ast
+
+    def merge_insert_spec(self, ast):
+        return ast
+
+    def update_stmt_positioned(self, ast):
+        return ast
+
+    def update_stmt_searched(self, ast):
+        return ast
+
+    def set_clause_list(self, ast):
+        return ast
+
+    def set_clause(self, ast):
+        return ast
+
+    def set_target(self, ast):
+        return ast
+
+    def temporary_table_declaration(self, ast):
+        return ast
+
+    def transaction_mode_list(self, ast):
+        return ast
+
+    def transaction_mode(self, ast):
+        return ast
+
+    def transaction_characteristics(self, ast):
+        return ast
+
+    def constraint_name_list(self, ast):
+        return ast
+
+    def connection_target(self, ast):
+        return ast
+
+    def connection_object(self, ast):
+        return ast
+
+    def disconnect_object(self, ast):
+        return ast
+
+    def role_spec(self, ast):
+        return ast
+
+    def set_time_zone_value(self, ast):
+        return ast
+
+    def transform_group_characteristic(self, ast):
+        return ast
+
+    def session_collation_stmt(self, ast):
+        return ast
+
+    def get_descriptor_information(self, ast):
+        return ast
+
+    def set_descriptor_information(self, ast):
+        return ast
+
+    def describe_stmt(self, ast):
+        return ast
+
+    def described_object(self, ast):
+        return ast
+
+    def input_using_clause(self, ast):
+        return ast
+
+    def output_using_clause(self, ast):
+        return ast
+
+    def target_spec_list(self, ast):
+        return ast
+
+    def cursor_intent(self, ast):
+        return ast
+
+    def statement_cursor(self, ast):
+        return ast
+
+    def sql_diagnostics_stmt(self, ast):
+        return ast
+
+    def sql_diagnostics_information(self, ast):
         return ast
 
 
