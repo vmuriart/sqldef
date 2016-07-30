@@ -1129,7 +1129,7 @@
     ;
 
 <bracketed_comment_introducer> =
-    <slash> <asterisk>
+    '/*'
     ;
 
 <bracketed_comment_contents> =
@@ -1137,7 +1137,7 @@
     ;
 
 <bracketed_comment_terminator> =
-    <asterisk> <slash>
+    '*/'
     ;
 
 <white_space> =
@@ -2158,7 +2158,7 @@
     ;
 
 <concatenation_operator> =
-    ||
+    '||'
     ;
 
 <array_value_expression_2> =
@@ -6588,4 +6588,52 @@
 
 <preparable_implementation_defined_statement> =
     '#SEE_THE_SYNTAX_RULES'
+    ;
+
+<module_name> =
+    <identifier>
+    ;
+
+<target_data_type> =
+    <data_type>
+    ;
+
+<package_pkg_i_no> =
+    '#MISSING'
+    ;
+
+<package_pkg_i_yes> =
+    '#MISSING'
+    ;
+
+<part_10> =
+    '#MISSING'
+    ;
+
+<part_3> =
+    '#MISSING'
+    ;
+
+<part_4> =
+    '#MISSING'
+    ;
+
+<part_5> =
+    '#MISSING'
+    ;
+
+<part_6> =
+    '#MISSING'
+    ;
+
+<part_7> =
+    '#MISSING'
+    ;
+
+<part_8> =
+    '#MISSING'
+    ;
+
+<part_9> =
+    '#MISSING'
     ;

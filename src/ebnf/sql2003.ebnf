@@ -1818,7 +1818,7 @@
 
 <case_operand> =
   | <row_value_predicand>
-  | <overlaps_predicate_part>
+  | <overlaps_predicate_part_1>
     ;
 
 <when_operand> =
@@ -4986,7 +4986,7 @@
     ;
 
 <sql_client_module_definition> =
-    <module_name_clause> <language_clause> <module_authorization_clause> [<module_path_specification>] [<module_transform_group_specification>] [<module_collation>] [{<temporary_table_declaration>}+] {<module_contents>}+
+    <module_name_clause> <language_clause> <module_authorization_clause> [<module_path_specification>] [<module_transform_group_specification>] [<module_collations>] [{<temporary_table_declaration>}+] {<module_contents>}+
     ;
 
 <module_authorization_clause> =
@@ -6841,4 +6841,33 @@
 
 <condition_number> =
     <simple_value_specification>
+    ;
+
+<unqualified_schema_name> =
+    <identifier>
+    ;
+
+<numeric_value_expression_divisor> =
+    <numeric_value_expression>
+    ;
+
+<numeric_value_expression_dividend> =
+    <numeric_value_expression>
+    ;
+
+<bit_string_literal> =
+    'B' <quote> [{<bit>}+] <quote> [{{<separator>}+ <quote> [{<bit>}+] <quote>}+]
+    ;
+
+<bit> =
+  | '0'
+  | '1'
+    ;
+
+<hex_string_literal> =
+    'X' <quote> [{<hexit>}+] <quote> [{{<separator>}+ <quote> [{<hexit>}+] <quote>}+]
+    ;
+
+<handler_declaration> =
+    '#MISSING'
     ;

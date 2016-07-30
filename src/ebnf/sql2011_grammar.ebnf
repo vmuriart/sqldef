@@ -7564,3 +7564,16 @@
 <condition_number> =
     <simple_value_specification>
     ;
+
+<update_statement_positioned> =
+    'UPDATE' <target_table> [['AS'] <correlation_name>] 'SET' <set_clause_list> 'WHERE' 'CURRENT' 'OF' <cursor_name>
+    ;
+
+<set_session_collation_statement> =
+  | 'SET' 'COLLATION' <collation_specification> ['FOR' <character_set_specification_list>]
+  | 'SET' 'NO' 'COLLATION' ['FOR' <character_set_specification_list>]
+    ;
+
+<collation_specification> =
+    <value_specification>
+    ;

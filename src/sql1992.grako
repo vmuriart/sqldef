@@ -3151,14 +3151,14 @@ c_variable_definition =
     ;
 
 c_storage_class =
-  | auto
-  | extern
-  | static
+  | 'auto'
+  | 'extern'
+  | 'static'
     ;
 
 c_class_modifier =
-  | const
-  | volatile
+  | 'const'
+  | 'volatile'
     ;
 
 c_variable_specification =
@@ -3168,7 +3168,7 @@ c_variable_specification =
     ;
 
 c_numeric_variable =
-    (long | short | float | double) c_host_identifier [c_initial_value] [{comma c_host_identifier [c_initial_value]}+]
+    ('long' | 'short' | 'float' | 'double') c_host_identifier [c_initial_value] [{comma c_host_identifier [c_initial_value]}+]
     ;
 
 c_initial_value =
@@ -3176,7 +3176,7 @@ c_initial_value =
     ;
 
 c_character_variable =
-    char ['CHARACTER' 'SET' ['IS'] character_set_specification] c_host_identifier c_array_specification [c_initial_value] [{comma c_host_identifier c_array_specification [c_initial_value]}+]
+    'char' ['CHARACTER' 'SET' ['IS'] character_set_specification] c_host_identifier c_array_specification [c_initial_value] [{comma c_host_identifier c_array_specification [c_initial_value]}+]
     ;
 
 c_array_specification =

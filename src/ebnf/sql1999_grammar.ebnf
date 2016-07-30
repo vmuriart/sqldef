@@ -4652,3 +4652,37 @@
 <condition_number> =
     <simple_value_specification>
     ;
+
+<assertion_definition> =
+    'CREATE' 'ASSERTION' <constraint_name> 'CHECK' <left_paren> <search_condition> <right_paren> [<constraint_characteristics>]
+    ;
+
+<attribute_definition> =
+    <attribute_name> <data_type> [<attribute_default>] [<collate_clause>]
+    ;
+
+<delete_statement_positioned> =
+    'DELETE' 'FROM' <target_table> [['AS'] <correlation_name>] 'WHERE' 'CURRENT' 'OF' <cursor_name>
+    ;
+
+<source_data_type> =
+    <data_type>
+    ;
+
+<target_table> =
+  | <table_name>
+  | 'ONLY' <left_paren> <table_name> <right_paren>
+    ;
+
+<user_defined_cast_definition> =
+    'CREATE' 'CAST' <left_paren> <source_data_type> 'AS' <target_data_type> <right_paren> 'WITH' <cast_function> ['AS' 'ASSIGNMENT']
+    ;
+
+<attribute_default> =
+    <default_clause>
+    ;
+
+<cast_function> =
+    <specific_routine_designator>
+    ;
+

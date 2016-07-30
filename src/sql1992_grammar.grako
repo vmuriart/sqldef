@@ -2788,10 +2788,6 @@ get_item_information =
     simple_target_specification_2 equals_operator descriptor_item_name
     ;
 
-item_number =
-    simple_value_specification
-    ;
-
 simple_target_specification_1 =
     simple_target_specification
     ;
@@ -2845,6 +2841,10 @@ simple_value_specification_1 =
     ;
 
 simple_value_specification_2 =
+    simple_value_specification
+    ;
+
+item_number =
     simple_value_specification
     ;
 

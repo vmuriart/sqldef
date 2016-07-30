@@ -2556,11 +2556,12 @@ row_value_constructor_element =
     value_expression
     ;
 
+# note this one was changed contextually_typed_[ROW]_value_specification
 contextually_typed_row_value_constructor =
   | common_value_expression
   | boolean_value_expression
   | contextually_typed_value_specification
-  | left_paren contextually_typed_row_value_specification right_paren
+  | left_paren contextually_typed_value_specification right_paren
   | left_paren contextually_typed_row_value_constructor_element comma contextually_typed_row_value_constructor_element_list right_paren
   | 'ROW' left_paren contextually_typed_row_value_constructor_element_list right_paren
     ;
