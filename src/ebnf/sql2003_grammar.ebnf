@@ -433,7 +433,7 @@
     ;
 
 <simple_comment_introducer> =
-    <minus_sign> <minus_sign>
+    <minus_sign> <minus_sign> [{<minus_sign>}+]
     ;
 
 <bracketed_comment> =
@@ -449,7 +449,7 @@
     ;
 
 <bracketed_comment_contents> =
-    '#SEE_THE_SYNTAX_RULES' [{<comment_character> | <separator>}+]
+    [{<comment_character> | <separator>}+] '#SEE_THE_SYNTAX_RULES'
     ;
 
 <comment_character> =
@@ -6268,18 +6268,18 @@
     ;
 
 <c_storage_class> =
-  | auto
-  | extern
-  | static
+  | 'auto'
+  | 'extern'
+  | 'static'
     ;
 
 <c_class_modifier> =
-  | const
-  | volatile
+  | 'const'
+  | 'volatile'
     ;
 
 <c_numeric_variable> =
-    (long long | long | short | float | double) <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
+    ('long' 'long' | 'long' | 'short' | 'float' | 'double') <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
     ;
 
 <c_character_variable> =
@@ -6287,9 +6287,9 @@
     ;
 
 <c_character_type> =
-  | char
-  | unsigned char
-  | unsigned short
+  | 'char'
+  | 'unsigned' 'char'
+  | 'unsigned' 'short'
     ;
 
 <c_array_specification> =
@@ -6699,8 +6699,7 @@
 
 <pl_i_variable_definition> =
   | ('DCL' | 'DECLARE') <pl_i_type_specification> [{<character_representation>}+] <semicolon>
-  | {<pl_i_host_identifier>
-  | <left_paren> <pl_i_host_identifier> [(<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
+  | (<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [{<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
     ;
 
 <pl_i_host_identifier> =

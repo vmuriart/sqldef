@@ -195,7 +195,7 @@
     ;
 
 <less_than_operator> =
-    ' <'
+    '<'
     ;
 
 <equals_operator> =
@@ -203,7 +203,7 @@
     ;
 
 <greater_than_operator> =
-    '> '
+    '>'
     ;
 
 <question_mark> =
@@ -360,7 +360,7 @@
     ;
 
 <doublequote_symbol> =
-    <double_quote> <double_quote>
+    '""'
     ;
 
 <delimiter_token> =
@@ -384,35 +384,39 @@
     ;
 
 <not_equals_operator> =
-    <less_than_operator> <greater_than_operator>
+    '<>'
     ;
 
 <greater_than_or_equals_operator> =
-    <greater_than_operator> <equals_operator>
+    '>='
     ;
 
 <less_than_or_equals_operator> =
-    <less_than_operator> <equals_operator>
+    '<='
     ;
 
 <concatenation_operator> =
-    <vertical_bar> <vertical_bar>
+    '||'
     ;
 
 <right_arrow> =
-    <minus_sign> <greater_than_operator>
+    '->'
     ;
 
 <double_colon> =
-    <colon> <colon>
+    '::'
     ;
 
 <double_period> =
-    <period> <period>
+    '..'
     ;
 
 <separator> =
     {<comment> | <white_space>}+
+    ;
+
+<white_space> =
+    '#SEE_THE_SYNTAX_RULES'
     ;
 
 <comment> =
@@ -433,15 +437,15 @@
     ;
 
 <bracketed_comment_introducer> =
-    <slash> <asterisk>
+    '/*'
     ;
 
 <bracketed_comment_terminator> =
-    <asterisk> <slash>
+    '*/'
     ;
 
 <bracketed_comment_contents> =
-    [{<comment_character> | <separator>}+]
+    [{<comment_character> | <separator>}+] '#SEE_THE_SYNTAX_RULES'
     ;
 
 <comment_character> =
@@ -1947,7 +1951,7 @@
     ;
 
 <multiset_element_reference> =
-    'ELEMENT' <left_paren> <multset_value_expression> <right_paren>
+    'ELEMENT' <left_paren> <multiset_value_expression> <right_paren>
     ;
 
 <value_expression> =
@@ -2491,7 +2495,7 @@
     ;
 
 <multiset_element_list> =
-    <multiset_element> [(<comma> <multiset_element>)]
+    <multiset_element> [{<comma> <multiset_element>}+]
     ;
 
 <multiset_element> =
@@ -3331,7 +3335,7 @@
     ;
 
 <distinct_predicate_part_2> =
-    'IS' 'DISTINCT' 'FROM' <row_value_predicand_4>
+    'IS' ['NOT'] 'DISTINCT' 'FROM' <row_value_predicand_4>
     ;
 
 <row_value_predicand_3> =
@@ -3444,6 +3448,7 @@
   | 'C'
   | 'COBOL'
   | 'FORTRAN'
+  | 'M'
   | 'MUMPS'
   | 'PASCAL'
   | 'PLI'
@@ -6670,7 +6675,7 @@
     ;
 
 <pl_i_variable_definition> =
-  ('DCL' | 'DECLARE') {<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [(<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
+  ('DCL' | 'DECLARE') (<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [{<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
     ;
 
 <pl_i_host_identifier> =

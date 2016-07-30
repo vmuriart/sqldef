@@ -3219,22 +3219,28 @@
     ;
 
 <c_storage_class> =
-  | auto
-  | extern
-  | static
+  | 'auto'
+  | 'extern'
+  | 'static'
     ;
 
 <c_class_modifier> =
-  | const
-  | volatile
+  | 'const'
+  | 'volatile'
     ;
 
 <c_numeric_variable> =
-    (long | short | float | double) <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
+    ('long' 'long' | 'long' | 'short' | 'float' | 'double') <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
     ;
 
 <c_character_variable> =
-    char ['CHARACTER' 'SET' ['IS'] <character_set_specification>] <c_host_identifier> <c_array_specification> [<c_initial_value>] [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
+    <c_character_type> ['CHARACTER' 'SET' ['IS'] <character_set_specification>] <c_host_identifier> <c_array_specification> [<c_initial_value>] [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
+    ;
+
+<c_character_type> =
+  | 'char'
+  | 'unsigned' 'char'
+  | 'unsigned' 'short'
     ;
 
 <c_array_specification> =
@@ -3267,7 +3273,7 @@
     ;
 
 <cobol_variable_definition> =
-    (01|77) <cobol_host_identifier> <cobol_type_specification> [{<character_representation>}+] <period>
+    ('01' | '77') <cobol_host_identifier> <cobol_type_specification> [{<character_representation>}+] <period>
     ;
 
 <cobol_host_identifier> =
