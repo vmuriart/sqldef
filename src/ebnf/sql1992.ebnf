@@ -863,9 +863,7 @@
     ;
 
 <module> =
-    <module_name_clause> <language_clause> <module_authorization_clause>
-        [{<temporary_table_declaration>}+]
-        {<module_contents>}+
+    <module_name_clause> <language_clause> <module_authorization_clause> [{<temporary_table_declaration>}+] {<module_contents>}+
     ;
 
 <module_name_clause> =
@@ -1484,10 +1482,7 @@
     ;
 
 <table_expression> =
-    <from_clause>
-        [<where_clause>]
-        [<group_by_clause>]
-        [<having_clause>]
+    <from_clause> [<where_clause>] [<group_by_clause>] [<having_clause>]
     ;
 
 <from_clause> =
@@ -1633,10 +1628,7 @@
     ;
 
 <simple_case> =
-    'CASE' <case_operand>
-        {<simple_when_clause>}+
-        [<else_clause>]
-        'END'
+    'CASE' <case_operand> {<simple_when_clause>}+ [<else_clause>] 'END'
     ;
 
 <case_operand> =
@@ -1665,10 +1657,7 @@
     ;
 
 <searched_case> =
-    'CASE'
-        {<searched_when_clause>}+
-        [<else_clause>]
-        'END'
+    'CASE' {<searched_when_clause>}+ [<else_clause>] 'END'
     ;
 
 <searched_when_clause> =
@@ -2168,9 +2157,7 @@
     ;
 
 <schema_definition> =
-    'CREATE' 'SCHEMA' <schema_name_clause>
-        [<schema_character_set_specification>]
-        [{<schema_element>}+]
+    'CREATE' 'SCHEMA' <schema_name_clause> [<schema_character_set_specification>] [{<schema_element>}+]
     ;
 
 <schema_name_clause> =
@@ -2199,8 +2186,7 @@
     ;
 
 <domain_definition> =
-    'CREATE' 'DOMAIN' <domain_name> ['AS'] <data_type>
-        [<default_clause>] [<domain_constraint>] [<collate_clause>]
+    'CREATE' 'DOMAIN' <domain_name> ['AS'] <data_type> [<default_clause>] [<domain_constraint>] [<collate_clause>]
     ;
 
 <domain_constraint> =
@@ -2212,8 +2198,7 @@
     ;
 
 <view_definition> =
-    'CREATE' 'VIEW' <table_name> [<left_paren> <view_column_list> <right_paren>]
-        'AS' <query_expression> ['WITH' [<levels_clause>] 'CHECK' 'OPTION']
+    'CREATE' 'VIEW' <table_name> [<left_paren> <view_column_list> <right_paren>] 'AS' <query_expression> ['WITH' [<levels_clause>] 'CHECK' 'OPTION']
     ;
 
 <view_column_list> =
@@ -2273,8 +2258,7 @@
     ;
 
 <character_set_definition> =
-    'CREATE' 'CHARACTER' 'SET' <character_set_name> ['AS'] <character_set_source>
-  |     [<collate_clause>
+  | 'CREATE' 'CHARACTER' 'SET' <character_set_name> ['AS'] <character_set_source> [<collate_clause>
   | <limited_collation_definition>]
     ;
 
@@ -2334,8 +2318,7 @@
     ;
 
 <collation_definition> =
-    'CREATE' 'COLLATION' <collation_name> 'FOR' <character_set_specification>
-        'FROM' <collation_source> [<pad_attribute>]
+    'CREATE' 'COLLATION' <collation_name> 'FOR' <character_set_specification> 'FROM' <collation_source> [<pad_attribute>]
     ;
 
 <pad_attribute> =
@@ -2344,10 +2327,7 @@
     ;
 
 <translation_definition> =
-    'CREATE' 'TRANSLATION' <translation_name>
-        'FOR' <source_character_set_specification>
-        'TO' <target_character_set_specification>
-        'FROM' <translation_source>
+    'CREATE' 'TRANSLATION' <translation_name> 'FOR' <source_character_set_specification> 'TO' <target_character_set_specification> 'FROM' <translation_source>
     ;
 
 <source_character_set_specification> =
@@ -2466,8 +2446,7 @@
     ;
 
 <revoke_statement> =
-    'REVOKE' ['GRANT' 'OPTION' 'FOR'] <privileges> 'ON' <object_name>
-        'FROM' <grantee> [{<comma> <grantee>}+] <drop_behaviour>
+    'REVOKE' ['GRANT' 'OPTION' 'FOR'] <privileges> 'ON' <object_name> 'FROM' <grantee> [{<comma> <grantee>}+] <drop_behaviour>
     ;
 
 <alter_domain_statement> =
@@ -2991,9 +2970,7 @@
     ;
 
 <dynamic_update_statement_positioned> =
-    'UPDATE' <table_name>
-        'SET' <set_clause> [{<comma> <set_clause>}+]
-        'WHERE' 'CURRENT' 'OF' <dynamic_cursor_name>
+    'UPDATE' <table_name> 'SET' <set_clause> [{<comma> <set_clause>}+] 'WHERE' 'CURRENT' 'OF' <dynamic_cursor_name>
     ;
 
 <sql_diagnostics_statement> =
@@ -3096,10 +3073,7 @@
     ;
 
 <embedded_sql_declare_section> =
-    <embedded_sql_begin_declare>
-        [<embedded_character_set_declaration>]
-        [{<host_variable_definition>}+]
-  |     <embedded_sql_end_declare>
+  | <embedded_sql_begin_declare> [<embedded_character_set_declaration>] [{<host_variable_definition>}+] <embedded_sql_end_declare>
   | <embedded_sql_mumps_declare>
     ;
 
@@ -3109,7 +3083,7 @@
 
 <sql_prefix> =
   | 'EXEC' 'SQL'
-  | <ampersand>'SQL'<left_paren>
+  | <ampersand> 'SQL' <left_paren>
     ;
 
 <sql_terminator> =
@@ -3133,8 +3107,7 @@
     ;
 
 <ada_variable_definition> =
-    <ada_host_identifier> [{<comma> <ada_host_identifier>}+] <colon>
-        <ada_type_specification> [<ada_initial_value>]
+    <ada_host_identifier> [{<comma> <ada_host_identifier>}+] <colon> <ada_type_specification> [<ada_initial_value>]
     ;
 
 <ada_type_specification> =
@@ -3196,9 +3169,7 @@
     ;
 
 <c_numeric_variable> =
-    (long | short | float | double)
-        <c_host_identifier> [<c_initial_value>]
-        [{<comma> <c_host_identifier> [<c_initial_value>]}+]
+    (long | short | float | double) <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
     ;
 
 <c_initial_value> =
@@ -3206,9 +3177,7 @@
     ;
 
 <c_character_variable> =
-    char ['CHARACTER' 'SET' ['IS'] <character_set_specification>]
-        <c_host_identifier> <c_array_specification> [<c_initial_value>]
-        [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
+    char ['CHARACTER' 'SET' ['IS'] <character_set_specification>] <c_host_identifier> <c_array_specification> [<c_initial_value>] [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
     ;
 
 <c_array_specification> =
@@ -3221,14 +3190,11 @@
     ;
 
 <c_varchar_variable> =
-    'VARCHAR' ['CHARACTER' 'SET' ['IS'] <character_set_specification>]
-        <c_host_identifier> <c_array_specification> [<c_initial_value>]
-        [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
+    'VARCHAR' ['CHARACTER' 'SET' ['IS'] <character_set_specification>] <c_host_identifier> <c_array_specification> [<c_initial_value>] [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
     ;
 
 <c_bit_variable> =
-    'BIT' <c_host_identifier> <c_array_specification> [<c_initial_value>]
-        [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
+    'BIT' <c_host_identifier> <c_array_specification> [<c_initial_value>] [{<comma> <c_host_identifier> <c_array_specification> [<c_initial_value>]}+]
     ;
 
 <cobol_variable_definition> =
@@ -3256,12 +3222,7 @@
     ;
 
 <embedded_sql_mumps_declare> =
-    <sql_prefix>
-        'BEGIN' 'DECLARE' 'SECTION'
-        [<embedded_character_set_declaration>]
-        [{<host_variable_definition>}+]
-        'END' 'DECLARE' 'SECTION'
-        <sql_terminator>
+    <sql_prefix> 'BEGIN' 'DECLARE' 'SECTION' [<embedded_character_set_declaration>] [{<host_variable_definition>}+] 'END' 'DECLARE' 'SECTION' <sql_terminator>
     ;
 
 <embedded_sql_statement> =

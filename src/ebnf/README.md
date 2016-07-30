@@ -39,3 +39,4 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 1. `(?<!=)\n    (?!;)` to `\n        ` to indent in continuation lines
 1. use `(\S)  +` with `\1 ` to clean up multiple spaces
 1. use `{(.*?)}([^+])` with `(\1)\2` to replace {} with ()
+1. use `[)}\]'>][<({\[']` to find definitions touching that shouldnt be
