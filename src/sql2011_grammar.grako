@@ -4373,9 +4373,7 @@ period_end_column_name =
     ;
 
 column_definition =
-  | column_name [data_type_or_domain_name] [default_clause | identity_column_specification | generation_clause
-  | system_time_period_start_column_specification
-  | system_time_period_end_column_specification] [{column_constraint_definition}+] [collate_clause]
+  column_name [data_type_or_domain_name] [default_clause | identity_column_specification | generation_clause | system_time_period_start_column_specification | system_time_period_end_column_specification] [{column_constraint_definition}+] [collate_clause]
     ;
 
 data_type_or_domain_name =

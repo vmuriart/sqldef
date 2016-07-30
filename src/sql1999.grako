@@ -19,6 +19,19 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+@@keyword :: SELECT FROM WHERE
+
+start =
+        direct_sql_statement
+        $
+        ;
+
 sql_object_identifier =
     sql_provenance sql_variant
     ;
@@ -48,27 +61,27 @@ sql_variant =
     ;
 
 sql_edition =
-  | 1987
-  | 1989
-  | 1992
-  | 1999
+  | _1987
+  | _1989
+  | _1992
+  | _1999
     ;
 
-1987 =
+_1987 =
   | '0'
   | 'edition1987' left_paren '0' right_paren
     ;
 
-1989 =
-    1989_base 1989_package
+_1989 =
+    _1989_base _1989_package
     ;
 
-1989_base =
+_1989_base =
   | '1'
   | 'edition1989' left_paren '1' right_paren
     ;
 
-1989_package =
+_1989_package =
   | integrity_no
   | integrity_yes
     ;
@@ -83,12 +96,12 @@ integrity_yes =
   | 'IntegrityYes' left_paren '1' right_paren
     ;
 
-1992 =
+_1992 =
   | '2'
   | 'edition1992' left_paren '2' right_paren
     ;
 
-1999 =
+_1999 =
   | '3'
   | 'edition1999' left_paren '3' right_paren
     ;
@@ -643,12 +656,6 @@ language_name =
   | 'PASCAL'
   | 'PLI'
   | 'SQL'
-    ;
-
-module_authorization_clause =
-  | 'SCHEMA' schema_name
-  | 'AUTHORIZATION' module_authorization_identifier
-  | 'SCHEMA' schema_name 'AUTHORIZATION' module_authorization_identifier
     ;
 
 module_authorization_identifier =
@@ -2095,7 +2102,7 @@ dereference_operator =
     ;
 
 right_arrow =
-    ->
+    '->'
     ;
 
 sql_argument_list =
@@ -2164,7 +2171,7 @@ array_value_expression_1 =
     ;
 
 concatenation_operator =
-    ||
+    '||'
     ;
 
 array_value_expression_2 =
@@ -2471,11 +2478,6 @@ interval_term =
 
 interval_factor =
     [sign] interval_primary
-    ;
-
-interval_primary =
-  | value_expression_primary
-  | interval_value_function
     ;
 
 interval_value_function =
@@ -5388,10 +5390,6 @@ drop_module_statement =
     'DROP' 'MODULE' sql_server_module_name drop_behavior
     ;
 
-triggered_sql_statement =
-    sql_procedure_statement
-    ;
-
 sql_dynamic_statement =
   | system_descriptor_statement
   | prepare_statement
@@ -5545,10 +5543,6 @@ descriptor_item_name =
     ;
 
 simple_value_specification_2 =
-    simple_value_specification
-    ;
-
-item_number =
     simple_value_specification
     ;
 
@@ -5865,15 +5859,15 @@ ada_type_specification =
     ;
 
 ada_qualified_type_specification =
-  | 'Interfaces'.'SQL' period 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification] left_paren '1' double_period length right_paren
-  | 'Interfaces'.'SQL' period 'BIT' left_paren '1' double_period length right_paren
-  | 'Interfaces'.'SQL' period 'SMALLINT'
-  | 'Interfaces'.'SQL' period 'INT'
-  | 'Interfaces'.'SQL' period 'REAL'
-  | 'Interfaces'.'SQL' period 'DOUBLE_PRECISION'
-  | 'Interfaces'.'SQL' period 'BOOLEAN'
-  | 'Interfaces'.'SQL' period 'SQLSTATE_TYPE'
-  | 'Interfaces'.'SQL' period 'INDICATOR_TYPE'
+  | 'Interfaces' period 'SQL' period 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification] left_paren '1' double_period length right_paren
+  | 'Interfaces' period 'SQL' period 'BIT' left_paren '1' double_period length right_paren
+  | 'Interfaces' period 'SQL' period 'SMALLINT'
+  | 'Interfaces' period 'SQL' period 'INT'
+  | 'Interfaces' period 'SQL' period 'REAL'
+  | 'Interfaces' period 'SQL' period 'DOUBLE_PRECISION'
+  | 'Interfaces' period 'SQL' period 'BOOLEAN'
+  | 'Interfaces' period 'SQL' period 'SQLSTATE_TYPE'
+  | 'Interfaces' period 'SQL' period 'INDICATOR_TYPE'
     ;
 
 ada_unqualified_type_specification =

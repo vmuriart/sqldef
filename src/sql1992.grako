@@ -2258,8 +2258,7 @@ assertion_check =
     ;
 
 character_set_definition =
-  | 'CREATE' 'CHARACTER' 'SET' character_set_name ['AS'] character_set_source [collate_clause
-  | limited_collation_definition]
+    'CREATE' 'CHARACTER' 'SET' character_set_name ['AS'] character_set_source [collate_clause | limited_collation_definition]
     ;
 
 character_set_source =

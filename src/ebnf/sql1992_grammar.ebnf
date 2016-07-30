@@ -2559,7 +2559,7 @@
     ;
 
 <sort_specification> =
-    <sort_key> [<collate_clause_>] [<ordering_specification>]
+    <sort_key> [<collate_clause>] [<ordering_specification>]
     ;
 
 <sort_key> =
@@ -2785,11 +2785,7 @@
     ;
 
 <get_item_information> =
-    <simple_target_specification_2> <equals_operator> <descriptor_item_name>>
-    ;
-
-<item_number> =
-    <simple_value_specification>
+    <simple_target_specification_2> <equals_operator> <descriptor_item_name>
     ;
 
 <simple_target_specification_1> =
@@ -3160,7 +3156,7 @@
     ;
 
 <ada_variable_definition> =
-    <ada_host_identifier> [{<comma> <ada_host_identifier>}+] : <ada_type_specification> [<ada_initial_value>]
+    <ada_host_identifier> [{<comma> <ada_host_identifier>}+] ':' <ada_type_specification> [<ada_initial_value>]
     ;
 
 <ada_initial_value> =
@@ -3397,8 +3393,7 @@
     ;
 
 <pl_i_variable_definition> =
-  | ('DCL' | 'DECLARE') {<pl_i_host_identifier>
-  | <left_paren> <pl_i_host_identifier> [(<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
+    ('DCL' | 'DECLARE') (<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [{<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
     ;
 
 <pl_i_host_identifier> =

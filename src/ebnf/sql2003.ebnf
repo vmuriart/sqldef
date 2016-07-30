@@ -790,7 +790,7 @@
   | 'ELEMENT'
   | 'ELSE'
   | 'END'
-  | 'END'-'EXEC'
+  | 'END-EXEC'
   | 'ESCAPE'
   | 'EXCEPT'
   | 'EXEC'
@@ -1569,10 +1569,6 @@
 
 <referenced_type> =
     <path_resolved_user_defined_type_name>
-    ;
-
-<path_resolved_user_defined_type_name> =
-    <user_defined_type_name>
     ;
 
 <path_resolved_user_defined_type_name> =
@@ -5636,10 +5632,6 @@
   | 'SET' 'NO' 'COLLATION' ['FOR' <character_set_specification_list>]
     ;
 
-<character_set_specification_list> =
-    <character_set_specification> [, {<character_set_specification>}+]
-    ;
-
 <collation_specification> =
     <value_specification>
     ;
@@ -5755,10 +5747,6 @@
     ;
 
 <simple_value_specification_2> =
-    <simple_value_specification>
-    ;
-
-<item_number> =
     <simple_value_specification>
     ;
 
