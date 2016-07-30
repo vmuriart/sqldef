@@ -18,7 +18,7 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 
 # convert 2011
 
-1. use `\d+.\d+.+\n\nFunction\n(.*\n)*?Format` to convert comments and headers
+1. use `\d+.\d+.+\n\n+Function\n(.*\n)*?Format` to convert comments and headers
 1. Replace `(<.*):(.*>)` with `\1_\2` to remove colons
 1. Replace `(<.*)-(.*>)` with `\1_\2` to remove hyphens- apply multiple times. note END-EXEC was mistakely changed. will fix later
 1. use `(^\d+ .*)` to format all headers

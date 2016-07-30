@@ -1,4 +1,4 @@
- 
+
 
 
 
@@ -21,7 +21,7 @@
 
                                                                    July 1992
 
- 
+
 
 
 
@@ -85,7 +85,7 @@
          Digital Equipment Corporation
          Maynard, Massachusetts
 
- 
+
 
 
 
@@ -181,7 +181,7 @@
 
         ii  Database Language SQL
 
- 
+
 
 
 
@@ -283,7 +283,7 @@
 
                                                       Table of Contents  iii
 
- 
+
 
 
 
@@ -379,7 +379,7 @@
 
          iv  Database Language SQL
 
- 
+
 
 
 
@@ -477,7 +477,7 @@
 
                                                         Table of Contents  v
 
- 
+
 
 
 
@@ -571,7 +571,7 @@
 
          vi  Database Language SQL
 
- 
+
 
 
 
@@ -667,7 +667,7 @@
 
                                                       Table of Contents  vii
 
- 
+
 
 
 
@@ -769,7 +769,7 @@
 
          viii  Database Language SQL
 
- 
+
 
 
 
@@ -853,7 +853,7 @@
 
                                                        Table of Contents  ix
 
- 
+
 
 
 
@@ -920,7 +920,7 @@
 
          x  Database Language SQL
 
- 
+
 
 
 
@@ -986,7 +986,7 @@
 
                                                                 Foreword  xi
 
- 
+
 
 
 
@@ -1053,7 +1053,7 @@
 
                                                           Introduction  xiii
 
- 
+
 
 
 
@@ -1120,7 +1120,7 @@
 
          xiv  Database Language SQL
 
- 
+
 
 
 
@@ -1189,7 +1189,7 @@
 
                                                             Introduction  xv
 
- 
+
 
 
 
@@ -1255,7 +1255,7 @@
 
          xvi  Database Language SQL
 
- 
+
 
 
 
@@ -1321,7 +1321,7 @@
 
                                                                    Scope   1
 
- 
+
 
 
 
@@ -1387,7 +1387,7 @@
 
          2  Database Language SQL
 
- 
+
 
 
 
@@ -1457,7 +1457,7 @@
 
                                                     Normative references   3
 
- 
+
 
 
 
@@ -1523,7 +1523,7 @@
 
          4  Database Language SQL
 
- 
+
 
 
 
@@ -1589,7 +1589,7 @@
 
                                  Definitions, notations, and conventions   5
 
- 
+
 
 
 
@@ -1657,7 +1657,7 @@
 
          6  Database Language SQL
 
- 
+
 
 
 
@@ -1723,7 +1723,7 @@
 
                                  Definitions, notations, and conventions   7
 
- 
+
 
 
 
@@ -1791,7 +1791,7 @@
 
          8  Database Language SQL
 
- 
+
 
 
 
@@ -1857,7 +1857,7 @@
 
                                  Definitions, notations, and conventions   9
 
- 
+
 
 
 
@@ -1923,7 +1923,7 @@
 
          10  Database Language SQL
 
- 
+
 
 
 
@@ -1989,7 +1989,7 @@
 
                                 Definitions, notations, and conventions   11
 
- 
+
 
 
 
@@ -2055,7 +2055,7 @@
 
          12  Database Language SQL
 
- 
+
 
 
 
@@ -2121,7 +2121,7 @@
 
                                 Definitions, notations, and conventions   13
 
- 
+
 
 
 
@@ -2187,7 +2187,7 @@
 
          14  Database Language SQL
 
- 
+
 
 
 
@@ -2253,7 +2253,7 @@
 
                                 Definitions, notations, and conventions   15
 
- 
+
 
 
 
@@ -2319,7 +2319,7 @@
 
          16  Database Language SQL
 
- 
+
 
 
 
@@ -2385,7 +2385,7 @@
 
                                 Definitions, notations, and conventions   17
 
- 
+
 
 
 
@@ -2451,7 +2451,7 @@
 
          18  Database Language SQL
 
- 
+
 
 
 
@@ -2517,7 +2517,7 @@
 
                                                                Concepts   19
 
- 
+
 
 
 
@@ -2583,7 +2583,7 @@
 
          20  Database Language SQL
 
- 
+
 
 
 
@@ -2649,7 +2649,7 @@
 
                                                                Concepts   21
 
- 
+
 
 
 
@@ -2715,7 +2715,7 @@
 
          22  Database Language SQL
 
- 
+
 
 
 
@@ -2781,7 +2781,7 @@
 
                                                                Concepts   23
 
- 
+
 
 
 
@@ -2849,7 +2849,7 @@
 
          24  Database Language SQL
 
- 
+
 
 
 
@@ -2921,7 +2921,7 @@
         |          |         |                    |                        |
                                                                Concepts   25
 
- 
+
 
 
 
@@ -2991,7 +2991,7 @@
 
          26  Database Language SQL
 
- 
+
 
 
 
@@ -3057,7 +3057,7 @@
 
                                                                Concepts   27
 
- 
+
 
 
 
@@ -3123,7 +3123,7 @@
 
          28  Database Language SQL
 
- 
+
 
 
 
@@ -3189,7 +3189,7 @@
 
                                                                Concepts   29
 
- 
+
 
 
 
@@ -3257,7 +3257,7 @@
         |                  |                                               |
          30  Database Language SQL
 
- 
+
 
 
 
@@ -3324,7 +3324,7 @@
 
                                                                Concepts   31
 
- 
+
 
 
 
@@ -3390,7 +3390,7 @@
 
          32  Database Language SQL
 
- 
+
 
 
 
@@ -3456,7 +3456,7 @@
 
                                                                Concepts   33
 
- 
+
 
 
 
@@ -3526,7 +3526,7 @@
 
          34  Database Language SQL
 
- 
+
 
 
 
@@ -3592,7 +3592,7 @@
 
                                                                Concepts   35
 
- 
+
 
 
 
@@ -3658,7 +3658,7 @@
 
          36  Database Language SQL
 
- 
+
 
 
 
@@ -3724,7 +3724,7 @@
 
                                                                Concepts   37
 
- 
+
 
 
 
@@ -3794,7 +3794,7 @@
 
          38  Database Language SQL
 
- 
+
 
 
 
@@ -3862,7 +3862,7 @@
 
                                                                Concepts   39
 
- 
+
 
 
 
@@ -3928,7 +3928,7 @@
 
          40  Database Language SQL
 
- 
+
 
 
 
@@ -3994,7 +3994,7 @@
 
                                                                Concepts   41
 
- 
+
 
 
 
@@ -4060,7 +4060,7 @@
 
          42  Database Language SQL
 
- 
+
 
 
 
@@ -4126,7 +4126,7 @@
 
                                                                Concepts   43
 
- 
+
 
 
 
@@ -4192,7 +4192,7 @@
 
          44  Database Language SQL
 
- 
+
 
 
 
@@ -4258,7 +4258,7 @@
 
                                                                Concepts   45
 
- 
+
 
 
 
@@ -4324,7 +4324,7 @@
 
          46  Database Language SQL
 
- 
+
 
 
 
@@ -4390,7 +4390,7 @@
 
                                                                Concepts   47
 
- 
+
 
 
 
@@ -4456,7 +4456,7 @@
 
          48  Database Language SQL
 
- 
+
 
 
 
@@ -4522,7 +4522,7 @@
 
                                                                Concepts   49
 
- 
+
 
 
 
@@ -4592,7 +4592,7 @@
 
          50  Database Language SQL
 
- 
+
 
 
 
@@ -4658,7 +4658,7 @@
 
                                                                Concepts   51
 
- 
+
 
 
 
@@ -4728,7 +4728,7 @@
 
          52  Database Language SQL
 
- 
+
 
 
 
@@ -4798,7 +4798,7 @@
 
                                                                Concepts   53
 
- 
+
 
 
 
@@ -4868,7 +4868,7 @@
 
          54  Database Language SQL
 
- 
+
 
 
 
@@ -4934,7 +4934,7 @@
 
                                                                Concepts   55
 
- 
+
 
 
 
@@ -5003,7 +5003,7 @@
 
          56  Database Language SQL
 
- 
+
 
 
 
@@ -5069,7 +5069,7 @@
 
                                                                Concepts   57
 
- 
+
 
 
 
@@ -5140,7 +5140,7 @@
 
          58  Database Language SQL
 
- 
+
 
 
 
@@ -5209,7 +5209,7 @@
 
                                                                Concepts   59
 
- 
+
 
 
 
@@ -5275,7 +5275,7 @@
 
          60  Database Language SQL
 
- 
+
 
 
 
@@ -5341,7 +5341,7 @@
 
                                                                Concepts   61
 
- 
+
 
 
 
@@ -5409,7 +5409,7 @@
 
          62  Database Language SQL
 
- 
+
 
 
 
@@ -5476,7 +5476,7 @@
 
                                                                Concepts   63
 
- 
+
 
 
 
@@ -5542,7 +5542,7 @@
 
          64  Database Language SQL
 
- 
+
 
 
 
@@ -5612,7 +5612,7 @@
 
                                                                Concepts   65
 
- 
+
 
 
 
@@ -5679,7 +5679,7 @@
 
          66  Database Language SQL
 
- 
+
 
 
 
@@ -5747,7 +5747,7 @@
 
                                                                Concepts   67
 
- 
+
 
 
 
@@ -5813,7 +5813,7 @@
 
          68  Database Language SQL
 
- 
+
 
 
 
@@ -5883,7 +5883,7 @@
 
                                                                Concepts   69
 
- 
+
 
 
 
@@ -5949,7 +5949,7 @@
 
          70  Database Language SQL
 
- 
+
 
 
 
@@ -6015,7 +6015,7 @@
 
                                                                Concepts   71
 
- 
+
 
 
 
@@ -6081,7 +6081,7 @@
 
          72  Database Language SQL
 
- 
+
 
 
 
@@ -6149,7 +6149,7 @@
 
                                                                Concepts   73
 
- 
+
 
 
 
@@ -6215,7 +6215,7 @@
 
          74  Database Language SQL
 
- 
+
 
 
 
@@ -6281,7 +6281,7 @@
 
                                                                Concepts   75
 
- 
+
 
 
 
@@ -6348,7 +6348,7 @@
 
          76  Database Language SQL
 
- 
+
 
 
 
@@ -6414,7 +6414,7 @@
 
                                                                Concepts   77
 
- 
+
 
 
 
@@ -6480,7 +6480,7 @@
 
          78  Database Language SQL
 
- 
+
 
 
 
@@ -6546,7 +6546,7 @@
 
                                                        Lexical elements   79
 
- 
+
 
 
 
@@ -6612,7 +6612,7 @@
 
          80  Database Language SQL
 
- 
+
 
 
 
@@ -6678,7 +6678,7 @@
 
                                                        Lexical elements   81
 
- 
+
 
 
 
@@ -6744,7 +6744,7 @@
 
          82  Database Language SQL
 
- 
+
 
 
 
@@ -6810,7 +6810,7 @@
 
                                                        Lexical elements   83
 
- 
+
 
 
 
@@ -6876,7 +6876,7 @@
 
          84  Database Language SQL
 
- 
+
 
 
 
@@ -6942,7 +6942,7 @@
 
                                                        Lexical elements   85
 
- 
+
 
 
 
@@ -7010,7 +7010,7 @@
 
          86  Database Language SQL
 
- 
+
 
 
 
@@ -7076,7 +7076,7 @@
 
                                                        Lexical elements   87
 
- 
+
 
 
 
@@ -7142,7 +7142,7 @@
 
          88  Database Language SQL
 
- 
+
 
 
 
@@ -7208,7 +7208,7 @@
 
                                                        Lexical elements   89
 
- 
+
 
 
 
@@ -7274,7 +7274,7 @@
 
          90  Database Language SQL
 
- 
+
 
 
 
@@ -7340,7 +7340,7 @@
 
                                                        Lexical elements   91
 
- 
+
 
 
 
@@ -7414,7 +7414,7 @@
 
          92  Database Language SQL
 
- 
+
 
 
 
@@ -7480,7 +7480,7 @@
 
                                                        Lexical elements   93
 
- 
+
 
 
 
@@ -7546,7 +7546,7 @@
 
          94  Database Language SQL
 
- 
+
 
 
 
@@ -7612,7 +7612,7 @@
 
                                                        Lexical elements   95
 
- 
+
 
 
 
@@ -7681,7 +7681,7 @@
 
          96  Database Language SQL
 
- 
+
 
 
 
@@ -7747,7 +7747,7 @@
 
                                                        Lexical elements   97
 
- 
+
 
 
 
@@ -7813,7 +7813,7 @@
 
          98  Database Language SQL
 
- 
+
 
 
 
@@ -7879,7 +7879,7 @@
 
                                                        Lexical elements   99
 
- 
+
 
 
 
@@ -7946,7 +7946,7 @@
 
          100  Database Language SQL
 
- 
+
 
 
 
@@ -8014,7 +8014,7 @@
 
                                                       Lexical elements   101
 
- 
+
 
 
 
@@ -8080,7 +8080,7 @@
 
          102  Database Language SQL
 
- 
+
 
 
 
@@ -8146,7 +8146,7 @@
 
                                                       Lexical elements   103
 
- 
+
 
 
 
@@ -8213,7 +8213,7 @@
 
          104  Database Language SQL
 
- 
+
 
 
 
@@ -8279,7 +8279,7 @@
 
                                                       Lexical elements   105
 
- 
+
 
 
 
@@ -8345,7 +8345,7 @@
 
          106  Database Language SQL
 
- 
+
 
 
 
@@ -8411,7 +8411,7 @@
 
                                                     Scalar expressions   107
 
- 
+
 
 
 
@@ -8478,7 +8478,7 @@
 
          108  Database Language SQL
 
- 
+
 
 
 
@@ -8547,7 +8547,7 @@
 
                                                     Scalar expressions   109
 
- 
+
 
 
 
@@ -8614,7 +8614,7 @@
 
          110  Database Language SQL
 
- 
+
 
 
 
@@ -8680,7 +8680,7 @@
 
                                                     Scalar expressions   111
 
- 
+
 
 
 
@@ -8749,7 +8749,7 @@
 
          112  Database Language SQL
 
- 
+
 
 
 
@@ -8815,7 +8815,7 @@
 
                                                     Scalar expressions   113
 
- 
+
 
 
 
@@ -8881,7 +8881,7 @@
 
          114  Database Language SQL
 
- 
+
 
 
 
@@ -8947,7 +8947,7 @@
 
                                                     Scalar expressions   115
 
- 
+
 
 
 
@@ -9013,7 +9013,7 @@
 
          116  Database Language SQL
 
- 
+
 
 
 
@@ -9079,7 +9079,7 @@
 
                                                     Scalar expressions   117
 
- 
+
 
 
 
@@ -9145,7 +9145,7 @@
 
          118  Database Language SQL
 
- 
+
 
 
 
@@ -9211,7 +9211,7 @@
 
                                                     Scalar expressions   119
 
- 
+
 
 
 
@@ -9277,7 +9277,7 @@
 
          120  Database Language SQL
 
- 
+
 
 
 
@@ -9343,7 +9343,7 @@
 
                                                     Scalar expressions   121
 
- 
+
 
 
 
@@ -9409,7 +9409,7 @@
 
          122  Database Language SQL
 
- 
+
 
 
 
@@ -9475,7 +9475,7 @@
 
                                                     Scalar expressions   123
 
- 
+
 
 
 
@@ -9542,7 +9542,7 @@
 
          124  Database Language SQL
 
- 
+
 
 
 
@@ -9608,7 +9608,7 @@
 
                                                     Scalar expressions   125
 
- 
+
 
 
 
@@ -9675,7 +9675,7 @@
 
          126  Database Language SQL
 
- 
+
 
 
 
@@ -9741,7 +9741,7 @@
 
                                                     Scalar expressions   127
 
- 
+
 
 
 
@@ -9807,7 +9807,7 @@
 
          128  Database Language SQL
 
- 
+
 
 
 
@@ -9875,7 +9875,7 @@
 
                                                     Scalar expressions   129
 
- 
+
 
 
 
@@ -9947,7 +9947,7 @@
 
          130  Database Language SQL
 
- 
+
 
 
 
@@ -10013,7 +10013,7 @@
 
                                                     Scalar expressions   131
 
- 
+
 
 
 
@@ -10079,7 +10079,7 @@
 
          132  Database Language SQL
 
- 
+
 
 
 
@@ -10145,7 +10145,7 @@
 
                                                     Scalar expressions   133
 
- 
+
 
 
 
@@ -10215,7 +10215,7 @@
 
          134  Database Language SQL
 
- 
+
 
 
 
@@ -10281,7 +10281,7 @@
 
                                                     Scalar expressions   135
 
- 
+
 
 
 
@@ -10349,7 +10349,7 @@
 
          136  Database Language SQL
 
- 
+
 
 
 
@@ -10417,7 +10417,7 @@
 
                                                     Scalar expressions   137
 
- 
+
 
 
 
@@ -10483,7 +10483,7 @@
 
          138  Database Language SQL
 
- 
+
 
 
 
@@ -10549,7 +10549,7 @@
 
                                                     Scalar expressions   139
 
- 
+
 
 
 
@@ -10615,7 +10615,7 @@
 
          140  Database Language SQL
 
- 
+
 
 
 
@@ -10681,7 +10681,7 @@
 
                                                     Scalar expressions   141
 
- 
+
 
 
 
@@ -10747,7 +10747,7 @@
 
          142  Database Language SQL
 
- 
+
 
 
 
@@ -10813,7 +10813,7 @@
 
                                                     Scalar expressions   143
 
- 
+
 
 
 
@@ -10880,7 +10880,7 @@
 
          144  Database Language SQL
 
- 
+
 
 
 
@@ -10946,7 +10946,7 @@
 
                                                     Scalar expressions   145
 
- 
+
 
 
 
@@ -11016,7 +11016,7 @@
 
          146  Database Language SQL
 
- 
+
 
 
 
@@ -11086,7 +11086,7 @@
 
                                                     Scalar expressions   147
 
- 
+
 
 
 
@@ -11154,7 +11154,7 @@
 
          148  Database Language SQL
 
- 
+
 
 
 
@@ -11225,7 +11225,7 @@
 
                                                     Scalar expressions   149
 
- 
+
 
 
 
@@ -11292,7 +11292,7 @@
 
          150  Database Language SQL
 
- 
+
 
 
 
@@ -11362,7 +11362,7 @@
 
                                                     Scalar expressions   151
 
- 
+
 
 
 
@@ -11431,7 +11431,7 @@
 
          152  Database Language SQL
 
- 
+
 
 
 
@@ -11500,7 +11500,7 @@
 
                                                     Scalar expressions   153
 
- 
+
 
 
 
@@ -11570,7 +11570,7 @@
 
          154  Database Language SQL
 
- 
+
 
 
 
@@ -11636,7 +11636,7 @@
 
                                                     Scalar expressions   155
 
- 
+
 
 
 
@@ -11702,7 +11702,7 @@
 
          156  Database Language SQL
 
- 
+
 
 
 
@@ -11768,7 +11768,7 @@
 
                                                     Scalar expressions   157
 
- 
+
 
 
 
@@ -11834,7 +11834,7 @@
 
          158  Database Language SQL
 
- 
+
 
 
 
@@ -11900,7 +11900,7 @@
 
                                                     Scalar expressions   159
 
- 
+
 
 
 
@@ -11966,7 +11966,7 @@
 
          160  Database Language SQL
 
- 
+
 
 
 
@@ -12032,7 +12032,7 @@
 
                                                     Scalar expressions   161
 
- 
+
 
 
 
@@ -12101,7 +12101,7 @@
 
          162  Database Language SQL
 
- 
+
 
 
 
@@ -12171,7 +12171,7 @@
 
                                                     Scalar expressions   163
 
- 
+
 
 
 
@@ -12237,7 +12237,7 @@
 
          164  Database Language SQL
 
- 
+
 
 
 
@@ -12303,7 +12303,7 @@
 
                                                     Scalar expressions   165
 
- 
+
 
 
 
@@ -12370,7 +12370,7 @@
 
          166  Database Language SQL
 
- 
+
 
 
 
@@ -12436,7 +12436,7 @@
 
                                                     Scalar expressions   167
 
- 
+
 
 
 
@@ -12503,7 +12503,7 @@
 
          168  Database Language SQL
 
- 
+
 
 
 
@@ -12569,7 +12569,7 @@
 
                                                     Scalar expressions   169
 
- 
+
 
 
 
@@ -12637,7 +12637,7 @@
 
          170  Database Language SQL
 
- 
+
 
 
 
@@ -12703,7 +12703,7 @@
 
                                                     Scalar expressions   171
 
- 
+
 
 
 
@@ -12769,7 +12769,7 @@
 
          172  Database Language SQL
 
- 
+
 
 
 
@@ -12835,7 +12835,7 @@
 
                                                      Query expressions   173
 
- 
+
 
 
 
@@ -12901,7 +12901,7 @@
 
          174  Database Language SQL
 
- 
+
 
 
 
@@ -12967,7 +12967,7 @@
 
                                                      Query expressions   175
 
- 
+
 
 
 
@@ -13033,7 +13033,7 @@
 
          176  Database Language SQL
 
- 
+
 
 
 
@@ -13099,7 +13099,7 @@
 
                                                      Query expressions   177
 
- 
+
 
 
 
@@ -13165,7 +13165,7 @@
 
          178  Database Language SQL
 
- 
+
 
 
 
@@ -13231,7 +13231,7 @@
 
                                                      Query expressions   179
 
- 
+
 
 
 
@@ -13297,7 +13297,7 @@
 
          180  Database Language SQL
 
- 
+
 
 
 
@@ -13365,7 +13365,7 @@
 
                                                      Query expressions   181
 
- 
+
 
 
 
@@ -13431,7 +13431,7 @@
 
          182  Database Language SQL
 
- 
+
 
 
 
@@ -13500,7 +13500,7 @@
 
                                                      Query expressions   183
 
- 
+
 
 
 
@@ -13566,7 +13566,7 @@
 
          184  Database Language SQL
 
- 
+
 
 
 
@@ -13632,7 +13632,7 @@
 
                                                      Query expressions   185
 
- 
+
 
 
 
@@ -13698,7 +13698,7 @@
 
          186  Database Language SQL
 
- 
+
 
 
 
@@ -13765,7 +13765,7 @@
 
                                                      Query expressions   187
 
- 
+
 
 
 
@@ -13831,7 +13831,7 @@
 
          188  Database Language SQL
 
- 
+
 
 
 
@@ -13899,7 +13899,7 @@
 
                                                      Query expressions   189
 
- 
+
 
 
 
@@ -13965,7 +13965,7 @@
 
          190  Database Language SQL
 
- 
+
 
 
 
@@ -14033,7 +14033,7 @@
 
                                                      Query expressions   191
 
- 
+
 
 
 
@@ -14100,7 +14100,7 @@
 
          192  Database Language SQL
 
- 
+
 
 
 
@@ -14166,7 +14166,7 @@
 
                                                      Query expressions   193
 
- 
+
 
 
 
@@ -14233,7 +14233,7 @@
 
          194  Database Language SQL
 
- 
+
 
 
 
@@ -14299,7 +14299,7 @@
 
                                                      Query expressions   195
 
- 
+
 
 
 
@@ -14365,7 +14365,7 @@
 
          196  Database Language SQL
 
- 
+
 
 
 
@@ -14433,7 +14433,7 @@
 
                                                      Query expressions   197
 
- 
+
 
 
 
@@ -14501,7 +14501,7 @@
 
          198  Database Language SQL
 
- 
+
 
 
 
@@ -14567,7 +14567,7 @@
 
                                                      Query expressions   199
 
- 
+
 
 
 
@@ -14636,7 +14636,7 @@
 
          200  Database Language SQL
 
- 
+
 
 
 
@@ -14707,7 +14707,7 @@
 
                                                      Query expressions   201
 
- 
+
 
 
 
@@ -14773,7 +14773,7 @@
 
          202  Database Language SQL
 
- 
+
 
 
 
@@ -14840,7 +14840,7 @@
 
                                                      Query expressions   203
 
- 
+
 
 
 
@@ -14906,7 +14906,7 @@
 
          204  Database Language SQL
 
- 
+
 
 
 
@@ -14972,7 +14972,7 @@
 
                                                             Predicates   205
 
- 
+
 
 
 
@@ -15038,7 +15038,7 @@
 
          206  Database Language SQL
 
- 
+
 
 
 
@@ -15104,7 +15104,7 @@
 
                                                             Predicates   207
 
- 
+
 
 
 
@@ -15170,7 +15170,7 @@
 
          208  Database Language SQL
 
- 
+
 
 
 
@@ -15241,7 +15241,7 @@
 
                                                             Predicates   209
 
- 
+
 
 
 
@@ -15307,7 +15307,7 @@
 
          210  Database Language SQL
 
- 
+
 
 
 
@@ -15373,7 +15373,7 @@
 
                                                             Predicates   211
 
- 
+
 
 
 
@@ -15442,7 +15442,7 @@
 
          212  Database Language SQL
 
- 
+
 
 
 
@@ -15508,7 +15508,7 @@
 
                                                             Predicates   213
 
- 
+
 
 
 
@@ -15574,7 +15574,7 @@
 
          214  Database Language SQL
 
- 
+
 
 
 
@@ -15640,7 +15640,7 @@
 
                                                             Predicates   215
 
- 
+
 
 
 
@@ -15706,7 +15706,7 @@
 
          216  Database Language SQL
 
- 
+
 
 
 
@@ -15772,7 +15772,7 @@
 
                                                             Predicates   217
 
- 
+
 
 
 
@@ -15839,7 +15839,7 @@
         |                |       |             |            |              |
          218  Database Language SQL
 
- 
+
 
 
 
@@ -15905,7 +15905,7 @@
 
                                                             Predicates   219
 
- 
+
 
 
 
@@ -15971,7 +15971,7 @@
 
          220  Database Language SQL
 
- 
+
 
 
 
@@ -16037,7 +16037,7 @@
 
                                                             Predicates   221
 
- 
+
 
 
 
@@ -16103,7 +16103,7 @@
 
          222  Database Language SQL
 
- 
+
 
 
 
@@ -16169,7 +16169,7 @@
 
                                                             Predicates   223
 
- 
+
 
 
 
@@ -16238,7 +16238,7 @@
 
          224  Database Language SQL
 
- 
+
 
 
 
@@ -16306,7 +16306,7 @@
 
                                                             Predicates   225
 
- 
+
 
 
 
@@ -16372,7 +16372,7 @@
 
          226  Database Language SQL
 
- 
+
 
 
 
@@ -16438,7 +16438,7 @@
 
                                                             Predicates   227
 
- 
+
 
 
 
@@ -16504,7 +16504,7 @@
 
          228  Database Language SQL
 
- 
+
 
 
 
@@ -16570,7 +16570,7 @@
 
                                                             Predicates   229
 
- 
+
 
 
 
@@ -16636,7 +16636,7 @@
 
          230  Database Language SQL
 
- 
+
 
 
 
@@ -16706,7 +16706,7 @@
 
                                                  Data assignment rules   231
 
- 
+
 
 
 
@@ -16772,7 +16772,7 @@
 
          232  Database Language SQL
 
- 
+
 
 
 
@@ -16838,7 +16838,7 @@
 
                                                  Data assignment rules   233
 
- 
+
 
 
 
@@ -16908,7 +16908,7 @@
 
          234  Database Language SQL
 
- 
+
 
 
 
@@ -16975,7 +16975,7 @@
 
                                                  Data assignment rules   235
 
- 
+
 
 
 
@@ -17041,7 +17041,7 @@
 
          236  Database Language SQL
 
- 
+
 
 
 
@@ -17107,7 +17107,7 @@
 
                                                  Data assignment rules   237
 
- 
+
 
 
 
@@ -17173,7 +17173,7 @@
 
          238  Database Language SQL
 
- 
+
 
 
 
@@ -17239,7 +17239,7 @@
 
                                             Additional common elements   239
 
- 
+
 
 
 
@@ -17306,7 +17306,7 @@
 
          240  Database Language SQL
 
- 
+
 
 
 
@@ -17374,7 +17374,7 @@
 
                                             Additional common elements   241
 
- 
+
 
 
 
@@ -17440,7 +17440,7 @@
 
          242  Database Language SQL
 
- 
+
 
 
 
@@ -17508,7 +17508,7 @@
 
                                             Additional common elements   243
 
- 
+
 
 
 
@@ -17574,7 +17574,7 @@
 
          244  Database Language SQL
 
- 
+
 
 
 
@@ -17640,7 +17640,7 @@
 
                                             Additional common elements   245
 
- 
+
 
 
 
@@ -17706,7 +17706,7 @@
 
          246  Database Language SQL
 
- 
+
 
 
 
@@ -17772,7 +17772,7 @@
 
                                             Additional common elements   247
 
- 
+
 
 
 
@@ -17838,7 +17838,7 @@
 
          248  Database Language SQL
 
- 
+
 
 
 
@@ -17906,7 +17906,7 @@
 
                                             Additional common elements   249
 
- 
+
 
 
 
@@ -17972,7 +17972,7 @@
 
          250  Database Language SQL
 
- 
+
 
 
 
@@ -18038,7 +18038,7 @@
 
                                             Additional common elements   251
 
- 
+
 
 
 
@@ -18104,7 +18104,7 @@
 
          252  Database Language SQL
 
- 
+
 
 
 
@@ -18170,7 +18170,7 @@
 
                                             Additional common elements   253
 
- 
+
 
 
 
@@ -18236,7 +18236,7 @@
 
          254  Database Language SQL
 
- 
+
 
 
 
@@ -18302,7 +18302,7 @@
 
                                     Schema definition and manipulation   255
 
- 
+
 
 
 
@@ -18368,7 +18368,7 @@
 
          256  Database Language SQL
 
- 
+
 
 
 
@@ -18434,7 +18434,7 @@
 
                                     Schema definition and manipulation   257
 
- 
+
 
 
 
@@ -18500,7 +18500,7 @@
 
          258  Database Language SQL
 
- 
+
 
 
 
@@ -18566,7 +18566,7 @@
 
                                     Schema definition and manipulation   259
 
- 
+
 
 
 
@@ -18632,7 +18632,7 @@
 
          260  Database Language SQL
 
- 
+
 
 
 
@@ -18698,7 +18698,7 @@
 
                                     Schema definition and manipulation   261
 
- 
+
 
 
 
@@ -18765,7 +18765,7 @@
 
          262  Database Language SQL
 
- 
+
 
 
 
@@ -18832,7 +18832,7 @@
 
                                     Schema definition and manipulation   263
 
- 
+
 
 
 
@@ -18902,7 +18902,7 @@
 
          264  Database Language SQL
 
- 
+
 
 
 
@@ -18968,7 +18968,7 @@
 
                                     Schema definition and manipulation   265
 
- 
+
 
 
 
@@ -19034,7 +19034,7 @@
 
          266  Database Language SQL
 
- 
+
 
 
 
@@ -19101,7 +19101,7 @@
 
                                     Schema definition and manipulation   267
 
- 
+
 
 
 
@@ -19167,7 +19167,7 @@
 
          268  Database Language SQL
 
- 
+
 
 
 
@@ -19233,7 +19233,7 @@
 
                                     Schema definition and manipulation   269
 
- 
+
 
 
 
@@ -19300,7 +19300,7 @@
 
          270  Database Language SQL
 
- 
+
 
 
 
@@ -19366,7 +19366,7 @@
 
                                     Schema definition and manipulation   271
 
- 
+
 
 
 
@@ -19433,7 +19433,7 @@
 
          272  Database Language SQL
 
- 
+
 
 
 
@@ -19499,7 +19499,7 @@
 
                                     Schema definition and manipulation   273
 
- 
+
 
 
 
@@ -19565,7 +19565,7 @@
 
          274  Database Language SQL
 
- 
+
 
 
 
@@ -19631,7 +19631,7 @@
 
                                     Schema definition and manipulation   275
 
- 
+
 
 
 
@@ -19702,7 +19702,7 @@
 
          276  Database Language SQL
 
- 
+
 
 
 
@@ -19768,7 +19768,7 @@
 
                                     Schema definition and manipulation   277
 
- 
+
 
 
 
@@ -19837,7 +19837,7 @@
 
          278  Database Language SQL
 
- 
+
 
 
 
@@ -19903,7 +19903,7 @@
 
                                     Schema definition and manipulation   279
 
- 
+
 
 
 
@@ -19969,7 +19969,7 @@
 
          280  Database Language SQL
 
- 
+
 
 
 
@@ -20035,7 +20035,7 @@
 
                                     Schema definition and manipulation   281
 
- 
+
 
 
 
@@ -20101,7 +20101,7 @@
 
          282  Database Language SQL
 
- 
+
 
 
 
@@ -20169,7 +20169,7 @@
 
                                     Schema definition and manipulation   283
 
- 
+
 
 
 
@@ -20235,7 +20235,7 @@
 
          284  Database Language SQL
 
- 
+
 
 
 
@@ -20301,7 +20301,7 @@
 
                                     Schema definition and manipulation   285
 
- 
+
 
 
 
@@ -20367,7 +20367,7 @@
 
          286  Database Language SQL
 
- 
+
 
 
 
@@ -20433,7 +20433,7 @@
 
                                     Schema definition and manipulation   287
 
- 
+
 
 
 
@@ -20499,7 +20499,7 @@
 
          288  Database Language SQL
 
- 
+
 
 
 
@@ -20565,7 +20565,7 @@
 
                                     Schema definition and manipulation   289
 
- 
+
 
 
 
@@ -20631,7 +20631,7 @@
 
          290  Database Language SQL
 
- 
+
 
 
 
@@ -20697,7 +20697,7 @@
 
                                     Schema definition and manipulation   291
 
- 
+
 
 
 
@@ -20763,7 +20763,7 @@
 
          292  Database Language SQL
 
- 
+
 
 
 
@@ -20829,7 +20829,7 @@
 
                                     Schema definition and manipulation   293
 
- 
+
 
 
 
@@ -20895,7 +20895,7 @@
 
          294  Database Language SQL
 
- 
+
 
 
 
@@ -20961,7 +20961,7 @@
 
                                     Schema definition and manipulation   295
 
- 
+
 
 
 
@@ -21028,7 +21028,7 @@
 
          296  Database Language SQL
 
- 
+
 
 
 
@@ -21097,7 +21097,7 @@
 
                                     Schema definition and manipulation   297
 
- 
+
 
 
 
@@ -21165,7 +21165,7 @@
 
          298  Database Language SQL
 
- 
+
 
 
 
@@ -21231,7 +21231,7 @@
 
                                     Schema definition and manipulation   299
 
- 
+
 
 
 
@@ -21300,7 +21300,7 @@
 
          300  Database Language SQL
 
- 
+
 
 
 
@@ -21367,7 +21367,7 @@
 
                                     Schema definition and manipulation   301
 
- 
+
 
 
 
@@ -21434,7 +21434,7 @@
 
          302  Database Language SQL
 
- 
+
 
 
 
@@ -21500,7 +21500,7 @@
 
                                     Schema definition and manipulation   303
 
- 
+
 
 
 
@@ -21566,7 +21566,7 @@
 
          304  Database Language SQL
 
- 
+
 
 
 
@@ -21632,7 +21632,7 @@
 
                                     Schema definition and manipulation   305
 
- 
+
 
 
 
@@ -21698,7 +21698,7 @@
 
          306  Database Language SQL
 
- 
+
 
 
 
@@ -21764,7 +21764,7 @@
 
                                     Schema definition and manipulation   307
 
- 
+
 
 
 
@@ -21830,7 +21830,7 @@
 
          308  Database Language SQL
 
- 
+
 
 
 
@@ -21897,7 +21897,7 @@
 
                                     Schema definition and manipulation   309
 
- 
+
 
 
 
@@ -21963,7 +21963,7 @@
 
          310  Database Language SQL
 
- 
+
 
 
 
@@ -22029,7 +22029,7 @@
 
                                     Schema definition and manipulation   311
 
- 
+
 
 
 
@@ -22095,7 +22095,7 @@
 
          312  Database Language SQL
 
- 
+
 
 
 
@@ -22161,7 +22161,7 @@
 
                                     Schema definition and manipulation   313
 
- 
+
 
 
 
@@ -22227,7 +22227,7 @@
 
          314  Database Language SQL
 
- 
+
 
 
 
@@ -22293,7 +22293,7 @@
 
                                     Schema definition and manipulation   315
 
- 
+
 
 
 
@@ -22361,7 +22361,7 @@
 
          316  Database Language SQL
 
- 
+
 
 
 
@@ -22427,7 +22427,7 @@
 
                                     Schema definition and manipulation   317
 
- 
+
 
 
 
@@ -22493,7 +22493,7 @@
 
          318  Database Language SQL
 
- 
+
 
 
 
@@ -22559,7 +22559,7 @@
 
                                     Schema definition and manipulation   319
 
- 
+
 
 
 
@@ -22625,7 +22625,7 @@
 
          320  Database Language SQL
 
- 
+
 
 
 
@@ -22692,7 +22692,7 @@
 
                                     Schema definition and manipulation   321
 
- 
+
 
 
 
@@ -22758,7 +22758,7 @@
 
          322  Database Language SQL
 
- 
+
 
 
 
@@ -22824,7 +22824,7 @@
 
                                     Schema definition and manipulation   323
 
- 
+
 
 
 
@@ -22890,7 +22890,7 @@
 
          324  Database Language SQL
 
- 
+
 
 
 
@@ -22956,7 +22956,7 @@
 
                                     Schema definition and manipulation   325
 
- 
+
 
 
 
@@ -23024,7 +23024,7 @@
 
          326  Database Language SQL
 
- 
+
 
 
 
@@ -23090,7 +23090,7 @@
 
                                     Schema definition and manipulation   327
 
- 
+
 
 
 
@@ -23156,7 +23156,7 @@
 
          328  Database Language SQL
 
- 
+
 
 
 
@@ -23222,7 +23222,7 @@
 
                                     Schema definition and manipulation   329
 
- 
+
 
 
 
@@ -23291,7 +23291,7 @@
 
          330  Database Language SQL
 
- 
+
 
 
 
@@ -23357,7 +23357,7 @@
 
                                     Schema definition and manipulation   331
 
- 
+
 
 
 
@@ -23423,7 +23423,7 @@
 
          332  Database Language SQL
 
- 
+
 
 
 
@@ -23489,7 +23489,7 @@
 
                                     Schema definition and manipulation   333
 
- 
+
 
 
 
@@ -23556,7 +23556,7 @@
 
          334  Database Language SQL
 
- 
+
 
 
 
@@ -23623,7 +23623,7 @@
 
                                     Schema definition and manipulation   335
 
- 
+
 
 
 
@@ -23691,7 +23691,7 @@
 
          336  Database Language SQL
 
- 
+
 
 
 
@@ -23759,7 +23759,7 @@
 
                                     Schema definition and manipulation   337
 
- 
+
 
 
 
@@ -23825,7 +23825,7 @@
 
          338  Database Language SQL
 
- 
+
 
 
 
@@ -23891,7 +23891,7 @@
 
                                     Schema definition and manipulation   339
 
- 
+
 
 
 
@@ -23957,7 +23957,7 @@
 
          340  Database Language SQL
 
- 
+
 
 
 
@@ -24023,7 +24023,7 @@
 
                                                                 Module   341
 
- 
+
 
 
 
@@ -24089,7 +24089,7 @@
 
          342  Database Language SQL
 
- 
+
 
 
 
@@ -24155,7 +24155,7 @@
 
                                                                 Module   343
 
- 
+
 
 
 
@@ -24221,7 +24221,7 @@
 
          344  Database Language SQL
 
- 
+
 
 
 
@@ -24287,7 +24287,7 @@
 
                                                                 Module   345
 
- 
+
 
 
 
@@ -24353,7 +24353,7 @@
 
          346  Database Language SQL
 
- 
+
 
 
 
@@ -24419,7 +24419,7 @@
 
                                                                 Module   347
 
- 
+
 
 
 
@@ -24485,7 +24485,7 @@
 
          348  Database Language SQL
 
- 
+
 
 
 
@@ -24555,7 +24555,7 @@
 
                                                                 Module   349
 
- 
+
 
 
 
@@ -24621,7 +24621,7 @@
 
          350  Database Language SQL
 
- 
+
 
 
 
@@ -24687,7 +24687,7 @@
 
                                                                 Module   351
 
- 
+
 
 
 
@@ -24753,7 +24753,7 @@
 
          352  Database Language SQL
 
- 
+
 
 
 
@@ -24819,7 +24819,7 @@
 
                                                                 Module   353
 
- 
+
 
 
 
@@ -24885,7 +24885,7 @@
 
          354  Database Language SQL
 
- 
+
 
 
 
@@ -24951,7 +24951,7 @@
 
                                                                 Module   355
 
- 
+
 
 
 
@@ -25021,7 +25021,7 @@
 
          356  Database Language SQL
 
- 
+
 
 
 
@@ -25089,7 +25089,7 @@
 
                                                                 Module   357
 
- 
+
 
 
 
@@ -25156,7 +25156,7 @@
 
          358  Database Language SQL
 
- 
+
 
 
 
@@ -25222,7 +25222,7 @@
 
                                                                 Module   359
 
- 
+
 
 
 
@@ -25291,7 +25291,7 @@
 
          360  Database Language SQL
 
- 
+
 
 
 
@@ -25358,7 +25358,7 @@
 
                                                                 Module   361
 
- 
+
 
 
 
@@ -25425,7 +25425,7 @@
 
          362  Database Language SQL
 
- 
+
 
 
 
@@ -25492,7 +25492,7 @@
 
                                                                 Module   363
 
- 
+
 
 
 
@@ -25559,7 +25559,7 @@
 
          364  Database Language SQL
 
- 
+
 
 
 
@@ -25625,7 +25625,7 @@
 
                                                                 Module   365
 
- 
+
 
 
 
@@ -25695,7 +25695,7 @@
 
          366  Database Language SQL
 
- 
+
 
 
 
@@ -25762,7 +25762,7 @@
 
                                                                 Module   367
 
- 
+
 
 
 
@@ -25828,7 +25828,7 @@
 
          368  Database Language SQL
 
- 
+
 
 
 
@@ -25894,7 +25894,7 @@
 
                                                                 Module   369
 
- 
+
 
 
 
@@ -25960,7 +25960,7 @@
 
          370  Database Language SQL
 
- 
+
 
 
 
@@ -26027,7 +26027,7 @@
 
                                                      Data manipulation   371
 
- 
+
 
 
 
@@ -26096,7 +26096,7 @@
 
          372  Database Language SQL
 
- 
+
 
 
 
@@ -26162,7 +26162,7 @@
 
                                                      Data manipulation   373
 
- 
+
 
 
 
@@ -26228,7 +26228,7 @@
 
          374  Database Language SQL
 
- 
+
 
 
 
@@ -26294,7 +26294,7 @@
 
                                                      Data manipulation   375
 
- 
+
 
 
 
@@ -26360,7 +26360,7 @@
 
          376  Database Language SQL
 
- 
+
 
 
 
@@ -26426,7 +26426,7 @@
 
                                                      Data manipulation   377
 
- 
+
 
 
 
@@ -26494,7 +26494,7 @@
 
          378  Database Language SQL
 
- 
+
 
 
 
@@ -26560,7 +26560,7 @@
 
                                                      Data manipulation   379
 
- 
+
 
 
 
@@ -26626,7 +26626,7 @@
 
          380  Database Language SQL
 
- 
+
 
 
 
@@ -26692,7 +26692,7 @@
 
                                                      Data manipulation   381
 
- 
+
 
 
 
@@ -26759,7 +26759,7 @@
 
          382  Database Language SQL
 
- 
+
 
 
 
@@ -26825,7 +26825,7 @@
 
                                                      Data manipulation   383
 
- 
+
 
 
 
@@ -26895,7 +26895,7 @@
 
          384  Database Language SQL
 
- 
+
 
 
 
@@ -26961,7 +26961,7 @@
 
                                                      Data manipulation   385
 
- 
+
 
 
 
@@ -27031,7 +27031,7 @@
 
          386  Database Language SQL
 
- 
+
 
 
 
@@ -27097,7 +27097,7 @@
 
                                                      Data manipulation   387
 
- 
+
 
 
 
@@ -27163,7 +27163,7 @@
 
          388  Database Language SQL
 
- 
+
 
 
 
@@ -27234,7 +27234,7 @@
 
                                                      Data manipulation   389
 
- 
+
 
 
 
@@ -27300,7 +27300,7 @@
 
          390  Database Language SQL
 
- 
+
 
 
 
@@ -27366,7 +27366,7 @@
 
                                                      Data manipulation   391
 
- 
+
 
 
 
@@ -27434,7 +27434,7 @@
 
          392  Database Language SQL
 
- 
+
 
 
 
@@ -27500,7 +27500,7 @@
 
                                                      Data manipulation   393
 
- 
+
 
 
 
@@ -27567,7 +27567,7 @@
 
          394  Database Language SQL
 
- 
+
 
 
 
@@ -27633,7 +27633,7 @@
 
                                                      Data manipulation   395
 
- 
+
 
 
 
@@ -27699,7 +27699,7 @@
 
          396  Database Language SQL
 
- 
+
 
 
 
@@ -27765,7 +27765,7 @@
 
                                                      Data manipulation   397
 
- 
+
 
 
 
@@ -27831,7 +27831,7 @@
 
          398  Database Language SQL
 
- 
+
 
 
 
@@ -27897,7 +27897,7 @@
 
                                                 Transaction management   399
 
- 
+
 
 
 
@@ -27963,7 +27963,7 @@
 
          400  Database Language SQL
 
- 
+
 
 
 
@@ -28029,7 +28029,7 @@
 
                                                 Transaction management   401
 
- 
+
 
 
 
@@ -28095,7 +28095,7 @@
 
          402  Database Language SQL
 
- 
+
 
 
 
@@ -28161,7 +28161,7 @@
 
                                                 Transaction management   403
 
- 
+
 
 
 
@@ -28227,7 +28227,7 @@
 
          404  Database Language SQL
 
- 
+
 
 
 
@@ -28293,7 +28293,7 @@
 
                                                 Transaction management   405
 
- 
+
 
 
 
@@ -28359,7 +28359,7 @@
 
          406  Database Language SQL
 
- 
+
 
 
 
@@ -28425,7 +28425,7 @@
 
                                                  Connection management   407
 
- 
+
 
 
 
@@ -28492,7 +28492,7 @@
 
          408  Database Language SQL
 
- 
+
 
 
 
@@ -28558,7 +28558,7 @@
 
                                                  Connection management   409
 
- 
+
 
 
 
@@ -28624,7 +28624,7 @@
 
          410  Database Language SQL
 
- 
+
 
 
 
@@ -28690,7 +28690,7 @@
 
                                                  Connection management   411
 
- 
+
 
 
 
@@ -28757,7 +28757,7 @@
 
          412  Database Language SQL
 
- 
+
 
 
 
@@ -28823,7 +28823,7 @@
 
                                                  Connection management   413
 
- 
+
 
 
 
@@ -28889,7 +28889,7 @@
 
          414  Database Language SQL
 
- 
+
 
 
 
@@ -28955,7 +28955,7 @@
 
                                                     Session management   415
 
- 
+
 
 
 
@@ -29021,7 +29021,7 @@
 
          416  Database Language SQL
 
- 
+
 
 
 
@@ -29087,7 +29087,7 @@
 
                                                     Session management   417
 
- 
+
 
 
 
@@ -29153,7 +29153,7 @@
 
          418  Database Language SQL
 
- 
+
 
 
 
@@ -29219,7 +29219,7 @@
 
                                                     Session management   419
 
- 
+
 
 
 
@@ -29285,7 +29285,7 @@
 
          420  Database Language SQL
 
- 
+
 
 
 
@@ -29351,7 +29351,7 @@
 
                                                     Session management   421
 
- 
+
 
 
 
@@ -29417,7 +29417,7 @@
 
          422  Database Language SQL
 
- 
+
 
 
 
@@ -29483,7 +29483,7 @@
 
                                                     Session management   423
 
- 
+
 
 
 
@@ -29549,7 +29549,7 @@
 
          424  Database Language SQL
 
- 
+
 
 
 
@@ -29619,7 +29619,7 @@
 
                                                            Dynamic SQL   425
 
- 
+
 
 
 
@@ -29686,7 +29686,7 @@
 
          426  Database Language SQL
 
- 
+
 
 
 
@@ -29758,7 +29758,7 @@
         |                      |                                           |
                                                            Dynamic SQL   427
 
- 
+
 
 
 
@@ -29824,7 +29824,7 @@
 
          428  Database Language SQL
 
- 
+
 
 
 
@@ -29891,7 +29891,7 @@
 
                                                            Dynamic SQL   429
 
- 
+
 
 
 
@@ -29957,7 +29957,7 @@
 
          430  Database Language SQL
 
- 
+
 
 
 
@@ -30023,7 +30023,7 @@
 
                                                            Dynamic SQL   431
 
- 
+
 
 
 
@@ -30089,7 +30089,7 @@
 
          432  Database Language SQL
 
- 
+
 
 
 
@@ -30155,7 +30155,7 @@
 
                                                            Dynamic SQL   433
 
- 
+
 
 
 
@@ -30221,7 +30221,7 @@
 
          434  Database Language SQL
 
- 
+
 
 
 
@@ -30287,7 +30287,7 @@
 
                                                            Dynamic SQL   435
 
- 
+
 
 
 
@@ -30353,7 +30353,7 @@
 
          436  Database Language SQL
 
- 
+
 
 
 
@@ -30419,7 +30419,7 @@
 
                                                            Dynamic SQL   437
 
- 
+
 
 
 
@@ -30485,7 +30485,7 @@
 
          438  Database Language SQL
 
- 
+
 
 
 
@@ -30552,7 +30552,7 @@
 
                                                            Dynamic SQL   439
 
- 
+
 
 
 
@@ -30618,7 +30618,7 @@
 
          440  Database Language SQL
 
- 
+
 
 
 
@@ -30684,7 +30684,7 @@
 
                                                            Dynamic SQL   441
 
- 
+
 
 
 
@@ -30750,7 +30750,7 @@
 
          442  Database Language SQL
 
- 
+
 
 
 
@@ -30817,7 +30817,7 @@
 
                                                            Dynamic SQL   443
 
- 
+
 
 
 
@@ -30885,7 +30885,7 @@
 
          444  Database Language SQL
 
- 
+
 
 
 
@@ -30951,7 +30951,7 @@
 
                                                            Dynamic SQL   445
 
- 
+
 
 
 
@@ -31018,7 +31018,7 @@
 
          446  Database Language SQL
 
- 
+
 
 
 
@@ -31086,7 +31086,7 @@
 
                                                            Dynamic SQL   447
 
- 
+
 
 
 
@@ -31152,7 +31152,7 @@
 
          448  Database Language SQL
 
- 
+
 
 
 
@@ -31219,7 +31219,7 @@
 
                                                            Dynamic SQL   449
 
- 
+
 
 
 
@@ -31285,7 +31285,7 @@
 
          450  Database Language SQL
 
- 
+
 
 
 
@@ -31351,7 +31351,7 @@
 
                                                            Dynamic SQL   451
 
- 
+
 
 
 
@@ -31417,7 +31417,7 @@
 
          452  Database Language SQL
 
- 
+
 
 
 
@@ -31484,7 +31484,7 @@
 
                                                            Dynamic SQL   453
 
- 
+
 
 
 
@@ -31550,7 +31550,7 @@
 
          454  Database Language SQL
 
- 
+
 
 
 
@@ -31617,7 +31617,7 @@
 
                                                            Dynamic SQL   455
 
- 
+
 
 
 
@@ -31684,7 +31684,7 @@
 
          456  Database Language SQL
 
- 
+
 
 
 
@@ -31750,7 +31750,7 @@
 
                                                            Dynamic SQL   457
 
- 
+
 
 
 
@@ -31817,7 +31817,7 @@
 
          458  Database Language SQL
 
- 
+
 
 
 
@@ -31883,7 +31883,7 @@
 
                                                            Dynamic SQL   459
 
- 
+
 
 
 
@@ -31949,7 +31949,7 @@
 
          460  Database Language SQL
 
- 
+
 
 
 
@@ -32015,7 +32015,7 @@
 
                                                            Dynamic SQL   461
 
- 
+
 
 
 
@@ -32083,7 +32083,7 @@
 
          462  Database Language SQL
 
- 
+
 
 
 
@@ -32149,7 +32149,7 @@
 
                                                            Dynamic SQL   463
 
- 
+
 
 
 
@@ -32215,7 +32215,7 @@
 
          464  Database Language SQL
 
- 
+
 
 
 
@@ -32281,7 +32281,7 @@
 
                                                            Dynamic SQL   465
 
- 
+
 
 
 
@@ -32347,7 +32347,7 @@
 
          466  Database Language SQL
 
- 
+
 
 
 
@@ -32414,7 +32414,7 @@
 
                                                            Dynamic SQL   467
 
- 
+
 
 
 
@@ -32480,7 +32480,7 @@
 
          468  Database Language SQL
 
- 
+
 
 
 
@@ -32546,7 +32546,7 @@
 
                                                            Dynamic SQL   469
 
- 
+
 
 
 
@@ -32612,7 +32612,7 @@
 
          470  Database Language SQL
 
- 
+
 
 
 
@@ -32678,7 +32678,7 @@
 
                                                            Dynamic SQL   471
 
- 
+
 
 
 
@@ -32744,7 +32744,7 @@
 
          472  Database Language SQL
 
- 
+
 
 
 
@@ -32810,7 +32810,7 @@
 
                                                            Dynamic SQL   473
 
- 
+
 
 
 
@@ -32879,7 +32879,7 @@
 
          474  Database Language SQL
 
- 
+
 
 
 
@@ -32945,7 +32945,7 @@
 
                                                            Dynamic SQL   475
 
- 
+
 
 
 
@@ -33011,7 +33011,7 @@
 
          476  Database Language SQL
 
- 
+
 
 
 
@@ -33077,7 +33077,7 @@
 
                                                            Dynamic SQL   477
 
- 
+
 
 
 
@@ -33143,7 +33143,7 @@
 
          478  Database Language SQL
 
- 
+
 
 
 
@@ -33209,7 +33209,7 @@
 
                                                 Diagnostics management   479
 
- 
+
 
 
 
@@ -33275,7 +33275,7 @@
 
          480  Database Language SQL
 
- 
+
 
 
 
@@ -33346,7 +33346,7 @@
 
                                                 Diagnostics management   481
 
- 
+
 
 
 
@@ -33417,7 +33417,7 @@
         |                                |                                 |
          482  Database Language SQL
 
- 
+
 
 
 
@@ -33494,7 +33494,7 @@
         |                                |                                 |
                                                 Diagnostics management   483
 
- 
+
 
 
 
@@ -33572,7 +33572,7 @@
 
          484  Database Language SQL
 
- 
+
 
 
 
@@ -33641,7 +33641,7 @@
 
                                                 Diagnostics management   485
 
- 
+
 
 
 
@@ -33708,7 +33708,7 @@
 
          486  Database Language SQL
 
- 
+
 
 
 
@@ -33775,7 +33775,7 @@
 
                                                 Diagnostics management   487
 
- 
+
 
 
 
@@ -33841,7 +33841,7 @@
 
          488  Database Language SQL
 
- 
+
 
 
 
@@ -33907,7 +33907,7 @@
 
                                                           Embedded SQL   489
 
- 
+
 
 
 
@@ -33974,7 +33974,7 @@
 
          490  Database Language SQL
 
- 
+
 
 
 
@@ -34040,7 +34040,7 @@
 
                                                           Embedded SQL   491
 
- 
+
 
 
 
@@ -34106,7 +34106,7 @@
 
          492  Database Language SQL
 
- 
+
 
 
 
@@ -34173,7 +34173,7 @@
 
                                                           Embedded SQL   493
 
- 
+
 
 
 
@@ -34239,7 +34239,7 @@
 
          494  Database Language SQL
 
- 
+
 
 
 
@@ -34306,7 +34306,7 @@
 
                                                           Embedded SQL   495
 
- 
+
 
 
 
@@ -34373,7 +34373,7 @@
 
          496  Database Language SQL
 
- 
+
 
 
 
@@ -34439,7 +34439,7 @@
 
                                                           Embedded SQL   497
 
- 
+
 
 
 
@@ -34505,7 +34505,7 @@
 
          498  Database Language SQL
 
- 
+
 
 
 
@@ -34571,7 +34571,7 @@
 
                                                           Embedded SQL   499
 
- 
+
 
 
 
@@ -34637,7 +34637,7 @@
 
          500  Database Language SQL
 
- 
+
 
 
 
@@ -34705,7 +34705,7 @@
 
                                                           Embedded SQL   501
 
- 
+
 
 
 
@@ -34771,7 +34771,7 @@
 
          502  Database Language SQL
 
- 
+
 
 
 
@@ -34837,7 +34837,7 @@
 
                                                           Embedded SQL   503
 
- 
+
 
 
 
@@ -34903,7 +34903,7 @@
 
          504  Database Language SQL
 
- 
+
 
 
 
@@ -34969,7 +34969,7 @@
 
                                                           Embedded SQL   505
 
- 
+
 
 
 
@@ -35035,7 +35035,7 @@
 
          506  Database Language SQL
 
- 
+
 
 
 
@@ -35103,7 +35103,7 @@
 
                                                           Embedded SQL   507
 
- 
+
 
 
 
@@ -35169,7 +35169,7 @@
 
          508  Database Language SQL
 
- 
+
 
 
 
@@ -35235,7 +35235,7 @@
 
                                                           Embedded SQL   509
 
- 
+
 
 
 
@@ -35305,7 +35305,7 @@
 
          510  Database Language SQL
 
- 
+
 
 
 
@@ -35371,7 +35371,7 @@
 
                                                           Embedded SQL   511
 
- 
+
 
 
 
@@ -35437,7 +35437,7 @@
 
          512  Database Language SQL
 
- 
+
 
 
 
@@ -35505,7 +35505,7 @@
 
                                                           Embedded SQL   513
 
- 
+
 
 
 
@@ -35571,7 +35571,7 @@
 
          514  Database Language SQL
 
- 
+
 
 
 
@@ -35637,7 +35637,7 @@
 
                                                           Embedded SQL   515
 
- 
+
 
 
 
@@ -35703,7 +35703,7 @@
 
          516  Database Language SQL
 
- 
+
 
 
 
@@ -35769,7 +35769,7 @@
 
                                                           Embedded SQL   517
 
- 
+
 
 
 
@@ -35835,7 +35835,7 @@
 
          518  Database Language SQL
 
- 
+
 
 
 
@@ -35901,7 +35901,7 @@
 
                                                           Embedded SQL   519
 
- 
+
 
 
 
@@ -35967,7 +35967,7 @@
 
          520  Database Language SQL
 
- 
+
 
 
 
@@ -36033,7 +36033,7 @@
 
                                                           Embedded SQL   521
 
- 
+
 
 
 
@@ -36101,7 +36101,7 @@
 
          522  Database Language SQL
 
- 
+
 
 
 
@@ -36167,7 +36167,7 @@
 
                                                           Embedded SQL   523
 
- 
+
 
 
 
@@ -36233,7 +36233,7 @@
 
          524  Database Language SQL
 
- 
+
 
 
 
@@ -36299,7 +36299,7 @@
 
                                               Direct invocation of SQL   525
 
- 
+
 
 
 
@@ -36368,7 +36368,7 @@
 
          526  Database Language SQL
 
- 
+
 
 
 
@@ -36437,7 +36437,7 @@
 
                                               Direct invocation of SQL   527
 
- 
+
 
 
 
@@ -36503,7 +36503,7 @@
 
          528  Database Language SQL
 
- 
+
 
 
 
@@ -36569,7 +36569,7 @@
 
                                               Direct invocation of SQL   529
 
- 
+
 
 
 
@@ -36637,7 +36637,7 @@
 
          530  Database Language SQL
 
- 
+
 
 
 
@@ -36703,7 +36703,7 @@
 
                                               Direct invocation of SQL   531
 
- 
+
 
 
 
@@ -36769,7 +36769,7 @@
 
          532  Database Language SQL
 
- 
+
 
 
 
@@ -36838,7 +36838,7 @@
 
                               Information Schema and Definition Schema   533
 
- 
+
 
 
 
@@ -36904,7 +36904,7 @@
 
          534  Database Language SQL
 
- 
+
 
 
 
@@ -36970,7 +36970,7 @@
 
                               Information Schema and Definition Schema   535
 
- 
+
 
 
 
@@ -37036,7 +37036,7 @@
 
          536  Database Language SQL
 
- 
+
 
 
 
@@ -37102,7 +37102,7 @@
 
                               Information Schema and Definition Schema   537
 
- 
+
 
 
 
@@ -37168,7 +37168,7 @@
 
          538  Database Language SQL
 
- 
+
 
 
 
@@ -37234,7 +37234,7 @@
 
                               Information Schema and Definition Schema   539
 
- 
+
 
 
 
@@ -37300,7 +37300,7 @@
 
          540  Database Language SQL
 
- 
+
 
 
 
@@ -37366,7 +37366,7 @@
 
                               Information Schema and Definition Schema   541
 
- 
+
 
 
 
@@ -37432,7 +37432,7 @@
 
          542  Database Language SQL
 
- 
+
 
 
 
@@ -37498,7 +37498,7 @@
 
                               Information Schema and Definition Schema   543
 
- 
+
 
 
 
@@ -37564,7 +37564,7 @@
 
          544  Database Language SQL
 
- 
+
 
 
 
@@ -37630,7 +37630,7 @@
 
                               Information Schema and Definition Schema   545
 
- 
+
 
 
 
@@ -37696,7 +37696,7 @@
 
          546  Database Language SQL
 
- 
+
 
 
 
@@ -37762,7 +37762,7 @@
 
                               Information Schema and Definition Schema   547
 
- 
+
 
 
 
@@ -37828,7 +37828,7 @@
 
          548  Database Language SQL
 
- 
+
 
 
 
@@ -37894,7 +37894,7 @@
 
                               Information Schema and Definition Schema   549
 
- 
+
 
 
 
@@ -37960,7 +37960,7 @@
 
          550  Database Language SQL
 
- 
+
 
 
 
@@ -38026,7 +38026,7 @@
 
                               Information Schema and Definition Schema   551
 
- 
+
 
 
 
@@ -38092,7 +38092,7 @@
 
          552  Database Language SQL
 
- 
+
 
 
 
@@ -38158,7 +38158,7 @@
 
                               Information Schema and Definition Schema   553
 
- 
+
 
 
 
@@ -38224,7 +38224,7 @@
 
          554  Database Language SQL
 
- 
+
 
 
 
@@ -38290,7 +38290,7 @@
 
                               Information Schema and Definition Schema   555
 
- 
+
 
 
 
@@ -38356,7 +38356,7 @@
 
          556  Database Language SQL
 
- 
+
 
 
 
@@ -38422,7 +38422,7 @@
 
                               Information Schema and Definition Schema   557
 
- 
+
 
 
 
@@ -38488,7 +38488,7 @@
 
          558  Database Language SQL
 
- 
+
 
 
 
@@ -38554,7 +38554,7 @@
 
                               Information Schema and Definition Schema   559
 
- 
+
 
 
 
@@ -38620,7 +38620,7 @@
 
          560  Database Language SQL
 
- 
+
 
 
 
@@ -38686,7 +38686,7 @@
 
                               Information Schema and Definition Schema   561
 
- 
+
 
 
 
@@ -38752,7 +38752,7 @@
 
          562  Database Language SQL
 
- 
+
 
 
 
@@ -38818,7 +38818,7 @@
 
                               Information Schema and Definition Schema   563
 
- 
+
 
 
 
@@ -38884,7 +38884,7 @@
 
          564  Database Language SQL
 
- 
+
 
 
 
@@ -38950,7 +38950,7 @@
 
                               Information Schema and Definition Schema   565
 
- 
+
 
 
 
@@ -39016,7 +39016,7 @@
 
          566  Database Language SQL
 
- 
+
 
 
 
@@ -39082,7 +39082,7 @@
 
                               Information Schema and Definition Schema   567
 
- 
+
 
 
 
@@ -39148,7 +39148,7 @@
 
          568  Database Language SQL
 
- 
+
 
 
 
@@ -39214,7 +39214,7 @@
 
                               Information Schema and Definition Schema   569
 
- 
+
 
 
 
@@ -39280,7 +39280,7 @@
 
          570  Database Language SQL
 
- 
+
 
 
 
@@ -39346,7 +39346,7 @@
 
                               Information Schema and Definition Schema   571
 
- 
+
 
 
 
@@ -39412,7 +39412,7 @@
 
          572  Database Language SQL
 
- 
+
 
 
 
@@ -39478,7 +39478,7 @@
 
                               Information Schema and Definition Schema   573
 
- 
+
 
 
 
@@ -39544,7 +39544,7 @@
 
          574  Database Language SQL
 
- 
+
 
 
 
@@ -39610,7 +39610,7 @@
 
                               Information Schema and Definition Schema   575
 
- 
+
 
 
 
@@ -39676,7 +39676,7 @@
 
          576  Database Language SQL
 
- 
+
 
 
 
@@ -39742,7 +39742,7 @@
 
                               Information Schema and Definition Schema   577
 
- 
+
 
 
 
@@ -39808,7 +39808,7 @@
 
          578  Database Language SQL
 
- 
+
 
 
 
@@ -39874,7 +39874,7 @@
 
                               Information Schema and Definition Schema   579
 
- 
+
 
 
 
@@ -39940,7 +39940,7 @@
 
          580  Database Language SQL
 
- 
+
 
 
 
@@ -40007,7 +40007,7 @@
 
                               Information Schema and Definition Schema   581
 
- 
+
 
 
 
@@ -40073,7 +40073,7 @@
 
          582  Database Language SQL
 
- 
+
 
 
 
@@ -40139,7 +40139,7 @@
 
                               Information Schema and Definition Schema   583
 
- 
+
 
 
 
@@ -40205,7 +40205,7 @@
 
          584  Database Language SQL
 
- 
+
 
 
 
@@ -40271,7 +40271,7 @@
 
                               Information Schema and Definition Schema   585
 
- 
+
 
 
 
@@ -40337,7 +40337,7 @@
 
          586  Database Language SQL
 
- 
+
 
 
 
@@ -40403,7 +40403,7 @@
 
                               Information Schema and Definition Schema   587
 
- 
+
 
 
 
@@ -40469,7 +40469,7 @@
 
          588  Database Language SQL
 
- 
+
 
 
 
@@ -40535,7 +40535,7 @@
 
                               Information Schema and Definition Schema   589
 
- 
+
 
 
 
@@ -40601,7 +40601,7 @@
 
          590  Database Language SQL
 
- 
+
 
 
 
@@ -40668,7 +40668,7 @@
 
                               Information Schema and Definition Schema   591
 
- 
+
 
 
 
@@ -40734,7 +40734,7 @@
 
          592  Database Language SQL
 
- 
+
 
 
 
@@ -40800,7 +40800,7 @@
 
                               Information Schema and Definition Schema   593
 
- 
+
 
 
 
@@ -40866,7 +40866,7 @@
 
          594  Database Language SQL
 
- 
+
 
 
 
@@ -40932,7 +40932,7 @@
 
                               Information Schema and Definition Schema   595
 
- 
+
 
 
 
@@ -40998,7 +40998,7 @@
 
          596  Database Language SQL
 
- 
+
 
 
 
@@ -41064,7 +41064,7 @@
 
                               Information Schema and Definition Schema   597
 
- 
+
 
 
 
@@ -41130,7 +41130,7 @@
 
          598  Database Language SQL
 
- 
+
 
 
 
@@ -41196,7 +41196,7 @@
 
                               Information Schema and Definition Schema   599
 
- 
+
 
 
 
@@ -41262,7 +41262,7 @@
 
          600  Database Language SQL
 
- 
+
 
 
 
@@ -41328,7 +41328,7 @@
 
                               Information Schema and Definition Schema   601
 
- 
+
 
 
 
@@ -41394,7 +41394,7 @@
 
          602  Database Language SQL
 
- 
+
 
 
 
@@ -41460,7 +41460,7 @@
 
                               Information Schema and Definition Schema   603
 
- 
+
 
 
 
@@ -41526,7 +41526,7 @@
 
          604  Database Language SQL
 
- 
+
 
 
 
@@ -41592,7 +41592,7 @@
 
                               Information Schema and Definition Schema   605
 
- 
+
 
 
 
@@ -41658,7 +41658,7 @@
 
          606  Database Language SQL
 
- 
+
 
 
 
@@ -41724,7 +41724,7 @@
 
                               Information Schema and Definition Schema   607
 
- 
+
 
 
 
@@ -41790,7 +41790,7 @@
 
          608  Database Language SQL
 
- 
+
 
 
 
@@ -41856,7 +41856,7 @@
 
                               Information Schema and Definition Schema   609
 
- 
+
 
 
 
@@ -41922,7 +41922,7 @@
 
          610  Database Language SQL
 
- 
+
 
 
 
@@ -41988,7 +41988,7 @@
 
                               Information Schema and Definition Schema   611
 
- 
+
 
 
 
@@ -42054,7 +42054,7 @@
 
          612  Database Language SQL
 
- 
+
 
 
 
@@ -42120,7 +42120,7 @@
 
                               Information Schema and Definition Schema   613
 
- 
+
 
 
 
@@ -42187,7 +42187,7 @@
 
          614  Database Language SQL
 
- 
+
 
 
 
@@ -42253,7 +42253,7 @@
 
                               Information Schema and Definition Schema   615
 
- 
+
 
 
 
@@ -42319,7 +42319,7 @@
 
          616  Database Language SQL
 
- 
+
 
 
 
@@ -42385,7 +42385,7 @@
 
                               Information Schema and Definition Schema   617
 
- 
+
 
 
 
@@ -42451,7 +42451,7 @@
 
          618  Database Language SQL
 
- 
+
 
 
 
@@ -42517,7 +42517,7 @@
         |                          |     |                          |      |
                                                           Status codes   619
 
- 
+
 
 
 
@@ -42592,7 +42592,7 @@
         |                          |     |                          |      |
          620  Database Language SQL
 
- 
+
 
 
 
@@ -42667,7 +42667,7 @@
         |                          |     |                          |      |
                                                           Status codes   621
 
- 
+
 
 
 
@@ -42741,7 +42741,7 @@
 
          622  Database Language SQL
 
- 
+
 
 
 
@@ -42807,7 +42807,7 @@
 
                                                           Status codes   623
 
- 
+
 
 
 
@@ -42873,7 +42873,7 @@
 
          624  Database Language SQL
 
- 
+
 
 
 
@@ -42942,7 +42942,7 @@
 
                                                            Conformance   625
 
- 
+
 
 
 
@@ -43009,7 +43009,7 @@
 
          626  Database Language SQL
 
- 
+
 
 
 
@@ -43075,7 +43075,7 @@
 
                                                            Conformance   627
 
- 
+
 
 
 
@@ -43141,7 +43141,7 @@
 
          628  Database Language SQL
 
- 
+
 
 
 
@@ -43208,7 +43208,7 @@
 
                                               Leveling the SQL Language  629
 
- 
+
 
 
 
@@ -43275,7 +43275,7 @@
 
          630  Database Language SQL
 
- 
+
 
 
 
@@ -43343,7 +43343,7 @@
 
                                               Leveling the SQL Language  631
 
- 
+
 
 
 
@@ -43412,7 +43412,7 @@
 
          632  Database Language SQL
 
- 
+
 
 
 
@@ -43478,7 +43478,7 @@
 
                                               Leveling the SQL Language  633
 
- 
+
 
 
 
@@ -43544,7 +43544,7 @@
 
          634  Database Language SQL
 
- 
+
 
 
 
@@ -43613,7 +43613,7 @@
 
                                               Leveling the SQL Language  635
 
- 
+
 
 
 
@@ -43681,7 +43681,7 @@
 
          636  Database Language SQL
 
- 
+
 
 
 
@@ -43749,7 +43749,7 @@
 
                                               Leveling the SQL Language  637
 
- 
+
 
 
 
@@ -43815,7 +43815,7 @@
 
          638  Database Language SQL
 
- 
+
 
 
 
@@ -43883,7 +43883,7 @@
 
                                               Leveling the SQL Language  639
 
- 
+
 
 
 
@@ -43949,7 +43949,7 @@
 
          640  Database Language SQL
 
- 
+
 
 
 
@@ -44017,7 +44017,7 @@
 
                                               Leveling the SQL Language  641
 
- 
+
 
 
 
@@ -44083,7 +44083,7 @@
 
          642  Database Language SQL
 
- 
+
 
 
 
@@ -44152,7 +44152,7 @@
 
                                               Leveling the SQL Language  643
 
- 
+
 
 
 
@@ -44220,7 +44220,7 @@
 
          644  Database Language SQL
 
- 
+
 
 
 
@@ -44290,7 +44290,7 @@
 
                                               Leveling the SQL Language  645
 
- 
+
 
 
 
@@ -44360,7 +44360,7 @@
 
          646  Database Language SQL
 
- 
+
 
 
 
@@ -44426,7 +44426,7 @@
 
                                               Leveling the SQL Language  647
 
- 
+
 
 
 
@@ -44493,7 +44493,7 @@
 
          648  Database Language SQL
 
- 
+
 
 
 
@@ -44560,7 +44560,7 @@
 
                                               Leveling the SQL Language  649
 
- 
+
 
 
 
@@ -44629,7 +44629,7 @@
 
          650  Database Language SQL
 
- 
+
 
 
 
@@ -44698,7 +44698,7 @@
 
                                               Leveling the SQL Language  651
 
- 
+
 
 
 
@@ -44764,7 +44764,7 @@
 
          652  Database Language SQL
 
- 
+
 
 
 
@@ -44831,7 +44831,7 @@
 
                                         Implementation-defined elements  653
 
- 
+
 
 
 
@@ -44897,7 +44897,7 @@
 
          654  Database Language SQL
 
- 
+
 
 
 
@@ -44963,7 +44963,7 @@
 
                                         Implementation-defined elements  655
 
- 
+
 
 
 
@@ -45029,7 +45029,7 @@
 
          656  Database Language SQL
 
- 
+
 
 
 
@@ -45095,7 +45095,7 @@
 
                                         Implementation-defined elements  657
 
- 
+
 
 
 
@@ -45163,7 +45163,7 @@
 
          658  Database Language SQL
 
- 
+
 
 
 
@@ -45229,7 +45229,7 @@
 
                                         Implementation-defined elements  659
 
- 
+
 
 
 
@@ -45296,7 +45296,7 @@
 
          660  Database Language SQL
 
- 
+
 
 
 
@@ -45364,7 +45364,7 @@
 
                                         Implementation-defined elements  661
 
- 
+
 
 
 
@@ -45430,7 +45430,7 @@
 
          662  Database Language SQL
 
- 
+
 
 
 
@@ -45497,7 +45497,7 @@
 
                                         Implementation-defined elements  663
 
- 
+
 
 
 
@@ -45563,7 +45563,7 @@
 
          664  Database Language SQL
 
- 
+
 
 
 
@@ -45629,7 +45629,7 @@
 
                                         Implementation-defined elements  665
 
- 
+
 
 
 
@@ -45695,7 +45695,7 @@
 
          666  Database Language SQL
 
- 
+
 
 
 
@@ -45761,7 +45761,7 @@
 
                                       Implementation-dependent elements  667
 
- 
+
 
 
 
@@ -45828,7 +45828,7 @@
 
          668  Database Language SQL
 
- 
+
 
 
 
@@ -45895,7 +45895,7 @@
 
                                       Implementation-dependent elements  669
 
- 
+
 
 
 
@@ -45961,7 +45961,7 @@
 
          670  Database Language SQL
 
- 
+
 
 
 
@@ -46027,7 +46027,7 @@
 
                                       Implementation-dependent elements  671
 
- 
+
 
 
 
@@ -46093,7 +46093,7 @@
 
          672  Database Language SQL
 
- 
+
 
 
 
@@ -46159,7 +46159,7 @@
 
                                       Implementation-dependent elements  673
 
- 
+
 
 
 
@@ -46225,7 +46225,7 @@
 
          674  Database Language SQL
 
- 
+
 
 
 
@@ -46291,7 +46291,7 @@
 
                                                     Deprecated features  675
 
- 
+
 
 
 
@@ -46357,7 +46357,7 @@
 
          676  Database Language SQL
 
- 
+
 
 
 
@@ -46423,7 +46423,7 @@
 
                                Incompatibilities with ISO/IEC 9075:1989  677
 
- 
+
 
 
 
@@ -46492,7 +46492,7 @@
 
          678  Database Language SQL
 
- 
+
 
 
 
@@ -46564,7 +46564,7 @@
 
                                Incompatibilities with ISO/IEC 9075:1989  679
 
- 
+
 
 
 
@@ -46636,7 +46636,7 @@
 
          680  Database Language SQL
 
- 
+
 
 
 
@@ -46708,7 +46708,7 @@
 
                                Incompatibilities with ISO/IEC 9075:1989  681
 
- 
+
 
 
 
@@ -46778,7 +46778,7 @@
 
          682  Database Language SQL
 
- 
+
 
 
 
@@ -46844,7 +46844,7 @@
 
                                Incompatibilities with ISO/IEC 9075:1989  683
 
- 
+
 
 
 
@@ -46910,7 +46910,7 @@
 
          684  Database Language SQL
 
- 
+
 
 
 
@@ -46976,7 +46976,7 @@
 
                                   Maintenance and interpretation of SQL  685
 
- 
+
 
 
 
@@ -47042,7 +47042,7 @@
 
          686  Database Language SQL
 
- 
+
 
 
 
@@ -47095,7 +47095,7 @@
 
                                                            Index  1
 
- 
+
 
 
 
@@ -47144,7 +47144,7 @@
 
           2  Database Language SQL
 
- 
+
 
 
 
@@ -47193,7 +47193,7 @@
 
                                                              Index  3
 
- 
+
 
 
 
@@ -47243,7 +47243,7 @@
 
           4  Database Language SQL
 
- 
+
 
 
 
@@ -47293,7 +47293,7 @@
 
                                                              Index  5
 
- 
+
 
 
 
@@ -47342,7 +47342,7 @@
 
           6  Database Language SQL
 
- 
+
 
 
 
@@ -47391,7 +47391,7 @@
 
                                                              Index  7
 
- 
+
 
 
 
@@ -47440,7 +47440,7 @@
 
           8  Database Language SQL
 
- 
+
 
 
 
@@ -47489,7 +47489,7 @@
 
                                                              Index  9
 
- 
+
 
 
 
@@ -47538,7 +47538,7 @@
 
           10  Database Language SQL
 
- 
+
 
 
 
@@ -47588,7 +47588,7 @@
                                             672, 673, 674, 677
                                                             Index  11
 
- 
+
 
 
 
@@ -47637,7 +47637,7 @@
 
           12  Database Language SQL
 
- 
+
 
 
 
@@ -47686,7 +47686,7 @@
 
                                                             Index  13
 
- 
+
 
 
 
@@ -47735,7 +47735,7 @@
 
           14  Database Language SQL
 
- 
+
 
 
 
@@ -47784,7 +47784,7 @@
 
                                                             Index  15
 
- 
+
 
 
 
@@ -47833,7 +47833,7 @@
 
           16  Database Language SQL
 
- 
+
 
 
 
@@ -47882,7 +47882,7 @@
 
                                                             Index  17
 
- 
+
 
 
 
@@ -47931,7 +47931,7 @@
 
           18  Database Language SQL
 
- 
+
 
 
 
@@ -47980,7 +47980,7 @@
 
                                                             Index  19
 
- 
+
 
 
 
@@ -48029,7 +48029,7 @@
 
           20  Database Language SQL
 
- 
+
 
 
 
@@ -48078,7 +48078,7 @@
 
                                                             Index  21
 
- 
+
 
 
 
@@ -48127,7 +48127,7 @@
 
           22  Database Language SQL
 
- 
+
 
 
 
@@ -48176,7 +48176,7 @@
 
                                                             Index  23
 
- 
+
 
 
 
@@ -48225,7 +48225,7 @@
 
           24  Database Language SQL
 
- 
+
 
 
 
@@ -48274,7 +48274,7 @@
 
                                                             Index  25
 
- 
+
 
 
 
@@ -48323,7 +48323,7 @@
 
           26  Database Language SQL
 
- 
+
 
 
 
@@ -48372,7 +48372,7 @@
 
                                                             Index  27
 
- 
+
 
 
 
@@ -48421,7 +48421,7 @@
 
           28  Database Language SQL
 
- 
+
 
 
 
@@ -48470,7 +48470,7 @@
 
                                                             Index  29
 
- 
+
 
 
 
@@ -48519,7 +48519,7 @@
 
           30  Database Language SQL
 
- 
+
 
 
 
@@ -48568,7 +48568,7 @@
 
                                                             Index  31
 
- 
+
 
 
 
@@ -48617,7 +48617,7 @@
 
           32  Database Language SQL
 
- 
+
 
 
 
@@ -48666,7 +48666,7 @@
 
                                                             Index  33
 
- 
+
 
 
 
@@ -48715,7 +48715,7 @@
 
           34  Database Language SQL
 
- 
+
 
 
 
@@ -48764,7 +48764,7 @@
 
                                                             Index  35
 
- 
+
 
 
 
@@ -48814,7 +48814,7 @@
 
           36  Database Language SQL
 
- 
+
 
 
 
@@ -48863,7 +48863,7 @@
 
                                                             Index  37
 
- 
+
 
 
 
@@ -48914,7 +48914,7 @@
 
           38  Database Language SQL
 
- 
+
 
 
 
@@ -48963,7 +48963,7 @@
 
                                                             Index  39
 
- 
+
 
 
 
@@ -49012,7 +49012,7 @@
 
           40  Database Language SQL
 
- 
+
 
 
 
@@ -49061,7 +49061,7 @@
 
                                                             Index  41
 
- 
+
 
 
 
@@ -49110,7 +49110,7 @@
 
           42  Database Language SQL
 
- 
+
 
 
 
@@ -49159,7 +49159,7 @@
 
                                                             Index  43
 
- 
+
 
 
 
@@ -49208,7 +49208,7 @@
 
           44  Database Language SQL
 
- 
+
 
 
 
@@ -49257,7 +49257,7 @@
 
                                                             Index  45
 
- 
+
 
 
 
@@ -49306,7 +49306,7 @@
 
           46  Database Language SQL
 
- 
+
 
 
 
@@ -49355,7 +49355,7 @@
 
                                                             Index  47
 
- 
+
 
 
 
@@ -49404,7 +49404,7 @@
 
           48  Database Language SQL
 
- 
+
 
 
 
@@ -49453,7 +49453,7 @@
 
                                                             Index  49
 
- 
+
 
 
 
@@ -49502,7 +49502,7 @@
 
           50  Database Language SQL
 
- 
+
 
 
 
@@ -49551,7 +49551,7 @@
 
                                                             Index  51
 
- 
+
 
 
 
@@ -49600,7 +49600,7 @@
 
           52  Database Language SQL
 
- 
+
 
 
 
@@ -49649,7 +49649,7 @@
 
                                                             Index  53
 
- 
+
 
 
 
@@ -49698,7 +49698,7 @@
 
           54  Database Language SQL
 
- 
+
 
 
 
@@ -49747,7 +49747,7 @@
 
                                                             Index  55
 
- 
+
 
 
 
@@ -49812,7 +49812,7 @@
                                             665, 670, 672, 673, 674,
                                             678
 
- 
+
 
 
 
@@ -49861,7 +49861,7 @@
 
                                                             Index  57
 
- 
+
 
 
 
@@ -49910,7 +49910,7 @@
 
           58  Database Language SQL
 
- 
+
 
 
 
@@ -49959,7 +49959,7 @@
 
                                                             Index  59
 
- 
+
 
 
 
@@ -50008,7 +50008,7 @@
 
           60  Database Language SQL
 
- 
+
 
 
 
@@ -50057,7 +50057,7 @@
 
                                                             Index  61
 
- 
+
 
 
 
@@ -50106,7 +50106,7 @@
 
           62  Database Language SQL
 
- 
+
 
 
 
@@ -50155,7 +50155,7 @@
 
                                                             Index  63
 
- 
+
 
 
 
@@ -50204,7 +50204,7 @@
 
           64  Database Language SQL
 
- 
+
 
 
 
@@ -50253,7 +50253,7 @@
 
                                                             Index  65
 
- 
+
 
 
 
@@ -50302,7 +50302,7 @@
 
           66  Database Language SQL
 
- 
+
 
 
 
@@ -50351,7 +50351,7 @@
 
                                                             Index  67
 
- 
+
 
 
 
@@ -50400,7 +50400,7 @@
 
           68  Database Language SQL
 
- 
+
 
 
 
@@ -50449,7 +50449,7 @@
 
                                                             Index  69
 
- 
+
 
 
 
@@ -50498,7 +50498,7 @@
 
           70  Database Language SQL
 
- 
+
 
 
 
@@ -50547,7 +50547,7 @@
 
                                                             Index  71
 
- 
+
 
 
 
@@ -50596,7 +50596,7 @@
 
           72  Database Language SQL
 
- 
+
 
 
 
@@ -50645,7 +50645,7 @@
 
                                                             Index  73
 
- 
+
 
 
 
@@ -50694,7 +50694,7 @@
 
           74  Database Language SQL
 
- 
+
 
 
 
@@ -50743,7 +50743,7 @@
 
                                                             Index  75
 
- 
+
 
 
 
