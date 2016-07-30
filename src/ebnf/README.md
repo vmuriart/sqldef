@@ -25,7 +25,7 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 1. use to select words to put quotes around `(?<!['<])\b([A-Z_\-]+)\b(?!['>])`
 1. `(?<!::=\s)`    continuetions
 1. use `(^[^\n#].*)\n\n` to add ; to the end of defintnions with `\1\n    ;\n\n`
-1. use `<(\w+)> \.\.\.` to select ellipses after a rule. use `{\1}+` to replace it
+1. use `(<\w+>) *\.\.\.` to select ellipses after a rule. use `{\1}+` to replace it
 1, use `<(\w+)>[\n\s]+\[[\n\s]+{[\n\s]+<comma>[\n\s]+<\1>[\n\s]+}[\n\s]+\.\.\.[\n\s]+\]` to replace list chains with `<comma>.{\1}`
 
 1. use for more generic version of above `(.*)[\n\s]+\[[\n\s]+{[\n\s]+<comma>[\n\s]+\1[\n\s]+}[\n\s]+\.\.\.[\n\s]+\]`
@@ -36,4 +36,6 @@ used `<(\w+)>` `\L$1` for lowercase and remove <>
 
 
 1. `        (.*)\n    \|   ` to `    |   \1\n    |   ` to add leading | to options
-
+1. `(?<!=)\n    (?!;)` to `\n        ` to indent in continuation lines
+1. use `(\S)  +` with `\1 ` to clean up multiple spaces
+1. use `{(.*?)}([^+])` with `(\1)\2` to replace {} with ()
