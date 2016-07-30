@@ -1,5 +1,23 @@
-BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
-==================================================================
+# The MIT License (MIT)
+# Copyright (c) 2016, Victor M. Uriarte
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
 
 <SQL terminal character> ::=
         <SQL language character>
@@ -46,53 +64,77 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <underscore>
     |   <vertical bar>
 
-<space> ::= !! space character in character set in use
+<space> ::=
+        !! space character in character set in use
 
-<double quote> ::= "
+<double quote> ::=
+        "
 
-<percent> ::= %
+<percent> ::=
+        %
 
-<ampersand> ::= &
+<ampersand> ::=
+        &
 
-<quote> ::= '
+<quote> ::=
+        '
 
-<left paren> ::= (
+<left paren> ::=
+        (
 
-<right paren> ::= )
+<right paren> ::=
+        )
 
-<asterisk> ::= *
+<asterisk> ::=
+        *
 
-<plus sign> ::= +
+<plus sign> ::=
+        +
 
-<comma> ::= ,
+<comma> ::=
+        ,
 
-<minus sign> ::= -
+<minus sign> ::=
+        -
 
-<period> ::= .
+<period> ::=
+        .
 
-<solidus> ::= /
+<solidus> ::=
+        /
 
-<colon> ::= :
+<colon> ::=
+        :
 
-<semicolon> ::= ;
+<semicolon> ::=
+        ;
 
-<less than operator> ::= <
+<less than operator> ::=
+        <
 
-<equals operator> ::= =
+<equals operator> ::=
+        =
 
-<greater than operator> ::= >
+<greater than operator> ::=
+        >
 
-<question mark> ::= ?
+<question mark> ::=
+        ?
 
-<underscore> ::= _
+<underscore> ::=
+        _
 
-<vertical bar> ::= |
+<vertical bar> ::=
+        |
 
-<SQL embedded language character> ::= <left bracket> | <right bracket>
+<SQL embedded language character> ::=
+        <left bracket> | <right bracket>
 
-<left bracket> ::= [
+<left bracket> ::=
+        [
 
-<right bracket> ::= ]
+<right bracket> ::=
+        ]
 
 <token> ::=
         <nondelimiter token>
@@ -106,15 +148,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <bit string literal>
     |   <hex string literal>
 
-<regular identifier> ::= <identifier body>
+<regular identifier> ::=
+        <identifier body>
 
-<identifier body> ::= <identifier start> [ { <underscore> | <identifier part> } ... ]
+<identifier body> ::=
+        <identifier start> [ { <underscore> | <identifier part> } ... ]
 
-<identifier start> ::= !! See the Syntax rules
+<identifier start> ::=
+        !! See the Syntax rules
 
-<identifier part> ::= <identifier start> | <digit>
+<identifier part> ::=
+        <identifier start> | <digit>
 
-<key word> ::= <reserved word> | <non-reserved word>
+<key word> ::=
+        <reserved word> | <non-reserved word>
 
 <reserved word> ::=
         ABSOLUTE | ACTION | ADD | ALL | ALLOCATE | ALTER | AND | ANY | ARE
@@ -168,9 +215,6 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   TABLE_NAME | TYPE
     |   UNCOMMITTED | UNNAMED
 
-
-
-
 <unsigned numeric literal> ::=
         <exact numeric literal>
     |   <approximate numeric literal>
@@ -179,47 +223,62 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <unsigned integer> [ <period> [ <unsigned integer> ] ]
     |   <period> <unsigned integer>
 
-<unsigned integer> ::= <digit> ...
+<unsigned integer> ::=
+        <digit> ...
 
 <approximate numeric literal> ::=
         <mantissa> E <exponent>
 
-<mantissa> ::= <exact numeric literal>
+<mantissa> ::=
+        <exact numeric literal>
 
-<exponent> ::= <signed integer>
+<exponent> ::=
+        <signed integer>
 
-<signed integer> ::= [ <sign> ] <unsigned integer>
+<signed integer> ::=
+        [ <sign> ] <unsigned integer>
 
-<sign> ::= <plus sign> | <minus sign>
+<sign> ::=
+        <plus sign> | <minus sign>
 
 <national character string literal> ::=
         N <quote> [ <character representation> ... ] <quote> [ { <separator>... <quote> [ <character representation>... ] <quote> }... ]
 
-<character representation> ::= <nonquote character> | <quote symbol>
+<character representation> ::=
+        <nonquote character> | <quote symbol>
 
-<nonquote character> ::= !! See the Syntax rules
+<nonquote character> ::=
+        !! See the Syntax rules
 
-<quote symbol> ::= <quote> <quote>
+<quote symbol> ::=
+        <quote> <quote>
 
-<separator> ::= { <comment> | <space> | <newline> }...
+<separator> ::=
+        { <comment> | <space> | <newline> }...
 
-<comment> ::= <comment introducer> [ <comment character>... ] <newline>
+<comment> ::=
+        <comment introducer> [ <comment character>... ] <newline>
 
-<comment introducer> ::= <minus sign><minus sign> [<minus sign>...]
+<comment introducer> ::=
+        <minus sign><minus sign> [<minus sign>...]
 
-<comment character> ::= <nonquote character> | <quote>
+<comment character> ::=
+        <nonquote character> | <quote>
 
-<newline> ::= !! implementation defined end of line indicator
+<newline> ::=
+        !! implementation defined end of line indicator
 
 <bit string literal> ::=
         B <quote> [ <bit> ... ] <quote> [ { <separator>... <quote> [ <bit>... ] <quote> }... ]
 
-<bit> ::= 0 | 1
+<bit> ::=
+        0 | 1
 
 <hex string literal> ::=
         X <quote> [ <hexit> ... ] <quote> [ { <separator>... <quote> [ <hexit>... ] <quote> }... ]
 
-<hexit> ::= <digit> | A | B | C | D | E | F | a | b | c | d | e | f
+<hexit> ::=
+        <digit> | A | B | C | D | E | F | a | b | c | d | e | f
 
 <delimiter token> ::=
         <character string literal>
@@ -239,7 +298,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <character string literal> ::=
     [ <introducer><character set specification> ] <quote> [ <character representation>... ] <quote> [ { <separator>... <quote> [ <character representation>... ] <quote> }... ]
 
-<introducer> ::= <underscore>
+<introducer> ::=
+        <underscore>
 
 <character set specification> ::=
         <standard character repertoire name>
@@ -248,82 +308,117 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <standard universal character form-of-use name>
     |   <implementation-defined universal character form-of-use name>
 
-<standard character repertoire name> ::= <character set name>
+<standard character repertoire name> ::=
+        <character set name>
 
-<character set name> ::= [ <schema name> <period> ] <SQL language identifier>
+<character set name> ::=
+        [ <schema name> <period> ] <SQL language identifier>
 
-<schema name> ::= [ <catalog name> <period> ] <unqualified schema name>
+<schema name> ::=
+        [ <catalog name> <period> ] <unqualified schema name>
 
-<catalog name> ::= <identifier>
+<catalog name> ::=
+        <identifier>
 
-<identifier> ::= [ <introducer><character set specification> ] <actual identifier>
+<identifier> ::=
+        [ <introducer><character set specification> ] <actual identifier>
 
-<actual identifier> ::= <regular identifier> | <delimited identifier>
+<actual identifier> ::=
+        <regular identifier> | <delimited identifier>
 
-<delimited identifier> ::= <double quote> <delimited identifier body> <double quote>
+<delimited identifier> ::=
+        <double quote> <delimited identifier body> <double quote>
 
-<delimited identifier body> ::= <delimited identifier part>...
+<delimited identifier body> ::=
+        <delimited identifier part>...
 
-<delimited identifier part> ::= <nondoublequote character> | <doublequote symbol>
+<delimited identifier part> ::=
+        <nondoublequote character> | <doublequote symbol>
 
-<nondoublequote character> ::= !! See the syntax rules
+<nondoublequote character> ::=
+        !! See the syntax rules
 
-<doublequote symbol> ::= <double quote><double quote>
+<doublequote symbol> ::=
+        <double quote><double quote>
 
-<unqualified schema name> ::= <identifier>
+<unqualified schema name> ::=
+        <identifier>
 
 <SQL language identifier> ::=
         <SQL language identifier start> [ { <underscore> | <SQL language identifier part> }... ]
 
-<SQL language identifier start> ::= <simple Latin letter>
+<SQL language identifier start> ::=
+        <simple Latin letter>
 
-<SQL language identifier part> ::= <simple Latin letter> | <digit>
+<SQL language identifier part> ::=
+        <simple Latin letter> | <digit>
 
-<implementation-defined character repertoire name> ::= <character set name>
+<implementation-defined character repertoire name> ::=
+        <character set name>
 
-<user-defined character repertoire name> ::= <character set name>
+<user-defined character repertoire name> ::=
+        <character set name>
 
-<standard universal character form-of-use name> ::= <character set name>
+<standard universal character form-of-use name> ::=
+        <character set name>
 
-<implementation-defined universal character form-of-use name> ::= <character set name>
+<implementation-defined universal character form-of-use name> ::=
+        <character set name>
 
-<date string> ::= <quote> <date value> <quote>
+<date string> ::=
+        <quote> <date value> <quote>
 
-<date value> ::= <years value> <minus sign> <months value> <minus sign> <days value>
+<date value> ::=
+        <years value> <minus sign> <months value> <minus sign> <days value>
 
-<years value> ::= <datetime value>
+<years value> ::=
+        <datetime value>
 
-<datetime value> ::= <unsigned integer>
+<datetime value> ::=
+        <unsigned integer>
 
-<months value> ::= <datetime value>
+<months value> ::=
+        <datetime value>
 
-<days value> ::= <datetime value>
+<days value> ::=
+        <datetime value>
 
-<time string> ::= <quote> <time value> [ <time zone interval> ] <quote>
+<time string> ::=
+        <quote> <time value> [ <time zone interval> ] <quote>
 
-<time value> ::= <hours value> <colon> <minutes value> <colon> <seconds value>
+<time value> ::=
+        <hours value> <colon> <minutes value> <colon> <seconds value>
 
-<hours value> ::= <datetime value>
+<hours value> ::=
+        <datetime value>
 
-<minutes value> ::= <datetime value>
+<minutes value> ::=
+        <datetime value>
 
-<seconds value> ::= <seconds integer value> [ <period> [ <seconds fraction> ] ]
+<seconds value> ::=
+        <seconds integer value> [ <period> [ <seconds fraction> ] ]
 
-<seconds integer value> ::= <unsigned integer>
+<seconds integer value> ::=
+        <unsigned integer>
 
-<seconds fraction> ::= <unsigned integer>
+<seconds fraction> ::=
+        <unsigned integer>
 
-<time zone interval> ::= <sign> <hours value> <colon> <minutes value>
+<time zone interval> ::=
+        <sign> <hours value> <colon> <minutes value>
 
-<timestamp string> ::= <quote> <date value> <space> <time value> [ <time zone interval> ] <quote>
+<timestamp string> ::=
+        <quote> <date value> <space> <time value> [ <time zone interval> ] <quote>
 
-<interval string> ::= <quote> { <year-month literal> | <day-time literal> } <quote>
+<interval string> ::=
+        <quote> { <year-month literal> | <day-time literal> } <quote>
 
 <year-month literal> ::=
         <years value>
     |   [ <years value> <minus sign> ] <months value>
 
-<day-time literal> ::= <day-time interval> | <time interval>
+<day-time literal> ::=
+        <day-time interval> | <time interval>
 
 <day-time interval> ::=
         <days value> [ <space> <hours value> [ <colon> <minutes value> [ <colon> <seconds value> ] ] ]
@@ -333,18 +428,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <minutes value> [ <colon> <seconds value> ]
     |   <seconds value>
 
-<not equals operator> ::= <>
+<not equals operator> ::=
+        <>
 
-<greater than or equals operator> ::= >=
+<greater than or equals operator> ::=
+        >=
 
-<less than or equals operator> ::= <=
+<less than or equals operator> ::=
+        <=
 
-<concatenation operator> ::= ||
+<concatenation operator> ::=
+        ||
 
-<double period> ::= ..
-
-
-
+<double period> ::=
+        ..
 
 <module> ::=
         <module name clause> <language clause> <module authorization clause>
@@ -354,43 +451,52 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <module name clause> ::=
         MODULE [ <module name> ] [ <module character set specification> ]
 
-<module name> ::= <identifier>
+<module name> ::=
+        <identifier>
 
-<module character set specification> ::= NAMES ARE <character set specification>
+<module character set specification> ::=
+        NAMES ARE <character set specification>
 
-<language clause> ::= LANGUAGE <language name>
+<language clause> ::=
+        LANGUAGE <language name>
 
-<language name> ::= ADA | C | COBOL | FORTRAN | MUMPS | PASCAL | PLI
+<language name> ::=
+        ADA | C | COBOL | FORTRAN | MUMPS | PASCAL | PLI
 
 <module authorization clause> ::=
         SCHEMA <schema name>
     |   AUTHORIZATION <module authorization identifier>
     |   SCHEMA <schema name> AUTHORIZATION <module authorization identifier>
 
-<module authorization identifier> ::= <authorization identifier>
+<module authorization identifier> ::=
+        <authorization identifier>
 
-<authorization identifier> ::= <identifier>
+<authorization identifier> ::=
+        <identifier>
 
 <temporary table declaration> ::=
     DECLARE LOCAL TEMPORARY TABLE <qualified local table name> <table element list> [ ON COMMIT { PRESERVE | DELETE } ROWS ]
 
-<qualified local table name> ::= MODULE <period> <local table name>
+<qualified local table name> ::=
+        MODULE <period> <local table name>
 
-<local table name> ::= <qualified identifier>
+<local table name> ::=
+        <qualified identifier>
 
-<qualified identifier> ::= <identifier>
+<qualified identifier> ::=
+        <identifier>
 
-<table element list> ::= <left paren> <table element> [ { <comma> <table element> }... ] <right paren>
+<table element list> ::=
+        <left paren> <table element> [ { <comma> <table element> }... ] <right paren>
 
-<table element> ::= <column definition> | <table constraint definition>
+<table element> ::=
+        <column definition> | <table constraint definition>
 
 <column definition> ::=
         <column name> { <data type> | <domain name> } [ <default clause> ] [ <column constraint definition>... ] [ <collate clause> ]
 
-<column name> ::= <identifier>
-
-
-
+<column name> ::=
+        <identifier>
 
 <data type> ::=
         <character string type> [ CHARACTER SET <character set specification> ]
@@ -407,7 +513,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   CHAR VARYING [ <left paren> <length> <right paren> ]
     |   VARCHAR [ <left paren> <length> <right paren> ]
 
-<length> ::= <unsigned integer>
+<length> ::=
+        <unsigned integer>
 
 <national character string type> ::=
         NATIONAL CHARACTER [ <left paren> <length> <right paren> ]
@@ -433,9 +540,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   INT
     |   SMALLINT
 
-<precision> ::= <unsigned integer>
+<precision> ::=
+        <unsigned integer>
 
-<scale> ::= <unsigned integer>
+<scale> ::=
+        <unsigned integer>
 
 <approximate numeric type> ::=
         FLOAT [ <left paren> <precision> <right paren> ]
@@ -447,13 +556,17 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   TIME [ <left paren> <time precision> <right paren> ] [ WITH TIME ZONE ]
     |   TIMESTAMP [ <left paren> <timestamp precision> <right paren> ] [ WITH TIME ZONE ]
 
-<time precision> ::= <time fractional seconds precision>
+<time precision> ::=
+        <time fractional seconds precision>
 
-<time fractional seconds precision> ::= <unsigned integer>
+<time fractional seconds precision> ::=
+        <unsigned integer>
 
-<timestamp precision> ::= <time fractional seconds precision>
+<timestamp precision> ::=
+        <time fractional seconds precision>
 
-<interval type> ::= INTERVAL <interval qualifier>
+<interval type> ::=
+        INTERVAL <interval qualifier>
 
 <interval qualifier> ::=
         <start field> TO <end field>
@@ -462,25 +575,31 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <start field> ::=
         <non-second datetime field> [ <left paren> <interval leading field precision> <right paren> ]
 
-<non-second datetime field> ::= YEAR | MONTH | DAY | HOUR | MINUTE
+<non-second datetime field> ::=
+        YEAR | MONTH | DAY | HOUR | MINUTE
 
-<interval leading field precision> ::= <unsigned integer>
+<interval leading field precision> ::=
+        <unsigned integer>
 
 <end field> ::=
         <non-second datetime field>
     |   SECOND [ <left paren> <interval fractional seconds precision> <right paren> ]
 
-<interval fractional seconds precision> ::= <unsigned integer>
+<interval fractional seconds precision> ::=
+        <unsigned integer>
 
 <single datetime field> ::=
         <non-second datetime field> [ <left paren> <interval leading field precision> <right paren> ]
     |   SECOND [ <left paren> <interval leading field precision> [ <comma> <left paren> <interval fractional seconds precision> ] <right paren> ]
 
-<domain name> ::= <qualified name>
+<domain name> ::=
+        <qualified name>
 
-<qualified name> ::= [ <schema name> <period> ] <qualified identifier>
+<qualified name> ::=
+        [ <schema name> <period> ] <qualified identifier>
 
-<default clause> ::= DEFAULT <default option>
+<default clause> ::=
+        DEFAULT <default option>
 
 <default option> ::=
         <literal>
@@ -491,12 +610,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   SYSTEM_USER
     |   NULL
 
+<literal> ::=
+        <signed numeric literal> | <general literal>
 
-
-
-<literal> ::= <signed numeric literal> | <general literal>
-
-<signed numeric literal> ::= [ <sign> ] <unsigned numeric literal>
+<signed numeric literal> ::=
+        [ <sign> ] <unsigned numeric literal>
 
 <general literal> ::=
         <character string literal>
@@ -511,34 +629,40 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <time literal>
     |   <timestamp literal>
 
-<date literal> ::= DATE <date string>
+<date literal> ::=
+        DATE <date string>
 
-<time literal> ::= TIME <time string>
+<time literal> ::=
+        TIME <time string>
 
-<timestamp literal> ::= TIMESTAMP <timestamp string>
+<timestamp literal> ::=
+        TIMESTAMP <timestamp string>
 
-<interval literal> ::= INTERVAL [ <sign> ] <interval string> <interval qualifier>
+<interval literal> ::=
+        INTERVAL [ <sign> ] <interval string> <interval qualifier>
 
 <datetime value function> ::=
         <current date value function>
     |   <current time value function>
     |   <current timestamp value function>
 
-<current date value function> ::= CURRENT_DATE
+<current date value function> ::=
+        CURRENT_DATE
 
-<current time value function> ::= CURRENT_TIME [ <left paren> <time precision> <right paren> ]
+<current time value function> ::=
+        CURRENT_TIME [ <left paren> <time precision> <right paren> ]
 
-<current timestamp value function> ::= CURRENT_TIMESTAMP [ <left paren> <timestamp precision> <right paren> ]
-
-
-
+<current timestamp value function> ::=
+        CURRENT_TIMESTAMP [ <left paren> <timestamp precision> <right paren> ]
 
 <column constraint definition> ::=
         [ <constraint name definition> ] <column constraint> [ <constraint attributes> ]
 
-<constraint name definition> ::= CONSTRAINT <constraint name>
+<constraint name definition> ::=
+        CONSTRAINT <constraint name>
 
-<constraint name> ::= <qualified name>
+<constraint name> ::=
+        <qualified name>
 
 <column constraint> ::=
         NOT NULL
@@ -546,35 +670,42 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <references specification>
     |   <check constraint definition>
 
-<unique specification> ::= UNIQUE | PRIMARY KEY
+<unique specification> ::=
+        UNIQUE | PRIMARY KEY
 
 <references specification> ::=
         REFERENCES <referenced table and columns> [ MATCH <match type> ] [ <referential triggered action> ]
 
-<referenced table and columns> ::= <table name> [ <left paren> <reference column list> <right paren> ]
+<referenced table and columns> ::=
+        <table name> [ <left paren> <reference column list> <right paren> ]
 
-<table name> ::= <qualified name> | <qualified local table name>
+<table name> ::=
+        <qualified name> | <qualified local table name>
 
-<reference column list> ::= <column name list>
+<reference column list> ::=
+        <column name list>
 
-<column name list> ::= <column name> [ { <comma> <column name> }... ]
+<column name list> ::=
+        <column name> [ { <comma> <column name> }... ]
 
-<match type> ::= FULL | PARTIAL
+<match type> ::=
+        FULL | PARTIAL
 
 <referential triggered action> ::=
         <update rule> [ <delete rule> ]
     |   <delete rule> [ <update rule> ]
 
-<update rule> ::= ON UPDATE <referential action>
+<update rule> ::=
+        ON UPDATE <referential action>
 
-<referential action> ::= CASCADE | SET NULL | SET DEFAULT | NO ACTION
+<referential action> ::=
+        CASCADE | SET NULL | SET DEFAULT | NO ACTION
 
-<delete rule> ::= ON DELETE <referential action>
+<delete rule> ::=
+        ON DELETE <referential action>
 
-<check constraint definition> ::= CHECK <left paren> <search condition> <right paren>
-
-
-
+<check constraint definition> ::=
+        CHECK <left paren> <search condition> <right paren>
 
 <search condition> ::=
         <boolean term>
@@ -584,11 +715,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <boolean factor>
     |   <boolean term> AND <boolean factor>
 
-<boolean factor> ::= [ NOT ] <boolean test>
+<boolean factor> ::=
+        [ NOT ] <boolean test>
 
-<boolean test> ::= <boolean primary> [ IS [ NOT ] <truth value> ]
+<boolean test> ::=
+        <boolean primary> [ IS [ NOT ] <truth value> ]
 
-<boolean primary> ::= <predicate> | <left paren> <search condition> <right paren>
+<boolean primary> ::=
+        <predicate> | <left paren> <search condition> <right paren>
 
 <predicate> ::=
         <comparison predicate>
@@ -601,7 +735,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <match predicate>
     |   <overlaps predicate>
 
-<comparison predicate> ::= <row value constructor> <comp op> <row value constructor>
+<comparison predicate> ::=
+        <row value constructor> <comp op> <row value constructor>
 
 <row value constructor> ::=
         <row value constructor element>
@@ -629,9 +764,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <term> <asterisk> <factor>
     |   <term> <solidus> <factor>
 
-<factor> ::= [ <sign> ] <numeric primary>
+<factor> ::=
+        [ <sign> ] <numeric primary>
 
-<numeric primary> ::= <value expression primary> | <numeric value function>
+<numeric primary> ::=
+        <value expression primary> | <numeric value function>
 
 <value expression primary> ::=
         <unsigned value specification>
@@ -642,9 +779,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <left paren> <value expression> <right paren>
     |   <cast specification>
 
-<unsigned value specification> ::= <unsigned literal> | <general value specification>
+<unsigned value specification> ::=
+        <unsigned literal> | <general value specification>
 
-<unsigned literal> ::= <unsigned numeric literal> | <general literal>
+<unsigned literal> ::=
+        <unsigned numeric literal> | <general literal>
 
 <general value specification> ::=
         <parameter specification>
@@ -656,17 +795,23 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   SYSTEM_USER
     |   VALUE
 
-<parameter specification> ::= <parameter name> [ <indicator parameter> ]
+<parameter specification> ::=
+        <parameter name> [ <indicator parameter> ]
 
-<parameter name> ::= <colon> <identifier>
+<parameter name> ::=
+        <colon> <identifier>
 
-<indicator parameter> ::= [ INDICATOR ] <parameter name>
+<indicator parameter> ::=
+        [ INDICATOR ] <parameter name>
 
-<dynamic parameter specification> ::= <question mark>
+<dynamic parameter specification> ::=
+        <question mark>
 
-<variable specification> ::= <embedded variable name> [ <indicator variable> ]
+<variable specification> ::=
+        <embedded variable name> [ <indicator variable> ]
 
-<embedded variable name> ::= <colon><host identifier>
+<embedded variable name> ::=
+        <colon><host identifier>
 
 <host identifier> ::=
         <Ada host identifier>
@@ -677,27 +822,38 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <Pascal host identifier>
     |   <PL/I host identifier>
 
-<Ada host identifier> ::= !! See syntax rules
+<Ada host identifier> ::=
+        !! See syntax rules
 
-<C host identifier> ::= !! See syntax rules
+<C host identifier> ::=
+        !! See syntax rules
 
-<Cobol host identifier> ::= !! See syntax rules
+<Cobol host identifier> ::=
+        !! See syntax rules
 
-<Fortran host identifier> ::= !! See syntax rules
+<Fortran host identifier> ::=
+        !! See syntax rules
 
-<MUMPS host identifier> ::= !! See syntax rules
+<MUMPS host identifier> ::=
+        !! See syntax rules
 
-<Pascal host identifier> ::= !! See syntax rules
+<Pascal host identifier> ::=
+        !! See syntax rules
 
-<PL/I host identifier> ::= !! See syntax rules
+<PL/I host identifier> ::=
+        !! See syntax rules
 
-<indicator variable> ::= [ INDICATOR ] <embedded variable name>
+<indicator variable> ::=
+        [ INDICATOR ] <embedded variable name>
 
-<column reference> ::= [ <qualifier> <period> ] <column name>
+<column reference> ::=
+        [ <qualifier> <period> ] <column name>
 
-<qualifier> ::= <table name> | <correlation name>
+<qualifier> ::=
+        <table name> | <correlation name>
 
-<correlation name> ::= <identifier>
+<correlation name> ::=
+        <identifier>
 
 <set function specification> ::=
         COUNT <left paren> <asterisk> <right paren>
@@ -706,18 +862,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <general set function> ::=
         <set function type> <left paren> [ <set quantifier> ] <value expression> <right paren>
 
-<set function type> ::= AVG | MAX | MIN | SUM | COUNT
+<set function type> ::=
+        AVG | MAX | MIN | SUM | COUNT
 
-<set quantifier> ::= DISTINCT | ALL
+<set quantifier> ::=
+        DISTINCT | ALL
 
+<scalar subquery> ::=
+        <subquery>
 
+<subquery> ::=
+        <left paren> <query expression> <right paren>
 
-
-<scalar subquery> ::= <subquery>
-
-<subquery> ::= <left paren> <query expression> <right paren>
-
-<query expression> ::= <non-join query expression> | <joined table>
+<query expression> ::=
+        <non-join query expression> | <joined table>
 
 <non-join query expression> ::=
         <non-join query term>
@@ -728,7 +886,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <non-join query primary>
     |   <query term> INTERSECT [ ALL ] [ <corresponding spec> ] <query primary>
 
-<non-join query primary> ::= <simple table> | <left paren> <non-join query expression> <right paren>
+<non-join query primary> ::=
+        <simple table> | <left paren> <non-join query expression> <right paren>
 
 <simple table> ::=
         <query specification>
@@ -742,11 +901,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <asterisk>
     |   <select sublist> [ { <comma> <select sublist> }... ]
 
-<select sublist> ::= <derived column> | <qualifier> <period> <asterisk>
+<select sublist> ::=
+        <derived column> | <qualifier> <period> <asterisk>
 
-<derived column> ::= <value expression> [ <as clause> ]
+<derived column> ::=
+        <value expression> [ <as clause> ]
 
-<as clause> ::= [ AS ] <column name>
+<as clause> ::=
+        [ AS ] <column name>
 
 <table expression> ::=
         <from clause>
@@ -754,9 +916,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         [ <group by clause> ]
         [ <having clause> ]
 
-<from clause> ::= FROM <table reference> [ { <comma> <table reference> }... ]
-
-
+<from clause> ::=
+        FROM <table reference> [ { <comma> <table reference> }... ]
 
 <table reference> ::=
         <table name> [ <correlation specification> ]
@@ -766,11 +927,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <correlation specification> ::=
         [ AS ] <correlation name> [ <left paren> <derived column list> <right paren> ]
 
-<derived column list> ::= <column name list>
+<derived column list> ::=
+        <column name list>
 
-<derived table> ::= <table subquery>
+<derived table> ::=
+        <table subquery>
 
-<table subquery> ::= <subquery>
+<table subquery> ::=
+        <subquery>
 
 <joined table> ::=
         <cross join>
@@ -788,55 +952,72 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <outer join type> [ OUTER ]
     |   UNION
 
-<outer join type> ::= LEFT | RIGHT | FULL
+<outer join type> ::=
+        LEFT | RIGHT | FULL
 
-<join specification> ::= <join condition> | <named columns join>
+<join specification> ::=
+        <join condition> | <named columns join>
 
-<join condition> ::= ON <search condition>
+<join condition> ::=
+        ON <search condition>
 
-<named columns join> ::= USING <left paren> <join column list> <right paren>
+<named columns join> ::=
+        USING <left paren> <join column list> <right paren>
 
-<join column list> ::= <column name list>
+<join column list> ::=
+        <column name list>
 
-<where clause> ::= WHERE <search condition>
+<where clause> ::=
+        WHERE <search condition>
 
-<group by clause> ::= GROUP BY <grouping column reference list>
+<group by clause> ::=
+        GROUP BY <grouping column reference list>
 
 <grouping column reference list> ::=
         <grouping column reference> [ { <comma> <grouping column reference> }... ]
 
-<grouping column reference> ::= <column reference> [ <collate clause> ]
+<grouping column reference> ::=
+        <column reference> [ <collate clause> ]
 
-<collate clause> ::= COLLATE <collation name>
+<collate clause> ::=
+        COLLATE <collation name>
 
-<collation name> ::= <qualified name>
+<collation name> ::=
+        <qualified name>
 
-<having clause> ::= HAVING <search condition>
+<having clause> ::=
+        HAVING <search condition>
 
-<table value constructor> ::= VALUES <table value constructor list>
+<table value constructor> ::=
+        VALUES <table value constructor list>
 
-<table value constructor list> ::= <row value constructor> [ { <comma> <row value constructor> }... ]
+<table value constructor list> ::=
+        <row value constructor> [ { <comma> <row value constructor> }... ]
 
-<explicit table> ::= TABLE <table name>
+<explicit table> ::=
+        TABLE <table name>
 
-<query term> ::= <non-join query term> | <joined table>
+<query term> ::=
+        <non-join query term> | <joined table>
 
-<corresponding spec> ::= CORRESPONDING [ BY <left paren> <corresponding column list> <right paren> ]
+<corresponding spec> ::=
+        CORRESPONDING [ BY <left paren> <corresponding column list> <right paren> ]
 
-<corresponding column list> ::= <column name list>
+<corresponding column list> ::=
+        <column name list>
 
-<query primary> ::= <non-join query primary> | <joined table>
+<query primary> ::=
+        <non-join query primary> | <joined table>
 
-
-
-
-<case expression> ::= <case abbreviation> | <case specification>
+<case expression> ::=
+        <case abbreviation> | <case specification>
 
 <case abbreviation> ::=
         NULLIF <left paren> <value expression> <comma> <value expression> <right paren>
     |   COALESCE <left paren> <value expression> { <comma> <value expression> }...  <right paren>
 
-<case specification> ::= <simple case> | <searched case>
+<case specification> ::=
+        <simple case> | <searched case>
 
 <simple case> ::=
         CASE <case operand>
@@ -844,17 +1025,23 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
             [ <else clause> ]
         END
 
-<case operand> ::= <value expression>
+<case operand> ::=
+        <value expression>
 
-<simple when clause> ::= WHEN <when operand> THEN <result>
+<simple when clause> ::=
+        WHEN <when operand> THEN <result>
 
-<when operand> ::= <value expression>
+<when operand> ::=
+        <value expression>
 
-<result> ::= <result expression> | NULL
+<result> ::=
+        <result expression> | NULL
 
-<result expression> ::= <value expression>
+<result expression> ::=
+        <value expression>
 
-<else clause> ::= ELSE <result>
+<else clause> ::=
+        ELSE <result>
 
 <searched case> ::=
         CASE
@@ -862,28 +1049,38 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         [ <else clause> ]
         END
 
-<searched when clause> ::= WHEN <search condition> THEN <result>
+<searched when clause> ::=
+        WHEN <search condition> THEN <result>
 
-<cast specification> ::= CAST <left paren> <cast operand> AS <cast target> <right paren>
+<cast specification> ::=
+        CAST <left paren> <cast operand> AS <cast target> <right paren>
 
-<cast operand> ::= <value expression> | NULL
+<cast operand> ::=
+        <value expression> | NULL
 
-<cast target> ::= <domain name> | <data type>
+<cast target> ::=
+        <domain name> | <data type>
 
-<numeric value function> ::= <position expression> | <extract expression> | <length expression>
+<numeric value function> ::=
+        <position expression> | <extract expression> | <length expression>
 
 <position expression> ::=
     POSITION <left paren> <character value expression> IN <character value expression> <right paren>
 
-<character value expression> ::= <concatenation> | <character factor>
+<character value expression> ::=
+        <concatenation> | <character factor>
 
-<concatenation> ::= <character value expression> <concatenation operator> <character factor>
+<concatenation> ::=
+        <character value expression> <concatenation operator> <character factor>
 
-<character factor> ::= <character primary> [ <collate clause> ]
+<character factor> ::=
+        <character primary> [ <collate clause> ]
 
-<character primary> ::= <value expression primary> | <string value function>
+<character primary> ::=
+        <value expression primary> | <string value function>
 
-<string value function> ::= <character value function> | <bit value function>
+<string value function> ::=
+        <character value function> | <bit value function>
 
 <character value function> ::=
         <character substring function>
@@ -895,54 +1092,74 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <character substring function> ::=
         SUBSTRING <left paren> <character value expression> FROM <start position> [ FOR <string length> ] <right paren>
 
-<start position> ::= <numeric value expression>
+<start position> ::=
+        <numeric value expression>
 
-<string length> ::= <numeric value expression>
+<string length> ::=
+        <numeric value expression>
 
-<fold> ::= { UPPER | LOWER } <left paren> <character value expression> <right paren>
+<fold> ::=
+        { UPPER | LOWER } <left paren> <character value expression> <right paren>
 
 <form-of-use conversion> ::=
         CONVERT <left paren> <character value expression> USING <form-of-use conversion name> <right paren>
 
-<form-of-use conversion name> ::= <qualified name>
+<form-of-use conversion name> ::=
+        <qualified name>
 
 <character translation> ::=
         TRANSLATE <left paren> <character value expression> USING <translation name> <right paren>
 
-<translation name> ::= <qualified name>
+<translation name> ::=
+        <qualified name>
 
-<trim function> ::= TRIM <left paren> <trim operands> <right paren>
+<trim function> ::=
+        TRIM <left paren> <trim operands> <right paren>
 
-<trim operands> ::= [ [ <trim specification> ] [ <trim character> ] FROM ] <trim source>
+<trim operands> ::=
+        [ [ <trim specification> ] [ <trim character> ] FROM ] <trim source>
 
-<trim specification> ::= LEADING | TRAILING | BOTH
+<trim specification> ::=
+        LEADING | TRAILING | BOTH
 
-<trim character> ::= <character value expression>
+<trim character> ::=
+        <character value expression>
 
-<trim source> ::= <character value expression>
+<trim source> ::=
+        <character value expression>
 
-<bit value function> ::= <bit substring function>
+<bit value function> ::=
+        <bit substring function>
 
 <bit substring function> ::=
         SUBSTRING <left paren> <bit value expression> FROM <start position> [ FOR <string length> ] <right paren>
 
-<bit value expression> ::= <bit concatenation> | <bit factor>
+<bit value expression> ::=
+        <bit concatenation> | <bit factor>
 
-<bit concatenation> ::= <bit value expression> <concatenation operator> <bit factor>
+<bit concatenation> ::=
+        <bit value expression> <concatenation operator> <bit factor>
 
-<bit factor> ::= <bit primary>
+<bit factor> ::=
+        <bit primary>
 
-<bit primary> ::= <value expression primary> | <string value function>
+<bit primary> ::=
+        <value expression primary> | <string value function>
 
-<extract expression> ::= EXTRACT <left paren> <extract field> FROM <extract source> <right paren>
+<extract expression> ::=
+        EXTRACT <left paren> <extract field> FROM <extract source> <right paren>
 
-<extract field> ::= <datetime field> | <time zone field>
+<extract field> ::=
+        <datetime field> | <time zone field>
 
-<datetime field> ::= <non-second datetime field> | SECOND
+<datetime field> ::=
+        <non-second datetime field> | SECOND
 
-<time zone field> ::= TIMEZONE_HOUR | TIMEZONE_MINUTE
+<time zone field> ::=
+        TIMEZONE_HOUR | TIMEZONE_MINUTE
 
-<extract source> ::= <datetime value expression> | <interval value expression>
+<extract source> ::=
+        <datetime value expression> | <interval value expression>
 
 <datetime value expression> ::=
         <datetime term>
@@ -956,11 +1173,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <interval term 2> <solidus> <factor>
     |   <term> <asterisk> <interval factor>
 
-<interval factor> ::= [ <sign> ] <interval primary>
+<interval factor> ::=
+        [ <sign> ] <interval primary>
 
-<interval primary> ::= <value expression primary> [ <interval qualifier> ]
+<interval primary> ::=
+        <value expression primary> [ <interval qualifier> ]
 
-<interval term 2> ::= <interval term>
+<interval term 2> ::=
+        <interval term>
 
 <interval value expression> ::=
         <interval term>
@@ -968,37 +1188,53 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <interval value expression 1> <minus sign> <interval term 1>
     |   <left paren> <datetime value expression> <minus sign> <datetime term> <right paren> <interval qualifier>
 
-<interval value expression 1> ::= <interval value expression>
+<interval value expression 1> ::=
+        <interval value expression>
 
-<interval term 1> ::= <interval term>
+<interval term 1> ::=
+        <interval term>
 
-<datetime term> ::= <datetime factor>
+<datetime term> ::=
+        <datetime factor>
 
-<datetime factor> ::= <datetime primary> [ <time zone> ]
+<datetime factor> ::=
+        <datetime primary> [ <time zone> ]
 
-<datetime primary> ::= <value expression primary> | <datetime value function>
+<datetime primary> ::=
+        <value expression primary> | <datetime value function>
 
-<time zone> ::= AT <time zone specifier>
+<time zone> ::=
+        AT <time zone specifier>
 
-<time zone specifier> ::= LOCAL | TIME ZONE <interval value expression>
+<time zone specifier> ::=
+        LOCAL | TIME ZONE <interval value expression>
 
-<length expression> ::= <char length expression> | <octet length expression> | <bit length expression>
+<length expression> ::=
+        <char length expression> | <octet length expression> | <bit length expression>
 
-<char length expression> ::= { CHAR_LENGTH | CHARACTER_LENGTH } <left paren> <string value expression> <right paren>
+<char length expression> ::=
+        { CHAR_LENGTH | CHARACTER_LENGTH } <left paren> <string value expression> <right paren>
 
-<string value expression> ::= <character value expression> | <bit value expression>
+<string value expression> ::=
+        <character value expression> | <bit value expression>
 
-<octet length expression> ::= OCTET_LENGTH <left paren> <string value expression> <right paren>
+<octet length expression> ::=
+        OCTET_LENGTH <left paren> <string value expression> <right paren>
 
-<bit length expression> ::= BIT_LENGTH <left paren> <string value expression> <right paren>
+<bit length expression> ::=
+        BIT_LENGTH <left paren> <string value expression> <right paren>
 
-<null specification> ::= NULL
+<null specification> ::=
+        NULL
 
-<default specification> ::= DEFAULT
+<default specification> ::=
+        DEFAULT
 
-<row value constructor list> ::= <row value constructor element> [ { <comma> <row value constructor element> } ... ]
+<row value constructor list> ::=
+        <row value constructor element> [ { <comma> <row value constructor element> } ... ]
 
-<row subquery> ::= <subquery>
+<row subquery> ::=
+        <subquery>
 
 <comp op> ::=
         <equals operator>
@@ -1011,71 +1247,89 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <between predicate> ::=
         <row value constructor> [ NOT ] BETWEEN <row value constructor> AND <row value constructor>
 
-<in predicate> ::= <row value constructor> [ NOT ] IN <in predicate value>
+<in predicate> ::=
+        <row value constructor> [ NOT ] IN <in predicate value>
 
-<in predicate value> ::= <table subquery> | <left paren> <in value list> <right paren>
+<in predicate value> ::=
+        <table subquery> | <left paren> <in value list> <right paren>
 
-<in value list> ::= <value expression> { <comma> <value expression> } ...
+<in value list> ::=
+        <value expression> { <comma> <value expression> } ...
 
-<like predicate> ::= <match value> [ NOT ] LIKE <pattern> [ ESCAPE <escape character> ]
+<like predicate> ::=
+        <match value> [ NOT ] LIKE <pattern> [ ESCAPE <escape character> ]
 
-<match value> ::= <character value expression>
+<match value> ::=
+        <character value expression>
 
-<pattern> ::= <character value expression>
+<pattern> ::=
+        <character value expression>
 
-<escape character> ::= <character value expression>
+<escape character> ::=
+        <character value expression>
 
-<null predicate> ::= IS [ NOT ] NULL
+<null predicate> ::=
+        IS [ NOT ] NULL
 
-<quantified comparison predicate> ::= <row value constructor> <comp op> <quantifier> <table subquery>
+<quantified comparison predicate> ::=
+        <row value constructor> <comp op> <quantifier> <table subquery>
 
-<quantifier> ::= <all> | <some>
+<quantifier> ::=
+        <all> | <some>
 
-<all> ::= ALL
+<all> ::=
+        ALL
 
-<some> ::= SOME | ANY
+<some> ::=
+        SOME | ANY
 
-<exists predicate> ::= EXISTS <table subquery>
+<exists predicate> ::=
+        EXISTS <table subquery>
 
-<unique predicate> ::= UNIQUE <table subquery>
+<unique predicate> ::=
+        UNIQUE <table subquery>
 
-<match predicate> ::= <row value constructor> MATCH [ UNIQUE ] [ PARTIAL | FULL ] <table subquery>
+<match predicate> ::=
+        <row value constructor> MATCH [ UNIQUE ] [ PARTIAL | FULL ] <table subquery>
 
-<overlaps predicate> ::= <row value constructor 1> OVERLAPS <row value constructor 2>
+<overlaps predicate> ::=
+        <row value constructor 1> OVERLAPS <row value constructor 2>
 
-<row value constructor 1> ::= <row value constructor>
+<row value constructor 1> ::=
+        <row value constructor>
 
-<row value constructor 2> ::= <row value constructor>
+<row value constructor 2> ::=
+        <row value constructor>
 
-<truth value> ::= TRUE | FALSE | UNKNOWN
-
-
-
+<truth value> ::=
+        TRUE | FALSE | UNKNOWN
 
 <constraint attributes> ::=
         <constraint check time> [ [ NOT ] DEFERRABLE ]
     |   [ NOT ] DEFERRABLE [ <constraint check time> ]
 
-<constraint check time> ::= INITIALLY DEFERRED | INITIALLY IMMEDIATE
+<constraint check time> ::=
+        INITIALLY DEFERRED | INITIALLY IMMEDIATE
 
-<table constraint definition> ::= [ <constraint name definition> ] <table constraint> [ <constraint check time> ]
+<table constraint definition> ::=
+        [ <constraint name definition> ] <table constraint> [ <constraint check time> ]
 
 <table constraint> ::=
         <unique constraint definition>
     |   <referential constraint definition>
     |   <check constraint definition>
 
-<unique constraint definition> ::= <unique specification> <left paren> <unique column list> <right paren>
+<unique constraint definition> ::=
+        <unique specification> <left paren> <unique column list> <right paren>
 
-<unique column list> ::= <column name list>
+<unique column list> ::=
+        <column name list>
 
 <referential constraint definition> ::=
         FOREIGN KEY <left paren> <referencing columns> <right paren> <references specification>
 
-<referencing columns> ::= <reference column list>
-
-
-
+<referencing columns> ::=
+        <reference column list>
 
 <module contents> ::=
         <declare cursor>
@@ -1085,41 +1339,50 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <declare cursor> ::=
         DECLARE <cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <cursor specification>
 
-<cursor name> ::= <identifier>
+<cursor name> ::=
+        <identifier>
 
-<cursor specification> ::= <query expression> [ <order by clause> ] [ <updatability clause> ]
+<cursor specification> ::=
+        <query expression> [ <order by clause> ] [ <updatability clause> ]
 
-<order by clause> ::= ORDER BY <sort specification list>
+<order by clause> ::=
+        ORDER BY <sort specification list>
 
-<sort specification list> ::= <sort specification> [ { <comma> <sort specification> }... ]
+<sort specification list> ::=
+        <sort specification> [ { <comma> <sort specification> }... ]
 
-<sort specification> ::= <sort key> [ <collate clause> ] [ <ordering specification> ]
+<sort specification> ::=
+        <sort key> [ <collate clause> ] [ <ordering specification> ]
 
-<sort key> ::= <column name> | <unsigned integer>
+<sort key> ::=
+        <column name> | <unsigned integer>
 
-<ordering specification> ::= ASC | DESC
+<ordering specification> ::=
+        ASC | DESC
 
-<updatability clause> ::= FOR { READ ONLY | UPDATE [ OF <column name list> ] }
+<updatability clause> ::=
+        FOR { READ ONLY | UPDATE [ OF <column name list> ] }
 
 <dynamic declare cursor> ::=
         DECLARE <cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <statement name>
 
-<statement name> ::= <identifier>
-
-
-
+<statement name> ::=
+        <identifier>
 
 <procedure> ::=
     PROCEDURE <procedure name> <parameter declaration list> <semicolon> <SQL procedure statement> <semicolon>
 
-<procedure name> ::= <identifier>
+<procedure name> ::=
+        <identifier>
 
 <parameter declaration list> ::=
         <left paren> <parameter declaration> [ { <comma> <parameter declaration> }... ] <right paren>
 
-<parameter declaration> ::= <parameter name> <data type> | <status parameter>
+<parameter declaration> ::=
+        <parameter name> <data type> | <status parameter>
 
-<status parameter> ::= SQLCODE | SQLSTATE
+<status parameter> ::=
+        SQLCODE | SQLSTATE
 
 <SQL procedure statement> ::=
         <SQL schema statement>
@@ -1129,9 +1392,6 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <SQL session statement>
     |   <SQL dynamic statement>
     |   <SQL diagnostics statement>
-
-
-
 
 <SQL schema statement> ::=
         <SQL schema definition statement>
@@ -1158,9 +1418,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   AUTHORIZATION <schema authorization identifier>
     |   <schema name> AUTHORIZATION <schema authorization identifier>
 
-<schema authorization identifier> ::= <authorization identifier>
+<schema authorization identifier> ::=
+        <authorization identifier>
 
-<schema character set specification> ::= DEFAULT CHARACTER SET <character set specification>
+<schema character set specification> ::=
+        DEFAULT CHARACTER SET <character set specification>
 
 <schema element> ::=
         <domain definition>
@@ -1186,16 +1448,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         CREATE VIEW <table name> [ <left paren> <view column list> <right paren> ]
             AS <query expression> [ WITH [ <levels clause> ] CHECK OPTION ]
 
-<view column list> ::= <column name list>
+<view column list> ::=
+        <column name list>
 
-<levels clause> ::= CASCADED | LOCAL
+<levels clause> ::=
+        CASCADED | LOCAL
 
 <grant statement> ::=
         GRANT <privileges> ON <object name> TO <grantee> [ { <comma> <grantee> }... ] [ WITH GRANT OPTION ]
 
-<privileges> ::= ALL PRIVILEGES | <action list>
+<privileges> ::=
+        ALL PRIVILEGES | <action list>
 
-<action list> ::= <action> [ { <comma> <action> }... ]
+<action list> ::=
+        <action> [ { <comma> <action> }... ]
 
 <action> ::=
         SELECT
@@ -1205,7 +1471,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   REFERENCES [ <left paren> <privilege column list> <right paren> ]
     |   USAGE
 
-<privilege column list> ::= <column name list>
+<privilege column list> ::=
+        <column name list>
 
 <object name> ::=
         [ TABLE ] <table name>
@@ -1214,30 +1481,35 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   CHARACTER SET <character set name>
     |   TRANSLATION <translation name>
 
-<grantee> ::= PUBLIC | <authorization identifier>
+<grantee> ::=
+        PUBLIC | <authorization identifier>
 
 <assertion definition> ::=
         CREATE ASSERTION <constraint name> <assertion check> [ <constraint attributes> ]
 
-<assertion check> ::= CHECK <left paren> <search condition> <right paren>
+<assertion check> ::=
+        CHECK <left paren> <search condition> <right paren>
 
 <character set definition> ::=
         CREATE CHARACTER SET <character set name> [ AS ] <character set source>
         [ <collate clause> | <limited collation definition> ]
 
-<character set source> ::= GET <existing character set name>
+<character set source> ::=
+        GET <existing character set name>
 
 <existing character set name> ::=
         <standard character repertoire name>
     |   <implementation-defined character repertoire name>
     |   <schema character set name>
 
-<schema character set name> ::= <character set name>
+<schema character set name> ::=
+        <character set name>
 
 <limited collation definition> ::=
         COLLATION FROM <collation source>
 
-<collation source> ::= <collating sequence definition> | <translation collation>
+<collation source> ::=
+        <collating sequence definition> | <translation collation>
 
 <collating sequence definition> ::=
         <external collation>
@@ -1248,21 +1520,27 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <external collation> ::=
     EXTERNAL <left paren> <quote> <external collation name> <quote> <right paren>
 
-<external collation name> ::= <standard collation name> | <implementation-defined collation name>
+<external collation name> ::=
+        <standard collation name> | <implementation-defined collation name>
 
-<standard collation name> ::= <collation name>
+<standard collation name> ::=
+        <collation name>
 
-<implementation-defined collation name> ::= <collation name>
+<implementation-defined collation name> ::=
+        <collation name>
 
-<schema collation name> ::= <collation name>
+<schema collation name> ::=
+        <collation name>
 
-<translation collation> ::= TRANSLATION <translation name> [ THEN COLLATION <collation name> ]
+<translation collation> ::=
+        TRANSLATION <translation name> [ THEN COLLATION <collation name> ]
 
 <collation definition> ::=
         CREATE COLLATION <collation name> FOR <character set specification>
             FROM <collation source> [ <pad attribute> ]
 
-<pad attribute> ::= NO PAD | PAD SPACE
+<pad attribute> ::=
+        NO PAD | PAD SPACE
 
 <translation definition> ::=
         CREATE TRANSLATION <translation name>
@@ -1270,11 +1548,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
             TO <target character set specification>
             FROM <translation source>
 
-<source character set specification> ::= <character set specification>
+<source character set specification> ::=
+        <character set specification>
 
-<target character set specification> ::= <character set specification>
+<target character set specification> ::=
+        <character set specification>
 
-<translation source> ::= <translation specification>
+<translation source> ::=
+        <translation specification>
 
 <translation specification> ::=
         <external translation>
@@ -1288,11 +1569,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <standard translation name>
     |   <implementation-defined translation name>
 
-<standard translation name> ::= <translation name>
+<standard translation name> ::=
+        <translation name>
 
-<implementation-defined translation name> ::= <translation name>
+<implementation-defined translation name> ::=
+        <translation name>
 
-<schema translation name> ::= <translation name>
+<schema translation name> ::=
+        <translation name>
 
 <SQL schema manipulation statement> ::=
         <drop schema statement>
@@ -1307,11 +1591,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <drop translation statement>
     |   <drop assertion statement>
 
-<drop schema statement> ::= DROP SCHEMA <schema name> <drop behaviour>
+<drop schema statement> ::=
+        DROP SCHEMA <schema name> <drop behaviour>
 
-<drop behaviour> ::= CASCADE | RESTRICT
+<drop behaviour> ::=
+        CASCADE | RESTRICT
 
-<alter table statement> ::= ALTER TABLE <table name> <alter table action>
+<alter table statement> ::=
+        ALTER TABLE <table name> <alter table action>
 
 <alter table action> ::=
         <add column definition>
@@ -1320,31 +1607,42 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <add table constraint definition>
     |   <drop table constraint definition>
 
-<add column definition> ::= ADD [ COLUMN ] <column definition>
+<add column definition> ::=
+        ADD [ COLUMN ] <column definition>
 
-<alter column definition> ::= ALTER [ COLUMN ] <column name> <alter column action>
+<alter column definition> ::=
+        ALTER [ COLUMN ] <column name> <alter column action>
 
-<alter column action> ::= <set column default clause> | <drop column default clause>
+<alter column action> ::=
+        <set column default clause> | <drop column default clause>
 
-<set column default clause> ::= SET <default clause>
+<set column default clause> ::=
+        SET <default clause>
 
-<drop column default clause> ::= DROP DEFAULT
+<drop column default clause> ::=
+        DROP DEFAULT
 
-<drop column definition> ::= DROP [ COLUMN ] <column name> <drop behaviour>
+<drop column definition> ::=
+        DROP [ COLUMN ] <column name> <drop behaviour>
 
-<add table constraint definition> ::= ADD <table constraint definition>
+<add table constraint definition> ::=
+        ADD <table constraint definition>
 
-<drop table constraint definition> ::= DROP CONSTRAINT <constraint name> <drop behaviour>
+<drop table constraint definition> ::=
+        DROP CONSTRAINT <constraint name> <drop behaviour>
 
-<drop table statement> ::= DROP TABLE <table name> <drop behaviour>
+<drop table statement> ::=
+        DROP TABLE <table name> <drop behaviour>
 
-<drop view statement> ::= DROP VIEW <table name> <drop behaviour>
+<drop view statement> ::=
+        DROP VIEW <table name> <drop behaviour>
 
 <revoke statement> ::=
         REVOKE [ GRANT OPTION FOR ] <privileges> ON <object name>
             FROM <grantee> [ { <comma> <grantee> }... ] <drop behaviour>
 
-<alter domain statement> ::= ALTER DOMAIN <domain name> <alter domain action>
+<alter domain statement> ::=
+        ALTER DOMAIN <domain name> <alter domain action>
 
 <alter domain action> ::=
         <set domain default clause>
@@ -1352,26 +1650,32 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <add domain constraint definition>
     |   <drop domain constraint definition>
 
-<set domain default clause> ::= SET <default clause>
+<set domain default clause> ::=
+        SET <default clause>
 
-<drop domain default clause> ::= DROP DEFAULT
+<drop domain default clause> ::=
+        DROP DEFAULT
 
-<add domain constraint definition> ::= ADD <domain constraint>
+<add domain constraint definition> ::=
+        ADD <domain constraint>
 
-<drop domain constraint definition> ::= DROP CONSTRAINT <constraint name>
+<drop domain constraint definition> ::=
+        DROP CONSTRAINT <constraint name>
 
-<drop domain statement> ::= DROP DOMAIN <domain name> <drop behaviour>
+<drop domain statement> ::=
+        DROP DOMAIN <domain name> <drop behaviour>
 
-<drop character set statement> ::= DROP CHARACTER SET <character set name>
+<drop character set statement> ::=
+        DROP CHARACTER SET <character set name>
 
-<drop collation statement> ::= DROP COLLATION <collation name>
+<drop collation statement> ::=
+        DROP COLLATION <collation name>
 
-<drop translation statement> ::= DROP TRANSLATION <translation name>
+<drop translation statement> ::=
+        DROP TRANSLATION <translation name>
 
-<drop assertion statement> ::= DROP ASSERTION <constraint name>
-
-
-
+<drop assertion statement> ::=
+        DROP ASSERTION <constraint name>
 
 <SQL data statement> ::=
         <open statement>
@@ -1380,7 +1684,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <select statement: single row>
     |   <SQL data change statement>
 
-<open statement> ::= OPEN <cursor name>
+<open statement> ::=
+        OPEN <cursor name>
 
 <fetch statement> ::=
         FETCH [ [ <fetch orientation> ] FROM ] <cursor name> INTO <fetch target list>
@@ -1392,20 +1697,24 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   LAST
     |   { ABSOLUTE | RELATIVE } <simple value specification>
 
-<simple value specification> ::= <parameter name> | <embedded variable name> | <literal>
+<simple value specification> ::=
+        <parameter name> | <embedded variable name> | <literal>
 
-<fetch target list> ::= <target specification> [ { <comma> <target specification> }... ]
+<fetch target list> ::=
+        <target specification> [ { <comma> <target specification> }... ]
 
 <target specification> ::=
         <parameter specification>
     |   <variable specification>
 
-<close statement> ::= CLOSE <cursor name>
+<close statement> ::=
+        CLOSE <cursor name>
 
 <select statement: single row> ::=
     SELECT [ <set quantifier> ] <select list> INTO <select target list> <table expression>
 
-<select target list> ::= <target specification> [ { <comma> <target specification> }... ]
+<select target list> ::=
+        <target specification> [ { <comma> <target specification> }... ]
 
 <SQL data change statement> ::=
         <delete statement: positioned>
@@ -1414,28 +1723,36 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <update statement: positioned>
     |   <update statement: searched>
 
-<delete statement: positioned> ::= DELETE FROM <table name> WHERE CURRENT OF <cursor name>
+<delete statement: positioned> ::=
+        DELETE FROM <table name> WHERE CURRENT OF <cursor name>
 
-<delete statement: searched> ::= DELETE FROM <table name> [ WHERE <search condition> ]
+<delete statement: searched> ::=
+        DELETE FROM <table name> [ WHERE <search condition> ]
 
-<insert statement> ::= INSERT INTO <table name> <insert columns and source>
+<insert statement> ::=
+        INSERT INTO <table name> <insert columns and source>
 
 <insert columns and source> ::=
         [ <left paren> <insert column list> <right paren> ] <query expression>
     |   DEFAULT VALUES
 
-<insert column list> ::= <column name list>
+<insert column list> ::=
+        <column name list>
 
 <update statement: positioned> ::=
         UPDATE <table name> SET <set clause list> WHERE CURRENT OF <cursor name>
 
-<set clause list> ::= <set clause> [ { <comma> <set clause> } ... ]
+<set clause list> ::=
+        <set clause> [ { <comma> <set clause> } ... ]
 
-<set clause> ::= <object column> <equals operator> <update source>
+<set clause> ::=
+        <object column> <equals operator> <update source>
 
-<object column> ::= <column name>
+<object column> ::=
+        <column name>
 
-<update source> ::= <value expression> | <null specification> | DEFAULT
+<update source> ::=
+        <value expression> | <null specification> | DEFAULT
 
 <update statement: searched> ::=
         UPDATE <table name> SET <set clause list> [ WHERE <search condition> ]
@@ -1454,7 +1771,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <transaction access mode>
     |   <diagnostics size>
 
-<isolation level> ::= ISOLATION LEVEL <level of isolation>
+<isolation level> ::=
+        ISOLATION LEVEL <level of isolation>
 
 <level of isolation> ::=
         READ UNCOMMITTED
@@ -1462,51 +1780,59 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   REPEATABLE READ
     |   SERIALIZABLE
 
-<transaction access mode> ::= READ ONLY | READ WRITE
+<transaction access mode> ::=
+        READ ONLY | READ WRITE
 
-<diagnostics size> ::= DIAGNOSTICS SIZE <number of conditions>
+<diagnostics size> ::=
+        DIAGNOSTICS SIZE <number of conditions>
 
-<number of conditions> ::= <simple value specification>
+<number of conditions> ::=
+        <simple value specification>
 
 <set constraints mode statement> ::=
         SET CONSTRAINTS <constraint name list> { DEFERRED | IMMEDIATE }
 
-<constraint name list> ::= ALL | <constraint name> [ { <comma> <constraint name> }... ]
+<constraint name list> ::=
+        ALL | <constraint name> [ { <comma> <constraint name> }... ]
 
-<commit statement> ::= COMMIT [ WORK ]
+<commit statement> ::=
+        COMMIT [ WORK ]
 
-<rollback statement> ::= ROLLBACK [ WORK ]
-
-
-
+<rollback statement> ::=
+        ROLLBACK [ WORK ]
 
 <SQL connection statement> ::=
         <connect statement>
     |   <set connection statement>
     |   <disconnect statement>
 
-<connect statement> ::= CONNECT TO <connection target>
+<connect statement> ::=
+        CONNECT TO <connection target>
 
 <connection target> ::=
         <SQL-server name> [ AS <connection name> ] [ USER <user name> ]
     |   DEFAULT
 
-<SQL-server name> ::= <simple value specification>
+<SQL-server name> ::=
+        <simple value specification>
 
-<connection name> ::= <simple value specification>
+<connection name> ::=
+        <simple value specification>
 
-<user name> ::= <simple value specification>
+<user name> ::=
+        <simple value specification>
 
-<set connection statement> ::= SET CONNECTION <connection object>
+<set connection statement> ::=
+        SET CONNECTION <connection object>
 
-<connection object> ::= DEFAULT | <connection name>
+<connection object> ::=
+        DEFAULT | <connection name>
 
-<disconnect statement> ::= DISCONNECT <disconnect object>
+<disconnect statement> ::=
+        DISCONNECT <disconnect object>
 
-<disconnect object> ::= <connection object> | ALL | CURRENT
-
-
-
+<disconnect object> ::=
+        <connection object> | ALL | CURRENT
 
 <SQL session statement> ::=
         <set catalog statement>
@@ -1515,22 +1841,26 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <set session authorization identifier statement>
     |   <set local time zone statement>
 
-<set catalog statement> ::= SET CATALOG <value specification>
+<set catalog statement> ::=
+        SET CATALOG <value specification>
 
-<value specification> ::= <literal> | <general value specification>
+<value specification> ::=
+        <literal> | <general value specification>
 
-<set schema statement> ::= SET SCHEMA <value specification>
+<set schema statement> ::=
+        SET SCHEMA <value specification>
 
-<set names statement> ::= SET NAMES <value specification>
+<set names statement> ::=
+        SET NAMES <value specification>
 
-<set session authorization identifier statement> ::= SET SESSION AUTHORIZATION <value specification>
+<set session authorization identifier statement> ::=
+        SET SESSION AUTHORIZATION <value specification>
 
-<set local time zone statement> ::= SET TIME ZONE <set time zone value>
+<set local time zone statement> ::=
+        SET TIME ZONE <set time zone value>
 
-<set time zone value> ::= <interval value expression> | LOCAL
-
-
-
+<set time zone value> ::=
+        <interval value expression> | LOCAL
 
 <SQL dynamic statement> ::=
         <system descriptor statement>
@@ -1547,15 +1877,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <get descriptor statement>
     |   <set descriptor statement>
 
-<allocate descriptor statement> ::= ALLOCATE DESCRIPTOR <descriptor name> [ WITH MAX <occurrences> ]
+<allocate descriptor statement> ::=
+        ALLOCATE DESCRIPTOR <descriptor name> [ WITH MAX <occurrences> ]
 
-<descriptor name> ::= [ <scope option> ] <simple value specification>
+<descriptor name> ::=
+        [ <scope option> ] <simple value specification>
 
-<scope option> ::= GLOBAL | LOCAL
+<scope option> ::=
+        GLOBAL | LOCAL
 
-<occurrences> ::= <simple value specification>
+<occurrences> ::=
+        <simple value specification>
 
-<deallocate descriptor statement> ::= DEALLOCATE DESCRIPTOR <descriptor name>
+<deallocate descriptor statement> ::=
+        DEALLOCATE DESCRIPTOR <descriptor name>
 
 <set descriptor statement> ::=
         SET DESCRIPTOR <descriptor name> <set descriptor information>
@@ -1564,13 +1899,17 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
         <set count>
     |   VALUE <item number> <set item information> [ { <comma> <set item information> }... ]
 
-<set count> ::= COUNT <equals operator> <simple value specification 1>
+<set count> ::=
+        COUNT <equals operator> <simple value specification 1>
 
-<simple value specification 1> ::= <simple value specification>
+<simple value specification 1> ::=
+        <simple value specification>
 
-<item number> ::= <simple value specification>
+<item number> ::=
+        <simple value specification>
 
-<set item information> ::= <descriptor item name> <equals operator> <simple value specification 2>
+<set item information> ::=
+        <descriptor item name> <equals operator> <simple value specification 2>
 
 <descriptor item name> ::=
         TYPE
@@ -1594,55 +1933,78 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   CHARACTER_SET_SCHEMA
     |   CHARACTER_SET_NAME
 
-<simple value specification 2> ::= <simple value specification>
+<simple value specification 2> ::=
+        <simple value specification>
 
-<get descriptor statement> ::= GET DESCRIPTOR <descriptor name> <get descriptor information>
+<get descriptor statement> ::=
+        GET DESCRIPTOR <descriptor name> <get descriptor information>
 
 <get descriptor information> ::=
         <get count>
     |   VALUE <item number> <get item information> [ { <comma> <get item information> }... ]
 
-<get count> ::= <simple target specification 1> <equals operator> COUNT
+<get count> ::=
+        <simple target specification 1> <equals operator> COUNT
 
-<simple target specification 1> ::= <simple target specification>
+<simple target specification 1> ::=
+        <simple target specification>
 
-<simple target specification> ::= <parameter name> | <embedded variable name>
+<simple target specification> ::=
+        <parameter name> | <embedded variable name>
 
-<get item information> ::= <simple target specification 2> <equals operator> <descriptor item name>
+<get item information> ::=
+        <simple target specification 2> <equals operator> <descriptor item name>
 
-<simple target specification 2> ::= <simple target specification>
+<simple target specification 2> ::=
+        <simple target specification>
 
-<prepare statement> ::= PREPARE <SQL statement name> FROM <SQL statement variable>
+<prepare statement> ::=
+        PREPARE <SQL statement name> FROM <SQL statement variable>
 
-<SQL statement name> ::= <statement name> | <extended statement name>
+<SQL statement name> ::=
+        <statement name> | <extended statement name>
 
-<extended statement name> ::= [ <scope option> ] <simple value specification>
+<extended statement name> ::=
+        [ <scope option> ] <simple value specification>
 
-<SQL statement variable> ::= <simple value specification>
+<SQL statement variable> ::=
+        <simple value specification>
 
-<deallocate prepared statement> ::= DEALLOCATE PREPARE <SQL statement name>
+<deallocate prepared statement> ::=
+        DEALLOCATE PREPARE <SQL statement name>
 
-<describe statement> ::= <describe input statement> | <describe output statement>
+<describe statement> ::=
+        <describe input statement> | <describe output statement>
 
-<describe input statement> ::= DESCRIBE INPUT <SQL statement name> <using descriptor>
+<describe input statement> ::=
+        DESCRIBE INPUT <SQL statement name> <using descriptor>
 
-<using descriptor> ::= { USING | INTO } SQL DESCRIPTOR <descriptor name>
+<using descriptor> ::=
+        { USING | INTO } SQL DESCRIPTOR <descriptor name>
 
-<describe output statement> ::= DESCRIBE [ OUTPUT ] <SQL statement name> <using descriptor>
+<describe output statement> ::=
+        DESCRIBE [ OUTPUT ] <SQL statement name> <using descriptor>
 
-<execute statement> ::= EXECUTE <SQL statement name> [ <result using clause> ] [ <parameter using clause> ]
+<execute statement> ::=
+        EXECUTE <SQL statement name> [ <result using clause> ] [ <parameter using clause> ]
 
-<result using clause> ::= <using clause>
+<result using clause> ::=
+        <using clause>
 
-<using clause> ::= <using arguments> | <using descriptor>
+<using clause> ::=
+        <using arguments> | <using descriptor>
 
-<using arguments> ::= { USING | INTO } <argument> [ { <comma> <argument> }... ]
+<using arguments> ::=
+        { USING | INTO } <argument> [ { <comma> <argument> }... ]
 
-<argument> ::= <target specification>
+<argument> ::=
+        <target specification>
 
-<parameter using clause> ::= <using clause>
+<parameter using clause> ::=
+        <using clause>
 
-<execute immediate statement> ::= EXECUTE IMMEDIATE <SQL statement variable>
+<execute immediate statement> ::=
+        EXECUTE IMMEDIATE <SQL statement variable>
 
 <SQL dynamic data statement> ::=
         <allocate cursor statement>
@@ -1655,13 +2017,17 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <allocate cursor statement> ::=
         ALLOCATE <extended cursor name> [ INSENSITIVE ] [ SCROLL ] CURSOR FOR <extended statement name>
 
-<extended cursor name> ::= [ <scope option> ] <simple value specification>
+<extended cursor name> ::=
+        [ <scope option> ] <simple value specification>
 
-<dynamic open statement> ::= OPEN <dynamic cursor name> [ <using clause> ]
+<dynamic open statement> ::=
+        OPEN <dynamic cursor name> [ <using clause> ]
 
-<dynamic cursor name> ::= <cursor name> | <extended cursor name>
+<dynamic cursor name> ::=
+        <cursor name> | <extended cursor name>
 
-<dynamic close statement> ::= CLOSE <dynamic cursor name>
+<dynamic close statement> ::=
+        CLOSE <dynamic cursor name>
 
 <dynamic fetch statement> ::=
         FETCH [ [ <fetch orientation> ] FROM ] <dynamic cursor name>
@@ -1674,11 +2040,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
             SET <set clause> [ { <comma> <set clause> }... ]
             WHERE CURRENT OF <dynamic cursor name>
 
-<SQL diagnostics statement> ::= <get diagnostics statement>
+<SQL diagnostics statement> ::=
+        <get diagnostics statement>
 
-<get diagnostics statement> ::= GET DIAGNOSTICS <sql diagnostics information>
+<get diagnostics statement> ::=
+        GET DIAGNOSTICS <sql diagnostics information>
 
-<sql diagnostics information> ::= <statement information> | <condition information>
+<sql diagnostics information> ::=
+        <statement information> | <condition information>
 
 <statement information> ::=
         <statement information item> [ { <comma> <statement information item> }... ]
@@ -1686,12 +2055,14 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <statement information item> ::=
         <simple target specification> <equals operator> <statement information item name>
 
-<statement information item name> ::= NUMBER | MORE | COMMAND_FUNCTION | DYNAMIC_FUNCTION | ROW_COUNT
+<statement information item name> ::=
+        NUMBER | MORE | COMMAND_FUNCTION | DYNAMIC_FUNCTION | ROW_COUNT
 
 <condition information> ::=
         EXCEPTION <condition number> <condition information item> [ { <comma> <condition information item> }... ]
 
-<condition number> ::= <simple value specification>
+<condition number> ::=
+        <simple value specification>
 
 <condition information item> ::=
         <simple target specification> <equals operator> <condition information item name>
@@ -1724,19 +2095,26 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <embedded SQL Pascal program>
     |   <embedded SQL PL/I program>
 
-<embedded SQL Ada program> ::= !! See the syntax rules
+<embedded SQL Ada program> ::=
+        !! See the syntax rules
 
-<embedded SQL C program> ::= !! See the syntax rules
+<embedded SQL C program> ::=
+        !! See the syntax rules
 
-<embedded SQL Cobol program> ::= !! See the syntax rules
+<embedded SQL Cobol program> ::=
+        !! See the syntax rules
 
-<embedded SQL Fortran program> ::= !! See the syntax rules
+<embedded SQL Fortran program> ::=
+        !! See the syntax rules
 
-<embedded SQL MUMPS program> ::= !! See the syntax rules
+<embedded SQL MUMPS program> ::=
+        !! See the syntax rules
 
-<embedded SQL Pascal program> ::= !! See the syntax rules
+<embedded SQL Pascal program> ::=
+        !! See the syntax rules
 
-<embedded SQL PL/I program> ::= !! See the syntax rules
+<embedded SQL PL/I program> ::=
+        !! See the syntax rules
 
 <embedded SQL declare section> ::=
         <embedded SQL begin declare>
@@ -1745,13 +2123,17 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
             <embedded SQL end declare>
     |   <embedded SQL MUMPS declare>
 
-<embedded SQL begin declare> ::= <SQL prefix> BEGIN DECLARE SECTION [ <SQL terminator> ]
+<embedded SQL begin declare> ::=
+        <SQL prefix> BEGIN DECLARE SECTION [ <SQL terminator> ]
 
-<SQL prefix> ::= EXEC SQL | <ampersand>SQL<left paren>
+<SQL prefix> ::=
+        EXEC SQL | <ampersand>SQL<left paren>
 
-<SQL terminator> ::= END-EXEC | <semicolon> | <right paren>
+<SQL terminator> ::=
+        END-EXEC | <semicolon> | <right paren>
 
-<embedded character set declaration> ::= SQL NAMES ARE <character set specification>
+<embedded character set declaration> ::=
+        SQL NAMES ARE <character set specification>
 
 <host variable definition> ::=
         <Ada variable definition>
@@ -1762,14 +2144,12 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <Pascal variable definition>
     |   <PL/I variable definition>
 
-
-
-
 <Ada variable definition> ::=
         <Ada host identifier> [ { <comma> <Ada host identifier> }... ] <colon>
         <Ada type specification> [ <Ada initial value> ]
 
-<Ada type specification> ::= <Ada qualified type specification> | <Ada unqualified type specification>
+<Ada type specification> ::=
+        <Ada qualified type specification> | <Ada unqualified type specification>
 
 <Ada qualified type specification> ::=
         SQL_STANDARD.CHAR [ CHARACTER SET [ IS ] <character set specification> ] <left paren> 1 <double period> <length> <right paren>
@@ -1793,15 +2173,20 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   SQLSTATE_TYPE
     |   INDICATOR_TYPE
 
-<Ada initial value> ::= <Ada assignment operator> <character representation>
+<Ada initial value> ::=
+        <Ada assignment operator> <character representation>
 
-<Ada assignment operator> ::= <colon><equals operator>
+<Ada assignment operator> ::=
+        <colon><equals operator>
 
-<C variable definition> ::= [ <C storage class> ] [ <C class modifier> ] <C variable specification> <semicolon>
+<C variable definition> ::=
+        [ <C storage class> ] [ <C class modifier> ] <C variable specification> <semicolon>
 
-<C storage class> ::= auto | extern | static
+<C storage class> ::=
+        auto | extern | static
 
-<C class modifier> ::= const | volatile
+<C class modifier> ::=
+        const | volatile
 
 <C variable specification> ::=
         <C numeric variable>
@@ -1813,16 +2198,19 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
             <C host identifier> [ <C initial value> ]
             [ { <comma> <C host identifier> [ <C initial value> ] }... ]
 
-<C initial value> ::= <equals operator> <character representation>
+<C initial value> ::=
+        <equals operator> <character representation>
 
 <C character variable> ::=
         char [ CHARACTER SET [ IS ] <character set specification> ]
             <C host identifier> <C array specification> [ <C initial value> ]
             [ { <comma> <C host identifier> <C array specification> [ <C initial value> ] }... ]
 
-<C array specification> ::= <left bracket> <length> <right bracket>
+<C array specification> ::=
+        <left bracket> <length> <right bracket>
 
-<C derived variable> ::= <C VARCHAR variable> | <C bit variable>
+<C derived variable> ::=
+        <C VARCHAR variable> | <C bit variable>
 
 <C VARCHAR variable> ::=
         VARCHAR [ CHARACTER SET [ IS ] <character set specification> ]
@@ -1848,7 +2236,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <PL/I variable definition> ::=
     ...omitted...
 
-<embedded SQL end declare> ::= <SQL prefix> END DECLARE SECTION [ <SQL terminator> ]
+<embedded SQL end declare> ::=
+        <SQL prefix> END DECLARE SECTION [ <SQL terminator> ]
 
 <embedded SQL MUMPS declare> ::=
     <SQL prefix>
@@ -1858,7 +2247,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     END DECLARE SECTION
     <SQL terminator>
 
-<embedded SQL statement> ::= <SQL prefix> <statement or declaration> [ <SQL terminator> ]
+<embedded SQL statement> ::=
+        <SQL prefix> <statement or declaration> [ <SQL terminator> ]
 
 <statement or declaration> ::=
         <declare cursor>
@@ -1867,22 +2257,28 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <embedded exception declaration>
     |   <SQL procedure statement>
 
-<embedded exception declaration> ::= WHENEVER <condition> <condition action>
+<embedded exception declaration> ::=
+        WHENEVER <condition> <condition action>
 
-<condition> ::= SQLERROR | NOT FOUND
+<condition> ::=
+        SQLERROR | NOT FOUND
 
-<condition action> ::= CONTINUE | <go to>
+<condition action> ::=
+        CONTINUE | <go to>
 
-<go to> ::= { GOTO | GO TO } <goto target>
+<go to> ::=
+        { GOTO | GO TO } <goto target>
 
 <goto target> ::=
         <host label identifier>
     |   <unsigned integer>
     |   <host PL/I label variable>
 
-<host label identifier> ::= !! See the syntax rules
+<host label identifier> ::=
+        !! See the syntax rules
 
-<host PL/I label variable> ::= !! See the syntax rules
+<host PL/I label variable> ::=
+        !! See the syntax rules
 
 <preparable statement> ::=
         <preparable SQL data statement>
@@ -1900,9 +2296,11 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <preparable dynamic delete statement: positioned>
     |   <preparable dynamic update statement: positioned>
 
-<dynamic single row select statement> ::= <query specification>
+<dynamic single row select statement> ::=
+        <query specification>
 
-<dynamic select statement> ::= <cursor specification>
+<dynamic select statement> ::=
+        <cursor specification>
 
 <preparable dynamic delete statement: positioned> ::=
         DELETE [ FROM <table name> ] WHERE CURRENT OF <cursor name>
@@ -1910,13 +2308,17 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
 <preparable dynamic update statement: positioned> ::=
         UPDATE [ <table name> ] SET <set clause> WHERE CURRENT OF <cursor name>
 
-<preparable SQL schema statement> ::= <SQL schema statement>
+<preparable SQL schema statement> ::=
+        <SQL schema statement>
 
-<preparable SQL transaction statement> ::= <SQL transaction statement>
+<preparable SQL transaction statement> ::=
+        <SQL transaction statement>
 
-<preparable SQL session statement> ::= <SQL session statement>
+<preparable SQL session statement> ::=
+        <SQL session statement>
 
-<preparable SQL implementation-defined statement> ::= !! See the syntax rules
+<preparable SQL implementation-defined statement> ::=
+        !! See the syntax rules
 
 <direct SQL statement> ::=
         <direct SQL data statement>
@@ -1933,8 +2335,8 @@ BNF Grammar for ISO/IEC 9075:1992 - Database Language SQL (SQL-92)
     |   <update statement: searched>
     |   <temporary table declaration>
 
-<direct select statement: multiple rows> ::= <query expression> [ <order by clause> ]
+<direct select statement: multiple rows> ::=
+        <query expression> [ <order by clause> ]
 
-<direct implementation-defined statement> ::= !! See the syntax rules
-
-
+<direct implementation-defined statement> ::=
+        !! See the syntax rules

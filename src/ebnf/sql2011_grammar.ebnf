@@ -1,12 +1,24 @@
-5 Lexical elements
+# The MIT License (MIT)
+# Copyright (c) 2016, Victor M. Uriarte
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
 
-
-5.1     <SQL terminal character>
-
-Function
-Define the terminal symbols of the SQL language and the elements of strings.
-
-Format
 <SQL terminal character> ::=
   <SQL language character>
 
@@ -153,13 +165,6 @@ Format
 <right brace> ::=
   }
 
-5.2     <token> and <separator>
-
-Function
-Specify lexical units (tokens and separators) that participate in SQL language.
-
-
-Format
 <token> ::=
     <nondelimiter token>
   | <delimiter token>
@@ -477,13 +482,6 @@ Format
 
   | YEAR
 
-5.3     <literal>
-
-Function
-Specify a non-null value.
-
-
-Format
 <literal> ::=
     <signed numeric literal>
   | <general literal>
@@ -670,13 +668,6 @@ Format
   | FALSE
   | UNKNOWN
 
-5.4    Names and identifiers
-
-Function
-Specify names.
-
-
-Format
 <identifier> ::=
   <actual identifier>
 
@@ -856,16 +847,6 @@ Format
 <window name> ::=
   <identifier>
 
-6 Scalar expressions
-
-
-6.1     <data type>
-
-Function
-Specify a data type.
-
-
-Format
 <data type> ::=
     <predefined type>
   | <row type>
@@ -1019,23 +1000,9 @@ Format
 <multiset type> ::=
   <data type> MULTISET
 
-6.2        <field definition>
-
-Function
-Define a field of a row type.
-
-
-Format
 <field definition> ::=
   <field name> <data type>
 
-6.3         <value expression primary>
-
-Function
-Specify a value that is syntactically self-delimited.
-
-
-Format
 <value expression primary> ::=
     <parenthesized value expression>
   | <nonparenthesized value expression primary>
@@ -1069,13 +1036,6 @@ Format
     <array value constructor>
   | <multiset value constructor>
 
-6.4     <value specification> and <target specification>
-
-Function
-Specify one or more values, host parameters, SQL parameters, dynamic parameters, or host variables.
-
-
-Format
 <value specification> ::=
     <literal>
   | <general value specification>
@@ -1148,13 +1108,6 @@ Format
 <current collation specification> ::=
   COLLATION FOR <left paren> <string value expression> <right paren>
 
-6.5        <contextually typed value specification>
-
-Function
-Specify a value whose data type is to be inferred from its context.
-
-
-Format
 <contextually typed value specification> ::=
     <implicitly typed value specification>
   | <default specification>
@@ -1173,47 +1126,19 @@ Format
 <default specification> ::=
   DEFAULT
 
-6.6        <identifier chain>
-
-Function
-Disambiguate a <period>-separated chain of identifiers.
-
-
-Format
 <identifier chain> ::=
   <identifier> [ { <period> <identifier> }... ]
 
 <basic identifier chain> ::=
   <identifier chain>
 
-6.7        <column reference>
-
-Function
-Reference a column.
-
-
-Format
 <column reference> ::=
     <basic identifier chain>
   | MODULE <period> <qualified identifier> <period> <column name>
 
-6.8      <SQL parameter reference>
-
-Function
-Reference an SQL parameter.
-
-
-Format
 <SQL parameter reference> ::=
   <basic identifier chain>
 
-6.9        <set function specification>
-
-Function
-Specify a value derived by the application of a function to an argument.
-
-
-Format
 <set function specification> ::=
     <aggregate function>
   | <grouping operation>
@@ -1222,13 +1147,6 @@ Format
   GROUPING <left paren> <column reference>
       [ { <comma> <column reference> }... ] <right paren>
 
-6.10 <window function>
-
-Function
-Specify a window function.
-
-
-Format
 <window function> ::=
   <window function type> OVER <window name or specification>
 
@@ -1300,14 +1218,6 @@ Format
 <in-line window specification> ::=
   <window specification>
 
-6.11 <nested window function>
-
-Function
-Specify a function nested in an aggregated argument of an <aggregate function> simply contained in a <window
-function>.
-
-
-Format
 <nested window function> ::=
     <nested row number function>
   | <value_of expression at row>
@@ -1341,13 +1251,6 @@ Format
 <value_of default value> ::=
   <value expression>
 
-6.12 <case expression>
-
-Function
-Specify a conditional value.
-
-
-Format
 <case expression> ::=
     <case abbreviation>
   | <case specification>
@@ -1410,13 +1313,6 @@ Format
 <result expression> ::=
   <value expression>
 
-6.13 <cast specification>
-
-Function
-Specify a data conversion.
-
-
-Format
 <cast specification> ::=
      CAST <left paren> <cast operand> AS <cast target> <right paren>
 
@@ -1428,33 +1324,12 @@ Format
     <domain name>
   | <data type>
 
-6.14 <next value expression>
-
-Function
-Return the next value of a sequence generator.
-
-
-Format
 <next value expression> ::=
   NEXT VALUE FOR <sequence generator name>
 
-6.15 <field reference>
-
-Function
-Reference a field of a row value.
-
-
-Format
 <field reference> ::=
   <value expression primary> <period> <field name>
 
-6.16 <subtype treatment>
-
-Function
-Modify the declared type of an expression.
-
-
-Format
 <subtype treatment> ::=
   TREAT <left paren> <subtype operand> AS <target subtype> <right paren>
 
@@ -1465,13 +1340,6 @@ Format
     <path-resolved user-defined type name>
   | <reference type>
 
-6.17 <method invocation>
-
-Function
-Reference an SQL-invoked method of a user-defined type value.
-
-
-Format
 <method invocation> ::=
     <direct invocation>
   | <generalized invocation>
@@ -1489,13 +1357,6 @@ Format
 <constructor method selection> ::=
   <routine invocation>
 
-6.18 <static method invocation>
-
-Function
-Invoke a static method.
-
-
-Format
 <static method invocation> ::=
   <path-resolved user-defined type name> <double colon> <method name>
       [ <SQL argument list> ]
@@ -1503,13 +1364,6 @@ Format
 <static method selection> ::=
   <routine invocation>
 
-6.19 <new specification>
-
-Function
-Invoke a method on a newly-constructed value of a structured type.
-
-
-Format
 <new specification> ::=
   NEW <path-resolved user-defined type name> <SQL argument list>
 
@@ -1517,14 +1371,6 @@ Format
     <method invocation>
   | <routine invocation>
 
-6.20 <attribute or method reference>
-
-Function
-Return a value acquired by accessing a column of the row identified by a value of a reference type or by
-invoking an SQL-invoked method.
-
-
-Format
 <attribute or method reference> ::=
   <value expression primary> <dereference operator> <qualified identifier>
       [ <SQL argument list> ]
@@ -1532,64 +1378,22 @@ Format
 <dereference operator> ::=
   <right arrow>
 
-6.21 <dereference operation>
-
-Function
-Access a column of the row identified by a value of a reference type.
-
-
-Format
 <dereference operation> ::=
   <reference value expression> <dereference operator> <attribute name>
 
-6.22 <method reference>
-
-Function
-Return a value acquired from invoking an SQL-invoked routine that is a method.
-
-
-Format
 <method reference> ::=
   <value expression primary> <dereference operator> <method name> <SQL argument list>
 
-6.23 <reference resolution>
-
-Function
-Obtain the value referenced by a reference value.
-
-
-Format
 <reference resolution> ::=
   DEREF <left paren> <reference value expression> <right paren>
 
-6.24 <array element reference>
-
-Function
-Return an element of an array.
-
-
-Format
 <array element reference> ::=
   <array value expression>
       <left bracket or trigraph> <numeric value expression> <right bracket or trigraph>
 
-6.25 <multiset element reference>
-
-Function
-Return the sole element of a multiset of one element.
-
-
-Format
 <multiset element reference> ::=
   ELEMENT <left paren> <multiset value expression> <right paren>
 
-6.26 <value expression>
-
-Function
-Specify a value.
-
-
-Format
 <value expression> ::=
     <common value expression>
   | <boolean value expression>
@@ -1614,13 +1418,6 @@ Format
     <array value expression>
   | <multiset value expression>
 
-6.27 <numeric value expression>
-
-Function
-Specify a numeric value.
-
-
-Format
 <numeric value expression> ::=
     <term>
   | <numeric value expression> <plus sign> <term>
@@ -1638,13 +1435,6 @@ Format
     <value expression primary>
   | <numeric value function>
 
-6.28 <numeric value function>
-
-Function
-Specify a function yielding a value of type numeric.
-
-
-Format
 <numeric value function> ::=
     <position expression>
   | <regex occurrences function>
@@ -1804,13 +1594,6 @@ Format
 <width bucket count> ::=
   <numeric value expression>
 
-6.29 <string value expression>
-
-Function
-Specify a character string value or a binary string value.
-
-
-Format
 <string value expression> ::=
     <character value expression>
   | <binary value expression>
@@ -1843,13 +1626,6 @@ Format
 <binary concatenation> ::=
   <binary value expression> <concatenation operator> <binary factor>
 
-6.30 <string value function>
-
-Function
-Specify a function yielding a value of type character string or binary string.
-
-
-Format
 <string value function> ::=
     <character value function>
   | <binary value function>
@@ -1984,13 +1760,6 @@ Format
 <string length> ::=
   <numeric value expression>
 
-6.31 <datetime value expression>
-
-Function
-Specify a datetime value.
-
-
-Format
 <datetime value expression> ::=
     <datetime term>
   | <interval value expression> <plus sign> <datetime term>
@@ -2014,13 +1783,6 @@ Format
     LOCAL
   | TIME ZONE <interval primary>
 
-6.32 <datetime value function>
-
-Function
-Specify a function yielding a value of type datetime.
-
-
-Format
 <datetime value function> ::=
     <current date value function>
   | <current time value function>
@@ -2043,13 +1805,6 @@ Format
 <current local timestamp value function> ::=
   LOCALTIMESTAMP [ <left paren> <timestamp precision> <right paren> ]
 
-6.33 <interval value expression>
-
-Function
-Specify an interval value.
-
-
-Format
 <interval value expression> ::=
     <interval term>
   | <interval value expression 1> <plus sign> <interval term 1>
@@ -2079,26 +1834,12 @@ Format
 <interval term 2> ::=
   <interval term>
 
-6.34 <interval value function>
-
-Function
-Specify a function yielding a value of type interval.
-
-
-Format
 <interval value function> ::=
   <interval absolute value function>
 
 <interval absolute value function> ::=
   ABS <left paren> <interval value expression> <right paren>
 
-6.35 <boolean value expression>
-
-Function
-Specify a boolean value.
-
-
-Format
 <boolean value expression> ::=
     <boolean term>
   | <boolean value expression> OR <boolean term>
@@ -2129,13 +1870,6 @@ Format
 <parenthesized boolean value expression> ::=
   <left paren> <boolean value expression> <right paren>
 
-6.36 <array value expression>
-
-Function
-Specify an array value.
-
-
-Format
 <array value expression> ::=
     <array concatenation>
   | <array primary>
@@ -2150,13 +1884,6 @@ Format
     <array value function>
   | <value expression primary>
 
-6.37 <array value function>
-
-Function
-Specify a function yielding a value of an array type.
-
-
-Format
 <array value function> ::=
   <trim array function>
 
@@ -2164,13 +1891,6 @@ Format
   TRIM_ARRAY <left paren> <array value expression> <comma> <numeric value expression> <right
   paren>
 
-6.38 <array value constructor>
-
-Function
-Specify construction of an array.
-
-
-Format
 <array value constructor> ::=
     <array value constructor by enumeration>
   | <array value constructor by query>
@@ -2187,13 +1907,6 @@ Format
 <array value constructor by query> ::=
   ARRAY <table subquery>
 
-6.39 <multiset value expression>
-
-Function
-Specify a multiset value.
-
-
-Format
 <multiset value expression> ::=
     <multiset term>
   | <multiset value expression> MULTISET UNION [ ALL | DISTINCT ] <multiset term>
@@ -2207,26 +1920,12 @@ Format
     <multiset value function>
   | <value expression primary>
 
-6.40 <multiset value function>
-
-Function
-Specify a function yielding a value of a multiset type.
-
-
-Format
 <multiset value function> ::=
   <multiset set function>
 
 <multiset set function> ::=
   SET <left paren> <multiset value expression> <right paren>
 
-6.41 <multiset value constructor>
-
-Function
-Specify construction of a multiset.
-
-
-Format
 <multiset value constructor> ::=
     <multiset value constructor by enumeration>
   | <multiset value constructor by query>
@@ -2247,16 +1946,6 @@ Format
 <table value constructor by query> ::=
   TABLE <table subquery>
 
-7 Query expressions
-
-
-7.1     <row value constructor>
-
-Function
-Specify a value or list of values to be constructed into a row.
-
-
-Format
 <row value constructor> ::=
     <common value expression>
   | <boolean value expression>
@@ -2296,13 +1985,6 @@ Format
   | <boolean predicand>
   | <explicit row value constructor>
 
-7.2      <row value expression>
-
-Function
-Specify a row value.
-
-
-Format
 <row value expression> ::=
     <row value special case>
   | <explicit row value constructor>
@@ -2322,13 +2004,6 @@ Format
 <row value special case> ::=
   <nonparenthesized value expression primary>
 
-7.3      <table value constructor>
-
-Function
-Specify a set of <row value expression>s to be constructed into a table.
-
-
-Format
 <table value constructor> ::=
   VALUES <row value expression list>
 
@@ -2342,13 +2017,6 @@ Format
   <contextually typed row value expression>
       [ { <comma> <contextually typed row value expression> }... ]
 
-7.4      <table expression>
-
-Function
-Specify a table or a grouped table.
-
-
-Format
 <table expression> ::=
   <from clause>
       [ <where clause> ]
@@ -2356,26 +2024,12 @@ Format
       [ <having clause> ]
       [ <window clause> ]
 
-7.5        <from clause>
-
-Function
-Specify a table derived from one or more tables.
-
-
-Format
 <from clause> ::=
   FROM <table reference list>
 
 <table reference list> ::=
   <table reference> [ { <comma> <table reference> }... ]
 
-7.6     <table reference>
-
-Function
-Reference a table.
-
-
-Format
 <table reference> ::=
     <table factor>
   | <joined table>
@@ -2479,13 +2133,6 @@ Format
     <left paren> <parenthesized joined table> <right paren>
   | <left paren> <joined table> <right paren>
 
-7.7     <joined table>
-
-Function
-Specify a table derived from a Cartesian product, inner join, or outer join.
-
-
-Format
 <joined table> ::=
     <cross join>
   | <qualified join>
@@ -2539,24 +2186,9 @@ Format
 <join column list> ::=
   <column name list>
 
-7.8      <where clause>
-
-Function
-Specify a table derived by the application of a <search condition> to the result of the preceding <from clause>.
-
-
-Format
 <where clause> ::=
   WHERE <search condition>
 
-7.9     <group by clause>
-
-Function
-Specify a grouped table derived by the application of the <group by clause> to the result of the previously
-specified clause.
-
-
-Format
 <group by clause> ::=
   GROUP BY [ <set quantifier> ] <grouping element list>
 
@@ -2605,23 +2237,9 @@ Format
 <empty grouping set> ::=
   <left paren> <right paren>
 
-7.10 <having clause>
-
-Function
-Specify a grouped table derived by the elimination of groups that do not satisfy a <search condition>.
-
-
-Format
 <having clause> ::=
   HAVING <search condition>
 
-7.11 <window clause>
-
-Function
-Specify one or more window definitions.
-
-
-Format
 <window clause> ::=
   WINDOW <window definition list>
 
@@ -2703,13 +2321,6 @@ Format
   | EXCLUDE TIES
   | EXCLUDE NO OTHERS
 
-7.12 <query specification>
-
-Function
-Specify a table derived from the result of a <table expression>.
-
-
-Format
 <query specification> ::=
   SELECT [ <set quantifier> ] <select list> <table expression>
 
@@ -2744,13 +2355,6 @@ Format
 <all fields column name list> ::=
   <column name list>
 
-7.13 <query expression>
-
-Function
-Specify a table.
-
-
-Format
 <query expression> ::=
   [ <with clause> ] <query expression body>
       [ <order by clause> ] [ <result offset clause> ] [ <fetch first clause> ]
@@ -2822,13 +2426,6 @@ Format
 <fetch first percentage> ::=
   <simple value specification> PERCENT
 
-7.14 <search or cycle clause>
-
-Function
-Specify the generation of ordering and cycle detection information in the result of recursive query expressions.
-
-
-Format
 <search or cycle clause> ::=
     <search clause>
   | <cycle clause>
@@ -2866,13 +2463,6 @@ Format
 <non-cycle mark value> ::=
   <value expression>
 
-7.15 <subquery>
-
-Function
-Specify a scalar value, a row, or a table derived from a <query expression>.
-
-
-Format
 <scalar subquery> ::=
   <subquery>
 
@@ -2885,15 +2475,6 @@ Format
 <subquery> ::=
   <left paren> <query expression> <right paren>
 
-8 Predicates
-
-8.1      <predicate>
-
-Function
-Specify a condition that can be evaluated to give a boolean value.
-
-
-Format
 <predicate> ::=
       <comparison predicate>
   |   <between predicate>
@@ -2915,13 +2496,6 @@ Format
   |   <type predicate>
   |   <period predicate>
 
-8.2        <comparison predicate>
-
-Function
-Specify a comparison of two row values.
-
-
-Format
 <comparison predicate> ::=
   <row value predicand> <comparison predicate part 2>
 
@@ -2936,13 +2510,6 @@ Format
   | <less than or equals operator>
   | <greater than or equals operator>
 
-8.3      <between predicate>
-
-Function
-Specify a range comparison.
-
-
-Format
 <between predicate> ::=
   <row value predicand> <between predicate part 2>
 
@@ -2950,13 +2517,6 @@ Format
   [ NOT ] BETWEEN [ ASYMMETRIC | SYMMETRIC ]
       <row value predicand> AND <row value predicand>
 
-8.4      <in predicate>
-
-Function
-Specify a quantified comparison.
-
-
-Format
 <in predicate> ::=
   <row value predicand> <in predicate part 2>
 
@@ -2970,13 +2530,6 @@ Format
 <in value list> ::=
   <row value expression> [ { <comma> <row value expression> }... ]
 
-8.5        <like predicate>
-
-Function
-Specify a pattern-match comparison.
-
-
-Format
 <like predicate> ::=
     <character like predicate>
   | <octet like predicate>
@@ -3005,13 +2558,6 @@ Format
 <escape octet> ::=
   <binary value expression>
 
-8.6     <similar predicate>
-
-Function
-Specify a character string similarity by means of a regular expression.
-
-
-Format
 <similar predicate> ::=
   <row value predicand> <similar predicate part 2>
 
@@ -3085,39 +2631,18 @@ Format
 <regular character set identifier> ::=
   <identifier>
 
-8.7        <regex like predicate>
-
-Function
-Specify a pattern-match comparison using an XQuery regular expression.
-
-
-Format
 <regex like predicate> ::=
   <row value predicand> <regex like predicate part 2>
 
 <regex like predicate part 2> ::=
   [ NOT ] LIKE_REGEX <XQuery pattern> [ FLAG <XQuery option flag> ]
 
-8.8        <null predicate>
-
-Function
-Specify a test for a null value.
-
-
-Format
 <null predicate> ::=
   <row value predicand> <null predicate part 2>
 
 <null predicate part 2> ::=
   IS [ NOT ] NULL
 
-8.9        <quantified comparison predicate>
-
-Function
-Specify a quantified comparison.
-
-
-Format
 <quantified comparison predicate> ::=
   <row value predicand> <quantified comparison predicate part 2>
 
@@ -3135,59 +2660,24 @@ Format
     SOME
   | ANY
 
-8.10 <exists predicate>
-
-Function
-Specify a test for a non-empty set.
-
-
-Format
 <exists predicate> ::=
   EXISTS <table subquery>
 
-8.11 <unique predicate>
-
-Function
-Specify a test for the absence of duplicate rows.
-
-
-Format
 <unique predicate> ::=
   UNIQUE <table subquery>
 
-8.12 <normalized predicate>
-
-Function
-Determine whether a character string value is normalized.
-
-
-Format
 <normalized predicate> ::=
   <row value predicand> <normalized predicate part 2>
 
 <normalized predicate part 2> ::=
   IS [ NOT ] [ <normal form> ] NORMALIZED
 
-8.13 <match predicate>
-
-Function
-Specify a test for matching rows.
-
-
-Format
 <match predicate> ::=
   <row value predicand> <match predicate part 2>
 
 <match predicate part 2> ::=
   MATCH [ UNIQUE ] [ SIMPLE | PARTIAL | FULL ] <table subquery>
 
-8.14 <overlaps predicate>
-
-Function
-Specify a test for an overlap between two datetime periods.
-
-
-Format
 <overlaps predicate> ::=
   <overlaps predicate part 1> <overlaps predicate part 2>
 
@@ -3203,13 +2693,6 @@ Format
 <row value predicand 2> ::=
   <row value predicand>
 
-8.15 <distinct predicate>
-
-Function
-Specify a test of whether two row values are distinct
-
-
-Format
 <distinct predicate> ::=
   <row value predicand 3> <distinct predicate part 2>
 
@@ -3222,52 +2705,24 @@ Format
 <row value predicand 4> ::=
   <row value predicand>
 
-8.16 <member predicate>
-
-Function
-Specify a test of whether a value is a member of a multiset.
-
-
-Format
 <member predicate> ::=
   <row value predicand> <member predicate part 2>
 
 <member predicate part 2> ::=
   [ NOT ] MEMBER [ OF ] <multiset value expression>
 
-8.17 <submultiset predicate>
-
-Function
-Specify a test of whether a multiset is a submultiset of another multiset.
-
-
-Format
 <submultiset predicate> ::=
   <row value predicand> <submultiset predicate part 2>
 
 <submultiset predicate part 2> ::=
   [ NOT ] SUBMULTISET [ OF ] <multiset value expression>
 
-8.18 <set predicate>
-
-Function
-Specify a test of whether a multiset is a set (that is, does not contain any duplicates).
-
-
-Format
 <set predicate> ::=
   <row value predicand> <set predicate part 2>
 
 <set predicate part 2> ::=
   IS [ NOT ] A SET
 
-8.19 <type predicate>
-
-Function
-Specify a type test.
-
-
-Format
 <type predicate> ::=
   <row value predicand> <type predicate part 2>
 
@@ -3288,13 +2743,6 @@ Format
 <exclusive user-defined type specification> ::=
   ONLY <path-resolved user-defined type name>
 
-8.20 <period predicate>
-
-Function
-Specify a test to determine the relationship between periods.
-
-
-Format
 <period predicate> ::=
     <period overlaps predicate>
   | <period equals predicate>
@@ -3369,26 +2817,9 @@ Format
 <period immediately succeeds predicate part 2> ::=
   IMMEDIATELY SUCCEEDS <period predicand 2>
 
-8.21 <search condition>
-
-Function
-Specify a condition that is True, False, or Unknown, depending on the value of a <boolean value expression>.
-
-
-Format
 <search condition> ::=
   <boolean value expression>
 
-10 Additional common elements
-
-
-10.1 <interval qualifier>
-
-Function
-Specify the precision of an interval data type.
-
-
-Format
 <interval qualifier> ::=
     <start field> TO <end field>
   | <single datetime field>
@@ -3426,10 +2857,8 @@ Format
 
 10.2 <language clause>
 
-
 Function
 Specify a programming language.
-
 
 Format
 <language clause> ::=
@@ -3445,26 +2874,12 @@ Format
   |   PLI
   |   SQL
 
-10.3 <path specification>
-
-Function
-Specify an order for searching for an SQL-invoked routine.
-
-
-Format
 <path specification> ::=
   PATH <schema name list>
 
 <schema name list> ::=
   <schema name> [ { <comma> <schema name> }... ]
 
-10.4 <routine invocation>
-
-Function
-Invoke an SQL-invoked routine.
-
-
-Format
 <routine invocation> ::=
   <routine name> <SQL argument list>
 
@@ -3493,13 +2908,6 @@ Format
   | <target specification>
   | <contextually typed value specification>
 
-10.5 <character set specification>
-
-Function
-Identify a character set.
-
-
-Format
 <character set specification> ::=
     <standard character set name>
   | <implementation-defined character set name>
@@ -3514,13 +2922,6 @@ Format
 <user-defined character set name> ::=
   <character set name>
 
-10.6 <specific routine designator>
-
-Function
-Specify an SQL-invoked routine.
-
-
-Format
 <specific routine designator> ::=
     SPECIFIC <routine type> <specific name>
   | <routine type> <member name> [ FOR <schema-resolved user-defined type name> ]
@@ -3541,23 +2942,9 @@ Format
 <data type list> ::=
   <left paren> [ <data type> [ { <comma> <data type> }... ] ] <right paren>
 
-10.7 <collate clause>
-
-Function
-Specify a default collation.
-
-
-Format
 <collate clause> ::=
   COLLATE <collation name>
 
-10.8 <constraint name definition> and <constraint characteristics>
-
-Function
-Specify the name of a constraint and its characteristics.
-
-
-Format
 <constraint name definition> ::=
   CONSTRAINT <constraint name>
 
@@ -3573,13 +2960,6 @@ Format
 <constraint enforcement> ::=
   [ NOT ] ENFORCED
 
-10.9 <aggregate function>
-
-Function
-Specify a value computed from a collection of rows.
-
-
-Format
 <aggregate function> ::=
       COUNT <left paren> <asterisk> <right paren> [ <filter clause> ]
   |   <general set function> [ <filter clause> ]
@@ -3673,13 +3053,6 @@ Format
   ARRAY_AGG
       <left paren> <value expression> [ ORDER BY <sort specification list> ] <right paren>
 
-10.10 <sort specification list>
-
-Function
-Specify a sort order.
-
-
-Format
 <sort specification list> ::=
   <sort specification> [ { <comma> <sort specification> }... ]
 
@@ -3697,16 +3070,6 @@ Format
     NULLS FIRST
   | NULLS LAST
 
-11 Schema definition and manipulation
-
-
-11.1 <schema definition>
-
-Function
-Define a schema.
-
-
-Format
 <schema definition> ::=
   CREATE SCHEMA <schema name clause>
       [ <schema character set or path> ]
@@ -3750,13 +3113,6 @@ Format
   |   <grant statement>
   |   <role definition>
 
-11.2 <drop schema statement>
-
-Function
-Destroy a schema.
-
-
-Format
 <drop schema statement> ::=
   DROP SCHEMA <schema name> <drop behavior>
 
@@ -3764,13 +3120,6 @@ Format
     CASCADE
   | RESTRICT
 
-11.3 <table definition>
-
-Function
-Define a persistent base table, a created local temporary table, or a global temporary table.
-
-
-Format
 <table definition> ::=
   CREATE [ <table scope> ] TABLE <table name> <table contents source>
       [ WITH <system versioning clause> ]
@@ -3897,13 +3246,6 @@ Format
 <period end column name> ::=
   <column name>
 
-11.4 <column definition>
-
-Function
-Define a column of a base table.
-
-
-Format
 <column definition> ::=
   <column name> [ <data type or domain name> ]
       [ <default clause> | <identity column specification> | <generation clause>
@@ -3947,13 +3289,6 @@ Format
 <generation expression> ::=
   <left paren> <value expression> <right paren>
 
-11.5 <default clause>
-
-Function
-Specify the default for a column, domain, or attribute.
-
-
-Format
 <default clause> ::=
   DEFAULT <default option>
 
@@ -3970,13 +3305,6 @@ Format
   | CURRENT_PATH
   | <implicitly typed value specification>
 
-11.6 <table constraint definition>
-
-Function
-Specify an integrity constraint.
-
-
-Format
 <table constraint definition> ::=
   [ <constraint name definition> ] <table constraint>
       [ <constraint characteristics> ]
@@ -3986,13 +3314,6 @@ Format
   | <referential constraint definition>
   | <check constraint definition>
 
-11.7 <unique constraint definition>
-
-Function
-Specify a uniqueness constraint for a table.
-
-
-Format
 <unique constraint definition> ::=
     <unique specification> <left paren> <unique column list> [ <comma> <without overlap
     specification> ] <right paren>
@@ -4008,13 +3329,6 @@ Format
 <without overlap specification> ::=
   <application time period name> WITHOUT OVERLAPS
 
-11.8 <referential constraint definition>
-
-Function
-Specify a referential constraint.
-
-
-Format
 <referential constraint definition> ::=
   FOREIGN KEY <left paren> <referencing column list>
       [ <comma> <referencing period specification> ] <right paren>
@@ -4062,23 +3376,9 @@ Format
   | RESTRICT
   | NO ACTION
 
-11.9 <check constraint definition>
-
-Function
-Specify a condition for the SQL-data.
-
-
-Format
 <check constraint definition> ::=
      CHECK <left paren> <search condition> <right paren>
 
-11.10 <alter table statement>
-
-Function
-Change the definition of a table.
-
-
-Format
 <alter table statement> ::=
   ALTER TABLE <table name> <alter table action>
 
@@ -4094,23 +3394,9 @@ Format
   | <add system versioning clause>
   | <drop system versioning clause>
 
-11.11 <add column definition>
-
-Function
-Add a column to a table.
-
-
-Format
 <add column definition> ::=
   ADD [ COLUMN ] <column definition>
 
-11.12 <alter column definition>
-
-Function
-Change a column and its definition.
-
-
-Format
 <alter column definition> ::=
 
   ALTER [ COLUMN ] <column name> <alter column action>
@@ -4127,83 +3413,27 @@ Format
   | <drop identity property clause>
   | <drop column generation expression clause>
 
-11.13 <set column default clause>
-
-Function
-Set the default clause for a column.
-
-
-Format
 <set column default clause> ::=
   SET <default clause>
 
-11.14 <drop column default clause>
-
-Function
-Drop the default clause from a column.
-
-
-Format
 <drop column default clause> ::=
   DROP DEFAULT
 
-11.15 <set column not null clause>
-
-Function
-Add a not null constraint to a column.
-
-
-Format
 <set column not null clause> ::=
   SET NOT NULL
 
-11.16 <drop column not null clause>
-
-Function
-Drop a not null constraint on a column.
-
-
-Format
 <drop column not null clause> ::=
   DROP NOT NULL
 
-11.17 <add column scope clause>
-
-Function
-Add a non-empty scope for an existing column of data type REF in a base table.
-
-
-Format
 <add column scope clause> ::=
   ADD <scope clause>
 
-11.18 <drop column scope clause>
-
-Function
-Drop the scope from an existing column of data type REF in a base table.
-
-
-Format
 <drop column scope clause> ::=
   DROP SCOPE <drop behavior>
 
-11.19 <alter column data type clause>
-
-Function
-Change the declared type of a column.
-
-
-Format
 <alter column data type clause> ::=
   SET DATA TYPE <data type>
 
-11.20 <alter identity column specification>
-
-Function
-Change the options specified for an identity column.
-
-
-Format
 <alter identity column specification> ::=
     <set identity column generation clause> [ <alter identity column option>... ]
   | <alter identity column option>...
@@ -4215,73 +3445,24 @@ Format
     <alter sequence generator restart option>
   | SET <basic sequence generator option>
 
-11.21 <drop identity property clause>
-
-Function
-Convert an identity column to a column that is not an identity column.
-
-
-Format
 <drop identity property clause> ::=
   DROP IDENTITY
 
-11.22 <drop column generation expression clause>
-
-Function
-Convert a generated column to a column that is not a generated column.
-
-
-Format
 <drop column generation expression clause> ::=
   DROP EXPRESSION
 
-11.23 <drop column definition>
-
-Function
-Destroy a column of a base table.
-
-
-Format
 <drop column definition> ::=
   DROP [ COLUMN ] <column name> <drop behavior>
 
-11.24 <add table constraint definition>
-
-Function
-Add a constraint to a table.
-
-
-Format
 <add table constraint definition> ::=
   ADD <table constraint definition>
 
-11.25 <alter table constraint definition>
-
-Function
-Change the definition of a table constraint.
-
-
-Format
 <alter table constraint definition> ::=
   ALTER CONSTRAINT <constraint name> <constraint enforcement>
 
-11.26 <drop table constraint definition>
-
-Function
-Destroy a constraint on a table.
-
-
-Format
 <drop table constraint definition> ::=
   DROP CONSTRAINT <constraint name> <drop behavior>
 
-11.27 <add table period definition>
-
-Function
-Add a system-time period or an application-time period to a persistent base table.
-
-
-Format
 <add table period definition> ::=
   ADD <table period definition> [ <add system time period column list> ]
 
@@ -4294,53 +3475,18 @@ Format
 <column definition 2> ::=
   <column definition>
 
-11.28 <drop table period definition>
-
-Function
-Remove a system-time period or application-time period from a persistent base table.
-
-
-Format
 <drop table period definition> ::=
   DROP <system or application time period specification> <drop behavior>
 
-11.29 <add system versioning clause>
-
-Function
-Alter a regular persistent base table to a system-versioned table.
-
-
-Format
 <add system versioning clause> ::=
   ADD <system versioning clause>
 
-11.30 <drop system versioning clause>
-
-Function
-Change a system-versioned table into a regular persistent base table.
-
-
-Format
 <drop system versioning clause> ::=
   DROP SYSTEM VERSIONING <drop behavior>
 
-11.31 <drop table statement>
-
-Function
-Destroy a table.
-
-
-Format
 <drop table statement> ::=
   DROP TABLE <table name> <drop behavior>
 
-11.32 <view definition>
-
-Function
-Define a viewed table.
-
-
-Format
 <view definition> ::=
   CREATE [ RECURSIVE ] VIEW <table name> <view specification>
       AS <query expression> [ WITH [ <levels clause> ] CHECK OPTION ]
@@ -4376,23 +3522,9 @@ Format
 <view column list> ::=
   <column name list>
 
-11.33 <drop view statement>
-
-Function
-Destroy a view.
-
-
-Format
 <drop view statement> ::=
   DROP VIEW <table name> <drop behavior>
 
-11.34 <domain definition>
-
-Function
-Define a domain.
-
-
-Format
 <domain definition> ::=
   CREATE DOMAIN <domain name> [ AS ] <predefined type>
       [ <default clause> ]
@@ -4403,13 +3535,6 @@ Format
   [ <constraint name definition> ] <check constraint definition> [
       <constraint characteristics> ]
 
-11.35 <alter domain statement>
-
-Function
-Change a domain and its definition.
-
-
-Format
 <alter domain statement> ::=
   ALTER DOMAIN <domain name> <alter domain action>
 
@@ -4419,63 +3544,21 @@ Format
   | <add domain constraint definition>
   | <drop domain constraint definition>
 
-11.36 <set domain default clause>
-
-Function
-Set the default value in a domain.
-
-
-Format
 <set domain default clause> ::=
   SET <default clause>
 
-11.37 <drop domain default clause>
-
-Function
-Remove the default clause of a domain.
-
-
-Format
 <drop domain default clause> ::=
   DROP DEFAULT
 
-11.38 <add domain constraint definition>
-
-Function
-Add a constraint to a domain.
-
-
-Format
 <add domain constraint definition> ::=
   ADD <domain constraint>
 
-11.39 <drop domain constraint definition>
-
-Function
-Destroy a constraint on a domain.
-
-
-Format
 <drop domain constraint definition> ::=
   DROP CONSTRAINT <constraint name>
 
-11.40 <drop domain statement>
-
-Function
-Destroy a domain.
-
-
-Format
 <drop domain statement> ::=
   DROP DOMAIN <domain name> <drop behavior>
 
-11.41 <character set definition>
-
-Function
-Define a character set.
-
-
-Format
 <character set definition> ::=
   CREATE CHARACTER SET <character set name> [ AS ]
       <character set source> [ <collate clause> ]
@@ -4483,23 +3566,9 @@ Format
 <character set source> ::=
   GET <character set specification>
 
-11.42 <drop character set statement>
-
-Function
-Destroy a character set.
-
-
-Format
 <drop character set statement> ::=
   DROP CHARACTER SET <character set name>
 
-11.43 <collation definition>
-
-Function
-Define a collation.
-
-
-Format
 <collation definition> ::=
   CREATE COLLATION <collation name> FOR <character set specification>
       FROM <existing collation name> [ <pad characteristic> ]
@@ -4511,23 +3580,9 @@ Format
     NO PAD
   | PAD SPACE
 
-11.44 <drop collation statement>
-
-Function
-Destroy a collation.
-
-
-Format
 <drop collation statement> ::=
   DROP COLLATION <collation name> <drop behavior>
 
-11.45 <transliteration definition>
-
-Function
-Define a character transliteration.
-
-
-Format
 <transliteration definition> ::=
   CREATE TRANSLATION <transliteration name> FOR <source character set specification>
       TO <target character set specification> FROM <transliteration source>
@@ -4548,45 +3603,17 @@ Format
 <transliteration routine> ::=
   <specific routine designator>
 
-11.46 <drop transliteration statement>
-
-Function
-Destroy a character transliteration.
-
-
-Format
 <drop transliteration statement> ::=
   DROP TRANSLATION <transliteration name>
 
-11.47 <assertion definition>
-
-Function
-Specify an integrity constraint.
-
-
-Format
 <assertion definition> ::=
      CREATE ASSERTION <constraint name>
          CHECK <left paren> <search condition> <right paren>
          [ <constraint characteristics> ]
 
-11.48 <drop assertion statement>
-
-Function
-Destroy an assertion.
-
-
-Format
 <drop assertion statement> ::=
   DROP ASSERTION <constraint name> [ <drop behavior> ]
 
-11.49 <trigger definition>
-
-Function
-Define triggered SQL-statements.
-
-
-Format
 <trigger definition> ::=
   CREATE TRIGGER <trigger name> <trigger action time> <trigger event>
       ON <table name> [ REFERENCING <transition table or variable list> ]
@@ -4641,23 +3668,9 @@ Format
 <new transition variable name> ::=
   <correlation name>
 
-11.50 <drop trigger statement>
-
-Function
-Destroy a trigger.
-
-
-Format
 <drop trigger statement> ::=
   DROP TRIGGER <trigger name>
 
-11.51 <user-defined type definition>
-
-Function
-Define a user-defined type.
-
-
-Format
 <user-defined type definition> ::=
   CREATE TYPE <user-defined type body>
 
@@ -4781,13 +3794,6 @@ Format
      |   <SQL-data access indication>
      |   <null-call clause>
 
-11.52 <attribute definition>
-
-Function
-Define an attribute of a structured type.
-
-
-Format
 <attribute definition> ::=
      <attribute name> <data type>
          [ <attribute default> ]
@@ -4796,13 +3802,6 @@ Format
 <attribute default> ::=
   <default clause>
 
-11.53 <alter type statement>
-
-Function
-Change the definition of a user-defined type.
-
-
-Format
 <alter type statement> ::=
   ALTER TYPE <schema-resolved user-defined type name> <alter type action>
 
@@ -4813,53 +3812,18 @@ Format
   | <add overriding method specification>
   | <drop method specification>
 
-11.54 <add attribute definition>
-
-Function
-Add an attribute to a user-defined type.
-
-
-Format
 <add attribute definition> ::=
   ADD ATTRIBUTE <attribute definition>
 
-11.55 <drop attribute definition>
-
-Function
-Destroy an attribute of a user-defined type.
-
-
-Format
 <drop attribute definition> ::=
   DROP ATTRIBUTE <attribute name> RESTRICT
 
-11.56 <add original method specification>
-
-Function
-Add an original method specification to a user-defined type.
-
-
-Format
 <add original method specification> ::=
   ADD <original method specification>
 
-11.57 <add overriding method specification>
-
-Function
-Add an overriding method specification to a user-defined type.
-
-
-Format
 <add overriding method specification> ::=
   ADD <overriding method specification>
 
-11.58 <drop method specification>
-
-Function
-Remove a method specification from a user-defined type.
-
-
-Format
 <drop method specification> ::=
   DROP <specific method specification designator> RESTRICT
 
@@ -4872,22 +3836,13 @@ Format
 This Subclause is modified by Subclause 9.23, “<drop data type statement>”, in ISO/IEC 9075-4.
 This Subclause is modified by Subclause 9.7, “<drop data type statement>”, in ISO/IEC 9075-13.
 
-
 Function
 Destroy a user-defined type.
-
 
 Format
 <drop data type statement> ::=
   DROP TYPE <schema-resolved user-defined type name> <drop behavior>
 
-11.60 <SQL-invoked routine>
-
-Function
-Define an SQL-invoked routine.
-
-
-Format
 <SQL-invoked routine> ::=
   <schema routine>
 
@@ -5057,13 +4012,6 @@ Format
 <group specification> ::=
   <group name> FOR TYPE <path-resolved user-defined type name>
 
-11.61 <alter routine statement>
-
-Function
-Alter a characteristic of an SQL-invoked routine.
-
-
-Format
 <alter routine statement> ::=
   ALTER <specific routine designator>
       <alter routine characteristics> <alter routine behavior>
@@ -5082,23 +4030,9 @@ Format
 <alter routine behavior> ::=
   RESTRICT
 
-11.62 <drop routine statement>
-
-Function
-Destroy an SQL-invoked routine.
-
-
-Format
 <drop routine statement> ::=
   DROP <specific routine designator> <drop behavior>
 
-11.63 <user-defined cast definition>
-
-Function
-Define a user-defined cast.
-
-
-Format
 <user-defined cast definition> ::=
   CREATE CAST <left paren> <source data type> AS <target data type> <right paren>
       WITH <cast function>
@@ -5113,24 +4047,10 @@ Format
 <target data type> ::=
   <data type>
 
-11.64 <drop user-defined cast statement>
-
-Function
-Destroy a user-defined cast.
-
-
-Format
 <drop user-defined cast statement> ::=
   DROP CAST <left paren> <source data type> AS <target data type> <right paren>
       <drop behavior>
 
-11.65 <user-defined ordering definition>
-
-Function
-Define a user-defined ordering for a user-defined type.
-
-
-Format
 <user-defined ordering definition> ::=
   CREATE ORDERING FOR <schema-resolved user-defined type name> <ordering form>
 
@@ -5164,23 +4084,9 @@ Format
 <map function specification> ::=
   <specific routine designator>
 
-11.66 <drop user-defined ordering statement>
-
-Function
-Destroy a user-defined ordering method.
-
-
-Format
 <drop user-defined ordering statement> ::=
   DROP ORDERING FOR <schema-resolved user-defined type name> <drop behavior>
 
-11.67 <transform definition>
-
-Function
-Define one or more transform functions for a user-defined type.
-
-
-Format
 <transform definition> ::=
   CREATE { TRANSFORM | TRANSFORMS } FOR
       <schema-resolved user-defined type name> <transform group>...
@@ -5210,13 +4116,6 @@ Format
 <from sql function> ::=
   <specific routine designator>
 
-11.68 <alter transform statement>
-
-Function
-Change the definition of one or more transform groups.
-
-
-Format
 <alter transform statement> ::=
   ALTER { TRANSFORM | TRANSFORMS }
       FOR <schema-resolved user-defined type name> <alter group>...
@@ -5231,23 +4130,9 @@ Format
     <add transform element list>
   | <drop transform element list>
 
-11.69 <add transform element list>
-
-Function
-Add a transform element (<to sql> and/or <from sql>) to an existing transform group.
-
-
-Format
 <add transform element list> ::=
   ADD <left paren> <transform element list> <right paren>
 
-11.70 <drop transform element list>
-
-Function
-Remove a transform element (<to sql> and/or <from sql>) from a transform group.
-
-
-Format
 <drop transform element list> ::=
   DROP <left paren> <transform kind>
       [ <comma> <transform kind> ] <drop behavior> <right paren>
@@ -5256,13 +4141,6 @@ Format
     TO SQL
   | FROM SQL
 
-11.71 <drop transform statement>
-
-Function
-Remove one or more transform functions associated with a transform.
-
-
-Format
 <drop transform statement> ::=
   DROP { TRANSFORM | TRANSFORMS } <transforms to be dropped>
       FOR <schema-resolved user-defined type name> <drop behavior>
@@ -5274,13 +4152,6 @@ Format
 <transform group element> ::=
   <group name>
 
-11.72 <sequence generator definition>
-
-Function
-Define an external sequence generator.
-
-
-Format
 <sequence generator definition> ::=
   CREATE SEQUENCE <sequence generator name> [ <sequence generator options> ]
 
@@ -5337,13 +4208,6 @@ Format
     CYCLE
   | NO CYCLE
 
-11.73 <alter sequence generator statement>
-
-Function
-Change the definition of an external sequence generator.
-
-
-Format
 <alter sequence generator statement> ::=
   ALTER SEQUENCE <sequence generator name> <alter sequence generator options>
 
@@ -5360,50 +4224,19 @@ Format
 <sequence generator restart value> ::=
   <signed numeric literal>
 
-11.74 <drop sequence generator statement>
-
-Function
-Destroy an external sequence generator.
-
-
-Format
 <drop sequence generator statement> ::=
   DROP SEQUENCE <sequence generator name> <drop behavior>
 
-12 Access control
-
-
-12.1 <grant statement>
-
-Function
-Define privileges and role authorizations.
-
-
-Format
 <grant statement> ::=
     <grant privilege statement>
   | <grant role statement>
 
-12.2 <grant privilege statement>
-
-Function
-Define privileges.
-
-
-Format
 <grant privilege statement> ::=
   GRANT <privileges> TO <grantee> [ { <comma> <grantee> }... ]
       [ WITH HIERARCHY OPTION ]
       [ WITH GRANT OPTION ]
       [ GRANTED BY <grantor> ]
 
-12.3 <privileges>
-
-Function
-Specify privileges.
-
-
-Format
 <privileges> ::=
   <object privileges> ON <object name>
 
@@ -5448,23 +4281,9 @@ Format
     CURRENT_USER
   | CURRENT_ROLE
 
-12.4 <role definition>
-
-Function
-Define a role.
-
-
-Format
 <role definition> ::=
   CREATE ROLE <role name> [ WITH ADMIN <grantor> ]
 
-12.5 <grant role statement>
-
-Function
-Define role authorizations.
-
-
-Format
 <grant role statement> ::=
   GRANT <role granted> [ { <comma> <role granted> }... ]
       TO <grantee> [ { <comma> <grantee> }... ]
@@ -5474,23 +4293,9 @@ Format
 <role granted> ::=
   <role name>
 
-12.6 <drop role statement>
-
-Function
-Destroy a role.
-
-
-Format
 <drop role statement> ::=
   DROP ROLE <role name>
 
-12.7 <revoke statement>
-
-Function
-Destroy privileges and role authorizations.
-
-
-Format
 <revoke statement> ::=
     <revoke privilege statement>
   | <revoke role statement>
@@ -5514,16 +4319,6 @@ Format
 <role revoked> ::=
   <role name>
 
-13 SQL-client modules
-
-
-13.1 <SQL-client module definition>
-
-Function
-Define an SQL-client module.
-
-
-Format
 <SQL-client module definition> ::=
   <module name clause> <language clause> <module authorization clause>
       [ <module path specification> ]
@@ -5562,26 +4357,12 @@ Format
   | <dynamic declare cursor>
   | <externally-invoked procedure>
 
-13.2 <module name clause>
-
-Function
-Name an SQL-client module.
-
-
-Format
 <module name clause> ::=
   MODULE [ <SQL-client module name> ] [ <module character set specification> ]
 
 <module character set specification> ::=
   NAMES ARE <character set specification>
 
-13.3 <externally-invoked procedure>
-
-Function
-Define an externally-invoked procedure.
-
-
-Format
 <externally-invoked procedure> ::=
   PROCEDURE <procedure name> <host parameter declaration list> <semicolon>
       <SQL procedure statement> <semicolon>
@@ -5600,13 +4381,6 @@ Format
 <status parameter> ::=
   SQLSTATE
 
-13.4 <SQL procedure statement>
-
-Function
-Define all of the SQL-statements that are <SQL procedure statement>s.
-
-
-Format
 <SQL procedure statement> ::=
   <SQL executable statement>
 
@@ -5743,27 +4517,10 @@ Format
   | <set descriptor statement>
   | <get descriptor statement>
 
-14 Data manipulation
-
-
-14.1 <declare cursor>
-
-Function
-Declare a standing cursor.
-
-
-Format
 <declare cursor> ::=
   DECLARE <cursor name> <cursor properties>
       FOR <cursor specification>
 
-14.2 <cursor properties>
-
-Function
-Specify the declared properties of a cursor.
-
-
-Format
 <cursor properties> ::=
   [ <cursor sensitivity> ] [ <cursor scrollability> ] CURSOR
       [ <cursor holdability> ]
@@ -5786,37 +4543,15 @@ Format
     WITH RETURN
   | WITHOUT RETURN
 
-14.3 <cursor specification>
-
-Function
-Define a result set.
-
-
-Format
 <cursor specification> ::=
   <query expression> [ <updatability clause> ]
 
 <updatability clause> ::=
   FOR { READ ONLY | UPDATE [ OF <column name list> ] }
 
-14.4 <open statement>
-
-Function
-Open a standing cursor.
-
-
-Format
 <open statement> ::=
   OPEN <cursor name>
 
-14.5 <fetch statement>
-
-Function
-Position a standing cursor on a specified row of the standing cursor's result set and retrieve values from that
-row.
-
-
-Format
 <fetch statement> ::=
      FETCH [ [ <fetch orientation> ] FROM ] <cursor name> INTO <fetch target list>
 
@@ -5830,23 +4565,9 @@ Format
 <fetch target list> ::=
      <target specification> [ { <comma> <target specification> }... ]
 
-14.6 <close statement>
-
-Function
-Close a standing cursor.
-
-
-Format
 <close statement> ::=
   CLOSE <cursor name>
 
-14.7 <select statement: single row>
-
-Function
-Retrieve values from a specified row of a table.
-
-
-Format
 <select statement: single row> ::=
   SELECT [ <set quantifier> ] <select list>
       INTO <select target list>
@@ -5855,13 +4576,6 @@ Format
 <select target list> ::=
   <target specification> [ { <comma> <target specification> }... ]
 
-14.8 <delete statement: positioned>
-
-Function
-Delete a row of a table.
-
-
-Format
 <delete statement: positioned> ::=
      DELETE FROM <target table> [ [ AS ] <correlation name> ]
          WHERE CURRENT OF <cursor name>
@@ -5870,13 +4584,6 @@ Format
     <table name>
   | ONLY <left paren> <table name> <right paren>
 
-14.9 <delete statement: searched>
-
-Function
-Delete rows of a table.
-
-
-Format
 <delete statement: searched> ::=
   DELETE FROM <target table>
       [ FOR PORTION OF <application time period name>
@@ -5884,13 +4591,6 @@ Format
       [ [ AS ] <correlation name> ]
       [ WHERE <search condition> ]
 
-14.10 <truncate table statement>
-
-Function
-Delete all rows of a base table without causing any triggered action.
-
-
-Format
 <truncate table statement> ::=
   TRUNCATE TABLE <target table> [ <identity column restart option> ]
 
@@ -5898,13 +4598,6 @@ Format
     CONTINUE IDENTITY
   | RESTART IDENTITY
 
-14.11 <insert statement>
-
-Function
-Create new rows in a table.
-
-
-Format
 <insert statement> ::=
   INSERT INTO <insertion target> <insert columns and source>
 
@@ -5936,13 +4629,6 @@ Format
 <insert column list> ::=
   <column name list>
 
-14.12 <merge statement>
-
-Function
-Conditionally update and/or delete rows of a table and/or insert new rows into a table.
-
-
-Format
 <merge statement> ::=
   MERGE INTO <target table> [ [ AS ] <merge correlation name> ]
       USING <table reference>
@@ -5990,25 +4676,11 @@ Format
     <value expression>
   | <contextually typed value specification>
 
-14.13 <update statement: positioned>
-
-Function
-Update a row of a table.
-
-
-Format
 <updatestatement: positioned> ::=
      UPDATE <target table> [ [ AS ] <correlation name> ]
          SET <set clause list>
          WHERE CURRENT OF <cursor name>
 
-14.14 <update statement: searched>
-
-Function
-Update rows of a table.
-
-
-Format
 <update statement: searched> ::=
   UPDATE <target table>
       [ FOR PORTION OF <application time period name>
@@ -6017,13 +4689,6 @@ Format
       SET <set clause list>
       [ WHERE <search condition> ]
 
-14.15 <set clause list>
-
-Function
-Specify a list of updates.
-
-
-Format
 <set clause list> ::=
   <set clause> [ { <comma> <set clause> }... ]
 
@@ -6063,24 +4728,10 @@ Format
     <value expression>
   | <contextually typed value specification>
 
-14.16 <temporary table declaration>
-
-Function
-Declare a declared local temporary table.
-
-
-Format
 <temporary table declaration> ::=
   DECLARE LOCAL TEMPORARY TABLE <table name> <table element list>
       [ ON COMMIT <table commit action> ROWS ]
 
-14.17 <free locator statement>
-
-Function
-Remove the association between a locator variable and the value that is represented by that locator.
-
-
-Format
 <free locator statement> ::=
   FREE LOCATOR <locator reference> [ { <comma> <locator reference> }... ]
 
@@ -6089,39 +4740,20 @@ Format
   | <embedded variable name>
   | <dynamic parameter specification>
 
-14.18 <hold locator statement>
-
-Function
-Mark a locator variable as being holdable.
-
-
-Format
 <hold locator statement> ::=
   HOLD LOCATOR <locator reference> [ { <comma> <locator reference> }... ]
-
-
-16 Control statements
 
 16.1 <call statement>
 
 This Subclause is modified by Subclause 11.22, “<call statement>”, in ISO/IEC 9075-10.
 
-
 Function
 Invoke an SQL-invoked routine.
-
 
 Format
 <call statement> ::=
   CALL <routine invocation>
 
-16.2 <return statement>
-
-Function
-Return a value from an SQL routine that is an SQL-invoked function.
-
-
-Format
 <return statement> ::=
   RETURN <return value>
 
@@ -6129,37 +4761,12 @@ Format
     <value expression>
   | NULL
 
-17 Transaction management
-
-
-17.1 <start transaction statement>
-
-Function
-Start an SQL-transaction and set its characteristics.
-
-
-Format
 <start transaction statement> ::=
   START TRANSACTION [ <transaction characteristics> ]
 
-17.2 <set transaction statement>
-
-Function
-Set the characteristics of the next SQL-transaction for the SQL-agent.
-    NOTE 522 — This statement has no effect on any SQL-transactions subsequent to the next SQL-transaction.
-
-
-Format
 <set transaction statement> ::=
   SET [ LOCAL ] TRANSACTION <transaction characteristics>
 
-17.3 <transaction characteristics>
-
-Function
-Specify transaction characteristics.
-
-
-Format
 <transaction characteristics> ::=
       [ <transaction mode> [ { <comma> <transaction mode> }... ] ]
 
@@ -6187,16 +4794,6 @@ Format
 <number of conditions> ::=
   <simple value specification>
 
-17.4 <set constraints mode statement>
-
-Function
-If an SQL-transaction is currently active, then set the constraint mode for that SQL-transaction in the current
-SQL-session. If no SQL-transaction is currently active, then set the constraint mode for the next SQL-transaction
-in the current SQL-session for the SQL-agent.
-    NOTE 524 — This statement has no effect on any SQL-transactions subsequent to this SQL-transaction.
-
-
-Format
 <set constraints mode statement> ::=
   SET CONSTRAINTS <constraint name list> { DEFERRED | IMMEDIATE }
 
@@ -6204,64 +4801,24 @@ Format
     ALL
   | <constraint name> [ { <comma> <constraint name> }... ]
 
-17.5 <savepoint statement>
-
-Function
-Establish a savepoint.
-
-
-Format
 <savepoint statement> ::=
   SAVEPOINT <savepoint specifier>
 
 <savepoint specifier> ::=
   <savepoint name>
 
-17.6 <release savepoint statement>
-
-Function
-Destroy a savepoint.
-
-
-Format
 <release savepoint statement> ::=
   RELEASE SAVEPOINT <savepoint specifier>
 
-17.7 <commit statement>
-
-Function
-Terminate the current SQL-transaction with commit.
-
-
-Format
 <commit statement> ::=
   COMMIT [ WORK ] [ AND [ NO ] CHAIN ]
 
-17.8 <rollback statement>
-
-Function
-Terminate the current SQL-transaction with rollback, or rollback all actions affecting SQL-data and/or schemas
-since the establishment of a savepoint.
-
-
-Format
 <rollback statement> ::=
   ROLLBACK [ WORK ] [ AND [ NO ] CHAIN ] [ <savepoint clause> ]
 
 <savepoint clause> ::=
   TO SAVEPOINT <savepoint specifier>
 
-
-18 Connection management
-
-
-18.1 <connect statement>
-
-Function
-Establish an SQL-session.
-
-
-Format
 <connect statement> ::=
   CONNECT TO <connection target>
 
@@ -6269,13 +4826,6 @@ Format
     <SQL-server name> [ AS <connection name> ] [ USER <connection user name> ]
   | DEFAULT
 
-18.2 <set connection statement>
-
-Function
-Select an SQL-connection from the available SQL-connections.
-
-
-Format
 <set connection statement> ::=
   SET CONNECTION <connection object>
 
@@ -6283,13 +4833,6 @@ Format
     DEFAULT
   | <connection name>
 
-18.3 <disconnect statement>
-
-Function
-Terminate an SQL-connection.
-
-
-Format
 <disconnect statement> ::=
   DISCONNECT <disconnect object>
 
@@ -6298,15 +4841,6 @@ Format
   | ALL
   | CURRENT
 
-19 Session management
-
-19.1 <set session characteristics statement>
-
-Function
-Set one or more characteristics for the current SQL-session.
-
-
-Format
 <set session characteristics statement> ::=
   SET SESSION CHARACTERISTICS AS <session characteristic list>
 
@@ -6319,23 +4853,9 @@ Format
 <session transaction characteristics> ::=
   TRANSACTION <transaction mode> [ { <comma> <transaction mode> }... ]
 
-19.2 <set session user identifier statement>
-
-Function
-Set the SQL-session user identifier and the current user identifier of the current SQL-session context.
-
-
-Format
 <set session user identifier statement> ::=
   SET SESSION AUTHORIZATION <value specification>
 
-19.3 <set role statement>
-
-Function
-Set the SQL-session role name and the current role name for the current SQL-session context.
-
-
-Format
 <set role statement> ::=
   SET ROLE <role specification>
 
@@ -6343,13 +4863,6 @@ Format
     <value specification>
   | NONE
 
-19.4 <set local time zone statement>
-
-Function
-Set the current default time zone displacement for the current SQL-session.
-
-
-Format
 <set local time zone statement> ::=
   SET TIME ZONE <set time zone value>
 
@@ -6357,75 +4870,30 @@ Format
     <interval value expression>
   | LOCAL
 
-19.5 <set catalog statement>
-
-Function
-Set the default catalog name for unqualified <schema name>s in <preparable statement>s that are prepared in
-the current SQL-session by an <execute immediate statement> or a <prepare statement> and in <direct SQL
-statement>s that are invoked directly.
-
-
-Format
 <set catalog statement> ::=
   SET <catalog name characteristic>
 
 <catalog name characteristic> ::=
   CATALOG <value specification>
 
-19.6 <set schema statement>
-
-Function
-Set the default schema name for unqualified <schema qualified name>s in <preparable statement>s that are
-prepared in the current SQL-session by an <execute immediate statement> or a <prepare statement> and in
-<direct SQL statement>s that are invoked directly.
-
-
-Format
 <set schema statement> ::=
   SET <schema name characteristic>
 
 <schema name characteristic> ::=
   SCHEMA <value specification>
 
-19.7 <set names statement>
-
-Function
-Set the default character set name for <character string literal>s in <preparable statement>s that are prepared
-in the current SQL-session by an <execute immediate statement> or a <prepare statement> and in <direct SQL
-statement>s that are invoked directly.
-
-
-Format
 <set names statement> ::=
   SET <character set name characteristic>
 
 <character set name characteristic> ::=
   NAMES <value specification>
 
-19.8 <set path statement>
-
-Function
-Set the SQL-path used to determine the subject routine of <routine invocation>s with unqualified <routine
-name>s in <preparable statement>s that are prepared in the current SQL-session by an <execute immediate
-statement> or a <prepare statement> and in <direct SQL statement>s that are invoked directly. The SQL-path
-remains the current SQL-path of the SQL-session until another SQL-path is successfully set.
-
-
-Format
 <set path statement> ::=
   SET <SQL-path characteristic>
 
 <SQL-path characteristic> ::=
   PATH <value specification>
 
-19.9 <set transform group statement>
-
-Function
-Set the group name that identifies the group of transform functions for mapping values of user-defined types
-to predefined data types.
-
-
-Format
 <set transform group statement> ::=
   SET <transform group characteristic>
 
@@ -6433,40 +4901,15 @@ Format
     DEFAULT TRANSFORM GROUP <value specification>
   | TRANSFORM GROUP FOR TYPE <path-resolved user-defined type name> <value specification>
 
-
-20 Dynamic SQL
-
-20.2 <allocate descriptor statement>
-
-Function
-Allocate an SQL descriptor area.
-
-
-Format
 <allocate descriptor statement> ::=
   ALLOCATE [ SQL ] DESCRIPTOR <descriptor name> [ WITH MAX <occurrences> ]
 
 <occurrences> ::=
   <simple value specification>
 
-
-20.3 <deallocate descriptor statement>
-
-Function
-Deallocate an SQL descriptor area.
-
-
-Format
 <deallocate descriptor statement> ::=
   DEALLOCATE [ SQL ] DESCRIPTOR <descriptor name>
 
-20.4 <get descriptor statement>
-
-Function
-Get information from an SQL descriptor area.
-
-
-Format
 <get descriptor statement> ::=
   GET [ SQL ] DESCRIPTOR <descriptor name> <get descriptor information>
 
@@ -6536,13 +4979,6 @@ Format
   |   USER_DEFINED_TYPE_SCHEMA
   |   USER_DEFINED_TYPE_CODE
 
-20.5 <set descriptor statement>
-
-Function
-Set information in an SQL descriptor area.
-
-
-Format
 <set descriptor statement> ::=
   SET [ SQL ] DESCRIPTOR <descriptor name> <set descriptor information>
 
@@ -6563,13 +4999,6 @@ Format
 <simple value specification 2> ::=
   <simple value specification>
 
-20.6 <prepare statement>
-
-Function
-Prepare a statement for execution.
-
-
-Format
 <prepare statement> ::=
   PREPARE <SQL statement name> [ <attributes specification> ]
       FROM <SQL statement variable>
@@ -6622,13 +5051,6 @@ Format
 <preparable implementation-defined statement> ::=
   !! See the Syntax Rules.
 
-20.7 <cursor attributes>
-
-Function
-Specify a list of cursor attributes.
-
-
-Format
 <cursor attributes> ::=
   <cursor attribute>...
 
@@ -6638,13 +5060,6 @@ Format
   | <cursor holdability>
   | <cursor returnability>
 
-20.8 <deallocate prepared statement>
-
-Function
-Deallocate SQL-statements that have been prepared with a <prepare statement>.
-
-
-Format
 <deallocate prepared statement> ::=
   DEALLOCATE PREPARE <SQL statement name>
 
@@ -6652,11 +5067,9 @@ Format
 
 This Subclause is modified by Subclause 17.4, “<describe statement>”, in ISO/IEC 9075-9.
 
-
 Function
 Obtain information about the <select list> columns or <dynamic parameter specification>s contained in a prepared
 statement or about the columns of the result set associated with a cursor.
-
 
 Format
 <describe statement> ::=
@@ -6680,13 +5093,6 @@ Format
     <SQL statement name>
   | CURSOR <cursor name> STRUCTURE
 
-20.10 <input using clause>
-
-Function
-Supply input values for an <SQL dynamic statement>.
-
-
-Format
 <input using clause> ::=
     <using arguments>
   | <using input descriptor>
@@ -6702,10 +5108,8 @@ Format
 
 20.11 <output using clause>
 
-
 Function
 Supply output variables for an <SQL dynamic statement>.
-
 
 Format
 <output using clause> ::=
@@ -6721,13 +5125,6 @@ Format
 <into descriptor> ::=
   INTO [ SQL ] DESCRIPTOR <descriptor name>
 
-20.12 <execute statement>
-
-Function
-Associate input SQL parameters and output targets with a prepared statement and execute the statement.
-
-
-Format
 <execute statement> ::=
   EXECUTE <SQL statement name> [ <result using clause> ] [ <parameter using clause> ]
 
@@ -6737,157 +5134,53 @@ Format
 <parameter using clause> ::=
   <input using clause>
 
-20.13 <execute immediate statement>
-
-Function
-Dynamically prepare and execute a preparable statement.
-
-
-Format
 <execute immediate statement> ::=
   EXECUTE IMMEDIATE <SQL statement variable>
 
-20.14 <dynamic declare cursor>
-
-Function
-Declare a declared dynamic cursor to be associated with a <statement name>, which may in turn be associated
-with a <cursor specification>.
-
-
-Format
 <dynamic declare cursor> ::=
   DECLARE <cursor name>
       <cursor properties>
       FOR <statement name>
 
-20.15 <allocate extended dynamic cursor statement>
-
-Function
-Define a cursor based on a prepared statement for a <cursor specification>.
-
-
-Format
 <allocate extended dynamic cursor statement> ::=
   ALLOCATE <extended cursor name>
       <cursor properties>
       FOR <extended statement name>
 
-20.16 <allocate received cursor statement>
-
-Function
-Assign a cursor to the result set sequence returned from an SQL-invoked procedure.
-
-
-Format
 <allocate received cursor statement> ::=
   ALLOCATE <cursor name>
       [ CURSOR ] FOR PROCEDURE <specific routine designator>
 
-20.17 <dynamic open statement>
-
-Function
-Associate input dynamic parameters with a <cursor specification> and open the dynamic cursor.
-
-
-Format
 <dynamic open statement> ::=
   OPEN <dynamic cursor name> [ <input using clause> ]
 
-20.18 <dynamic fetch statement>
-
-Function
-Fetch a row for a dynamic cursor.
-
-
-Format
 <dynamic fetch statement> ::=
   FETCH [ [ <fetch orientation> ] FROM ] <dynamic cursor name> <output using clause>
 
-20.19 <dynamic single row select statement>
-
-Function
-Retrieve values from a dynamically-specified row of a table.
-
-
-Format
 <dynamic single row select statement> ::=
   <query specification>
 
-20.20 <dynamic close statement>
-
-Function
-Close a dynamic cursor.
-
-
-Format
 <dynamic close statement> ::=
   CLOSE <dynamic cursor name>
 
-20.21 <dynamic delete statement: positioned>
-
-Function
-Delete a row of a table.
-
-
-Format
 <dynamic delete statement: positioned> ::=
   DELETE FROM <target table> WHERE CURRENT OF <dynamic cursor name>
 
-
-20.22 <dynamic update statement: positioned>
-
-Function
-Update a row of a table.
-
-
-Format
 <dynamic update statement: positioned> ::=
   UPDATE <target table> SET <set clause list>
       WHERE CURRENT OF <dynamic cursor name>
 
-20.23 <preparable dynamic delete statement: positioned>
-
-Function
-Delete a row of a table through a dynamic cursor.
-
-
-Format
 <preparable dynamic delete statement: positioned> ::=
   DELETE [ FROM <target table> ]
       WHERE CURRENT OF <preparable dynamic cursor name>
 
-20.24 <preparable dynamic cursor name>
-
-Function
-Specify the cursor of a <preparable dynamic delete statement: positioned> or a <preparable dynamic update
-statement: positioned>.
-
-
-Format
 <preparable dynamic cursor name> ::=
   [ <scope option> ] <cursor name>
 
-20.25 <preparable dynamic update statement: positioned>
-
-Function
-Update a row of a table through a dynamic cursor.
-
-
-Format
 <preparable dynamic update statement: positioned> ::=
   UPDATE [ <target table> ] SET <set clause list>
       WHERE CURRENT OF <preparable dynamic cursor name>
 
-21 Embedded SQL
-
-
-21.1 <embedded SQL host program>
-
-Function
-Specify an <embedded SQL host program>.
-
-
-Format
 <embedded SQL host program> ::=
       <embedded SQL Ada program>
   |   <embedded SQL C program>
@@ -6987,13 +5280,6 @@ Format
      |   <Pascal host identifier>
      |   <PL/I host identifier>
 
-21.2 <embedded exception declaration>
-
-Function
-Specify the action to be taken when an SQL-statement causes a specific class of condition to be raised.
-
-
-Format
 <embedded exception declaration> ::=
   WHENEVER <condition> <condition action>
 
@@ -7038,13 +5324,6 @@ Format
 <host PL/I label variable> ::=
   !! See the Syntax Rules.
 
-21.3 <embedded SQL Ada program>
-
-Function
-Specify an <embedded SQL Ada program>.
-
-
-Format
 <embedded SQL Ada program> ::=
   !! See the Syntax Rules.
 
@@ -7137,13 +5416,6 @@ Format
 <Ada multiset locator variable> ::=
   SQL TYPE IS <multiset type> AS LOCATOR
 
-21.4 <embedded SQL C program>
-
-Function
-Specify an <embedded SQL C program>.
-
-
-Format
 <embedded SQL C program> ::=
   !! See the Syntax Rules.
 
@@ -7293,13 +5565,6 @@ Format
 <C initial value> ::=
   <equals operator> <character representation>...
 
-21.5 <embedded SQL COBOL program>
-
-Function
-Specify an <embedded SQL COBOL program>.
-
-
-Format
 <embedded SQL COBOL program> ::=
   !! See the Syntax Rules.
 
@@ -7391,13 +5656,6 @@ Format
 <COBOL nines> ::=
   { 9 [ <left paren> <length> <right paren> ] }...
 
-21.6 <embedded SQL Fortran program>
-
-Function
-Specify an <embedded SQL Fortran program>.
-
-
-Format
 <embedded SQL Fortran program> ::=
   !! See the Syntax Rules.
 
@@ -7466,13 +5724,6 @@ Format
 <Fortran REF variable> ::=
   SQL TYPE IS <reference type>
 
-21.7 <embedded SQL MUMPS program>
-
-Function
-Specify an <embedded SQL MUMPS program>.
-
-
-Format
 <embedded SQL MUMPS program> ::=
   !! See the Syntax Rules.
 
@@ -7534,13 +5785,6 @@ Format
 <MUMPS REF variable> ::=
   SQL TYPE IS <reference type>
 
-21.8 <embedded SQL Pascal program>
-
-Function
-Specify an <embedded SQL Pascal program>.
-
-
-Format
 <embedded SQL Pascal program> ::=
   !! See the Syntax Rules.
 
@@ -7603,13 +5847,6 @@ Format
 <Pascal REF variable> ::=
   SQL TYPE IS <reference type>
 
-21.9 <embedded SQL PL/I program>
-
-Function
-Specify an <embedded SQL PL/I program>.
-
-
-Format
 <embedded SQL PL/I program> ::=
   !! See the Syntax Rules.
 
@@ -7689,17 +5926,6 @@ Format
     { BIN | BINARY } FLOAT
   | FLOAT { BIN | BINARY }
 
-
-22 Direct invocation of SQL
-
-
-22.1 <direct SQL statement>
-
-Function
-Specify direct execution of SQL.
-
-
-Format
 <direct SQL statement> ::=
   <directly executable statement> <semicolon>
 
@@ -7723,26 +5949,9 @@ Format
 <direct implementation-defined statement> ::=
   !! See the Syntax Rules.
 
-22.2 <direct select statement: multiple rows>
-
-Function
-Specify a statement to retrieve multiple rows from a specified table.
-
-
-Format
 <direct select statement: multiple rows> ::=
   <cursor specification>
 
-23 Diagnostics management
-
-
-23.1 <get diagnostics statement>
-
-Function
-Get exception or completion condition information from a diagnostics area.
-
-
-Format
 <get diagnostics statement> ::=
   GET DIAGNOSTICS <SQL diagnostics information>
 
