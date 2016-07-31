@@ -26,22 +26,6 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 
-sql_terminal_character =
-  | sql_language_character
-  | sql_embedded_language_character
-    ;
-
-sql_embedded_language_character =
-  | left_bracket
-  | right_bracket
-    ;
-
-sql_language_character =
-  | simple_latin_letter
-  | digit
-  | sql_special_character
-    ;
-
 simple_latin_letter =
   | simple_latin_upper_case_letter
   | simple_latin_lower_case_letter
@@ -118,44 +102,12 @@ digit =
   | '9'
     ;
 
-sql_special_character =
-  | space
-  | double_quote
-  | percent
-  | ampersand
-  | quote
-  | left_paren
-  | right_paren
-  | asterisk
-  | plus_sign
-  | comma
-  | minus_sign
-  | period
-  | solidus
-  | colon
-  | semicolon
-  | less_than_operator
-  | equals_operator
-  | greater_than_operator
-  | question_mark
-  | underscore
-  | vertical_bar
-    ;
-
 space =
     '#SEE_THE_SYNTAX_RULES'
     ;
 
 double_quote =
     '"'
-    ;
-
-percent =
-    '%'
-    ;
-
-ampersand =
-    '&'
     ;
 
 quote =
@@ -218,34 +170,8 @@ question_mark =
     '?'
     ;
 
-left_bracket =
-    '['
-    ;
-
-right_bracket =
-    ']'
-    ;
-
 underscore =
     '_'
-    ;
-
-vertical_bar =
-    '|'
-    ;
-
-token =
-  | nondelimiter_token
-  | delimiter_token
-    ;
-
-nondelimiter_token =
-  | regular_identifier
-  | key_word
-  | unsigned_numeric_literal
-  | national_character_string_literal
-  | bit_string_literal
-  | hex_string_literal
     ;
 
 regular_identifier =
@@ -286,23 +212,6 @@ doublequote_symbol =
     '""'
     ;
 
-delimiter_token =
-  | character_string_literal
-  | date_string
-  | time_string
-  | timestamp_string
-  | interval_string
-  | delimited_identifier
-  | sql_special_character
-  | not_equals_operator
-  | greater_than_or_equals_operator
-  | less_than_or_equals_operator
-  | concatenation_operator
-  | double_period
-  | left_bracket
-  | right_bracket
-    ;
-
 not_equals_operator =
     '<>'
     ;
@@ -317,10 +226,6 @@ less_than_or_equals_operator =
 
 concatenation_operator =
     '||'
-    ;
-
-double_period =
-    '..'
     ;
 
 separator =
@@ -342,294 +247,6 @@ comment_introducer =
 
 newline =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-key_word =
-  | reserved_word
-  | non_reserved_word
-    ;
-
-non_reserved_word =
-  | 'ADA'
-  | 'C'
-  | 'CATALOG_NAME'
-  | 'CHARACTER_SET_CATALOG'
-  | 'CHARACTER_SET_NAME'
-  | 'CHARACTER_SET_SCHEMA'
-  | 'CLASS_ORIGIN'
-  | 'COBOL'
-  | 'COLLATION_CATALOG'
-  | 'COLLATION_NAME'
-  | 'COLLATION_SCHEMA'
-  | 'COLUMN_NAME'
-  | 'COMMAND_FUNCTION'
-  | 'COMMITTED'
-  | 'CONDITION_NUMBER'
-  | 'CONNECTION_NAME'
-  | 'CONSTRAINT_CATALOG'
-  | 'CONSTRAINT_NAME'
-  | 'CONSTRAINT_SCHEMA'
-  | 'CURSOR_NAME'
-  | 'DATA'
-  | 'DATETIME_INTERVAL_CODE'
-  | 'DATETIME_INTERVAL_PRECISION'
-  | 'DYNAMIC_FUNCTION'
-  | 'FORTRAN'
-  | 'LENGTH'
-  | 'MESSAGE_LENGTH'
-  | 'MESSAGE_OCTET_LENGTH'
-  | 'MESSAGE_TEXT'
-  | 'MORE'
-  | 'MUMPS'
-  | 'NAME'
-  | 'NULLABLE'
-  | 'NUMBER'
-  | 'PASCAL'
-  | 'PLI'
-  | 'REPEATABLE'
-  | 'RETURNED_LENGTH'
-  | 'RETURNED_OCTET_LENGTH'
-  | 'RETURNED_SQLSTATE'
-  | 'ROW_COUNT'
-  | 'SCALE'
-  | 'SCHEMA_NAME'
-  | 'SERIALIZABLE'
-  | 'SERVER_NAME'
-  | 'SUBCLASS_ORIGIN'
-  | 'TABLE_NAME'
-  | 'TYPE'
-  | 'UNCOMMITTED'
-  | 'UNNAMED'
-    ;
-
-reserved_word =
-  | 'ABSOLUTE'
-  | 'ACTION'
-  | 'ADD'
-  | 'ALL'
-  | 'ALLOCATE'
-  | 'ALTER'
-  | 'AND'
-  | 'ANY'
-  | 'ARE'
-  | 'AS'
-  | 'ASC'
-  | 'ASSERTION'
-  | 'AT'
-  | 'AUTHORIZATION'
-  | 'AVG'
-  | 'BEGIN'
-  | 'BETWEEN'
-  | 'BIT'
-  | 'BIT_LENGTH'
-  | 'BOTH'
-  | 'BY'
-  | 'CASCADE'
-  | 'CASCADED'
-  | 'CASE'
-  | 'CAST'
-  | 'CATALOG'
-  | 'CHAR'
-  | 'CHARACTER'
-  | 'CHAR_LENGTH'
-  | 'CHARACTER_LENGTH'
-  | 'CHECK'
-  | 'CLOSE'
-  | 'COALESCE'
-  | 'COLLATE'
-  | 'COLLATION'
-  | 'COLUMN'
-  | 'COMMIT'
-  | 'CONNECT'
-  | 'CONNECTION'
-  | 'CONSTRAINT'
-  | 'CONSTRAINTS'
-  | 'CONTINUE'
-  | 'CONVERT'
-  | 'CORRESPONDING'
-  | 'COUNT'
-  | 'CREATE'
-  | 'CROSS'
-  | 'CURRENT'
-  | 'CURRENT_DATE'
-  | 'CURRENT_TIME'
-  | 'CURRENT_TIMESTAMP'
-  | 'CURRENT_USER'
-  | 'CURSOR'
-  | 'DATE'
-  | 'DAY'
-  | 'DEALLOCATE'
-  | 'DEC'
-  | 'DECIMAL'
-  | 'DECLARE'
-  | 'DEFAULT'
-  | 'DEFERRABLE'
-  | 'DEFERRED'
-  | 'DELETE'
-  | 'DESC'
-  | 'DESCRIBE'
-  | 'DESCRIPTOR'
-  | 'DIAGNOSTICS'
-  | 'DISCONNECT'
-  | 'DISTINCT'
-  | 'DOMAIN'
-  | 'DOUBLE'
-  | 'DROP'
-  | 'ELSE'
-  | 'END'
-  | 'END-EXEC'
-  | 'ESCAPE'
-  | 'EXCEPT'
-  | 'EXCEPTION'
-  | 'EXEC'
-  | 'EXECUTE'
-  | 'EXISTS'
-  | 'EXTERNAL'
-  | 'EXTRACT'
-  | 'FALSE'
-  | 'FETCH'
-  | 'FIRST'
-  | 'FLOAT'
-  | 'FOR'
-  | 'FOREIGN'
-  | 'FOUND'
-  | 'FROM'
-  | 'FULL'
-  | 'GET'
-  | 'GLOBAL'
-  | 'GO'
-  | 'GOTO'
-  | 'GRANT'
-  | 'GROUP'
-  | 'HAVING'
-  | 'HOUR'
-  | 'IDENTITY'
-  | 'IMMEDIATE'
-  | 'IN'
-  | 'INDICATOR'
-  | 'INITIALLY'
-  | 'INNER'
-  | 'INPUT'
-  | 'INSENSITIVE'
-  | 'INSERT'
-  | 'INT'
-  | 'INTEGER'
-  | 'INTERSECT'
-  | 'INTERVAL'
-  | 'INTO'
-  | 'IS'
-  | 'ISOLATION'
-  | 'JOIN'
-  | 'KEY'
-  | 'LANGUAGE'
-  | 'LAST'
-  | 'LEADING'
-  | 'LEFT'
-  | 'LEVEL'
-  | 'LIKE'
-  | 'LOCAL'
-  | 'LOWER'
-  | 'MATCH'
-  | 'MAX'
-  | 'MIN'
-  | 'MINUTE'
-  | 'MODULE'
-  | 'MONTH'
-  | 'NAMES'
-  | 'NATIONAL'
-  | 'NATURAL'
-  | 'NCHAR'
-  | 'NEXT'
-  | 'NO'
-  | 'NOT'
-  | 'NULL'
-  | 'NULLIF'
-  | 'NUMERIC'
-  | 'OCTET_LENGTH'
-  | 'OF'
-  | 'ON'
-  | 'ONLY'
-  | 'OPEN'
-  | 'OPTION'
-  | 'OR'
-  | 'ORDER'
-  | 'OUTER'
-  | 'OUTPUT'
-  | 'OVERLAPS'
-  | 'PAD'
-  | 'PARTIAL'
-  | 'POSITION'
-  | 'PRECISION'
-  | 'PREPARE'
-  | 'PRESERVE'
-  | 'PRIMARY'
-  | 'PRIOR'
-  | 'PRIVILEGES'
-  | 'PROCEDURE'
-  | 'PUBLIC'
-  | 'READ'
-  | 'REAL'
-  | 'REFERENCES'
-  | 'RELATIVE'
-  | 'RESTRICT'
-  | 'REVOKE'
-  | 'RIGHT'
-  | 'ROLLBACK'
-  | 'ROWS'
-  | 'SCHEMA'
-  | 'SCROLL'
-  | 'SECOND'
-  | 'SECTION'
-  | 'SELECT'
-  | 'SESSION'
-  | 'SESSION_USER'
-  | 'SET'
-  | 'SIZE'
-  | 'SMALLINT'
-  | 'SOME'
-  | 'SPACE'
-  | 'SQL'
-  | 'SQLCODE'
-  | 'SQLERROR'
-  | 'SQLSTATE'
-  | 'SUBSTRING'
-  | 'SUM'
-  | 'SYSTEM_USER'
-  | 'TABLE'
-  | 'TEMPORARY'
-  | 'THEN'
-  | 'TIME'
-  | 'TIMESTAMP'
-  | 'TIMEZONE_HOUR'
-  | 'TIMEZONE_MINUTE'
-  | 'TO'
-  | 'TRAILING'
-  | 'TRANSACTION'
-  | 'TRANSLATE'
-  | 'TRANSLATION'
-  | 'TRIM'
-  | 'TRUE'
-  | 'UNION'
-  | 'UNIQUE'
-  | 'UNKNOWN'
-  | 'UPDATE'
-  | 'UPPER'
-  | 'USAGE'
-  | 'USER'
-  | 'USING'
-  | 'VALUE'
-  | 'VALUES'
-  | 'VARCHAR'
-  | 'VARYING'
-  | 'VIEW'
-  | 'WHEN'
-  | 'WHENEVER'
-  | 'WHERE'
-  | 'WITH'
-  | 'WORK'
-  | 'WRITE'
-  | 'YEAR'
-  | 'ZONE'
     ;
 
 literal =
@@ -921,49 +538,6 @@ correlation_name =
     identifier
     ;
 
-module_name =
-    identifier
-    ;
-
-cursor_name =
-    identifier
-    ;
-
-procedure_name =
-    identifier
-    ;
-
-sql_statement_name =
-  | statement_name
-  | extended_statement_name
-    ;
-
-statement_name =
-    identifier
-    ;
-
-extended_statement_name =
-    [scope_option] simple_value_specification
-    ;
-
-dynamic_cursor_name =
-  | cursor_name
-  | extended_cursor_name
-    ;
-
-extended_cursor_name =
-    [scope_option] simple_value_specification
-    ;
-
-descriptor_name =
-    [scope_option] simple_value_specification
-    ;
-
-scope_option =
-  | 'GLOBAL'
-  | 'LOCAL'
-    ;
-
 parameter_name =
     colon identifier
     ;
@@ -1110,16 +684,6 @@ simple_value_specification =
   | parameter_name
   | embedded_variable_name
   | literal
-    ;
-
-target_specification =
-  | parameter_specification
-  | variable_specification
-    ;
-
-simple_target_specification =
-  | parameter_name
-  | embedded_variable_name
     ;
 
 parameter_specification =
@@ -1895,20 +1459,6 @@ interval_leading_field_precision =
     unsigned_integer
     ;
 
-language_clause =
-    'LANGUAGE' language_name
-    ;
-
-language_name =
-  | 'ADA'
-  | 'C'
-  | 'COBOL'
-  | 'FORTRAN'
-  | 'MUMPS'
-  | 'PASCAL'
-  | 'PLI'
-    ;
-
 privileges =
   | 'ALL' 'PRIVILEGES'
   | action_list
@@ -2390,63 +1940,6 @@ revoke_statement =
     'REVOKE' ['GRANT' 'OPTION' 'FOR'] privileges 'ON' object_name 'FROM' grantee [{comma grantee}+] drop_behavior
     ;
 
-module =
-    module_name_clause language_clause module_authorization_clause [{temporary_table_declaration}+] {module_contents}+
-    ;
-
-module_authorization_clause =
-  | 'SCHEMA' schema_name
-  | 'AUTHORIZATION' module_authorization_identifier
-  | 'SCHEMA' schema_name 'AUTHORIZATION' module_authorization_identifier
-    ;
-
-module_authorization_identifier =
-    authorization_identifier
-    ;
-
-module_contents =
-  | declare_cursor
-  | dynamic_declare_cursor
-  | procedure
-    ;
-
-module_name_clause =
-    'MODULE' [module_name] [module_character_set_specification]
-    ;
-
-module_character_set_specification =
-    'NAMES' 'ARE' character_set_specification
-    ;
-
-procedure =
-    'PROCEDURE' procedure_name parameter_declaration_list semicolon sql_procedure_statement semicolon
-    ;
-
-parameter_declaration_list =
-  | left_paren parameter_declaration [{comma parameter_declaration}+] right_paren
-  | {parameter_declaration}+
-    ;
-
-parameter_declaration =
-  | parameter_name data_type
-  | status_parameter
-    ;
-
-status_parameter =
-  | 'SQLCODE'
-  | 'SQLSTATE'
-    ;
-
-sql_procedure_statement =
-  | sql_schema_statement
-  | sql_data_statement
-  | sql_transaction_statement
-  | sql_connection_statement
-  | sql_session_statement
-  | sql_dynamic_statement
-  | sql_diagnostics_statement
-    ;
-
 sql_schema_statement =
   | sql_schema_definition_statement
   | sql_schema_manipulation_statement
@@ -2478,22 +1971,6 @@ sql_schema_manipulation_statement =
   | drop_assertion_statement
     ;
 
-sql_data_statement =
-  | open_statement
-  | fetch_statement
-  | close_statement
-  | select_statement_single_row
-  | sql_data_change_statement
-    ;
-
-sql_data_change_statement =
-  | delete_statement_positioned
-  | delete_statement_searched
-  | insert_statement
-  | update_statement_positioned
-  | update_statement_searched
-    ;
-
 sql_transaction_statement =
   | set_transaction_statement
   | set_constraints_mode_statement
@@ -2513,48 +1990,6 @@ sql_session_statement =
   | set_names_statement
   | set_session_authorization_identifier_statement
   | set_local_time_zone_statement
-    ;
-
-sql_dynamic_statement =
-  | system_descriptor_statement
-  | prepare_statement
-  | deallocate_prepared_statement
-  | describe_statement
-  | execute_statement
-  | execute_immediate_statement
-  | sql_dynamic_data_statement
-    ;
-
-sql_dynamic_data_statement =
-  | allocate_cursor_statement
-  | dynamic_open_statement
-  | dynamic_fetch_statement
-  | dynamic_close_statement
-  | dynamic_delete_statement_positioned
-  | dynamic_update_statement_positioned
-    ;
-
-system_descriptor_statement =
-  | allocate_descriptor_statement
-  | deallocate_descriptor_statement
-  | set_descriptor_statement
-  | get_descriptor_statement
-    ;
-
-sql_diagnostics_statement =
-    get_diagnostics_statement
-    ;
-
-declare_cursor =
-    'DECLARE' cursor_name ['INSENSITIVE'] ['SCROLL'] 'CURSOR' 'FOR' cursor_specification
-    ;
-
-cursor_specification =
-    query_expression [order_by_clause] [updatability_clause]
-    ;
-
-updatability_clause =
-    'FOR' ('READ' 'ONLY' | 'UPDATE' ['OF' column_name_list])
     ;
 
 order_by_clause =
@@ -2579,42 +2014,6 @@ ordering_specification =
   | 'DESC'
     ;
 
-open_statement =
-    'OPEN' cursor_name
-    ;
-
-fetch_statement =
-    'FETCH' [[fetch_orientation] 'FROM'] cursor_name 'INTO' fetch_target_list
-    ;
-
-fetch_orientation =
-  | 'NEXT'
-  | 'PRIOR'
-  | 'FIRST'
-  | 'LAST'
-  | ('ABSOLUTE' | 'RELATIVE') simple_value_specification
-    ;
-
-fetch_target_list =
-    target_specification [{comma target_specification}+]
-    ;
-
-close_statement =
-    'CLOSE' cursor_name
-    ;
-
-select_statement_single_row =
-    'SELECT' [set_quantifier] select_list 'INTO' select_target_list table_expression
-    ;
-
-select_target_list =
-    target_specification [{comma target_specification}+]
-    ;
-
-delete_statement_positioned =
-    'DELETE' 'FROM' table_name 'WHERE' 'CURRENT' 'OF' cursor_name
-    ;
-
 delete_statement_searched =
     'DELETE' 'FROM' table_name ['WHERE' search_condition]
     ;
@@ -2630,10 +2029,6 @@ insert_columns_and_source =
 
 insert_column_list =
     column_name_list
-    ;
-
-update_statement_positioned =
-    'UPDATE' table_name 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' cursor_name
     ;
 
 set_clause_list =
@@ -2766,352 +2161,6 @@ set_time_zone_value =
   | 'LOCAL'
     ;
 
-allocate_descriptor_statement =
-    'ALLOCATE' 'DESCRIPTOR' descriptor_name ['WITH' 'MAX' occurrences]
-    ;
-
-occurrences =
-    simple_value_specification
-    ;
-
-deallocate_descriptor_statement =
-    'DEALLOCATE' 'DESCRIPTOR' descriptor_name
-    ;
-
-get_descriptor_statement =
-    'GET' 'DESCRIPTOR' descriptor_name get_descriptor_information
-    ;
-
-get_descriptor_information =
-  | get_count
-  | 'VALUE' item_number get_item_information [{comma get_item_information}+]
-    ;
-
-get_count =
-    simple_target_specification_1 equals_operator 'COUNT'
-    ;
-
-get_item_information =
-    simple_target_specification_2 equals_operator descriptor_item_name
-    ;
-
-simple_target_specification_1 =
-    simple_target_specification
-    ;
-
-simple_target_specification_2 =
-    simple_target_specification
-    ;
-
-descriptor_item_name =
-  | 'TYPE'
-  | 'LENGTH'
-  | 'OCTET_LENGTH'
-  | 'RETURNED_LENGTH'
-  | 'RETURNED_OCTET_LENGTH'
-  | 'PRECISION'
-  | 'SCALE'
-  | 'DATETIME_INTERVAL_CODE'
-  | 'DATETIME_INTERVAL_PRECISION'
-  | 'NULLABLE'
-  | 'INDICATOR'
-  | 'DATA'
-  | 'NAME'
-  | 'UNNAMED'
-  | 'COLLATION_CATALOG'
-  | 'COLLATION_SCHEMA'
-  | 'COLLATION_NAME'
-  | 'CHARACTER_SET_CATALOG'
-  | 'CHARACTER_SET_SCHEMA'
-  | 'CHARACTER_SET_NAME'
-    ;
-
-set_descriptor_statement =
-    'SET' 'DESCRIPTOR' descriptor_name set_descriptor_information
-    ;
-
-set_descriptor_information =
-  | set_count
-  | 'VALUE' item_number set_item_information [{comma set_item_information}+]
-    ;
-
-set_count =
-    'COUNT' equals_operator simple_value_specification_1
-    ;
-
-set_item_information =
-    descriptor_item_name equals_operator simple_value_specification_2
-    ;
-
-simple_value_specification_1 =
-    simple_value_specification
-    ;
-
-simple_value_specification_2 =
-    simple_value_specification
-    ;
-
-item_number =
-    simple_value_specification
-    ;
-
-prepare_statement =
-    'PREPARE' sql_statement_name 'FROM' sql_statement_variable
-    ;
-
-sql_statement_variable =
-    simple_value_specification
-    ;
-
-preparable_statement =
-  | preparable_sql_data_statement
-  | preparable_sql_schema_statement
-  | preparable_sql_transaction_statement
-  | preparable_sql_session_statement
-  | preparable_implementation_defined_statement
-    ;
-
-preparable_sql_data_statement =
-  | delete_statement_searched
-  | dynamic_single_row_select_statement
-  | insert_statement
-  | dynamic_select_statement
-  | update_statement_searched
-  | preparable_dynamic_delete_statement_positioned
-  | preparable_dynamic_update_statement_positioned
-    ;
-
-preparable_sql_schema_statement =
-    sql_schema_statement
-    ;
-
-preparable_sql_transaction_statement =
-    sql_transaction_statement
-    ;
-
-preparable_sql_session_statement =
-    sql_session_statement
-    ;
-
-dynamic_select_statement =
-    cursor_specification
-    ;
-
-dynamic_single_row_select_statement =
-    query_specification
-    ;
-
-preparable_implementation_defined_statement =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-deallocate_prepared_statement =
-    'DEALLOCATE' 'PREPARE' sql_statement_name
-    ;
-
-describe_statement =
-  | describe_input_statement
-  | describe_output_statement
-    ;
-
-describe_input_statement =
-    'DESCRIBE' 'INPUT' sql_statement_name using_descriptor
-    ;
-
-describe_output_statement =
-    'DESCRIBE' ['OUTPUT'] sql_statement_name using_descriptor
-    ;
-
-using_clause =
-  | using_arguments
-  | using_descriptor
-    ;
-
-using_arguments =
-    ('USING' | 'INTO') argument [{comma argument}+]
-    ;
-
-argument =
-    target_specification
-    ;
-
-using_descriptor =
-    ('USING' | 'INTO') 'SQL' 'DESCRIPTOR' descriptor_name
-    ;
-
-execute_statement =
-    'EXECUTE' sql_statement_name [result_using_clause] [parameter_using_clause]
-    ;
-
-result_using_clause =
-    using_clause
-    ;
-
-parameter_using_clause =
-    using_clause
-    ;
-
-execute_immediate_statement =
-    'EXECUTE' 'IMMEDIATE' sql_statement_variable
-    ;
-
-dynamic_declare_cursor =
-    'DECLARE' cursor_name ['INSENSITIVE'] ['SCROLL'] 'CURSOR' 'FOR' statement_name
-    ;
-
-allocate_cursor_statement =
-    'ALLOCATE' extended_cursor_name ['INSENSITIVE'] ['SCROLL'] 'CURSOR' 'FOR' extended_statement_name
-    ;
-
-dynamic_open_statement =
-    'OPEN' dynamic_cursor_name [using_clause]
-    ;
-
-dynamic_fetch_statement =
-    'FETCH' [[fetch_orientation] 'FROM'] dynamic_cursor_name using_clause
-    ;
-
-dynamic_close_statement =
-    'CLOSE' dynamic_cursor_name
-    ;
-
-dynamic_delete_statement_positioned =
-    'DELETE' 'FROM' table_name 'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
-    ;
-
-dynamic_update_statement_positioned =
-    'UPDATE' table_name 'SET' set_clause [{comma set_clause}+] 'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
-    ;
-
-preparable_dynamic_delete_statement_positioned =
-    'DELETE' ['FROM' table_name] 'WHERE' 'CURRENT' 'OF' cursor_name
-    ;
-
-preparable_dynamic_update_statement_positioned =
-    'UPDATE' [table_name] 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' cursor_name
-    ;
-
-get_diagnostics_statement =
-    'GET' 'DIAGNOSTICS' sql_diagnostics_information
-    ;
-
-sql_diagnostics_information =
-  | statement_information
-  | condition_information
-    ;
-
-statement_information =
-    statement_information_item [{comma statement_information_item}+]
-    ;
-
-statement_information_item =
-    simple_target_specification equals_operator statement_information_item_name
-    ;
-
-statement_information_item_name =
-  | 'NUMBER'
-  | 'MORE'
-  | 'COMMAND_FUNCTION'
-  | 'DYNAMIC_FUNCTION'
-  | 'ROW_COUNT'
-    ;
-
-condition_information =
-    'EXCEPTION' condition_number condition_information_item [{comma condition_information_item}+]
-    ;
-
-condition_information_item =
-    simple_target_specification equals_operator condition_information_item_name
-    ;
-
-condition_information_item_name =
-  | 'CONDITION_NUMBER'
-  | 'RETURNED_SQLSTATE'
-  | 'CLASS_ORIGIN'
-  | 'SUBCLASS_ORIGIN'
-  | 'SERVER_NAME'
-  | 'CONNECTION_NAME'
-  | 'CONSTRAINT_CATALOG'
-  | 'CONSTRAINT_SCHEMA'
-  | 'CONSTRAINT_NAME'
-  | 'CATALOG_NAME'
-  | 'SCHEMA_NAME'
-  | 'TABLE_NAME'
-  | 'COLUMN_NAME'
-  | 'CURSOR_NAME'
-  | 'MESSAGE_TEXT'
-  | 'MESSAGE_LENGTH'
-  | 'MESSAGE_OCTET_LENGTH'
-    ;
-
-condition_number =
-    simple_value_specification
-    ;
-
-embedded_sql_host_program =
-  | embedded_sql_ada_program
-  | embedded_sql_c_program
-  | embedded_sql_cobol_program
-  | embedded_sql_fortran_program
-  | embedded_sql_mumps_program
-  | embedded_sql_pascal_program
-  | embedded_sql_pl_i_program
-    ;
-
-embedded_sql_statement =
-    sql_prefix statement_or_declaration [sql_terminator]
-    ;
-
-statement_or_declaration =
-  | declare_cursor
-  | dynamic_declare_cursor
-  | temporary_table_declaration
-  | embedded_exception_declaration
-  | sql_procedure_statement
-    ;
-
-sql_prefix =
-  | 'EXEC' 'SQL'
-  | ampersand 'SQL' left_paren
-    ;
-
-sql_terminator =
-  | 'END-EXEC'
-  | semicolon
-  | right_paren
-    ;
-
-embedded_sql_declare_section =
-  | embedded_sql_begin_declare [embedded_character_set_declaration] [{host_variable_definition}+] embedded_sql_end_declare
-  | embedded_sql_mumps_declare
-    ;
-
-embedded_character_set_declaration =
-    'SQL' 'NAMES' 'ARE' character_set_specification
-    ;
-
-embedded_sql_begin_declare =
-    sql_prefix 'BEGIN' 'DECLARE' 'SECTION' [sql_terminator]
-    ;
-
-embedded_sql_end_declare =
-    sql_prefix 'END' 'DECLARE' 'SECTION' [sql_terminator]
-    ;
-
-embedded_sql_mumps_declare =
-    sql_prefix 'BEGIN' 'DECLARE' 'SECTION' [embedded_character_set_declaration] [{host_variable_definition}+] 'END' 'DECLARE' 'SECTION' sql_terminator
-    ;
-
-host_variable_definition =
-  | ada_variable_definition
-  | c_variable_definition
-  | cobol_variable_definition
-  | fortran_variable_definition
-  | mumps_variable_definition
-  | pascal_variable_definition
-  | pl_i_variable_definition
-    ;
-
 embedded_variable_name =
     colon host_identifier
     ;
@@ -3126,308 +2175,32 @@ host_identifier =
   | pl_i_host_identifier
     ;
 
-embedded_exception_declaration =
-    'WHENEVER' condition condition_action
-    ;
-
-condition =
-  | 'SQLERROR'
-  | 'NOT' 'FOUND'
-    ;
-
-condition_action =
-  | 'CONTINUE'
-  | go_to
-    ;
-
-go_to =
-    ('GOTO' | 'GO' 'TO') goto_target
-    ;
-
-goto_target =
-  | host_label_identifier
-  | unsigned_integer
-  | host_pl_i_label_variable
-    ;
-
-host_label_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-host_pl_i_label_variable =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-embedded_sql_ada_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-ada_variable_definition =
-    ada_host_identifier [{comma ada_host_identifier}+] ':' ada_type_specification [ada_initial_value]
-    ;
-
-ada_initial_value =
-    ada_assignment_operator {character_representation}+
-    ;
-
-ada_assignment_operator =
-    colon equals_operator
-    ;
-
 ada_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-ada_type_specification =
-  | ada_qualified_type_specification
-  | ada_unqualified_type_specification
-    ;
-
-ada_qualified_type_specification =
-  | 'SQL_STANDARD' period 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification] left_paren '1' double_period length right_paren
-  | 'SQL_STANDARD' period 'BIT' left_paren '1' double_period length right_paren
-  | 'SQL_STANDARD' period 'SMALLINT'
-  | 'SQL_STANDARD' period 'INT'
-  | 'SQL_STANDARD' period 'REAL'
-  | 'SQL_STANDARD' period 'DOUBLE_PRECISION'
-  | 'SQL_STANDARD' period 'SQLCODE_TYPE'
-  | 'SQL_STANDARD' period 'SQLSTATE_TYPE'
-  | 'SQL_STANDARD' period 'INDICATOR_TYPE'
-    ;
-
-ada_unqualified_type_specification =
-  | 'CHAR' left_paren '1' double_period length right_paren
-  | 'BIT' left_paren '1' double_period length right_paren
-  | 'SMALLINT'
-  | 'INT'
-  | 'REAL'
-  | 'DOUBLE_PRECISION'
-  | 'SQLCODE_TYPE'
-  | 'SQLSTATE_TYPE'
-  | 'INDICATOR_TYPE'
-    ;
-
-embedded_sql_c_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-c_variable_definition =
-    [c_storage_class] [c_class_modifier] c_variable_specification semicolon
-    ;
-
-c_variable_specification =
-  | c_numeric_variable
-  | c_character_variable
-  | c_derived_variable
-    ;
-
-c_storage_class =
-  | 'auto'
-  | 'extern'
-  | 'static'
-    ;
-
-c_class_modifier =
-  | 'const'
-  | 'volatile'
-    ;
-
-c_numeric_variable =
-    ('long' 'long' | 'long' | 'short' | 'float' | 'double') c_host_identifier [c_initial_value] [{comma c_host_identifier [c_initial_value]}+]
-    ;
-
-c_character_variable =
-    c_character_type ['CHARACTER' 'SET' ['IS'] character_set_specification] c_host_identifier c_array_specification [c_initial_value] [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-    ;
-
-c_character_type =
-  | 'char'
-  | 'unsigned' 'char'
-  | 'unsigned' 'short'
-    ;
-
-c_array_specification =
-    left_bracket length right_bracket
     ;
 
 c_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
     ;
 
-c_derived_variable =
-  | c_varchar_variable
-  | c_bit_variable
-    ;
-
-c_varchar_variable =
-    'VARCHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification] c_host_identifier c_array_specification [c_initial_value] [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-    ;
-
-c_bit_variable =
-    'BIT' c_host_identifier c_array_specification [c_initial_value] [{comma c_host_identifier c_array_specification [c_initial_value]}+]
-    ;
-
-c_initial_value =
-    equals_operator {character_representation}+
-    ;
-
-embedded_sql_cobol_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-cobol_variable_definition =
-    ('01' | '77') cobol_host_identifier cobol_type_specification [{character_representation}+] period
-    ;
-
 cobol_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-cobol_type_specification =
-  | cobol_character_type
-  | cobol_bit_type
-  | cobol_numeric_type
-  | cobol_integer_type
-    ;
-
-cobol_character_type =
-    ['CHARACTER' 'SET' ['IS'] character_set_specification] ('PIC' | 'PICTURE') ['IS'] {'X' [left_paren length right_paren]}+
-    ;
-
-cobol_bit_type =
-    ('PIC' | 'PICTURE') ['IS'] {'B' [left_paren length right_paren]}+
-    ;
-
-cobol_numeric_type =
-    ('PIC' | 'PICTURE') ['IS'] 'S' cobol_nines_specification ['USAGE' ['IS']] 'DISPLAY' 'SIGN' 'LEADING' 'SEPARATE'
-    ;
-
-cobol_nines_specification =
-  | cobol_nines ['V' [cobol_nines]]
-  | 'V' cobol_nines
-    ;
-
-cobol_integer_type =
-  | cobol_computational_integer
-  | cobol_binary_integer
-    ;
-
-cobol_computational_integer =
-    ('PIC' | 'PICTURE') ['IS'] 'S' cobol_nines ['USAGE' ['IS']] ('COMP' | 'COMPUTATIONAL')
-    ;
-
-cobol_binary_integer =
-    ('PIC' | 'PICTURE') ['IS'] 'S' cobol_nines ['USAGE' ['IS']] 'BINARY'
-    ;
-
-cobol_nines =
-    {'9' [left_paren length right_paren]}+
-    ;
-
-embedded_sql_fortran_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-fortran_variable_definition =
-    fortran_type_specification fortran_host_identifier [{comma fortran_host_identifier}+]
     ;
 
 fortran_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
     ;
 
-fortran_type_specification =
-  | 'CHARACTER' [asterisk length] ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'BIT' [asterisk length]
-  | 'INTEGER'
-  | 'REAL'
-  | 'DOUBLE' 'PRECISION'
-    ;
-
-embedded_sql_mumps_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-mumps_variable_definition =
-    (mumps_numeric_variable | mumps_character_variable) semicolon
-    ;
-
-mumps_character_variable =
-    'VARCHAR' mumps_host_identifier mumps_length_specification [{comma mumps_host_identifier mumps_length_specification}+]
-    ;
-
 mumps_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-mumps_length_specification =
-    left_paren length right_paren
-    ;
-
-mumps_numeric_variable =
-    mumps_type_specification mumps_host_identifier [{comma mumps_host_identifier}+]
-    ;
-
-mumps_type_specification =
-  | 'INT'
-  | 'DEC' [left_paren precision [comma scale] right_paren]
-  | 'REAL'
-    ;
-
-embedded_sql_pascal_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pascal_variable_definition =
-    pascal_host_identifier [{comma pascal_host_identifier}+] colon pascal_type_specification semicolon
     ;
 
 pascal_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
     ;
 
-pascal_type_specification =
-  | 'PACKED' 'ARRAY' left_bracket '1' double_period length right_bracket 'OF' 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'PACKED' 'ARRAY' left_bracket '1' double_period length right_bracket 'OF' 'BIT'
-  | 'INTEGER'
-  | 'REAL'
-  | 'CHAR' ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'BIT'
-    ;
-
-embedded_sql_pl_i_program =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pl_i_variable_definition =
-    ('DCL' | 'DECLARE') (pl_i_host_identifier | left_paren pl_i_host_identifier [{comma pl_i_host_identifier}+] right_paren) pl_i_type_specification [{character_representation}+] semicolon
-    ;
-
 pl_i_host_identifier =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pl_i_type_specification =
-  | ('CHAR' | 'CHARACTER') ['VARYING'] left_paren length right_paren ['CHARACTER' 'SET' ['IS'] character_set_specification]
-  | 'BIT' ['VARYING'] left_paren length right_paren
-  | pl_i_type_fixed_decimal left_paren precision [comma scale] right_paren
-  | pl_i_type_fixed_binary [left_paren precision right_paren]
-  | pl_i_type_float_binary left_paren precision right_paren
-    ;
-
-pl_i_type_fixed_decimal =
-  | ('DEC' | 'DECIMAL') 'FIXED'
-  | 'FIXED' ('DEC' | 'DECIMAL')
-    ;
-
-pl_i_type_fixed_binary =
-  | ('BIN' | 'BINARY') 'FIXED'
-  | 'FIXED' ('BIN' | 'BINARY')
-    ;
-
-pl_i_type_float_binary =
-  | ('BIN' | 'BINARY') 'FLOAT'
-  | 'FLOAT' ('BIN' | 'BINARY')
     ;
 
 direct_sql_statement =
