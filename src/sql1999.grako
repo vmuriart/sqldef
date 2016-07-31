@@ -3383,7 +3383,7 @@ free_locator_statement =
     ;
 
 locator_reference =
-  | host_parameter_name
+    host_parameter_name
     ;
 
 hold_locator_statement =
