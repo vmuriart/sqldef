@@ -4497,6 +4497,10 @@ merge_insert_value_element =
   | contextually_typed_value_specification
     ;
 
+update_statement_positioned =
+    'UPDATE' target_table [['AS'] correlation_name] 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' cursor_name
+    ;
+
 update_statement_searched =
     'UPDATE' target_table ['FOR' 'PORTION' 'OF' application_time_period_name 'FROM' point_in_time_1 'TO' point_in_time_2] [['AS'] correlation_name] 'SET' set_clause_list ['WHERE' search_condition]
     ;
@@ -4752,6 +4756,11 @@ set_transform_group_statement =
 transform_group_characteristic =
   | 'DEFAULT' 'TRANSFORM' 'GROUP' value_specification
   | 'TRANSFORM' 'GROUP' 'FOR' 'TYPE' path_resolved_user_defined_type_name value_specification
+    ;
+
+set_session_collation_statement =
+  | 'SET' 'COLLATION' value_specification ['FOR' character_set_specification_list]
+  | 'SET' 'NO' 'COLLATION' ['FOR' character_set_specification_list]
     ;
 
 allocate_descriptor_statement =
@@ -5059,15 +5068,6 @@ all_qualifier =
 
 condition_number =
     simple_value_specification
-    ;
-
-update_statement_positioned =
-    'UPDATE' target_table [['AS'] correlation_name] 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' cursor_name
-    ;
-
-set_session_collation_statement =
-  | 'SET' 'COLLATION' value_specification ['FOR' character_set_specification_list]
-  | 'SET' 'NO' 'COLLATION' ['FOR' character_set_specification_list]
     ;
 
 start =
