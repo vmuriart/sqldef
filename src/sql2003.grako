@@ -19,6 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+
 sql_terminal_character =
     sql_language_character
     ;
@@ -6870,4 +6877,8 @@ hex_string_literal =
 
 handler_declaration =
     '#MISSING'
+    ;
+
+start =
+    direct_sql_statement $
     ;

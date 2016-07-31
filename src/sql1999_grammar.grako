@@ -19,6 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+
 sql_terminal_character =
     sql_language_character
     ;
@@ -4686,3 +4693,6 @@ cast_function =
     specific_routine_designator
     ;
 
+start =
+    direct_sql_statement $
+    ;

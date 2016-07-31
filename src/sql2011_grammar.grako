@@ -19,6 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+
 sql_terminal_character =
     sql_language_character
     ;
@@ -7576,4 +7583,8 @@ set_session_collation_statement =
 
 collation_specification =
     value_specification
+    ;
+
+start =
+    direct_sql_statement $
     ;

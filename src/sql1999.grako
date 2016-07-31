@@ -19,6 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+
 sql_object_identifier =
     sql_provenance sql_variant
     ;
@@ -6636,4 +6643,8 @@ part_8 =
 
 part_9 =
     '#MISSING'
+    ;
+
+start =
+    direct_sql_statement $
     ;

@@ -19,6 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+
 sql_terminal_character =
   | sql_language_character
   | sql_embedded_language_character
@@ -3341,4 +3348,8 @@ direct_select_statement_multiple_rows =
 
 direct_implementation_defined_statement =
     '#SEE_THE_SYNTAX_RULES'
+    ;
+
+start =
+    direct_sql_statement $
     ;
