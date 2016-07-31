@@ -189,11 +189,7 @@ general_literal =
     ;
 
 character_string_literal =
-    [introducer character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
-    ;
-
-introducer =
-    underscore
+    [underscore character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 character_representation =
@@ -245,15 +241,7 @@ sign =
     ;
 
 approximate_numeric_literal =
-    mantissa 'E' exponent
-    ;
-
-mantissa =
-    exact_numeric_literal
-    ;
-
-exponent =
-    signed_integer
+    exact_numeric_literal 'E' signed_integer
     ;
 
 signed_integer =
@@ -371,15 +359,7 @@ minutes_value =
     ;
 
 seconds_value =
-    seconds_integer_value [period [seconds_fraction]]
-    ;
-
-seconds_integer_value =
-    unsigned_integer
-    ;
-
-seconds_fraction =
-    unsigned_integer
+    unsigned_integer [period [unsigned_integer]]
     ;
 
 datetime_value =
@@ -401,13 +381,9 @@ actual_identifier =
   | delimited_identifier
     ;
 
-sql_language_identifier =
-    regular_identifier
-    ;
-
 authorization_identifier =
   | role_name
-  | user_identifier
+  | identifier
     ;
 
 table_name =
@@ -419,15 +395,7 @@ domain_name =
     ;
 
 schema_name =
-    [catalog_name period] unqualified_schema_name
-    ;
-
-unqualified_schema_name =
-    identifier
-    ;
-
-catalog_name =
-    identifier
+    [identifier period] identifier
     ;
 
 schema_qualified_name =
@@ -487,10 +455,6 @@ host_parameter_name =
     colon identifier
     ;
 
-sql_parameter_name =
-    identifier
-    ;
-
 constraint_name =
     schema_qualified_name
     ;
@@ -509,14 +473,10 @@ collation_name =
     ;
 
 character_set_name =
-    [schema_name period] sql_language_identifier
+    [schema_name period] regular_identifier
     ;
 
 translation_name =
-    schema_qualified_name
-    ;
-
-form_of_use_conversion_name =
     schema_qualified_name
     ;
 
@@ -536,27 +496,11 @@ field_name =
     identifier
     ;
 
-savepoint_name =
-    identifier
-    ;
-
 role_name =
     identifier
     ;
 
-user_identifier =
-    identifier
-    ;
-
 connection_name =
-    simple_value_specification
-    ;
-
-sql_server_name =
-    simple_value_specification
-    ;
-
-connection_user_name =
     simple_value_specification
     ;
 
@@ -689,15 +633,11 @@ row_type_body =
     ;
 
 reference_type =
-    'REF' left_paren referenced_type right_paren [scope_clause]
+    'REF' left_paren user_defined_type right_paren [scope_clause]
     ;
 
 scope_clause =
     'SCOPE' table_name
-    ;
-
-referenced_type =
-    user_defined_type
     ;
 
 user_defined_type =
@@ -812,11 +752,7 @@ field_reference =
     ;
 
 attribute_or_method_reference =
-    value_expression_primary dereference_operator qualified_identifier [sql_argument_list]
-    ;
-
-dereference_operator =
-    right_arrow
+    value_expression_primary right_arrow qualified_identifier [sql_argument_list]
     ;
 
 method_invocation =
@@ -851,11 +787,7 @@ set_function_specification =
     ;
 
 general_set_function =
-    set_function_type left_paren [set_quantifier] value_expression right_paren
-    ;
-
-set_function_type =
-    computational_operation
+    computational_operation left_paren [set_quantifier] value_expression right_paren
     ;
 
 computational_operation =
@@ -946,21 +878,13 @@ absolute_value_expression =
     ;
 
 modulus_expression =
-    'MOD' left_paren numeric_value_expression_dividend comma numeric_value_expression_divisor right_paren
-    ;
-
-numeric_value_expression_dividend =
-    numeric_value_expression
-    ;
-
-numeric_value_expression_divisor =
-    numeric_value_expression
+    'MOD' left_paren numeric_value_expression comma numeric_value_expression right_paren
     ;
 
 string_value_function =
   | character_value_function
   | blob_value_function
-  | bit_value_function
+  | bit_substring_function
     ;
 
 character_value_function =
@@ -987,7 +911,7 @@ fold =
     ;
 
 form_of_use_conversion =
-    'CONVERT' left_paren character_value_expression 'USING' form_of_use_conversion_name right_paren
+    'CONVERT' left_paren character_value_expression 'USING' schema_qualified_name right_paren
     ;
 
 character_translation =
@@ -999,21 +923,13 @@ trim_function =
     ;
 
 trim_operands =
-    [[trim_specification] [trim_character] 'FROM'] trim_source
-    ;
-
-trim_source =
-    character_value_expression
+    [[trim_specification] [character_value_expression] 'FROM'] character_value_expression
     ;
 
 trim_specification =
   | 'LEADING'
   | 'TRAILING'
   | 'BOTH'
-    ;
-
-trim_character =
-    character_value_expression
     ;
 
 character_overlay_function =
@@ -1039,23 +955,11 @@ blob_trim_function =
     ;
 
 blob_trim_operands =
-    [[trim_specification] [trim_octet] 'FROM'] blob_trim_source
-    ;
-
-blob_trim_source =
-    blob_value_expression
-    ;
-
-trim_octet =
-    blob_value_expression
+    [[trim_specification] [blob_value_expression] 'FROM'] blob_value_expression
     ;
 
 blob_overlay_function =
     'OVERLAY' left_paren blob_value_expression 'PLACING' blob_value_expression 'FROM' start_position ['FOR' string_length] right_paren
-    ;
-
-bit_value_function =
-    bit_substring_function
     ;
 
 bit_substring_function =
@@ -1098,10 +1002,6 @@ current_local_timestamp_value_function =
     'LOCALTIMESTAMP' [left_paren timestamp_precision right_paren]
     ;
 
-interval_value_function =
-    interval_absolute_value_function
-    ;
-
 interval_absolute_value_function =
     'ABS' left_paren interval_value_expression right_paren
     ;
@@ -1122,7 +1022,7 @@ case_specification =
     ;
 
 simple_case =
-    'CASE' case_operand {simple_when_clause}+ [else_clause] 'END'
+    'CASE' value_expression {simple_when_clause}+ [else_clause] 'END'
     ;
 
 searched_case =
@@ -1130,7 +1030,7 @@ searched_case =
     ;
 
 simple_when_clause =
-    'WHEN' when_operand 'THEN' result
+    'WHEN' value_expression 'THEN' result
     ;
 
 searched_when_clause =
@@ -1141,21 +1041,9 @@ else_clause =
     'ELSE' result
     ;
 
-case_operand =
-    value_expression
-    ;
-
-when_operand =
-    value_expression
-    ;
-
 result =
-  | result_expression
+  | value_expression
   | 'NULL'
-    ;
-
-result_expression =
-    value_expression
     ;
 
 cast_specification =
@@ -1209,13 +1097,13 @@ nonparenthesized_value_expression_primary =
   | unsigned_value_specification
   | column_reference
   | set_function_specification
-  | scalar_subquery
+  | subquery
   | case_expression
   | cast_specification
   | subtype_treatment
   | attribute_or_method_reference
   | reference_resolution
-  | collection_value_constructor
+  | array_value_expression
   | routine_invocation
   | field_reference
   | element_reference
@@ -1224,20 +1112,12 @@ nonparenthesized_value_expression_primary =
   | new_specification
     ;
 
-collection_value_constructor =
-    array_value_expression
-    ;
-
 new_specification =
     'NEW' routine_invocation
     ;
 
 subtype_treatment =
-    'TREAT' left_paren subtype_operand 'AS' target_data_type right_paren
-    ;
-
-subtype_operand =
-    value_expression
+    'TREAT' left_paren value_expression 'AS' target_data_type right_paren
     ;
 
 target_data_type =
@@ -1374,7 +1254,7 @@ interval_factor =
 
 interval_primary =
   | value_expression_primary
-  | interval_value_function
+  | interval_absolute_value_function
     ;
 
 interval_value_expression_1 =
@@ -1424,25 +1304,13 @@ parenthesized_boolean_value_expression =
     ;
 
 array_value_expression =
-  | array_value_constructor
+  | array_value_list_constructor
   | array_concatenation
   | value_expression_primary
     ;
 
 array_concatenation =
-    array_value_expression_1 concatenation_operator array_value_expression_2
-    ;
-
-array_value_expression_1 =
-    array_value_expression
-    ;
-
-array_value_expression_2 =
-    array_value_expression
-    ;
-
-array_value_constructor =
-    array_value_list_constructor
+    array_value_expression concatenation_operator array_value_expression
     ;
 
 array_value_list_constructor =
@@ -1460,7 +1328,7 @@ array_element =
 row_value_constructor =
   | row_value_constructor_element
   | ['ROW'] left_paren row_value_constructor_element_list right_paren
-  | row_subquery
+  | subquery
     ;
 
 row_value_constructor_element_list =
@@ -1535,7 +1403,7 @@ table_reference =
 
 table_primary =
   | table_or_query_name [['AS'] correlation_name [left_paren derived_column_list right_paren]]
-  | derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
+  | table_subquery ['AS'] correlation_name [left_paren derived_column_list right_paren]
   | lateral_derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
   | collection_derived_table ['AS'] correlation_name [left_paren derived_column_list right_paren]
   | only_spec [['AS'] correlation_name [left_paren derived_column_list right_paren]]
@@ -1552,10 +1420,6 @@ lateral_derived_table =
 
 collection_derived_table =
     'UNNEST' left_paren collection_value_expression right_paren ['WITH' 'ORDINALITY']
-    ;
-
-derived_table =
-    table_subquery
     ;
 
 table_or_query_name =
@@ -1604,7 +1468,7 @@ join_condition =
     ;
 
 named_columns_join =
-    'USING' left_paren join_column_list right_paren
+    'USING' left_paren column_name_list right_paren
     ;
 
 join_type =
@@ -1616,10 +1480,6 @@ outer_join_type =
   | 'LEFT'
   | 'RIGHT'
   | 'FULL'
-    ;
-
-join_column_list =
-    column_name_list
     ;
 
 where_clause =
@@ -1739,11 +1599,7 @@ with_list =
     ;
 
 with_list_element =
-    query_name [left_paren with_column_list right_paren] 'AS' left_paren query_expression right_paren [search_or_cycle_clause]
-    ;
-
-with_column_list =
-    column_name_list
+    query_name [left_paren column_name_list right_paren] 'AS' left_paren query_expression right_paren [search_or_cycle_clause]
     ;
 
 query_expression_body =
@@ -1788,11 +1644,7 @@ explicit_table =
     ;
 
 corresponding_spec =
-    'CORRESPONDING' ['BY' left_paren corresponding_column_list right_paren]
-    ;
-
-corresponding_column_list =
-    column_name_list
+    'CORRESPONDING' ['BY' left_paren column_name_list right_paren]
     ;
 
 search_or_cycle_clause =
@@ -1802,7 +1654,7 @@ search_or_cycle_clause =
     ;
 
 search_clause =
-    'SEARCH' recursive_search_order 'SET' sequence_column
+    'SEARCH' recursive_search_order 'SET' column_name
     ;
 
 recursive_search_order =
@@ -1810,12 +1662,8 @@ recursive_search_order =
   | 'BREADTH' 'FIRST' 'BY' sort_specification_list
     ;
 
-sequence_column =
-    column_name
-    ;
-
 cycle_clause =
-    'CYCLE' cycle_column_list 'SET' cycle_mark_column 'TO' cycle_mark_value 'DEFAULT' non_cycle_mark_value 'USING' path_column
+    'CYCLE' cycle_column_list 'SET' column_name 'TO' value_expression 'DEFAULT' value_expression 'USING' column_name
     ;
 
 cycle_column_list =
@@ -1824,30 +1672,6 @@ cycle_column_list =
 
 cycle_column =
     column_name
-    ;
-
-cycle_mark_column =
-    column_name
-    ;
-
-path_column =
-    column_name
-    ;
-
-cycle_mark_value =
-    value_expression
-    ;
-
-non_cycle_mark_value =
-    value_expression
-    ;
-
-scalar_subquery =
-    subquery
-    ;
-
-row_subquery =
-    subquery
     ;
 
 table_subquery =
@@ -1910,14 +1734,10 @@ like_predicate =
     ;
 
 character_like_predicate =
-    character_match_value ['NOT'] 'LIKE' character_pattern ['ESCAPE' escape_character]
+    character_match_value ['NOT'] 'LIKE' character_value_expression ['ESCAPE' escape_character]
     ;
 
 character_match_value =
-    character_value_expression
-    ;
-
-character_pattern =
     character_value_expression
     ;
 
@@ -1926,27 +1746,11 @@ escape_character =
     ;
 
 octet_like_predicate =
-    octet_match_value ['NOT'] 'LIKE' octet_pattern ['ESCAPE' escape_octet]
-    ;
-
-octet_match_value =
-    blob_value_expression
-    ;
-
-octet_pattern =
-    blob_value_expression
-    ;
-
-escape_octet =
-    blob_value_expression
+    blob_value_expression ['NOT'] 'LIKE' blob_value_expression ['ESCAPE' blob_value_expression]
     ;
 
 similar_predicate =
-    character_match_value ['NOT'] 'SIMILAR' 'TO' similar_pattern ['ESCAPE' escape_character]
-    ;
-
-similar_pattern =
-    character_value_expression
+    character_match_value ['NOT'] 'SIMILAR' 'TO' character_value_expression ['ESCAPE' escape_character]
     ;
 
 null_predicate =
@@ -1984,27 +1788,11 @@ match_predicate =
     ;
 
 overlaps_predicate =
-    row_value_expression_1 'OVERLAPS' row_value_expression_2
-    ;
-
-row_value_expression_1 =
-    row_value_expression
-    ;
-
-row_value_expression_2 =
-    row_value_expression
+    row_value_expression 'OVERLAPS' row_value_expression
     ;
 
 distinct_predicate =
-    row_value_expression_3 'IS' 'DISTINCT' 'FROM' row_value_expression_4
-    ;
-
-row_value_expression_3 =
-    row_value_expression
-    ;
-
-row_value_expression_4 =
-    row_value_expression
+    row_value_expression 'IS' 'DISTINCT' 'FROM' row_value_expression
     ;
 
 type_predicate =
@@ -2016,12 +1804,8 @@ type_list =
     ;
 
 user_defined_type_specification =
-  | inclusive_user_defined_type_specification
+  | user_defined_type
   | exclusive_user_defined_type_specification
-    ;
-
-inclusive_user_defined_type_specification =
-    user_defined_type
     ;
 
 exclusive_user_defined_type_specification =
@@ -2169,21 +1953,9 @@ grantor =
     ;
 
 character_set_specification =
-  | standard_character_set_name
-  | implementation_defined_character_set_name
-  | user_defined_character_set_name
-    ;
-
-standard_character_set_name =
-    character_set_name
-    ;
-
-implementation_defined_character_set_name =
-    character_set_name
-    ;
-
-user_defined_character_set_name =
-    character_set_name
+  | character_set_name
+  | character_set_name
+  | character_set_name
     ;
 
 specific_routine_designator =
@@ -2314,17 +2086,13 @@ table_element =
     ;
 
 self_referencing_column_specification =
-    'REF' 'IS' self_referencing_column_name reference_generation
+    'REF' 'IS' column_name reference_generation
     ;
 
 reference_generation =
   | 'SYSTEM' 'GENERATED'
   | 'USER' 'GENERATED'
   | 'DERIVED'
-    ;
-
-self_referencing_column_name =
-    column_name
     ;
 
 column_options =
@@ -2336,15 +2104,7 @@ column_option_list =
     ;
 
 subtable_clause =
-    'UNDER' supertable_clause
-    ;
-
-supertable_clause =
-    supertable_name
-    ;
-
-supertable_name =
-    table_name
+    'UNDER' table_name
     ;
 
 like_clause =
@@ -2367,11 +2127,7 @@ column_constraint =
     ;
 
 reference_scope_check =
-    'REFERENCES' 'ARE' ['NOT'] 'CHECKED' ['ON' 'DELETE' reference_scope_check_action]
-    ;
-
-reference_scope_check_action =
-    referential_action
+    'REFERENCES' 'ARE' ['NOT'] 'CHECKED' ['ON' 'DELETE' referential_action]
     ;
 
 default_clause =
@@ -2401,7 +2157,7 @@ table_constraint =
     ;
 
 unique_constraint_definition =
-  | unique_specification left_paren unique_column_list right_paren
+  | unique_specification left_paren column_name_list right_paren
   | 'UNIQUE' '(' 'VALUE' ')'
     ;
 
@@ -2410,12 +2166,8 @@ unique_specification =
   | 'PRIMARY' 'KEY'
     ;
 
-unique_column_list =
-    column_name_list
-    ;
-
 referential_constraint_definition =
-    'FOREIGN' 'KEY' left_paren referencing_columns right_paren references_specification
+    'FOREIGN' 'KEY' left_paren reference_column_list right_paren references_specification
     ;
 
 references_specification =
@@ -2426,10 +2178,6 @@ match_type =
   | 'FULL'
   | 'PARTIAL'
   | 'SIMPLE'
-    ;
-
-referencing_columns =
-    reference_column_list
     ;
 
 referenced_table_and_columns =
@@ -2534,7 +2282,7 @@ view_specification =
     ;
 
 regular_view_specification =
-    [left_paren view_column_list right_paren]
+    [left_paren column_name_list right_paren]
     ;
 
 referenceable_view_specification =
@@ -2560,10 +2308,6 @@ view_column_option =
 levels_clause =
   | 'CASCADED'
   | 'LOCAL'
-    ;
-
-view_column_list =
-    column_name_list
     ;
 
 drop_view_statement =
@@ -2622,11 +2366,7 @@ drop_character_set_statement =
     ;
 
 collation_definition =
-    'CREATE' 'COLLATION' collation_name 'FOR' character_set_specification 'FROM' existing_collation_name [pad_characteristic]
-    ;
-
-existing_collation_name =
-    collation_name
+    'CREATE' 'COLLATION' collation_name 'FOR' character_set_specification 'FROM' collation_name [pad_characteristic]
     ;
 
 pad_characteristic =
@@ -2639,28 +2379,12 @@ drop_collation_statement =
     ;
 
 translation_definition =
-    'CREATE' 'TRANSLATION' translation_name 'FOR' source_character_set_specification 'TO' target_character_set_specification 'FROM' translation_source
-    ;
-
-source_character_set_specification =
-    character_set_specification
-    ;
-
-target_character_set_specification =
-    character_set_specification
+    'CREATE' 'TRANSLATION' translation_name 'FOR' character_set_specification 'TO' character_set_specification 'FROM' translation_source
     ;
 
 translation_source =
-  | existing_translation_name
-  | translation_routine
-    ;
-
-existing_translation_name =
-    translation_name
-    ;
-
-translation_routine =
-    specific_routine_designator
+  | translation_name
+  | specific_routine_designator
     ;
 
 drop_translation_statement =
@@ -2683,11 +2407,7 @@ trigger_action_time =
 trigger_event =
   | 'INSERT'
   | 'DELETE'
-  | 'UPDATE' ['OF' trigger_column_list]
-    ;
-
-trigger_column_list =
-    column_name_list
+  | 'UPDATE' ['OF' column_name_list]
     ;
 
 triggered_action =
@@ -2704,26 +2424,10 @@ old_or_new_values_alias_list =
     ;
 
 old_or_new_values_alias =
-  | 'OLD' ['ROW'] ['AS'] old_values_correlation_name
-  | 'NEW' ['ROW'] ['AS'] new_values_correlation_name
-  | 'OLD' 'TABLE' ['AS'] old_values_table_alias
-  | 'NEW' 'TABLE' ['AS'] new_values_table_alias
-    ;
-
-old_values_table_alias =
-    identifier
-    ;
-
-new_values_table_alias =
-    identifier
-    ;
-
-old_values_correlation_name =
-    correlation_name
-    ;
-
-new_values_correlation_name =
-    correlation_name
+  | 'OLD' ['ROW'] ['AS'] correlation_name
+  | 'NEW' ['ROW'] ['AS'] correlation_name
+  | 'OLD' 'TABLE' ['AS'] identifier
+  | 'NEW' 'TABLE' ['AS'] identifier
     ;
 
 drop_trigger_statement =
@@ -2739,11 +2443,7 @@ user_defined_type_body =
     ;
 
 subtype_clause =
-    'UNDER' supertype_name
-    ;
-
-supertype_name =
-    user_defined_type
+    'UNDER' user_defined_type
     ;
 
 representation =
@@ -2792,19 +2492,11 @@ ref_cast_option =
     ;
 
 cast_to_ref =
-    'CAST' left_paren 'SOURCE' 'AS' 'REF' right_paren 'WITH' cast_to_ref_identifier
-    ;
-
-cast_to_ref_identifier =
-    identifier
+    'CAST' left_paren 'SOURCE' 'AS' 'REF' right_paren 'WITH' identifier
     ;
 
 cast_to_type =
-    'CAST' left_paren 'REF' 'AS' 'SOURCE' right_paren 'WITH' cast_to_type_identifier
-    ;
-
-cast_to_type_identifier =
-    identifier
+    'CAST' left_paren 'REF' 'AS' 'SOURCE' right_paren 'WITH' identifier
     ;
 
 list_of_attributes =
@@ -2816,19 +2508,11 @@ cast_option =
     ;
 
 cast_to_distinct =
-    'CAST' left_paren 'SOURCE' 'AS' 'DISTINCT' right_paren 'WITH' cast_to_distinct_identifier
-    ;
-
-cast_to_distinct_identifier =
-    identifier
+    'CAST' left_paren 'SOURCE' 'AS' 'DISTINCT' right_paren 'WITH' identifier
     ;
 
 cast_to_source =
-    'CAST' left_paren 'DISTINCT' 'AS' 'SOURCE' right_paren 'WITH' cast_to_source_identifier
-    ;
-
-cast_to_source_identifier =
-    identifier
+    'CAST' left_paren 'DISTINCT' 'AS' 'SOURCE' right_paren 'WITH' identifier
     ;
 
 method_specification_list =
@@ -2901,10 +2585,6 @@ drop_data_type_statement =
     'DROP' 'TYPE' user_defined_type_name drop_behavior
     ;
 
-sql_invoked_routine =
-    schema_routine
-    ;
-
 schema_routine =
   | schema_procedure
   | schema_function
@@ -2931,7 +2611,7 @@ sql_parameter_declaration_list =
     ;
 
 sql_parameter_declaration =
-    [parameter_mode] [sql_parameter_name] parameter_type ['RESULT']
+    [parameter_mode] [identifier] parameter_type ['RESULT']
     ;
 
 parameter_mode =
@@ -2972,7 +2652,7 @@ routine_characteristic =
     ;
 
 dynamic_result_sets_characteristic =
-    'DYNAMIC' 'RESULT' 'SETS' maximum_dynamic_result_sets
+    'DYNAMIC' 'RESULT' 'SETS' unsigned_integer
     ;
 
 parameter_style_clause =
@@ -3000,12 +2680,8 @@ returns_data_type =
     ;
 
 routine_body =
-  | sql_routine_body
+  | sql_procedure_statement
   | external_body_reference
-    ;
-
-sql_routine_body =
-    sql_procedure_statement
     ;
 
 external_body_reference =
@@ -3040,16 +2716,8 @@ null_call_clause =
   | 'CALLED' 'ON' 'NULL' 'INPUT'
     ;
 
-maximum_dynamic_result_sets =
-    unsigned_integer
-    ;
-
 transform_group_specification =
-    'TRANSFORM' 'GROUP' (single_group_specification | multiple_group_specification)
-    ;
-
-single_group_specification =
-    group_name
+    'TRANSFORM' 'GROUP' (group_name | multiple_group_specification)
     ;
 
 multiple_group_specification =
@@ -3113,23 +2781,15 @@ ordering_category =
     ;
 
 relative_category =
-    'RELATIVE' 'WITH' relative_function_specification
+    'RELATIVE' 'WITH' specific_routine_designator
     ;
 
 map_category =
-    'MAP' 'WITH' map_function_specification
+    'MAP' 'WITH' specific_routine_designator
     ;
 
 state_category =
     'STATE' [specific_name]
-    ;
-
-relative_function_specification =
-    specific_routine_designator
-    ;
-
-map_function_specification =
-    specific_routine_designator
     ;
 
 drop_user_defined_ordering_statement =
@@ -3158,19 +2818,11 @@ transform_element =
     ;
 
 to_sql =
-    'TO' 'SQL' 'WITH' to_sql_function
+    'TO' 'SQL' 'WITH' specific_routine_designator
     ;
 
 from_sql =
-    'FROM' 'SQL' 'WITH' from_sql_function
-    ;
-
-to_sql_function =
-    specific_routine_designator
-    ;
-
-from_sql_function =
-    specific_routine_designator
+    'FROM' 'SQL' 'WITH' specific_routine_designator
     ;
 
 drop_transform_statement =
@@ -3179,11 +2831,7 @@ drop_transform_statement =
 
 transforms_to_be_dropped =
   | 'ALL'
-  | transform_group_element
-    ;
-
-transform_group_element =
-    group_name
+  | group_name
     ;
 
 grant_statement =
@@ -3244,7 +2892,7 @@ sql_executable_statement =
   | sql_transaction_statement
   | sql_connection_statement
   | sql_session_statement
-  | sql_diagnostics_statement
+  | get_diagnostics_statement
     ;
 
 sql_schema_statement =
@@ -3256,7 +2904,7 @@ sql_schema_definition_statement =
   | schema_definition
   | table_definition
   | view_definition
-  | sql_invoked_routine
+  | schema_routine
   | grant_statement
   | role_definition
   | grant_role_statement
@@ -3341,10 +2989,6 @@ sql_session_statement =
   | set_session_characteristics_statement
     ;
 
-sql_diagnostics_statement =
-    get_diagnostics_statement
-    ;
-
 order_by_clause =
     'ORDER' 'BY' sort_specification_list
     ;
@@ -3354,11 +2998,7 @@ sort_specification_list =
     ;
 
 sort_specification =
-    sort_key [collate_clause] [ordering_specification]
-    ;
-
-sort_key =
-    value_expression
+    value_expression [collate_clause] [ordering_specification]
     ;
 
 ordering_specification =
@@ -3403,11 +3043,7 @@ delete_statement_searched =
     ;
 
 insert_statement =
-    'INSERT' 'INTO' insertion_target insert_columns_and_source
-    ;
-
-insertion_target =
-    table_name
+    'INSERT' 'INTO' table_name insert_columns_and_source
     ;
 
 insert_columns_and_source =
@@ -3534,11 +3170,7 @@ level_of_isolation =
     ;
 
 diagnostics_size =
-    'DIAGNOSTICS' 'SIZE' number_of_conditions
-    ;
-
-number_of_conditions =
-    simple_value_specification
+    'DIAGNOSTICS' 'SIZE' simple_value_specification
     ;
 
 set_transaction_statement =
@@ -3563,7 +3195,7 @@ savepoint_statement =
     ;
 
 savepoint_specifier =
-  | savepoint_name
+  | identifier
   | simple_target_specification
     ;
 
@@ -3588,7 +3220,7 @@ connect_statement =
     ;
 
 connection_target =
-  | sql_server_name ['AS' connection_name] ['USER' connection_user_name]
+  | simple_value_specification ['AS' connection_name] ['USER' simple_value_specification]
   | 'DEFAULT'
     ;
 
@@ -3674,7 +3306,7 @@ statement_information_item_name =
     ;
 
 condition_information =
-    'EXCEPTION' condition_number condition_information_item [{comma condition_information_item}+]
+    'EXCEPTION' simple_value_specification condition_information_item [{comma condition_information_item}+]
     ;
 
 condition_information_item =
@@ -3711,16 +3343,12 @@ condition_information_item_name =
   | 'TRIGGER_SCHEMA'
     ;
 
-condition_number =
-    simple_value_specification
-    ;
-
 assertion_definition =
     'CREATE' 'ASSERTION' constraint_name 'CHECK' left_paren search_condition right_paren [constraint_characteristics]
     ;
 
 attribute_definition =
-    attribute_name data_type [attribute_default] [collate_clause]
+    attribute_name data_type [default_clause] [collate_clause]
     ;
 
 delete_statement_positioned =
@@ -3737,15 +3365,7 @@ target_table =
     ;
 
 user_defined_cast_definition =
-    'CREATE' 'CAST' left_paren source_data_type 'AS' target_data_type right_paren 'WITH' cast_function ['AS' 'ASSIGNMENT']
-    ;
-
-attribute_default =
-    default_clause
-    ;
-
-cast_function =
-    specific_routine_designator
+    'CREATE' 'CAST' left_paren source_data_type 'AS' target_data_type right_paren 'WITH' specific_routine_designator ['AS' 'ASSIGNMENT']
     ;
 
 direct_sql_statement =
