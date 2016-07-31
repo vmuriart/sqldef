@@ -3,12 +3,16 @@ import os
 import re
 
 simple = [
-    # 'datetime_value',
-    'identifier',
-    # 'unsigned_integer',
-    # 'schema_qualified_name',
-    # 'numeric_value_expression',
     'subquery',
+    'underscore',
+    'identifier',
+    'qualified_name',
+    'column_name_list',
+    'character_set_name',
+    'schema_qualified_name',
+    # 'datetime_value',
+    # 'unsigned_integer',
+    # 'numeric_value_expression',
     # 'simple_value_specification'
 ]
 
@@ -50,3 +54,4 @@ if __name__ == '__main__':
         process(file)
 
         print("Finished {file}".format(file=file))
+        print("")
