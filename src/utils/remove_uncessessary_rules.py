@@ -47,6 +47,7 @@ def process(text, start=None):
         #     continue
 
         if name not in rules_required:
+            print name
             text = text.replace('\n' + full + '\n', '\n')
 
     return text

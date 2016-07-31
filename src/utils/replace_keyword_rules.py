@@ -2,26 +2,16 @@ import glob
 import os
 import re
 
-simple = [
-    # 'datetime_value',
-    'identifier',
-    # 'unsigned_integer',
-    # 'schema_qualified_name',
-    # 'numeric_value_expression',
-    'subquery',
-    # 'simple_value_specification'
-]
-
 
 def process(path):
     with open(path) as f:
         b = f.read()
 
-    regex = re.compile(r'((\w+) =\s+(\w+?)\s*;\n)')
+    regex = re.compile(r"((\w+) =\s+('\w+')\s+;\n)")
     found = regex.findall(b)
 
     for def_, name, new in found:
-        if new not in simple:
+        if name == 'underscore':
             continue
         print name
 

@@ -6,11 +6,18 @@ if __name__ == '__main__':
     os.chdir("../")
     for file in glob.glob("*.grako"):
         print("Starting {file}".format(file=file))
+
         with open(file) as f:
             b = f.read()
-        text = grako.gencode(grammar=b)
 
-        with open("./parsers/" + file[:-5] + 'py', 'w') as f:
-            f.write(text)
+        try:
+            text = grako.gencode(grammar=b)
 
-        print("Finished {file}".format(file=file))
+        except Exception as e:
+            print("Error {file}".format(file=file))
+            print(e)
+
+        else:
+            with open("./parsers/" + file[:-5] + 'py', 'w') as f:
+                f.write(text)
+            print("Finished {file}".format(file=file))
