@@ -43,8 +43,8 @@ def process(text, start=None):
 
     for full, name, _ in found:
         # Exclude rules starting with underscore
-        if name.startswith('_'):
-            continue
+        # if name.startswith('_'):
+        #     continue
 
         if name not in rules_required:
             text = text.replace('\n' + full + '\n', '\n')

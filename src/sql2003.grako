@@ -30,16 +30,8 @@ digit =
     /\d+/
     ;
 
-space =
-    / /
-    ;
-
 double_quote =
     '"'
-    ;
-
-ampersand =
-    '&'
     ;
 
 quote =
@@ -174,7 +166,7 @@ unicode_character_escape_value =
     ;
 
 unicode_escape_character =
-    '#SEE_THE_SYNTAX_RULES'
+    '\U'
     ;
 
 not_equals_operator =
@@ -201,52 +193,6 @@ double_colon =
     '::'
     ;
 
-separator =
-    {comment | white_space}+
-    ;
-
-white_space =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-comment =
-  | simple_comment
-  | bracketed_comment
-    ;
-
-simple_comment =
-    simple_comment_introducer [{comment_character}+] newline
-    ;
-
-simple_comment_introducer =
-    minus_sign minus_sign [{minus_sign}+]
-    ;
-
-bracketed_comment =
-    bracketed_comment_introducer bracketed_comment_contents bracketed_comment_terminator
-    ;
-
-bracketed_comment_introducer =
-    '/*'
-    ;
-
-bracketed_comment_terminator =
-    '*/'
-    ;
-
-bracketed_comment_contents =
-    [{comment_character | separator}+] '#SEE_THE_SYNTAX_RULES'
-    ;
-
-comment_character =
-  | nonquote_character
-  | quote
-    ;
-
-newline =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 literal =
   | signed_numeric_literal
   | general_literal
@@ -268,7 +214,7 @@ general_literal =
     ;
 
 character_string_literal =
-    [introducer character_set_specification] quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    [introducer character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 introducer =
@@ -279,16 +225,12 @@ character_representation =
     /(''|[^'\n])/
     ;
 
-nonquote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 national_character_string_literal =
-    'N' quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    'N' quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 unicode_character_string_literal =
-    [introducer character_set_specification] 'U' ampersand quote [{unicode_representation}+] quote [{separator quote [{unicode_representation}+] quote}+] ['ESCAPE' escape_character]
+    [introducer character_set_specification] 'U&' quote [{unicode_representation}+] quote [{quote [{unicode_representation}+] quote}+] ['ESCAPE' escape_character]
     ;
 
 unicode_representation =
@@ -297,7 +239,7 @@ unicode_representation =
     ;
 
 binary_string_literal =
-    'X' quote [{hexit hexit}+] quote [{separator quote [{hexit hexit}+] quote}+] ['ESCAPE' escape_character]
+    'X' quote [{hexit hexit}+] quote [{quote [{hexit hexit}+] quote}+] ['ESCAPE' escape_character]
     ;
 
 hexit =
@@ -402,7 +344,7 @@ unquoted_time_string =
     ;
 
 unquoted_timestamp_string =
-    unquoted_date_string space unquoted_time_string
+    unquoted_date_string unquoted_time_string
     ;
 
 unquoted_interval_string =
@@ -420,7 +362,7 @@ day_time_literal =
     ;
 
 day_time_interval =
-    days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+    days_value [hours_value [colon minutes_value [colon seconds_value]]]
     ;
 
 time_interval =
@@ -885,7 +827,6 @@ general_value_specification =
   | host_parameter_specification
   | sql_parameter_reference
   | dynamic_parameter_specification
-  | embedded_variable_specification
   | current_collation_specification
   | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
   | 'CURRENT_PATH'
@@ -902,7 +843,6 @@ simple_value_specification =
   | literal
   | host_parameter_name
   | sql_parameter_reference
-  | embedded_variable_name
     ;
 
 target_specification =
@@ -911,14 +851,12 @@ target_specification =
   | column_reference
   | target_array_element_specification
   | dynamic_parameter_specification
-  | embedded_variable_specification
     ;
 
 simple_target_specification =
   | host_parameter_specification
   | sql_parameter_reference
   | column_reference
-  | embedded_variable_name
     ;
 
 host_parameter_specification =
@@ -927,14 +865,6 @@ host_parameter_specification =
 
 dynamic_parameter_specification =
     question_mark
-    ;
-
-embedded_variable_specification =
-    embedded_variable_name [indicator_variable]
-    ;
-
-indicator_variable =
-    ['INDICATOR'] embedded_variable_name
     ;
 
 indicator_parameter =
@@ -4504,7 +4434,6 @@ free_locator_statement =
 
 locator_reference =
   | host_parameter_name
-  | embedded_variable_name
     ;
 
 hold_locator_statement =
@@ -4959,48 +4888,6 @@ dynamic_update_statement_positioned =
     'UPDATE' target_table 'SET' set_clause_list 'WHERE' 'CURRENT' 'OF' dynamic_cursor_name
     ;
 
-embedded_variable_name =
-    colon host_identifier
-    ;
-
-host_identifier =
-  | ada_host_identifier
-  | c_host_identifier
-  | cobol_host_identifier
-  | fortran_host_identifier
-  | mumps_host_identifier
-  | pascal_host_identifier
-  | pl_i_host_identifier
-    ;
-
-ada_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-c_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-cobol_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-fortran_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-mumps_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pascal_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pl_i_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 direct_sql_statement =
     directly_executable_statement semicolon
     ;
@@ -5011,7 +4898,6 @@ directly_executable_statement =
   | sql_transaction_statement
   | sql_connection_statement
   | sql_session_statement
-  | direct_implementation_defined_statement
     ;
 
 direct_sql_data_statement =
@@ -5021,10 +4907,6 @@ direct_sql_data_statement =
   | update_statement_searched
   | merge_statement
   | temporary_table_declaration
-    ;
-
-direct_implementation_defined_statement =
-    '#SEE_THE_SYNTAX_RULES'
     ;
 
 direct_select_statement_multiple_rows =

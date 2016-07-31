@@ -30,10 +30,6 @@ digit =
     /\d+/
     ;
 
-space =
-    / /
-    ;
-
 double_quote =
     '"'
     ;
@@ -171,52 +167,6 @@ double_colon =
     '::'
     ;
 
-separator =
-    {comment | white_space}+
-    ;
-
-white_space =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-comment =
-  | simple_comment
-  | bracketed_comment
-    ;
-
-simple_comment =
-    simple_comment_introducer [{comment_character}+] newline
-    ;
-
-simple_comment_introducer =
-    minus_sign minus_sign [{minus_sign}+]
-    ;
-
-bracketed_comment =
-    bracketed_comment_introducer bracketed_comment_contents bracketed_comment_terminator
-    ;
-
-bracketed_comment_introducer =
-    '/*'
-    ;
-
-bracketed_comment_terminator =
-    '*/'
-    ;
-
-bracketed_comment_contents =
-    [{comment_character | separator}+] '#SEE_THE_SYNTAX_RULES'
-    ;
-
-comment_character =
-  | nonquote_character
-  | quote
-    ;
-
-newline =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 literal =
   | signed_numeric_literal
   | general_literal
@@ -239,7 +189,7 @@ general_literal =
     ;
 
 character_string_literal =
-    [introducer character_set_specification] quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    [introducer character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 introducer =
@@ -250,24 +200,20 @@ character_representation =
     /(''|[^'\n])/
     ;
 
-nonquote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 national_character_string_literal =
-    'N' quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    'N' quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 bit_string_literal =
-    'B' quote [{bit}+] quote [{separator quote [{bit}+] quote}+]
+    'B' quote [{bit}+] quote [{quote [{bit}+] quote}+]
     ;
 
 hex_string_literal =
-    'X' quote [{hexit}+] quote [{separator quote [{hexit}+] quote}+]
+    'X' quote [{hexit}+] quote [{quote [{hexit}+] quote}+]
     ;
 
 binary_string_literal =
-    'X' quote [{hexit hexit}+] quote [{separator quote [{hexit hexit}+] quote}+]
+    'X' quote [{hexit hexit}+] quote [{quote [{hexit hexit}+] quote}+]
     ;
 
 bit =
@@ -377,7 +323,7 @@ unquoted_time_string =
     ;
 
 unquoted_timestamp_string =
-    unquoted_date_string space unquoted_time_string
+    unquoted_date_string unquoted_time_string
     ;
 
 unquoted_interval_string =
@@ -395,7 +341,7 @@ day_time_literal =
     ;
 
 day_time_interval =
-    days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+    days_value [hours_value [colon minutes_value [colon seconds_value]]]
     ;
 
 time_interval =

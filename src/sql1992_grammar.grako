@@ -30,10 +30,6 @@ digit =
     /\d+/
     ;
 
-space =
-    / /
-    ;
-
 double_quote =
     '"'
     ;
@@ -131,27 +127,6 @@ concatenation_operator =
     '||'
     ;
 
-separator =
-    {comment | space | newline}+
-    ;
-
-comment =
-    comment_introducer [{comment_character}+] newline
-    ;
-
-comment_character =
-  | nonquote_character
-  | quote
-    ;
-
-comment_introducer =
-    minus_sign minus_sign [{minus_sign}+]
-    ;
-
-newline =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 literal =
   | signed_numeric_literal
   | general_literal
@@ -172,7 +147,7 @@ general_literal =
     ;
 
 character_string_literal =
-    [introducer character_set_specification] quote [{character_representation}+] quote [{{separator}+ quote [{character_representation}+] quote}+]
+    [introducer character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 introducer =
@@ -183,20 +158,16 @@ character_representation =
     /(''|[^'\n])/
     ;
 
-nonquote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 national_character_string_literal =
-    'N' quote [{character_representation}+] quote [{{separator}+ quote [{character_representation}+] quote}+]
+    'N' quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 bit_string_literal =
-    'B' quote [{bit}+] quote [{{separator}+ quote [{bit}+] quote}+]
+    'B' quote [{bit}+] quote [{quote [{bit}+] quote}+]
     ;
 
 hex_string_literal =
-    'X' quote [{hexit}+] quote [{{separator}+ quote [{hexit}+] quote}+]
+    'X' quote [{hexit}+] quote [{quote [{hexit}+] quote}+]
     ;
 
 bit =
@@ -274,7 +245,7 @@ time_string =
     ;
 
 timestamp_string =
-    quote date_value space time_value [time_zone_interval] quote
+    quote date_value time_value [time_zone_interval] quote
     ;
 
 time_zone_interval =
@@ -308,7 +279,7 @@ day_time_literal =
     ;
 
 day_time_interval =
-    days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+    days_value [hours_value [colon minutes_value [colon seconds_value]]]
     ;
 
 time_interval =
@@ -549,7 +520,6 @@ unsigned_value_specification =
 general_value_specification =
   | parameter_specification
   | dynamic_parameter_specification
-  | variable_specification
   | 'USER'
   | 'CURRENT_USER'
   | 'SESSION_USER'
@@ -559,7 +529,6 @@ general_value_specification =
 
 simple_value_specification =
   | parameter_name
-  | embedded_variable_name
   | literal
     ;
 
@@ -573,14 +542,6 @@ indicator_parameter =
 
 dynamic_parameter_specification =
     question_mark
-    ;
-
-variable_specification =
-    embedded_variable_name [indicator_variable]
-    ;
-
-indicator_variable =
-    ['INDICATOR'] embedded_variable_name
     ;
 
 table_reference =
@@ -2038,48 +1999,6 @@ set_time_zone_value =
   | 'LOCAL'
     ;
 
-embedded_variable_name =
-    colon host_identifier
-    ;
-
-host_identifier =
-  | ada_host_identifier
-  | c_host_identifier
-  | cobol_host_identifier
-  | fortran_host_identifier
-  | mumps_host_identifier
-  | pascal_host_identifier
-  | pl_i_host_identifier
-    ;
-
-ada_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-c_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-cobol_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-fortran_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-mumps_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pascal_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pl_i_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 direct_sql_statement =
     directly_executable_statement semicolon
     ;
@@ -2090,7 +2009,6 @@ directly_executable_statement =
   | sql_transaction_statement
   | sql_connection_statement
   | sql_session_statement
-  | direct_implementation_defined_statement
     ;
 
 direct_sql_data_statement =
@@ -2099,10 +2017,6 @@ direct_sql_data_statement =
   | insert_statement
   | update_statement_searched
   | temporary_table_declaration
-    ;
-
-direct_implementation_defined_statement =
-    '#SEE_THE_SYNTAX_RULES'
     ;
 
 direct_select_statement_multiple_rows =

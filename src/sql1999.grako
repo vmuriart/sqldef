@@ -26,41 +26,8 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 
-_1987 =
-  | '0'
-  | 'edition1987' left_paren '0' right_paren
-    ;
-
-_1989 =
-    _1989_base _1989_package
-    ;
-
-_1989_base =
-  | '1'
-  | 'edition1989' left_paren '1' right_paren
-    ;
-
-_1989_package =
-  | integrity_no
-  | integrity_yes
-    ;
-
-_1992 =
-  | '2'
-  | 'edition1992' left_paren '2' right_paren
-    ;
-
-_1999 =
-  | '3'
-  | 'edition1999' left_paren '3' right_paren
-    ;
-
 digit =
     /\d+/
-    ;
-
-space =
-    / /
     ;
 
 double_quote =
@@ -635,7 +602,7 @@ general_literal =
     ;
 
 character_string_literal =
-    [introducer character_set_specification] quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    [introducer character_set_specification] quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 introducer =
@@ -646,62 +613,12 @@ character_representation =
     /(''|[^'\n])/
     ;
 
-nonquote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-separator =
-    {comment | white_space}+
-    ;
-
-comment =
-  | simple_comment
-  | bracketed_comment
-    ;
-
-simple_comment =
-    simple_comment_introducer [{comment_character}+] newline
-    ;
-
-simple_comment_introducer =
-    minus_sign minus_sign [{minus_sign}+]
-    ;
-
-comment_character =
-  | nonquote_character
-  | quote
-    ;
-
-newline =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-bracketed_comment =
-    bracketed_comment_introducer bracketed_comment_contents bracketed_comment_terminator
-    ;
-
-bracketed_comment_introducer =
-    '/*'
-    ;
-
-bracketed_comment_contents =
-    [{comment_character | separator}+]
-    ;
-
-bracketed_comment_terminator =
-    '*/'
-    ;
-
-white_space =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 national_character_string_literal =
-    'N' quote [{character_representation}+] quote [{separator quote [{character_representation}+] quote}+]
+    'N' quote [{character_representation}+] quote [{quote [{character_representation}+] quote}+]
     ;
 
 bit_string_literal =
-    'B' quote [{bit}+] quote [{separator quote [{bit}+] quote}+]
+    'B' quote [{bit}+] quote [{quote [{bit}+] quote}+]
     ;
 
 bit =
@@ -710,7 +627,7 @@ bit =
     ;
 
 hex_string_literal =
-    'X' quote [{hexit}+] quote [{separator quote [{hexit}+] quote}+]
+    'X' quote [{hexit}+] quote [{quote [{hexit}+] quote}+]
     ;
 
 hexit =
@@ -718,7 +635,7 @@ hexit =
     ;
 
 binary_string_literal =
-    'X' quote [{hexit hexit}+] quote [{separator quote [{hexit hexit}+] quote}+]
+    'X' quote [{hexit hexit}+] quote [{quote [{hexit hexit}+] quote}+]
     ;
 
 datetime_literal =
@@ -808,7 +725,7 @@ timestamp_string =
     ;
 
 unquoted_timestamp_string =
-    unquoted_date_string space unquoted_time_string
+    unquoted_date_string unquoted_time_string
     ;
 
 interval_literal =
@@ -834,7 +751,7 @@ day_time_literal =
     ;
 
 day_time_interval =
-    days_value [space hours_value [colon minutes_value [colon seconds_value]]]
+    days_value [hours_value [colon minutes_value [colon seconds_value]]]
     ;
 
 time_interval =
@@ -1021,7 +938,6 @@ general_value_specification =
   | sql_parameter_reference
   | sql_variable_reference
   | dynamic_parameter_specification
-  | embedded_variable_specification
   | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
   | 'CURRENT_PATH'
   | 'CURRENT_ROLE'
@@ -1648,7 +1564,6 @@ target_specification =
   | column_reference
   | sql_variable_reference
   | dynamic_parameter_specification
-  | embedded_variable_specification
     ;
 
 reference_resolution =
@@ -3445,7 +3360,6 @@ simple_value_specification =
   | host_parameter_name
   | sql_parameter_reference
   | sql_variable_reference
-  | embedded_variable_name
     ;
 
 fetch_target_list =
@@ -3470,7 +3384,6 @@ free_locator_statement =
 
 locator_reference =
   | host_parameter_name
-  | embedded_variable_name
     ;
 
 hold_locator_statement =
@@ -3715,7 +3628,6 @@ simple_target_specification =
   | sql_parameter_reference
   | column_reference
   | sql_variable_reference
-  | embedded_variable_name
     ;
 
 release_savepoint_statement =
@@ -4229,48 +4141,6 @@ scope_option =
   | 'LOCAL'
     ;
 
-embedded_variable_name =
-    colon host_identifier
-    ;
-
-host_identifier =
-  | ada_host_identifier
-  | c_host_identifier
-  | cobol_host_identifier
-  | fortran_host_identifier
-  | mumps_host_identifier
-  | pascal_host_identifier
-  | pl_i_host_identifier
-    ;
-
-ada_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-c_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-cobol_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-fortran_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-mumps_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pascal_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-pl_i_host_identifier =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
 occurrences =
     simple_value_specification
     ;
@@ -4461,14 +4331,6 @@ dynamic_parameter_specification =
     question_mark
     ;
 
-embedded_variable_specification =
-    embedded_variable_name [indicator_variable]
-    ;
-
-indicator_variable =
-    ['INDICATOR'] embedded_variable_name
-    ;
-
 into_descriptor =
     'INTO' ['SQL'] 'DESCRIPTOR' descriptor_name
     ;
@@ -4559,7 +4421,6 @@ directly_executable_statement =
   | sql_transaction_statement
   | sql_connection_statement
   | sql_session_statement
-  | direct_implementation_defined_statement
     ;
 
 direct_sql_data_statement =
@@ -4613,10 +4474,6 @@ set_transform_group_statement =
 transform_group_characteristic =
   | 'DEFAULT' 'TRANSFORM' 'GROUP' value_specification
   | 'TRANSFORM' 'GROUP' 'FOR' 'TYPE' user_defined_type value_specification
-    ;
-
-direct_implementation_defined_statement =
-    '#SEE_THE_SYNTAX_RULES'
     ;
 
 interval_primary =
