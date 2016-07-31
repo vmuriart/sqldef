@@ -26,84 +26,12 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 
-simple_latin_letter =
-  | simple_latin_upper_case_letter
-  | simple_latin_lower_case_letter
-    ;
-
-simple_latin_upper_case_letter =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
-    ;
-
-simple_latin_lower_case_letter =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z'
-    ;
-
 digit =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
+    /\d+/
     ;
 
 space =
-    '#SEE_THE_SYNTAX_RULES'
+    / /
     ;
 
 double_quote =
@@ -204,29 +132,13 @@ underscore =
     '_'
     ;
 
+@name
 regular_identifier =
-    identifier_body
-    ;
-
-identifier_body =
-    identifier_start [{identifier_part}+]
-    ;
-
-identifier_part =
-  | identifier_start
-  | identifier_extend
-    ;
-
-identifier_start =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_extend =
-    '#SEE_THE_SYNTAX_RULES'
+    /[a-z]\w*/
     ;
 
 large_object_length_token =
-    {digit}+ multiplier
+    digit multiplier
     ;
 
 multiplier =
@@ -240,12 +152,7 @@ delimited_identifier =
     ;
 
 delimited_identifier_body =
-    {delimited_identifier_part}+
-    ;
-
-delimited_identifier_part =
-  | nondoublequote_character
-  | doublequote_symbol
+    /(""|[^"\n])+/
     ;
 
 unicode_escape_value =
@@ -268,14 +175,6 @@ unicode_character_escape_value =
 
 unicode_escape_character =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-nondoublequote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-doublequote_symbol =
-    '""'
     ;
 
 not_equals_operator =
@@ -377,16 +276,11 @@ introducer =
     ;
 
 character_representation =
-  | nonquote_character
-  | quote_symbol
+    /(''|[^'\n])/
     ;
 
 nonquote_character =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-quote_symbol =
-    "''"
     ;
 
 national_character_string_literal =
@@ -407,19 +301,7 @@ binary_string_literal =
     ;
 
 hexit =
-  | digit
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
+    /[a-f\d]/
     ;
 
 signed_numeric_literal =
@@ -458,7 +340,7 @@ signed_integer =
     ;
 
 unsigned_integer =
-    {digit}+
+    digit
     ;
 
 datetime_literal =
@@ -599,16 +481,7 @@ actual_identifier =
     ;
 
 sql_language_identifier =
-    sql_language_identifier_start [{underscore | sql_language_identifier_part}+]
-    ;
-
-sql_language_identifier_start =
-    simple_latin_letter
-    ;
-
-sql_language_identifier_part =
-  | simple_latin_letter
-  | digit
+    regular_identifier
     ;
 
 authorization_identifier =

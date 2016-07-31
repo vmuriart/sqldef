@@ -55,84 +55,12 @@ _1999 =
   | 'edition1999' left_paren '3' right_paren
     ;
 
-simple_latin_letter =
-  | simple_latin_upper_case_letter
-  | simple_latin_lower_case_letter
-    ;
-
-simple_latin_upper_case_letter =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
-    ;
-
-simple_latin_lower_case_letter =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z'
-    ;
-
 digit =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
+    /\d+/
     ;
 
 space =
-    '#SEE_THE_SYNTAX_RULES'
+    / /
     ;
 
 double_quote =
@@ -220,65 +148,9 @@ actual_identifier =
   | delimited_identifier
     ;
 
+@name
 regular_identifier =
-    identifier_body
-    ;
-
-identifier_body =
-    identifier_start [{identifier_part}+]
-    ;
-
-identifier_start =
-  | initial_alphabetic_character
-  | ideographic_character
-    ;
-
-initial_alphabetic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-ideographic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_part =
-  | alphabetic_character
-  | ideographic_character
-  | decimal_digit_character
-  | identifier_combining_character
-  | underscore
-  | alternate_underscore
-  | extender_character
-  | identifier_ignorable_character
-  | connector_character
-    ;
-
-alphabetic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-decimal_digit_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_combining_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-alternate_underscore =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-extender_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_ignorable_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-connector_character =
-    '#SEE_THE_SYNTAX_RULES'
+    /[a-z]\w*/
     ;
 
 delimited_identifier =
@@ -286,20 +158,7 @@ delimited_identifier =
     ;
 
 delimited_identifier_body =
-    {delimited_identifier_part}+
-    ;
-
-delimited_identifier_part =
-  | nondoublequote_character
-  | doublequote_symbol
-    ;
-
-nondoublequote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-doublequote_symbol =
-    double_quote double_quote
+    /(""|[^"\n])+/
     ;
 
 character_set_specification =
@@ -329,16 +188,7 @@ unqualified_schema_name =
     ;
 
 sql_language_identifier =
-    sql_language_identifier_start [{underscore | sql_language_identifier_part}+]
-    ;
-
-sql_language_identifier_start =
-    simple_latin_letter
-    ;
-
-sql_language_identifier_part =
-  | simple_latin_letter
-  | digit
+    regular_identifier
     ;
 
 implementation_defined_character_set_name =
@@ -493,7 +343,7 @@ length =
     ;
 
 unsigned_integer =
-    {digit}+
+    digit
     ;
 
 large_object_length =
@@ -508,7 +358,7 @@ multiplier =
     ;
 
 large_object_length_token =
-    {digit}+ multiplier
+    digit multiplier
     ;
 
 national_character_string_type =
@@ -793,16 +643,11 @@ introducer =
     ;
 
 character_representation =
-  | nonquote_character
-  | quote_symbol
+    /(''|[^'\n])/
     ;
 
 nonquote_character =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-quote_symbol =
-    quote quote
     ;
 
 separator =
@@ -869,19 +714,7 @@ hex_string_literal =
     ;
 
 hexit =
-  | digit
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
+    /[a-f\d]/
     ;
 
 binary_string_literal =

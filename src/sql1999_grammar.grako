@@ -26,135 +26,16 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 
-sql_terminal_character =
-    sql_language_character
-    ;
-
-sql_language_character =
-  | simple_latin_letter
-  | digit
-  | sql_special_character
-    ;
-
-simple_latin_letter =
-  | simple_latin_upper_case_letter
-  | simple_latin_lower_case_letter
-    ;
-
-simple_latin_upper_case_letter =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
-    ;
-
-simple_latin_lower_case_letter =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z'
-    ;
-
 digit =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
-    ;
-
-sql_special_character =
-  | space
-  | double_quote
-  | percent
-  | ampersand
-  | quote
-  | left_paren
-  | right_paren
-  | asterisk
-  | plus_sign
-  | comma
-  | minus_sign
-  | period
-  | solidus
-  | colon
-  | semicolon
-  | less_than_operator
-  | equals_operator
-  | greater_than_operator
-  | question_mark
-  | left_bracket
-  | right_bracket
-  | circumflex
-  | underscore
-  | vertical_bar
-  | left_brace
-  | right_brace
+    /\d+/
     ;
 
 space =
-    '#SEE_THE_SYNTAX_RULES'
+    / /
     ;
 
 double_quote =
     '"'
-    ;
-
-percent =
-    '%'
-    ;
-
-ampersand =
-    '&'
     ;
 
 quote =
@@ -213,10 +94,6 @@ greater_than_operator =
     '>'
     ;
 
-question_mark =
-    '?'
-    ;
-
 left_bracket_or_trigraph =
   | left_bracket
   | left_bracket_trigraph
@@ -243,105 +120,17 @@ right_bracket_trigraph =
     '??)'
     ;
 
-circumflex =
-    '^'
-    ;
-
 underscore =
     '_'
     ;
 
-vertical_bar =
-    '|'
-    ;
-
-left_brace =
-    '{'
-    ;
-
-right_brace =
-    '}'
-    ;
-
-token =
-  | nondelimiter_token
-  | delimiter_token
-    ;
-
-nondelimiter_token =
-  | regular_identifier
-  | key_word
-  | unsigned_numeric_literal
-  | national_character_string_literal
-  | bit_string_literal
-  | hex_string_literal
-  | large_object_length_token
-  | multiplier
-    ;
-
+@name
 regular_identifier =
-    identifier_body
-    ;
-
-identifier_body =
-    identifier_start [{underscore | identifier_part}+]
-    ;
-
-identifier_start =
-  | initial_alphabetic_character
-  | ideographic_character
-    ;
-
-identifier_part =
-  | alphabetic_character
-  | ideographic_character
-  | decimal_digit_character
-  | identifier_combining_character
-  | underscore
-  | alternate_underscore
-  | extender_character
-  | identifier_ignorable_character
-  | connector_character
-    ;
-
-initial_alphabetic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-ideographic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-alphabetic_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-decimal_digit_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_combining_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-alternate_underscore =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-extender_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_ignorable_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-connector_character =
-    '#SEE_THE_SYNTAX_RULES'
+    /[a-z]\w*/
     ;
 
 large_object_length_token =
-    {digit}+ multiplier
+    digit multiplier
     ;
 
 multiplier =
@@ -355,38 +144,7 @@ delimited_identifier =
     ;
 
 delimited_identifier_body =
-    {delimited_identifier_part}+
-    ;
-
-delimited_identifier_part =
-  | nondoublequote_character
-  | doublequote_symbol
-    ;
-
-nondoublequote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-doublequote_symbol =
-    '""'
-    ;
-
-delimiter_token =
-  | character_string_literal
-  | date_string
-  | time_string
-  | timestamp_string
-  | interval_string
-  | delimited_identifier
-  | sql_special_character
-  | not_equals_operator
-  | greater_than_or_equals_operator
-  | less_than_or_equals_operator
-  | concatenation_operator
-  | right_arrow
-  | left_bracket_trigraph
-  | right_bracket_trigraph
-  | double_colon
+    /(""|[^"\n])+/
     ;
 
 not_equals_operator =
@@ -459,455 +217,6 @@ newline =
     '#SEE_THE_SYNTAX_RULES'
     ;
 
-key_word =
-  | reserved_word
-  | non_reserved_word
-    ;
-
-non_reserved_word =
-  | 'ABS'
-  | 'ADA'
-  | 'ASENSITIVE'
-  | 'ASSIGNMENT'
-  | 'ASYMMETRIC'
-  | 'ATOMIC'
-  | 'AVG'
-  | 'BETWEEN'
-  | 'BIT_LENGTH'
-  | 'BITVAR'
-  | 'C'
-  | 'CALLED'
-  | 'CARDINALITY'
-  | 'CATALOG_NAME'
-  | 'CHAIN'
-  | 'CHAR_LENGTH'
-  | 'CHARACTER_LENGTH'
-  | 'CHARACTER_SET_CATALOG'
-  | 'CHARACTER_SET_NAME'
-  | 'CHARACTER_SET_SCHEMA'
-  | 'CHECKED'
-  | 'CLASS_ORIGIN'
-  | 'COALESCE'
-  | 'COBOL'
-  | 'COLLATION_CATALOG'
-  | 'COLLATION_NAME'
-  | 'COLLATION_SCHEMA'
-  | 'COLUMN_NAME'
-  | 'COMMAND_FUNCTION'
-  | 'COMMAND_FUNCTION_CODE'
-  | 'COMMITTED'
-  | 'CONDITION_NUMBER'
-  | 'CONNECTION_NAME'
-  | 'CONSTRAINT_CATALOG'
-  | 'CONSTRAINT_NAME'
-  | 'CONSTRAINT_SCHEMA'
-  | 'CONTAINS'
-  | 'CONVERT'
-  | 'COUNT'
-  | 'CURSOR_NAME'
-  | 'DATETIME_INTERVAL_CODE'
-  | 'DATETIME_INTERVAL_PRECISION'
-  | 'DEFINED'
-  | 'DEFINER'
-  | 'DISPATCH'
-  | 'DYNAMIC_FUNCTION'
-  | 'DYNAMIC_FUNCTION_CODE'
-  | 'EXISTING'
-  | 'EXISTS'
-  | 'EXTRACT'
-  | 'FINAL'
-  | 'FORTRAN'
-  | 'G'
-  | 'GENERATED'
-  | 'GRANTED'
-  | 'HIERARCHY'
-  | 'HOLD'
-  | 'IMPLEMENTATION'
-  | 'INFIX'
-  | 'INSENSITIVE'
-  | 'INSTANCE'
-  | 'INSTANTIABLE'
-  | 'INVOKER'
-  | 'K'
-  | 'KEY_MEMBER'
-  | 'KEY_TYPE'
-  | 'LENGTH'
-  | 'LOWER'
-  | 'M'
-  | 'MAX'
-  | 'MIN'
-  | 'MESSAGE_LENGTH'
-  | 'MESSAGE_OCTET_LENGTH'
-  | 'MESSAGE_TEXT'
-  | 'METHOD'
-  | 'MOD'
-  | 'MORE'
-  | 'MUMPS'
-  | 'NAME'
-  | 'NULLABLE'
-  | 'NUMBER'
-  | 'NULLIF'
-  | 'OCTET_LENGTH'
-  | 'OPTIONS'
-  | 'OVERLAPS'
-  | 'OVERLAY'
-  | 'OVERRIDING'
-  | 'PASCAL'
-  | 'PARAMETER_MODE'
-  | 'PARAMETER_NAME'
-  | 'PARAMETER_ORDINAL_POSITION'
-  | 'PARAMETER_SPECIFIC_CATALOG'
-  | 'PARAMETER_SPECIFIC_NAME'
-  | 'PARAMETER_SPECIFIC_SCHEMA'
-  | 'PLI'
-  | 'POSITION'
-  | 'REPEATABLE'
-  | 'RETURNED_LENGTH'
-  | 'RETURNED_OCTET_LENGTH'
-  | 'RETURNED_SQLSTATE'
-  | 'ROUTINE_CATALOG'
-  | 'ROUTINE_NAME'
-  | 'ROUTINE_SCHEMA'
-  | 'ROW_COUNT'
-  | 'SCALE'
-  | 'SCHEMA_NAME'
-  | 'SECURITY'
-  | 'SELF'
-  | 'SENSITIVE'
-  | 'SERIALIZABLE'
-  | 'SERVER_NAME'
-  | 'SIMPLE'
-  | 'SOURCE'
-  | 'SPECIFIC_NAME'
-  | 'SIMILAR'
-  | 'SUBLIST'
-  | 'SUBSTRING'
-  | 'SUM'
-  | 'STYLE'
-  | 'SUBCLASS_ORIGIN'
-  | 'SYMMETRIC'
-  | 'SYSTEM'
-  | 'TABLE_NAME'
-  | 'TRANSACTIONS_COMMITTED'
-  | 'TRANSACTIONS_ROLLED_BACK'
-  | 'TRANSACTION_ACTIVE'
-  | 'TRANSFORM'
-  | 'TRANSFORMS'
-  | 'TRANSLATE'
-  | 'TRIGGER_CATALOG'
-  | 'TRIGGER_SCHEMA'
-  | 'TRIGGER_NAME'
-  | 'TRIM'
-  | 'TYPE'
-  | 'UNCOMMITTED'
-  | 'UNNAMED'
-  | 'UPPER'
-  | 'USER_DEFINED_TYPE_CATALOG'
-  | 'USER_DEFINED_TYPE_NAME'
-  | 'USER_DEFINED_TYPE_SCHEMA'
-    ;
-
-reserved_word =
-  | 'ABSOLUTE'
-  | 'ACTION'
-  | 'ADD'
-  | 'ADMIN'
-  | 'AFTER'
-  | 'AGGREGATE'
-  | 'ALIAS'
-  | 'ALL'
-  | 'ALLOCATE'
-  | 'ALTER'
-  | 'AND'
-  | 'ANY'
-  | 'ARE'
-  | 'ARRAY'
-  | 'AS'
-  | 'ASC'
-  | 'ASSERTION'
-  | 'AT'
-  | 'AUTHORIZATION'
-  | 'BEFORE'
-  | 'BEGIN'
-  | 'BINARY'
-  | 'BIT'
-  | 'BLOB'
-  | 'BOOLEAN'
-  | 'BOTH'
-  | 'BREADTH'
-  | 'BY'
-  | 'CALL'
-  | 'CASCADE'
-  | 'CASCADED'
-  | 'CASE'
-  | 'CAST'
-  | 'CATALOG'
-  | 'CHAR'
-  | 'CHARACTER'
-  | 'CHECK'
-  | 'CLASS'
-  | 'CLOB'
-  | 'CLOSE'
-  | 'COLLATE'
-  | 'COLLATION'
-  | 'COLUMN'
-  | 'COMMIT'
-  | 'COMPLETION'
-  | 'CONNECT'
-  | 'CONNECTION'
-  | 'CONSTRAINT'
-  | 'CONSTRAINTS'
-  | 'CONSTRUCTOR'
-  | 'CONTINUE'
-  | 'CORRESPONDING'
-  | 'CREATE'
-  | 'CROSS'
-  | 'CUBE'
-  | 'CURRENT'
-  | 'CURRENT_DATE'
-  | 'CURRENT_PATH'
-  | 'CURRENT_ROLE'
-  | 'CURRENT_TIME'
-  | 'CURRENT_TIMESTAMP'
-  | 'CURRENT_USER'
-  | 'CURSOR'
-  | 'CYCLE'
-  | 'DATA'
-  | 'DATE'
-  | 'DAY'
-  | 'DEALLOCATE'
-  | 'DEC'
-  | 'DECIMAL'
-  | 'DECLARE'
-  | 'DEFAULT'
-  | 'DEFERRABLE'
-  | 'DEFERRED'
-  | 'DELETE'
-  | 'DEPTH'
-  | 'DEREF'
-  | 'DESC'
-  | 'DESCRIBE'
-  | 'DESCRIPTOR'
-  | 'DESTROY'
-  | 'DESTRUCTOR'
-  | 'DETERMINISTIC'
-  | 'DICTIONARY'
-  | 'DIAGNOSTICS'
-  | 'DISCONNECT'
-  | 'DISTINCT'
-  | 'DOMAIN'
-  | 'DOUBLE'
-  | 'DROP'
-  | 'DYNAMIC'
-  | 'EACH'
-  | 'ELSE'
-  | 'END'
-  | 'END-EXEC'
-  | 'EQUALS'
-  | 'ESCAPE'
-  | 'EVERY'
-  | 'EXCEPT'
-  | 'EXCEPTION'
-  | 'EXEC'
-  | 'EXECUTE'
-  | 'EXTERNAL'
-  | 'FALSE'
-  | 'FETCH'
-  | 'FIRST'
-  | 'FLOAT'
-  | 'FOR'
-  | 'FOREIGN'
-  | 'FOUND'
-  | 'FROM'
-  | 'FREE'
-  | 'FULL'
-  | 'FUNCTION'
-  | 'GENERAL'
-  | 'GET'
-  | 'GLOBAL'
-  | 'GO'
-  | 'GOTO'
-  | 'GRANT'
-  | 'GROUP'
-  | 'GROUPING'
-  | 'HAVING'
-  | 'HOST'
-  | 'HOUR'
-  | 'IDENTITY'
-  | 'IGNORE'
-  | 'IMMEDIATE'
-  | 'IN'
-  | 'INDICATOR'
-  | 'INITIALIZE'
-  | 'INITIALLY'
-  | 'INNER'
-  | 'INOUT'
-  | 'INPUT'
-  | 'INSERT'
-  | 'INT'
-  | 'INTEGER'
-  | 'INTERSECT'
-  | 'INTERVAL'
-  | 'INTO'
-  | 'IS'
-  | 'ISOLATION'
-  | 'ITERATE'
-  | 'JOIN'
-  | 'KEY'
-  | 'LANGUAGE'
-  | 'LARGE'
-  | 'LAST'
-  | 'LATERAL'
-  | 'LEADING'
-  | 'LEFT'
-  | 'LESS'
-  | 'LEVEL'
-  | 'LIKE'
-  | 'LIMIT'
-  | 'LOCAL'
-  | 'LOCALTIME'
-  | 'LOCALTIMESTAMP'
-  | 'LOCATOR'
-  | 'MAP'
-  | 'MATCH'
-  | 'MINUTE'
-  | 'MODIFIES'
-  | 'MODIFY'
-  | 'MODULE'
-  | 'MONTH'
-  | 'NAMES'
-  | 'NATIONAL'
-  | 'NATURAL'
-  | 'NCHAR'
-  | 'NCLOB'
-  | 'NEW'
-  | 'NEXT'
-  | 'NO'
-  | 'NONE'
-  | 'NOT'
-  | 'NULL'
-  | 'NUMERIC'
-  | 'OBJECT'
-  | 'OF'
-  | 'OFF'
-  | 'OLD'
-  | 'ON'
-  | 'ONLY'
-  | 'OPEN'
-  | 'OPERATION'
-  | 'OPTION'
-  | 'OR'
-  | 'ORDER'
-  | 'ORDINALITY'
-  | 'OUT'
-  | 'OUTER'
-  | 'OUTPUT'
-  | 'PAD'
-  | 'PARAMETER'
-  | 'PARAMETERS'
-  | 'PARTIAL'
-  | 'PATH'
-  | 'POSTFIX'
-  | 'PRECISION'
-  | 'PREFIX'
-  | 'PREORDER'
-  | 'PREPARE'
-  | 'PRESERVE'
-  | 'PRIMARY'
-  | 'PRIOR'
-  | 'PRIVILEGES'
-  | 'PROCEDURE'
-  | 'PUBLIC'
-  | 'READ'
-  | 'READS'
-  | 'REAL'
-  | 'RECURSIVE'
-  | 'REF'
-  | 'REFERENCES'
-  | 'REFERENCING'
-  | 'RELATIVE'
-  | 'RESTRICT'
-  | 'RESULT'
-  | 'RETURN'
-  | 'RETURNS'
-  | 'REVOKE'
-  | 'RIGHT'
-  | 'ROLE'
-  | 'ROLLBACK'
-  | 'ROLLUP'
-  | 'ROUTINE'
-  | 'ROW'
-  | 'ROWS'
-  | 'SAVEPOINT'
-  | 'SCHEMA'
-  | 'SCROLL'
-  | 'SCOPE'
-  | 'SEARCH'
-  | 'SECOND'
-  | 'SECTION'
-  | 'SELECT'
-  | 'SEQUENCE'
-  | 'SESSION'
-  | 'SESSION_USER'
-  | 'SET'
-  | 'SETS'
-  | 'SIZE'
-  | 'SMALLINT'
-  | 'SOME'| 'SPACE'
-  | 'SPECIFIC'
-  | 'SPECIFICTYPE'
-  | 'SQL'
-  | 'SQLEXCEPTION'
-  | 'SQLSTATE'
-  | 'SQLWARNING'
-  | 'START'
-  | 'STATE'
-  | 'STATEMENT'
-  | 'STATIC'
-  | 'STRUCTURE'
-  | 'SYSTEM_USER'
-  | 'TABLE'
-  | 'TEMPORARY'
-  | 'TERMINATE'
-  | 'THAN'
-  | 'THEN'
-  | 'TIME'
-  | 'TIMESTAMP'
-  | 'TIMEZONE_HOUR'
-  | 'TIMEZONE_MINUTE'
-  | 'TO'
-  | 'TRAILING'
-  | 'TRANSACTION'
-  | 'TRANSLATION'
-  | 'TREAT'
-  | 'TRIGGER'
-  | 'TRUE'
-  | 'UNDER'
-  | 'UNION'
-  | 'UNIQUE'
-  | 'UNKNOWN'
-  | 'UNNEST'
-  | 'UPDATE'
-  | 'USAGE'
-  | 'USER'
-  | 'USING'
-  | 'VALUE'
-  | 'VALUES'
-  | 'VARCHAR'
-  | 'VARIABLE'
-  | 'VARYING'
-  | 'VIEW'
-  | 'WHEN'
-  | 'WHENEVER'
-  | 'WHERE'
-  | 'WITH'
-  | 'WITHOUT'
-  | 'WORK'
-  | 'WRITE'
-  | 'YEAR'
-  | 'ZONE'
-    ;
-
 literal =
   | signed_numeric_literal
   | general_literal
@@ -938,16 +247,11 @@ introducer =
     ;
 
 character_representation =
-  | nonquote_character
-  | quote_symbol
+    /(''|[^'\n])/
     ;
 
 nonquote_character =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-quote_symbol =
-    quote quote
     ;
 
 national_character_string_literal =
@@ -972,19 +276,7 @@ bit =
     ;
 
 hexit =
-  | digit
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
+    /[a-f\d]/
     ;
 
 signed_numeric_literal =
@@ -1023,7 +315,7 @@ signed_integer =
     ;
 
 unsigned_integer =
-    {digit}+
+    digit
     ;
 
 datetime_literal =
@@ -1164,16 +456,7 @@ actual_identifier =
     ;
 
 sql_language_identifier =
-    sql_language_identifier_start [{underscore | sql_language_identifier_part}+]
-    ;
-
-sql_language_identifier_start =
-    simple_latin_letter
-    ;
-
-sql_language_identifier_part =
-  | simple_latin_letter
-  | digit
+    regular_identifier
     ;
 
 authorization_identifier =
@@ -1227,14 +510,6 @@ correlation_name =
     ;
 
 query_name =
-    identifier
-    ;
-
-sql_client_module_name =
-    identifier
-    ;
-
-procedure_name =
     identifier
     ;
 
@@ -1598,10 +873,6 @@ dereference_operator =
     right_arrow
     ;
 
-method_reference =
-    value_expression_primary dereference_operator method_name sql_argument_list
-    ;
-
 method_invocation =
   | direct_invocation
   | generalized_invocation
@@ -1615,24 +886,12 @@ generalized_invocation =
     left_paren value_expression_primary 'AS' data_type right_paren period method_name [sql_argument_list]
     ;
 
-method_selection =
-    routine_invocation
-    ;
-
 static_method_invocation =
     user_defined_type double_colon method_name [sql_argument_list]
     ;
 
-static_method_selection =
-    routine_invocation
-    ;
-
 element_reference =
     array_value_expression left_bracket_or_trigraph numeric_value_expression right_bracket_or_trigraph
-    ;
-
-dereference_operation =
-    reference_value_expression dereference_operator attribute_name
     ;
 
 reference_resolution =
@@ -2025,10 +1284,6 @@ collection_value_constructor =
 
 new_specification =
     'NEW' routine_invocation
-    ;
-
-new_invocation =
-    method_invocation
     ;
 
 subtype_treatment =
@@ -2746,58 +2001,6 @@ similar_predicate =
 
 similar_pattern =
     character_value_expression
-    ;
-
-regular_expression =
-  | regular_term
-  | regular_expression vertical_bar regular_term
-    ;
-
-regular_term =
-  | regular_factor
-  | regular_term regular_factor
-    ;
-
-regular_factor =
-  | regular_primary
-  | regular_primary asterisk
-  | regular_primary plus_sign
-    ;
-
-regular_primary =
-  | character_specifier
-  | percent
-  | regular_character_set
-  | left_paren regular_expression right_paren
-    ;
-
-character_specifier =
-  | non_escaped_character
-  | escaped_character
-    ;
-
-non_escaped_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-escaped_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-regular_character_set =
-  | underscore
-  | left_bracket {character_enumeration}+ right_bracket
-  | left_bracket circumflex {character_enumeration}+ right_bracket
-  | left_bracket colon regular_character_set_identifier colon right_bracket
-    ;
-
-character_enumeration =
-  | character_specifier
-  | character_specifier minus_sign character_specifier
-    ;
-
-regular_character_set_identifier =
-    identifier
     ;
 
 null_predicate =
@@ -4084,67 +3287,6 @@ role_revoked =
     role_name
     ;
 
-sql_client_module_definition =
-    module_name_clause language_clause module_authorization_clause [module_path_specification] [module_transform_group_specification] [temporary_table_declaration] {module_contents}+
-    ;
-
-module_authorization_clause =
-  | 'SCHEMA' schema_name
-  | 'AUTHORIZATION' module_authorization_identifier
-  | 'SCHEMA' schema_name 'AUTHORIZATION' module_authorization_identifier
-    ;
-
-module_authorization_identifier =
-    authorization_identifier
-    ;
-
-module_path_specification =
-    path_specification
-    ;
-
-module_transform_group_specification =
-    transform_group_specification
-    ;
-
-module_contents =
-  | declare_cursor
-  | externally_invoked_procedure
-    ;
-
-module_name_clause =
-    'MODULE' [sql_client_module_name] [module_character_set_specification]
-    ;
-
-module_character_set_specification =
-    'NAMES' 'ARE' character_set_specification
-    ;
-
-externally_invoked_procedure =
-    'PROCEDURE' procedure_name host_parameter_declaration_setup semicolon sql_procedure_statement semicolon
-    ;
-
-host_parameter_declaration_setup =
-  | host_parameter_declaration_list
-  | {host_parameter_declaration}+
-    ;
-
-host_parameter_declaration_list =
-    left_paren host_parameter_declaration [{comma host_parameter_declaration}+] right_paren
-    ;
-
-host_parameter_declaration =
-  | host_parameter_name host_parameter_data_type
-  | status_parameter
-    ;
-
-host_parameter_data_type =
-    data_type [locator_indication]
-    ;
-
-status_parameter =
-    'SQLSTATE'
-    ;
-
 sql_procedure_statement =
     sql_executable_statement
     ;
@@ -4255,39 +3397,6 @@ sql_session_statement =
 
 sql_diagnostics_statement =
     get_diagnostics_statement
-    ;
-
-declare_cursor =
-    'DECLARE' cursor_name [cursor_sensitivity] [cursor_scrollability] 'CURSOR' [cursor_holdability] [cursor_returnability] 'FOR' cursor_specification
-    ;
-
-cursor_sensitivity =
-  | 'SENSITIVE'
-  | 'INSENSITIVE'
-  | 'ASENSITIVE'
-    ;
-
-cursor_scrollability =
-  | 'SCROLL'
-  | 'NO' 'SCROLL'
-    ;
-
-cursor_holdability =
-  | 'WITH' 'HOLD'
-  | 'WITHOUT' 'HOLD'
-    ;
-
-cursor_returnability =
-  | 'WITH' 'RETURN'
-  | 'WITHOUT' 'RETURN'
-    ;
-
-cursor_specification =
-    query_expression [order_by_clause] [updatability_clause]
-    ;
-
-updatability_clause =
-    'FOR' ('READ' 'ONLY' | 'UPDATE' ['OF' column_name_list])
     ;
 
 order_by_clause =
@@ -4691,6 +3800,30 @@ attribute_default =
 
 cast_function =
     specific_routine_designator
+    ;
+
+direct_sql_statement =
+    directly_executable_statement semicolon
+    ;
+
+directly_executable_statement =
+  | direct_sql_data_statement
+  | sql_schema_statement
+  | sql_transaction_statement
+  | sql_connection_statement
+  | sql_session_statement
+    ;
+
+direct_sql_data_statement =
+  | delete_statement_searched
+  | direct_select_statement_multiple_rows
+  | insert_statement
+  | update_statement_searched
+  | temporary_table_declaration
+    ;
+
+direct_select_statement_multiple_rows =
+    query_expression [order_by_clause]
     ;
 
 start =

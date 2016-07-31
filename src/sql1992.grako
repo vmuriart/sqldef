@@ -26,84 +26,12 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 
-simple_latin_letter =
-  | simple_latin_upper_case_letter
-  | simple_latin_lower_case_letter
-    ;
-
-simple_latin_upper_case_letter =
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
-    ;
-
-simple_latin_lower_case_letter =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z'
-    ;
-
 digit =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
+    /\d+/
     ;
 
 space =
-    '#SEE_THE_SYNTAX_RULES'
+    / /
     ;
 
 double_quote =
@@ -170,21 +98,9 @@ underscore =
     '_'
     ;
 
+@name
 regular_identifier =
-    identifier_body
-    ;
-
-identifier_body =
-    identifier_start [{underscore | identifier_part}+]
-    ;
-
-identifier_start =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-identifier_part =
-  | identifier_start
-  | digit
+    /[a-z]\w*/
     ;
 
 unsigned_numeric_literal =
@@ -198,7 +114,7 @@ exact_numeric_literal =
     ;
 
 unsigned_integer =
-    {digit}+
+    digit
     ;
 
 approximate_numeric_literal =
@@ -227,16 +143,11 @@ national_character_string_literal =
     ;
 
 character_representation =
-  | nonquote_character
-  | quote_symbol
+    /(''|[^'\n])/
     ;
 
 nonquote_character =
     '#SEE_THE_SYNTAX_RULES'
-    ;
-
-quote_symbol =
-    "''"
     ;
 
 separator =
@@ -274,19 +185,7 @@ hex_string_literal =
     ;
 
 hexit =
-  | digit
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
+    /[a-f\d]/
     ;
 
 character_string_literal =
@@ -335,20 +234,7 @@ delimited_identifier =
     ;
 
 delimited_identifier_body =
-    {delimited_identifier_part}+
-    ;
-
-delimited_identifier_part =
-  | nondoublequote_character
-  | doublequote_symbol
-    ;
-
-nondoublequote_character =
-    '#SEE_THE_SYNTAX_RULES'
-    ;
-
-doublequote_symbol =
-    '""'
+    /(""|[^"\n])+/
     ;
 
 unqualified_schema_name =
@@ -356,16 +242,7 @@ unqualified_schema_name =
     ;
 
 sql_language_identifier =
-    sql_language_identifier_start [{underscore | sql_language_identifier_part}+]
-    ;
-
-sql_language_identifier_start =
-    simple_latin_letter
-    ;
-
-sql_language_identifier_part =
-  | simple_latin_letter
-  | digit
+    regular_identifier
     ;
 
 implementation_defined_character_repertoire_name =
