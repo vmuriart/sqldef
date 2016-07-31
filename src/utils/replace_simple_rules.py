@@ -2,6 +2,10 @@ import glob
 import os
 import re
 
+simple = ['datetime_value', 'identifier', 'unsigned_integer',
+          'schema_qualified_name', 'numeric_value_expression',
+          'subquery', 'simple_value_specification']
+
 
 def process(path):
     with open(path) as f:
@@ -48,7 +52,7 @@ def process(path):
         if temp():
             continue
         '''
-        if name not in to_do:
+        if new not in simple:
             continue
         print name
 
@@ -77,5 +81,3 @@ if __name__ == '__main__':
         process(file)
 
         print("Finished {file}".format(file=file))
-
-# datetime_value
