@@ -16,7 +16,7 @@ def process(text, start=None):
 
     # List of rule paths to check and leave. Any not needed will be removed
     if start is None:
-        start = ['start', ]
+        start = ['cursor_specification']
 
     rules_required = set(start)
 
@@ -43,8 +43,8 @@ def process(text, start=None):
 
     for full, name, _ in found:
         # Exclude rules starting with underscore
-        # if name.startswith('_'):
-        #     continue
+        if name.startswith('start'):
+            continue
 
         if name not in rules_required:
             print name
