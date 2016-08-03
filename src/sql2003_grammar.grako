@@ -827,7 +827,7 @@ attribute_or_method_reference =
     ;
 
 reference_resolution =
-    'DEREF' left_paren reference_value_expression right_paren
+    'DEREF' left_paren value_expression_primary right_paren
     ;
 
 array_element_reference =
@@ -849,17 +849,8 @@ common_value_expression =
   | string_value_expression
   | datetime_value_expression
   | interval_value_expression
-  | user_defined_type_value_expression
-  | reference_value_expression
+  | value_expression_primary
   | collection_value_expression
-    ;
-
-user_defined_type_value_expression =
-    value_expression_primary
-    ;
-
-reference_value_expression =
-    value_expression_primary
     ;
 
 collection_value_expression =
@@ -868,13 +859,11 @@ collection_value_expression =
     ;
 
 numeric_value_expression =
-  | term
-  | numeric_value_expression plus_or_minus term
+    [numeric_value_expression plus_or_minus] term
     ;
 
 term =
-  | factor
-  | term multiply_or_divide factor
+    [term multiply_or_divide] factor
     ;
 
 factor =
@@ -987,12 +976,7 @@ string_value_expression =
     ;
 
 character_value_expression =
-  | concatenation
-  | character_factor
-    ;
-
-concatenation =
-    character_value_expression '||' character_factor
+    [character_value_expression '||'] character_factor
     ;
 
 character_factor =
@@ -1005,21 +989,12 @@ character_primary =
     ;
 
 blob_value_expression =
-  | blob_concatenation
-  | blob_factor
+    [blob_value_expression '||'] blob_factor
     ;
 
 blob_factor =
-    blob_primary
-    ;
-
-blob_primary =
   | value_expression_primary
   | string_value_function
-    ;
-
-blob_concatenation =
-    blob_value_expression '||' blob_factor
     ;
 
 string_value_function =
@@ -1083,7 +1058,7 @@ normalize_function =
     ;
 
 specific_type_method =
-    user_defined_type_value_expression period 'SPECIFICTYPE' [left_paren right_paren]
+    value_expression_primary period 'SPECIFICTYPE' [left_paren right_paren]
     ;
 
 blob_value_function =
@@ -1117,8 +1092,7 @@ string_length =
     ;
 
 datetime_value_expression =
-  | datetime_factor
-  | interval_value_expression plus_sign datetime_factor
+  | [interval_value_expression plus_sign] datetime_factor
   | datetime_value_expression plus_or_minus interval_term
     ;
 
@@ -1142,38 +1116,20 @@ time_zone_specifier =
 
 datetime_value_function =
   | 'CURRENT_DATE'
-  | current_time_value_function
-  | current_timestamp_value_function
-  | current_local_time_value_function
-  | current_local_timestamp_value_function
-    ;
-
-current_time_value_function =
-    'CURRENT_TIME' [left_paren precision right_paren]
-    ;
-
-current_local_time_value_function =
-    'LOCALTIME' [left_paren precision right_paren]
-    ;
-
-current_timestamp_value_function =
-    'CURRENT_TIMESTAMP' [left_paren precision right_paren]
-    ;
-
-current_local_timestamp_value_function =
-    'LOCALTIMESTAMP' [left_paren precision right_paren]
+  | 'CURRENT_TIME' [left_paren precision right_paren]
+  | 'CURRENT_TIMESTAMP' [left_paren precision right_paren]
+  | 'LOCALTIME' [left_paren precision right_paren]
+  | 'LOCALTIMESTAMP' [left_paren precision right_paren]
     ;
 
 interval_value_expression =
-  | interval_term
-  | interval_value_expression plus_or_minus interval_term
+  | [interval_value_expression plus_or_minus] interval_term
   | left_paren datetime_value_expression minus_sign datetime_factor right_paren interval_qualifier
     ;
 
 interval_term =
-  | interval_factor
   | interval_term multiply_or_divide factor
-  | term asterisk interval_factor
+  | [term asterisk] interval_factor
     ;
 
 interval_factor =
@@ -1190,13 +1146,11 @@ interval_absolute_value_function =
     ;
 
 boolean_value_expression =
-  | boolean_term
-  | boolean_value_expression 'OR' boolean_term
+    [boolean_value_expression 'OR'] boolean_term
     ;
 
 boolean_term =
-  | boolean_factor
-  | boolean_term 'AND' boolean_factor
+    [boolean_term 'AND'] boolean_factor
     ;
 
 boolean_factor =
@@ -1228,12 +1182,7 @@ parenthesized_boolean_value_expression =
     ;
 
 array_value_expression =
-  | array_concatenation
-  | array_primary
-    ;
-
-array_concatenation =
-    array_value_expression '||' array_primary
+    [array_value_expression '||'] array_primary
     ;
 
 array_primary =
@@ -1285,8 +1234,8 @@ multiset_set_function =
 
 multiset_value_constructor =
   | multiset_value_constructor_by_enumeration
-  | multiset_value_constructor_by_query
-  | table_value_constructor_by_query
+  | 'MULTISET' subquery
+  | 'TABLE' subquery
     ;
 
 multiset_value_constructor_by_enumeration =
@@ -1299,14 +1248,6 @@ multiset_element_list =
 
 multiset_element =
     value_expression
-    ;
-
-multiset_value_constructor_by_query =
-    'MULTISET' subquery
-    ;
-
-table_value_constructor_by_query =
-    'TABLE' subquery
     ;
 
 row_value_constructor =
@@ -1518,7 +1459,7 @@ where_clause =
     ;
 
 group_by_clause =
-    'GROUP' 'BY' [set_quantifier] grouping_element_list
+    'GROUP' 'BY' [all_distinct] grouping_element_list
     ;
 
 grouping_element_list =
@@ -1660,7 +1601,7 @@ window_frame_exclusion =
     ;
 
 query_specification =
-    'SELECT' [set_quantifier] select_list table_expression
+    'SELECT' [all_distinct] select_list table_expression
     ;
 
 select_list =
@@ -2092,7 +2033,7 @@ aggregate_function =
     ;
 
 general_set_function =
-    computational_operation left_paren [set_quantifier] value_expression right_paren
+    computational_operation left_paren [all_distinct] value_expression right_paren
     ;
 
 computational_operation =
@@ -2111,11 +2052,6 @@ computational_operation =
   | 'COLLECT'
   | 'FUSION'
   | 'INTERSECTION'
-    ;
-
-set_quantifier =
-  | 'DISTINCT'
-  | 'ALL'
     ;
 
 filter_clause =
@@ -3542,7 +3478,7 @@ close_statement =
     ;
 
 select_statement_single_row =
-    'SELECT' [set_quantifier] select_list 'INTO' select_target_list table_expression
+    'SELECT' [all_distinct] select_list 'INTO' select_target_list table_expression
     ;
 
 select_target_list =
