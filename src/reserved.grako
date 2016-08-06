@@ -105,6 +105,7 @@
 @@keyword :: DENSE_RANK
 @@keyword :: DEREF
 @@keyword :: DESCRIBE
+@@keyword :: DECODE
 @@keyword :: DETERMINISTIC
 @@keyword :: DISCONNECT
 @@keyword :: DISTINCT

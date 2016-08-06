@@ -93,17 +93,9 @@ signed_integer =
     ;
 
 datetime_literal =
-  | 'DATE' "'" date_value "'"
-  | 'TIME' "'" time_value "'"
-  | 'TIMESTAMP' "'" date_value time_value "'"
-    ;
-
-date_value =
-    integer '-' integer '-' integer
-    ;
-
-time_value =
-    integer ':' integer ':' proper_decimal
+  | 'DATE' "'" integer '-' integer '-' integer "'"
+  | 'TIME' "'" integer ':' integer ':' proper_decimal "'"
+  | 'TIMESTAMP' "'" integer '-' integer '-' integer integer ':' integer ':' proper_decimal "'"
     ;
 
 interval_literal =
@@ -136,11 +128,6 @@ parameter_name =
     ;
 
 data_type =
-  | predefined_type
-  | qualified_name
-    ;
-
-predefined_type =
   | 'CHARACTER' [integer_list]
   | 'CHAR' [integer_list]
   | 'NUMERIC' [integer_list]
@@ -155,8 +142,8 @@ predefined_type =
   | 'DOUBLE' 'PRECISION'
   | 'BOOLEAN'
   | 'DATE'
-  | 'TIME' [integer_list] [with_out 'TIME' 'ZONE']
-  | 'TIMESTAMP' [integer_list] [with_out 'TIME' 'ZONE']
+  | 'TIME' [integer_list]
+  | 'TIMESTAMP' [integer_list]
   | 'INTERVAL' interval_qualifier
     ;
 
@@ -170,18 +157,16 @@ parenthesized_value_expr =
     ;
 
 nonparenthesized_value_expr_primary =
-  | set_function_spec
-  | window_function
+  | aggregate_function
+  | 'DECODE' left_paren value_expr_list right_paren
+  | window_function_type 'OVER' window_spec
   | subquery
   | 'NULLIF' value_expr_list
   | 'COALESCE' value_expr_list
   | case_expr
-  | 'DECODE' left_paren value_expr_primary right_paren
-  | 'CAST' left_paren result 'AS' cast_target right_paren
+  | 'CAST' left_paren result 'AS' data_type right_paren
   | value_expr_primary '.' identifier
   | 'TREAT' left_paren value_expr 'AS' qualified_name right_paren
-  | method_invocation
-  | routine_invocation
   | unsigned_numeric_literal
   | general_literal
   | parameter_name
@@ -199,15 +184,6 @@ identifier_chain =
     '.'.{identifier}
     ;
 
-set_function_spec =
-  | aggregate_function
-  | 'GROUPING' parenthesized_name_list
-    ;
-
-window_function =
-    window_function_type 'OVER' window_name_or_spec
-    ;
-
 window_function_type =
   | rank_function_type empty_set
   | 'ROW_NUMBER' empty_set
@@ -219,11 +195,6 @@ rank_function_type =
   | 'DENSE_RANK'
   | 'PERCENT_RANK'
   | 'CUME_DIST'
-    ;
-
-window_name_or_spec =
-  | window_spec
-  | identifier
     ;
 
 value_expr_list =
@@ -252,8 +223,8 @@ when_operand_list =
     ;
 
 when_operand =
-  | value_expr
   | part_predicate
+  | value_expr
     ;
 
 part_predicate =
@@ -273,28 +244,14 @@ result =
   | value_expr
     ;
 
-cast_target =
-  | data_type
-  | qualified_name
-    ;
-
-method_invocation =
-  | value_expr_primary '.' identifier [argument_list]
-  | left_paren value_expr_primary 'AS' data_type right_paren '.' identifier [argument_list]
-    ;
-
 value_expr =
-  | common_value_expr
-  | boolean_value_expr
-  | row_value_expr
-    ;
-
-common_value_expr =
   | numeric_value_expr
   | chr_value_expr
   | datetime_value_expr
   | interval_value_expr
   | value_expr_primary
+  | boolean_value_expr
+  | row_value_expr
     ;
 
 numeric_value_expr =
@@ -381,8 +338,8 @@ datetime_primary =
     ;
 
 interval_value_expr =
-  | [interval_value_expr plus_or_minus] interval_term
   | left_paren datetime_value_expr '-' datetime_primary right_paren interval_qualifier
+  | [interval_value_expr plus_or_minus] interval_term
     ;
 
 interval_term =
@@ -391,11 +348,7 @@ interval_term =
     ;
 
 interval_factor =
-    [plus_or_minus] interval_primary
-    ;
-
-interval_primary =
-    value_expr_primary [interval_qualifier]
+    [plus_or_minus] value_expr_primary [interval_qualifier]
     ;
 
 boolean_value_expr =
@@ -446,18 +399,10 @@ table_primary =
   | qualified_name [as_clause]
     ;
 
-parenthesized_name_list =
-    left_paren name_list right_paren
-    ;
-
 joined_table =
   | table_reference 'CROSS' 'JOIN' table_primary
-  | table_reference [join_type] 'JOIN' table_reference join_spec
+  | table_reference [join_type] 'JOIN' table_reference 'ON' boolean_value_expr
   | table_reference 'NATURAL' [join_type] 'JOIN' table_primary
-    ;
-
-join_spec =
-    'ON' boolean_value_expr
     ;
 
 join_type =
@@ -484,8 +429,8 @@ grouping_element_list =
     ;
 
 ordinary_grouping_set =
-  | qualified_name
   | left_paren name_list right_paren
+  | qualified_name
     ;
 
 grouping_set =
@@ -502,7 +447,7 @@ having_clause =
     ;
 
 window_spec =
-    left_paren [identifier] [partition_clause] [order_by_clause] right_paren
+    left_paren [partition_clause] [order_by_clause] right_paren
     ;
 
 partition_clause =
@@ -517,7 +462,6 @@ select_list =
 select_sublist =
   | value_expr [as_clause]
   | qualified_name '.' '*'
-  | value_expr_primary '.' '*'
     ;
 
 as_clause =
@@ -571,11 +515,7 @@ comp_op =
 
 in_predicate_value =
   | subquery
-  | left_paren in_value_list right_paren
-    ;
-
-in_value_list =
-    ','.{row_value_expr}
+  | left_paren ','.{row_value_expr} right_paren
     ;
 
 quantifier =
@@ -597,25 +537,9 @@ primary_datetime_field =
   | 'SECOND'
     ;
 
-routine_invocation =
-    qualified_name argument_list
-    ;
-
-argument_list =
-    left_paren [','.{argument}] right_paren
-    ;
-
-argument =
-  | value_expr ['AS' qualified_name]
-  | parameter_name
-  | qualified_name
-  | '?'
-    ;
-
 aggregate_function =
   | 'COUNT' left_paren '*' right_paren [filter_clause]
   | computational_operation left_paren [all_distinct] value_expr right_paren [filter_clause]
-  | ordered_set_function within_group_spec [filter_clause]
     ;
 
 computational_operation =
@@ -638,14 +562,6 @@ computational_operation =
 
 filter_clause =
     'FILTER' left_paren where_clause right_paren
-    ;
-
-ordered_set_function =
-    rank_function_type value_expr_list
-    ;
-
-within_group_spec =
-    'WITHIN' 'GROUP' left_paren order_by_clause right_paren
     ;
 
 sort_spec_list =
@@ -672,11 +588,6 @@ cursor_spec =
 
 order_by_clause =
     'ORDER' 'BY' sort_spec_list
-    ;
-
-with_out =
-  | 'WITH'
-  | 'WITHOUT'
     ;
 
 start =

@@ -26,875 +26,276 @@
 @@eol_comments :: /--.*?$/
 @@comments :: ?//\*[\s\S]*?\*//?
 @@keyword :: SELECT FROM WHERE
-#include :: "keywords92.grako"
+#include :: reserved.grako
+#include :: keywords92.grako
 
 start =
-        multiple_direct_sql_statement
-        $
-        ;
+    statements $
+    ;
 
-multiple_direct_sql_statement =
-        ';'.{direct_sql_statement}
-        [';']
-        ;
+statements =
+    ';'.{select_statement} [';']
+    ;
 
 @name
 regular_identifier =
-        /[a-z]\w*/
-        ;
+    /[a-z]\w*/
+    ;
 
 par_integer =
-        '(' integer ')'
-        ;
-
-par_integer_optional_integer =
-        '(' integer [',' integer] ')'
-        ;
-
-unsigned_numeric_literal =
-        exact_numeric_literal
-    |   approximate_numeric_literal
-        ;
+    '(' integer [',' integer] ')'
+    ;
 
 exact_numeric_literal =
-        proper_decimal
-    |   '.' integer
-        ;
+  | proper_decimal
+  | '.' integer
+    ;
 
 integer =
-        /\d+/
-        ;
-
-approximate_numeric_literal =
-        exact_numeric_literal 'E' [sign] integer
-        ;
-
-char_in_string =
-        /(''|[^'\n])+/
-        ;  #';
+    /\d+/
+    ;
 
 identifier_chain =
-        ['MODULE' '.'] '.'.{identifier}
-        ;
+    '.'.{identifier}
+    ;
 
 identifier =
-        regular_identifier
-    |   delimited_identifier
-        ;
-
-delimited_identifier =
-        '"' {char_in_delimited_identifier}+ '"'
-        ;
-
-char_in_delimited_identifier =
-        /(""|[^"\n])+/
-        ;  #";
-
-date_value =
-        integer '-' integer '-' integer
-        ;
-
-time_value =
-        integer ':' integer ':' proper_decimal
-        ;
+  | regular_identifier
+  | '"' /(""|[^"\n])+/ '"'
+    ;
 
 proper_decimal =
-        integer ['.' [integer]]
-        ;
-
-time_zone_interval =
-        sign integer ':' integer
-        ;
-
-year_month_literal =
-        [integer '-'] integer
-        ;
-
-day_time_literal =
-        day_time_interval
-    |   time_interval
-        ;
-
-day_time_interval =
-        integer [' ' integer [':' integer [':' proper_decimal]]]
-        ;
-
-time_interval =
-        integer [':' integer [':' proper_decimal]]
-    |   integer [':' proper_decimal]
-    |   proper_decimal
-        ;
-
-temporary_table_declaration =
-        'DECLARE' 'LOCAL' 'TEMPORARY' 'TABLE' identifier_chain table_element_list
-            ['ON' 'COMMIT' ('PRESERVE' | 'DELETE') 'ROWS']
-        ;
-
-table_element_list =
-        '(' ','.{table_element} ')'
-        ;
-
-table_element =
-        column_definition
-    |   table_constraint_definition
-        ;
-
-column_definition =
-        identifier (data_type | identifier_chain) [default_clause]
-            [{[constraint_name_definition] column_constraint [_KW_CONSTRAINT_ATTRIBUTES]}+]
-            [collate_clause]
-        ;
+    integer ['.' [integer]]
+    ;
 
 data_type =
-        character_string_type ['CHARACTER' 'SET' identifier_chain]
-    |   national_character_string_type
-    |   bit_string_type
-    |   exact_numeric_type
-    |   approximate_numeric_type
-    |   datetime_type
-    |   interval_type
-        ;
-
-character_string_type =
-        (_KW_CHAR | _KW_VCHAR) [par_integer]
-        ;
-
-national_character_string_type =
-        _KW_NCHAR ['VARYING'] [par_integer]
-        ;
-
-bit_string_type =
-        'BIT' ['VARYING'] [par_integer]
-        ;
-
-exact_numeric_type =
-        'NUMERIC' [par_integer_optional_integer]
-    |   'DECIMAL' [par_integer_optional_integer]
-    |   'DEC' [par_integer_optional_integer]
-    |   'INTEGER'
-    |   'INT'
-    |   'SMALLINT'
-        ;
-
-approximate_numeric_type =
-        'FLOAT' [par_integer]
-    |   'REAL'
-    |   'DOUBLE' 'PRECISION'
-        ;
-
-datetime_type =
-        'DATE'
-    |   'TIME' [par_integer] ['WITH' 'TIME' 'ZONE']
-    |   'TIMESTAMP' [par_integer] ['WITH' 'TIME' 'ZONE']
-        ;
-
-interval_type =
-        'INTERVAL' interval_qualifier
-        ;
-
-interval_qualifier =
-        _KW_NON_SECOND_DATETIME_FIELD [par_integer] 'TO' end_field
-    |   single_datetime_field
-        ;
-
-end_field =
-        _KW_NON_SECOND_DATETIME_FIELD
-    |   'SECOND' [par_integer]
-        ;
-
-single_datetime_field =
-        _KW_NON_SECOND_DATETIME_FIELD [par_integer]
-    |   'SECOND' [par_integer_optional_integer]
-        ;
-
-default_clause =
-        'DEFAULT' default_option
-        ;
-
-default_option =
-        'USER'
-    |   'CURRENT_USER'
-    |   'SESSION_USER'
-    |   'SYSTEM_USER'
-    |   'NULL'
-    |   literal
-    |   datetime_value_function
-        ;
-
-literal =
-        [sign] unsigned_numeric_literal
-    |   general_literal
-        ;
-
-general_literal =
-        "'" [{char_in_string}+] "'"
-    |   'DATE' "'" date_value "'"
-    |   'TIME' "'" time_value [time_zone_interval] "'"
-    |   'TIMESTAMP' "'" date_value ' ' time_value [time_zone_interval] "'"
-    |   'INTERVAL' [sign] "'" (year_month_literal | day_time_literal) "'" interval_qualifier
-        ;
-
-datetime_value_function =
-        'CURRENT_DATE'
-    |   'CURRENT_TIME' [par_integer]
-    |   'CURRENT_TIMESTAMP' [par_integer]
-        ;
-
-constraint_name_definition =
-        'CONSTRAINT' identifier_chain
-        ;
-
-column_constraint =
-        'NOT' 'NULL'
-    |   _KW_UNIQUE_SPECIFICATION
-    |   references_specification
-    |   assertion_check
-        ;
-
-references_specification =
-        'REFERENCES' identifier_chain [column_name_list]
-            ['MATCH' _KW_MATCH_TYPE] [_KW_REFERENTIAL_TRIGGERED_ACTION]
-        ;
-
-column_name_list =
-        '(' ','.{identifier} ')'
-        ;
+  | _KW_CHAR [par_integer]
+  | 'NUMERIC' [par_integer]
+  | 'DECIMAL' [par_integer]
+  | 'INTEGER'
+  | 'INT'
+  | 'SMALLINT'
+  | 'FLOAT' [par_integer]
+  | 'REAL'
+  | 'DOUBLE' 'PRECISION'
+  | 'DATE'
+  | 'TIME' [par_integer] ['WITH' 'TIME' 'ZONE']
+  | 'TIMESTAMP' [par_integer] ['WITH' 'TIME' 'ZONE']
+    ;
 
 search_condition =
-        [search_condition 'OR'] boolean_term
-        ;
-
-boolean_term =
-        [boolean_term 'AND'] boolean_factor
-        ;
-
-boolean_factor =
-        ['NOT'] boolean_primary ['IS' ['NOT'] _KW_TRUTH_VALUE]
-        ;
+    ('AND'|'OR').{['NOT'] boolean_primary}
+    ;
 
 boolean_primary =
-        predicate
-    |   '(' search_condition ')'
-        ;
+  | predicate
+  | '(' search_condition ')'
+    ;
 
 predicate =
-        'IS' ['NOT'] 'NULL'
-    |   'EXISTS' subquery
-    |   row_value_constructor comp_op row_value_constructor
-    |   row_value_constructor ['NOT'] 'BETWEEN' row_value_constructor 'AND' row_value_constructor
-    |   row_value_constructor ['NOT'] 'IN' in_predicate_value
-    |   character_value_expression ['NOT'] 'LIKE' character_value_expression ['ESCAPE' character_value_expression]
-    |   row_value_constructor comp_op _KW_QUANTIFIER subquery
-    |   row_value_constructor 'MATCH' ['UNIQUE'] ['PARTIAL' | 'FULL'] subquery
-    |   row_value_constructor 'OVERLAPS' row_value_constructor
-        ;
+  | 'IS' ['NOT'] 'NULL'
+  | 'EXISTS' subquery
+  | row_value_constructor comp_op row_value_constructor
+  | row_value_constructor ['NOT'] 'LIKE' row_value_constructor
+  | row_value_constructor ['NOT'] 'BETWEEN' row_value_constructor 'AND' row_value_constructor
+  | row_value_constructor ['NOT'] 'IN' in_predicate_value
+  | row_value_constructor comp_op _KW_QUANTIFIER subquery
+  | row_value_constructor 'MATCH' ['UNIQUE'] ['PARTIAL' | 'FULL'] subquery
+  | row_value_constructor 'OVERLAPS' row_value_constructor
+    ;
 
 row_value_constructor =
-        '(' ','.{row_value_constructor_element} ')'
-    |   row_value_constructor_element
-    |   subquery
-        ;
+  | '(' ','.{row_value_constructor_element} ')'
+  | row_value_constructor_element
+  | subquery
+    ;
 
 row_value_constructor_element =
-        'DEFAULT'
-    |   'NULL'
-    |   value_expression
-        ;
+  | 'NULL'
+  | value_expression
+    ;
 
 value_expression =
-        numeric_value_expression
-    |   string_value_expression
-    |   datetime_value_expression
-    |   interval_value_expression
-        ;
+    [value_expression ops] [sign] primary
+    ;
 
-numeric_value_expression =
-        [numeric_value_expression sign] term
-        ;
+ops =
+  | sign
+  | mult_div
+  | '||'
+  ;
 
-term =
-        [term mult_div] factor
-        ;
-
-factor =
-        [sign] numeric_primary
-        ;
-
-numeric_primary =
-        value_expression_primary
-    |   numeric_value_function
-        ;
-
-value_expression_primary =
-        ('COALESCE' | 'NULLIF') value_expression_list
-    |   'CAST' '(' result 'AS' cast_target ')'
-    |   '(' value_expression ')'
-    |   unsigned_value_specification
-    |   identifier_chain
-    |   set_function_specification
-    |   subquery
-    |   case_specification
-        ;
-
-unsigned_value_specification =
-        unsigned_numeric_literal
-    |   general_literal
-    |   general_value_specification
-        ;
-
-general_value_specification =
-    |   '?'
-    |   'USER'
-    |   'CURRENT_USER'
-    |   'SESSION_USER'
-    |   'SYSTEM_USER'
-    |   'VALUE'
-    |   parameter_name [['INDICATOR'] parameter_name]
-        ;
-
-parameter_name =
-        ':' identifier
-        ;
-
-set_function_specification =
-        'COUNT' '(' '*' ')'
-    |   _KW_SET_FUNCTION_TYPE '(' [_KW_SET_QUANTIFIER] value_expression ')'
-        ;
+primary =
+  | exact_numeric_literal ['E' [sign] integer]
+  | "'" /(''|[^'\n])*/ "'"
+  | ':' identifier
+  | '?'
+  | 'COALESCE' value_expression_list
+  | 'SUBSTR' value_expression_list
+  | 'DECODE' value_expression_list
+  | 'NULLIF' value_expression_list
+  | 'CAST' '(' result 'AS' data_type ')'
+  | 'DATE' "'" integer '-' integer '-' integer "'"
+  | 'TIME' "'" integer ':' integer ':' proper_decimal "'"
+  | 'TIMESTAMP' "'" integer '-' integer '-' integer integer ':' integer ':' proper_decimal "'"
+  | 'USER'
+  | 'CURRENT_USER'
+  | 'SESSION_USER'
+  | 'SYSTEM_USER'
+  | 'VALUE'
+  | 'COUNT' '(' '*' ')'
+  | _KW_SET_FUNCTION_TYPE '(' [_KW_SET_QUANTIFIER] value_expression ')'
+  | 'CASE' [value_expression] {when_clause}+ [else_clause] 'END'
+  | 'POSITION' '(' value_expression 'IN' value_expression ')'
+  | 'EXTRACT' '(' _KW_EXTRACT_FIELD 'FROM' value_expression ')'
+  | 'SUBSTRING' '(' value_expression 'FROM' value_expression ['FOR' value_expression] ')'
+  | 'UPPER' '(' value_expression ')'
+  | 'LOWER' '(' value_expression ')'
+  | 'TRIM' '(' [[_KW_TRIM_SPECIFICATION] [value_expression] 'FROM'] value_expression ')'
+  | 'CURRENT_DATE'
+  | 'CURRENT_TIME'
+  | 'CURRENT_TIMESTAMP'
+  | subquery
+  | '(' value_expression ')'
+  | identifier_chain
+    ;
 
 subquery =
-        '(' query_expression ')'
-        ;
+    '(' query_expression ')'
+    ;
 
 query_expression =
-        non_join_query_expression
-    |   joined_table
-        ;
+  | non_join_query_expression
+  | joined_table
+    ;
 
 non_join_query_expression =
-        non_join_query_term
-    |   query_expression ('UNION' | 'EXCEPT') ['ALL'] [corresponding_spec] query_term
-        ;
+  | non_join_query_term
+  | query_expression ('UNION' | 'EXCEPT') ['ALL'] query_term
+    ;
 
 non_join_query_term =
-        non_join_query_primary
-    |   query_term 'INTERSECT' ['ALL'] [corresponding_spec] query_primary
-        ;
+  | non_join_query_primary
+  | query_term 'INTERSECT' ['ALL'] query_primary
+    ;
 
 non_join_query_primary =
-        '(' non_join_query_expression ')'
-    |   simple_table
-        ;
+  | '(' non_join_query_expression ')'
+  | simple_table
+    ;
 
 simple_table =
-        'SELECT' [_KW_SET_QUANTIFIER] select_list table_expression
-    |   'VALUES' table_value_constructor_list
-    |   'TABLE' identifier_chain
-        ;
+    'SELECT' [_KW_SET_QUANTIFIER] select_list table_expression
+    ;
 
 select_list =
-        '*'
-    |   ','.{select_sublist}
-        ;
+  | '*'
+  | ','.{select_sublist}
+    ;
 
 select_sublist =
-        value_expression [as_clause]
-    |   identifier_chain '.' '*'
-        ;
+  | value_expression [as_clause]
+  | identifier_chain '.' '*'
+    ;
 
 as_clause =
-        ['AS'] identifier
-        ;
+    ['AS'] identifier
+    ;
 
 table_expression =
-        from_clause
-            [where_clause]
-            [group_by_clause]
-            [having_clause]
-        ;
+    from_clause [where_clause] [group_by_clause] [having_clause]
+    ;
 
 from_clause =
-        'FROM' ','.{table_reference}
-        ;
+    'FROM' ','.{table_reference}
+    ;
 
 table_reference =
-        identifier_chain [correlation_specification]
-    |   subquery correlation_specification
-    |   joined_table
-        ;
-
-correlation_specification =
-        as_clause [column_name_list]
-        ;
+  | identifier_chain [as_clause]
+  | subquery as_clause
+  | joined_table
+    ;
 
 joined_table =
-        cross_join
-    |   qualified_join
-    |   '(' joined_table ')'
-        ;
+  | cross_join
+  | qualified_join
+  | '(' joined_table ')'
+    ;
 
 cross_join =
-        table_reference 'CROSS' 'JOIN' table_reference
-        ;
+    table_reference 'CROSS' 'JOIN' table_reference
+    ;
 
 qualified_join =
-        table_reference ['NATURAL'] [_KW_JOIN_TYPE] 'JOIN'
-            table_reference [join_specification]
-        ;
-
-join_specification =
-        join_condition
-    |   named_columns_join
-        ;
+    table_reference ['NATURAL'] [_KW_JOIN_TYPE] 'JOIN' table_reference [join_condition]
+    ;
 
 join_condition =
-        'ON' search_condition
-        ;
-
-named_columns_join =
-        'USING' column_name_list
-        ;
+    'ON' search_condition
+    ;
 
 where_clause =
-        'WHERE' search_condition
-        ;
+    'WHERE' search_condition
+    ;
 
 group_by_clause =
-        'GROUP' 'BY' grouping_column_reference_list
-        ;
+    'GROUP' 'BY' grouping_column_reference_list
+    ;
 
 grouping_column_reference_list =
-        ','.{identifier_chain [collate_clause]}
-        ;
-
-collate_clause =
-        'COLLATE' identifier_chain
-        ;
+    ','.{identifier_chain}
+    ;
 
 having_clause =
-        'HAVING' search_condition
-        ;
-
-table_value_constructor_list =
-        ','.{row_value_constructor}
-        ;
+    'HAVING' search_condition
+    ;
 
 query_term =
-        non_join_query_term
-    |   joined_table
-        ;
-
-corresponding_spec =
-        'CORRESPONDING' ['BY' column_name_list]
-        ;
+  | non_join_query_term
+  | joined_table
+    ;
 
 query_primary =
-        non_join_query_primary
-    |   joined_table
-        ;
-
-case_specification =
-        'CASE' [value_expression]
-            {when_clause}+
-            [else_clause]
-            'END'
-        ;
+  | non_join_query_primary
+  | joined_table
+    ;
 
 result =
-        'NULL'
-    |   value_expression
-        ;
+  | 'NULL'
+  | value_expression
+    ;
 
 else_clause =
-        'ELSE' result
-        ;
+    'ELSE' result
+    ;
 
 when_clause =
-        'WHEN' (search_condition | value_expression) 'THEN' result
-        ;
-
-cast_target =
-        identifier_chain
-    |   data_type
-        ;
-
-numeric_value_function =
-        'POSITION' '(' character_value_expression 'IN' character_value_expression ')'
-    |   'EXTRACT' '(' _KW_EXTRACT_FIELD 'FROM' extract_source ')'
-    |   length_expression
-        ;
-
-character_value_expression =
-        [character_value_expression '||'] character_factor
-        ;
-
-character_factor =
-        character_primary [collate_clause]
-        ;
-
-character_primary =
-        value_expression_primary
-    |   string_value_function
-        ;
-
-string_value_function =
-        'SUBSTRING' '(' string_value_expression 'FROM' numeric_value_expression ['FOR' numeric_value_expression] ')'
-    |   ('UPPER' | 'LOWER') '(' character_value_expression ')'
-    |   ('CONVERT' | 'TRANSLATE') '(' character_value_expression 'USING' identifier_chain ')'
-    |   'TRIM' '(' [[_KW_TRIM_SPECIFICATION] [character_value_expression] 'FROM'] character_value_expression ')'
-        ;
-
-bit_value_expression =
-        [bit_value_expression '||'] character_primary
-        ;
-
-extract_source =
-        datetime_value_expression
-    |   interval_value_expression
-        ;
-
-datetime_value_expression =
-        [interval_value_expression '+'] datetime_factor
-    |   datetime_value_expression sign interval_term
-        ;
-
-interval_term =
-        interval_term mult_div factor
-    |   [term '*'] [sign] value_expression_primary [interval_qualifier]
-        ;
-
-interval_value_expression =
-        [interval_value_expression sign] interval_term
-    |   '(' datetime_value_expression '-' datetime_factor ')' interval_qualifier
-        ;
-
-datetime_factor =
-        datetime_primary ['AT' time_zone_specifier]
-        ;
-
-datetime_primary =
-        value_expression_primary
-    |   datetime_value_function
-        ;
-
-time_zone_specifier =
-        'LOCAL'
-    |   'TIME' 'ZONE' interval_value_expression
-        ;
-
-length_expression =
-        ('CHAR_LENGTH' | 'CHARACTER_LENGTH' | 'OCTET_LENGTH' | 'BIT_LENGTH')
-            '(' string_value_expression ')'
-        ;
-
-string_value_expression =
-        character_value_expression
-    |   bit_value_expression
-        ;
+  | 'WHEN' search_condition 'THEN' result
+  | 'WHEN' value_expression 'THEN' result
+    ;
 
 in_predicate_value =
-        subquery
-    |   value_expression_list
-        ;
+  | subquery
+  | value_expression_list
+    ;
 
 value_expression_list =
-        '(' ','.{value_expression} ')'
-        ;
-
-table_constraint_definition =
-        [constraint_name_definition] table_constraint [_KW_CONSTRAINT_CHECK_TIME]
-        ;
-
-table_constraint =
-        _KW_UNIQUE_SPECIFICATION column_name_list
-    |   'FOREIGN' 'KEY' column_name_list references_specification
-    |   assertion_check
-        ;
+    '(' ','.{value_expression} ')'
+    ;
 
 order_by_clause =
-        'ORDER' 'BY' sort_specification_list
-        ;
+    'ORDER' 'BY' sort_specification_list
+    ;
 
 sort_specification_list =
-        ','.{sort_key [collate_clause] [_KW_ORDERING_SPECIFICATION]}
-        ;
+    ','.{sort_key [_KW_ORDERING_SPECIFICATION]}
+    ;
 
 sort_key =
-        identifier
-    |   integer
-        ;
-
-sql_schema_statement =
-        sql_schema_definition_statement
-    |   sql_schema_manipulation_statement
-        ;
-
-sql_schema_definition_statement =
-        schema_definition
-    |   table_definition
-    |   view_definition
-    |   grant_statement
-    |   domain_definition
-    |   character_set_definition
-    |   collation_definition
-    |   translation_definition
-    |   assertion_definition
-        ;
-
-schema_definition =
-        'CREATE' 'SCHEMA' schema_name_clause
-            ['DEFAULT' 'CHARACTER' 'SET' identifier_chain]
-            [{schema_element}+]
-        ;
-
-schema_name_clause =
-        identifier_chain
-    |   [identifier_chain] 'AUTHORIZATION' identifier
-        ;
-
-schema_element =
-        domain_definition
-    |   table_definition
-    |   view_definition
-    |   grant_statement
-    |   assertion_definition
-    |   character_set_definition
-    |   collation_definition
-    |   translation_definition
-        ;
-
-domain_definition =
-        'CREATE' 'DOMAIN' identifier_chain ['AS'] data_type
-            [default_clause] [domain_constraint] [collate_clause]
-        ;
-
-domain_constraint =
-        [constraint_name_definition] assertion_check [_KW_CONSTRAINT_ATTRIBUTES]
-        ;
-
-table_definition =
-        'CREATE' [('GLOBAL' | 'LOCAL') 'TEMPORARY'] 'TABLE'
-            identifier_chain table_element_list ['ON' 'COMMIT' ('DELETE' | 'PRESERVE') 'ROWS']
-        ;
-
-view_definition =
-        'CREATE' 'VIEW' identifier_chain [column_name_list]
-            'AS' query_expression ['WITH' [_KW_LEVELS_CLAUSE] 'CHECK' 'OPTION']
-        ;
-
-grant_statement =
-        'GRANT' privileges 'ON' object_name 'TO' ','.{grantee} ['WITH' 'GRANT' 'OPTION']
-        ;
-
-privileges =
-        'ALL' 'PRIVILEGES'
-    |   ','.{action}
-        ;
-
-action =
-        ('SELECT' | 'DELETE' | 'USAGE')
-    |   ('INSERT' | 'UPDATE' | 'REFERENCES') [column_name_list]
-        ;
-
-object_name =
-        ['TABLE' | 'DOMAIN' | 'COLLATION' | 'TRANSLATION' | 'CHARACTER' 'SET']
-            identifier_chain
-        ;
-
-grantee =
-        'PUBLIC'
-    |   identifier
-        ;
-
-assertion_definition =
-        'CREATE' 'ASSERTION' identifier_chain assertion_check
-            [_KW_CONSTRAINT_ATTRIBUTES]
-        ;
-
-assertion_check =
-        'CHECK' '(' search_condition ')'
-        ;
-
-character_set_definition =
-        'CREATE' 'CHARACTER' 'SET' identifier_chain ['AS'] 'GET' identifier_chain
-            [collate_clause | 'COLLATION' 'FROM' collation_source]
-        ;
-
-collation_source =
-        collating_sequence_definition
-    |   'TRANSLATION' identifier_chain ['THEN' 'COLLATION' identifier_chain]
-        ;
-
-collating_sequence_definition =
-        'DEFAULT'
-    |   external_translation
-    |   identifier_chain
-    |   'DESC' '(' identifier_chain ')'
-        ;
-
-collation_definition =
-        'CREATE' 'COLLATION' identifier_chain 'FOR' identifier_chain
-            'FROM' collation_source [_KW_PAD_ATTRIBUTE]
-        ;
-
-translation_definition =
-        'CREATE' 'TRANSLATION' identifier_chain
-            'FOR' identifier_chain
-            'TO' identifier_chain
-            'FROM' translation_specification
-        ;
-
-translation_specification =
-        'IDENTITY'
-    |   external_translation
-    |   identifier_chain
-        ;
-
-external_translation =
-        'EXTERNAL' '(' "'" identifier_chain "'" ')'
-        ;
-
-sql_schema_manipulation_statement =
-        'DROP' 'SCHEMA' identifier_chain _KW_DROP_BEHAVIOUR
-    |   'ALTER' 'TABLE' identifier_chain alter_table_action
-    |   'DROP' 'TABLE' identifier_chain _KW_DROP_BEHAVIOUR
-    |   'DROP' 'VIEW' identifier_chain _KW_DROP_BEHAVIOUR
-    |   revoke_statement
-    |   'ALTER' 'DOMAIN' identifier_chain alter_domain_action
-    |   'DROP' 'DOMAIN' identifier_chain _KW_DROP_BEHAVIOUR
-    |   'DROP' 'CHARACTER' 'SET' identifier_chain
-    |   'DROP' 'COLLATION' identifier_chain
-    |   'DROP' 'TRANSLATION' identifier_chain
-    |   'DROP' 'ASSERTION' identifier_chain
-        ;
-
-alter_table_action =
-        'ADD' ['COLUMN'] column_definition
-    |   'ALTER' ['COLUMN'] identifier alter_action
-    |   'DROP' ['COLUMN'] identifier _KW_DROP_BEHAVIOUR
-    |   'ADD' table_constraint_definition
-    |   'DROP' 'CONSTRAINT' identifier_chain _KW_DROP_BEHAVIOUR
-        ;
-
-alter_action =
-        'SET' default_clause
-    |   _KW_DROP_DEFAULT_CLAUSE
-        ;
-
-revoke_statement =
-        'REVOKE' ['GRANT' 'OPTION' 'FOR'] privileges 'ON' object_name
-            'FROM' ','.{grantee} _KW_DROP_BEHAVIOUR
-        ;
-
-alter_domain_action =
-        alter_action
-    |   'ADD' domain_constraint
-    |   'DROP' 'CONSTRAINT' identifier_chain
-        ;
-
-simple_value_specification =
-        parameter_name
-    |   literal
-        ;
-
-delete_statement_searched =
-        'DELETE' 'FROM' identifier_chain [where_clause]
-        ;
-
-insert_statement =
-        'INSERT' 'INTO' identifier_chain insert_columns_and_source
-        ;
-
-insert_columns_and_source =
-        'DEFAULT' 'VALUES'
-    |   [column_name_list] query_expression
-        ;
-
-set_clause_list =
-        ','.{set_clause}
-        ;
-
-set_clause =
-        identifier '=' row_value_constructor_element
-        ;
-
-update_statement_searched =
-        'UPDATE' identifier_chain 'SET' set_clause_list [where_clause]
-        ;
-
-sql_transaction_statement =
-        'SET' 'TRANSACTION' ','.{transaction_mode}
-    |   'SET' 'CONSTRAINTS' constraint_name_list ('DEFERRED' | 'IMMEDIATE')
-    |   _KW_COMMIT_STATEMENT
-    |   _KW_ROLLBACK_STATEMENT
-        ;
-
-transaction_mode =
-        'ISOLATION' 'LEVEL' _KW_LEVEL_OF_ISOLATION
-    |   _KW_TRANSACTION_ACCESS_MODE
-    |   'DIAGNOSTICS' 'SIZE' simple_value_specification
-        ;
-
-constraint_name_list =
-        'ALL'
-    |   ','.{identifier_chain}
-        ;
-
-sql_connection_statement =
-        'CONNECT' 'TO' connection_target
-    |   'SET' 'CONNECTION' connection_object
-    |   'DISCONNECT' disconnect_object
-        ;
-
-connection_target =
-        'DEFAULT'
-    |   simple_value_specification ['AS' simple_value_specification] ['USER' simple_value_specification]
-        ;
-
-connection_object =
-        'DEFAULT'
-    |   simple_value_specification
-        ;
-
-disconnect_object =
-        'ALL'
-    |   'CURRENT'
-    |   connection_object
-        ;
-
-sql_session_statement =
-        'SET' 'CATALOG' value_specification
-    |   'SET' 'SCHEMA' value_specification
-    |   'SET' 'NAMES' value_specification
-    |   'SET' 'SESSION' 'AUTHORIZATION' value_specification
-    |   'SET' 'TIME' 'ZONE' set_time_zone_value
-        ;
-
-value_specification =
-        literal
-    |   general_value_specification
-        ;
-
-set_time_zone_value =
-        'LOCAL'
-    |   interval_value_expression
-        ;
-
-direct_sql_statement =
-        direct_sql_data_statement
-    |   sql_schema_statement
-    |   sql_transaction_statement
-    |   sql_connection_statement
-    |   sql_session_statement
-        ;
-
-direct_sql_data_statement =
-        delete_statement_searched
-    |   select_statement
-    |   insert_statement
-    |   update_statement_searched
-    |   temporary_table_declaration
-        ;
+  | identifier
+  | integer
+    ;
 
 select_statement =
-        query_expression [order_by_clause]
-        ;
+    query_expression [order_by_clause]
+    ;
