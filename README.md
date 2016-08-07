@@ -94,3 +94,36 @@ with open(path, 'w') as f:
 
 
 
+
+
+## Update
+digit
+/\d/
+
+regular_identifier
+@name
+/[a-z]\w*/
+
+space
+/ /
+
+delimited_identifier_body
+/(""|[^"\n])+/
+
+character_representation
+/(''|[^'\n])+/
+
+sql_language_identifier
+regular_identifier
+
+hexit
+/[a-f\d]/
+
+##rename
+qualified_name to schema_qualified_name
+
+## remove duplicates within options
+`  \| (\w+)\n  \| \1\n` and `  \| \1\n`
+
+## lists
+`(\w+) \[{comma \1}\+\]` to `','.{$1}`

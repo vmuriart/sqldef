@@ -17,7 +17,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 8, 6, 21, 11, 1, 5)
+__version__ = (2016, 8, 7, 3, 38, 37, 6)
 
 __all__ = [
     'SqlParser',
@@ -107,6 +107,7 @@ KEYWORDS = set([
     'DEC',
     'DECIMAL',
     'DECLARE',
+    'DECODE',
     'DEFAULT',
     'DELETE',
     'DENSE_RANK',
@@ -492,36 +493,36 @@ class SqlParser(Parser):
             with self._option():
                 self._token('DATE')
                 self._token("'")
-                self._date_value_()
+                self._integer_()
+                self._token('-')
+                self._integer_()
+                self._token('-')
+                self._integer_()
                 self._token("'")
             with self._option():
                 self._token('TIME')
                 self._token("'")
-                self._time_value_()
+                self._integer_()
+                self._token(':')
+                self._integer_()
+                self._token(':')
+                self._proper_decimal_()
                 self._token("'")
             with self._option():
                 self._token('TIMESTAMP')
                 self._token("'")
-                self._date_value_()
-                self._time_value_()
+                self._integer_()
+                self._token('-')
+                self._integer_()
+                self._token('-')
+                self._integer_()
+                self._integer_()
+                self._token(':')
+                self._integer_()
+                self._token(':')
+                self._proper_decimal_()
                 self._token("'")
             self._error('no available options')
-
-    @graken()
-    def _date_value_(self):
-        self._integer_()
-        self._token('-')
-        self._integer_()
-        self._token('-')
-        self._integer_()
-
-    @graken()
-    def _time_value_(self):
-        self._integer_()
-        self._token(':')
-        self._integer_()
-        self._token(':')
-        self._proper_decimal_()
 
     @graken()
     def _interval_literal_(self):
@@ -605,15 +606,6 @@ class SqlParser(Parser):
     def _data_type_(self):
         with self._choice():
             with self._option():
-                self._predefined_type_()
-            with self._option():
-                self._qualified_name_()
-            self._error('no available options')
-
-    @graken()
-    def _predefined_type_(self):
-        with self._choice():
-            with self._option():
                 self._token('CHARACTER')
                 with self._optional():
                     self._integer_list_()
@@ -658,71 +650,65 @@ class SqlParser(Parser):
                 self._token('TIME')
                 with self._optional():
                     self._integer_list_()
-                with self._optional():
-                    self._with_out_()
-                    self._token('TIME')
-                    self._token('ZONE')
             with self._option():
                 self._token('TIMESTAMP')
                 with self._optional():
                     self._integer_list_()
-                with self._optional():
-                    self._with_out_()
-                    self._token('TIME')
-                    self._token('ZONE')
             with self._option():
                 self._token('INTERVAL')
                 self._interval_qualifier_()
             self._error('expecting one of: BIGINT BOOLEAN CHAR CHARACTER DATE DEC DECIMAL DOUBLE FLOAT INT INTEGER NUMERIC REAL SMALLINT TIME TIMESTAMP')
 
     @graken()
-    def _value_expr_primary_(self):
-        with self._choice():
-            with self._option():
-                self._parenthesized_value_expr_()
-            with self._option():
-                self._nonparenthesized_value_expr_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _parenthesized_value_expr_(self):
-        self._left_paren_()
-        self._value_expr_()
-        self._right_paren_()
-
-    @graken()
     def _nonparenthesized_value_expr_primary_(self):
         with self._choice():
             with self._option():
-                self._set_function_spec_()
+                self._token('DECODE')
+                self._value_expr_list_()
             with self._option():
-                self._window_function_()
+                self._rank_function_type_()
+                self._empty_set_()
+                self._token('OVER')
+                self._window_spec_()
+            with self._option():
+                self._token('ROW_NUMBER')
+                self._empty_set_()
+                self._token('OVER')
+                self._window_spec_()
+            with self._option():
+                self._aggregate_function_()
+                with self._optional():
+                    self._token('OVER')
+                    self._window_spec_()
             with self._option():
                 self._subquery_()
             with self._option():
                 self._token('NULLIF')
                 self._value_expr_list_()
             with self._option():
+                self._token('LENGTH')
+                self._value_expr_list_()
+            with self._option():
                 self._token('COALESCE')
                 self._value_expr_list_()
             with self._option():
-                self._case_expr_()
+                self._token('SUBSTR')
+                self._value_expr_list_()
             with self._option():
-                self._token('DECODE')
-                self._left_paren_()
-                self._value_expr_primary_()
-                self._right_paren_()
+                self._token('REGEXP_SUBSTR')
+                self._value_expr_list_()
+            with self._option():
+                self._token('REGEXP_REPLACE')
+                self._value_expr_list_()
+            with self._option():
+                self._case_expr_()
             with self._option():
                 self._token('CAST')
                 self._left_paren_()
                 self._result_()
                 self._token('AS')
-                self._cast_target_()
+                self._data_type_()
                 self._right_paren_()
-            with self._option():
-                self._value_expr_primary_()
-                self._token('.')
-                self._identifier_()
             with self._option():
                 self._token('TREAT')
                 self._left_paren_()
@@ -731,10 +717,6 @@ class SqlParser(Parser):
                 self._qualified_name_()
                 self._right_paren_()
             with self._option():
-                self._method_invocation_()
-            with self._option():
-                self._routine_invocation_()
-            with self._option():
                 self._unsigned_numeric_literal_()
             with self._option():
                 self._general_literal_()
@@ -742,8 +724,6 @@ class SqlParser(Parser):
                 self._parameter_name_()
             with self._option():
                 self._token('?')
-            with self._option():
-                self._qualified_name_()
             with self._option():
                 self._token('CURRENT_ROLE')
             with self._option():
@@ -756,6 +736,8 @@ class SqlParser(Parser):
                 self._token('USER')
             with self._option():
                 self._token('VALUE')
+            with self._option():
+                self._qualified_name_()
             self._error('expecting one of: ? CURRENT_ROLE CURRENT_USER SESSION_USER SYSTEM_USER USER VALUE')
 
     @graken()
@@ -769,35 +751,6 @@ class SqlParser(Parser):
         self._positive_closure(block0, prefix=sep0)
 
     @graken()
-    def _set_function_spec_(self):
-        with self._choice():
-            with self._option():
-                self._aggregate_function_()
-            with self._option():
-                self._token('GROUPING')
-                self._parenthesized_name_list_()
-            self._error('no available options')
-
-    @graken()
-    def _window_function_(self):
-        self._window_function_type_()
-        self._token('OVER')
-        self._window_name_or_spec_()
-
-    @graken()
-    def _window_function_type_(self):
-        with self._choice():
-            with self._option():
-                self._rank_function_type_()
-                self._empty_set_()
-            with self._option():
-                self._token('ROW_NUMBER')
-                self._empty_set_()
-            with self._option():
-                self._aggregate_function_()
-            self._error('no available options')
-
-    @graken()
     def _rank_function_type_(self):
         with self._choice():
             with self._option():
@@ -809,15 +762,6 @@ class SqlParser(Parser):
             with self._option():
                 self._token('CUME_DIST')
             self._error('expecting one of: CUME_DIST DENSE_RANK PERCENT_RANK RANK')
-
-    @graken()
-    def _window_name_or_spec_(self):
-        with self._choice():
-            with self._option():
-                self._window_spec_()
-            with self._option():
-                self._identifier_()
-            self._error('no available options')
 
     @graken()
     def _value_expr_list_(self):
@@ -888,9 +832,9 @@ class SqlParser(Parser):
     def _when_operand_(self):
         with self._choice():
             with self._option():
-                self._value_expr_()
-            with self._option():
                 self._part_predicate_()
+            with self._option():
+                self._value_expr_()
             self._error('no available options')
 
     @graken()
@@ -932,7 +876,7 @@ class SqlParser(Parser):
                 with self._optional():
                     self._token('NOT')
                 self._token('LIKE')
-                self._chr_value_expr_()
+                self._value_expr_()
             with self._option():
                 with self._optional():
                     self._token('NOT')
@@ -952,261 +896,108 @@ class SqlParser(Parser):
             self._error('expecting one of: NULL')
 
     @graken()
-    def _cast_target_(self):
-        with self._choice():
-            with self._option():
-                self._data_type_()
-            with self._option():
-                self._qualified_name_()
-            self._error('no available options')
-
-    @graken()
-    def _method_invocation_(self):
-        with self._choice():
-            with self._option():
-                self._value_expr_primary_()
-                self._token('.')
-                self._identifier_()
-                with self._optional():
-                    self._argument_list_()
-            with self._option():
-                self._left_paren_()
-                self._value_expr_primary_()
-                self._token('AS')
-                self._data_type_()
-                self._right_paren_()
-                self._token('.')
-                self._identifier_()
-                with self._optional():
-                    self._argument_list_()
-            self._error('no available options')
-
-    @graken()
     def _value_expr_(self):
         with self._choice():
             with self._option():
-                self._common_value_expr_()
+                with self._optional():
+                    self._value_expr_()
+                    self._ops_()
+                with self._optional():
+                    self._plus_or_minus_()
+                self._primary_()
             with self._option():
                 self._boolean_value_expr_()
-            with self._option():
-                self._row_value_expr_()
             self._error('no available options')
 
     @graken()
-    def _common_value_expr_(self):
+    def _ops_(self):
         with self._choice():
             with self._option():
-                self._numeric_value_expr_()
+                self._plus_or_minus_()
             with self._option():
-                self._chr_value_expr_()
+                self._multiply_or_divide_()
             with self._option():
-                self._datetime_value_expr_()
-            with self._option():
-                self._interval_value_expr_()
-            with self._option():
-                self._value_expr_primary_()
-            self._error('no available options')
+                self._token('||')
+            self._error('expecting one of: ||')
 
     @graken()
-    def _numeric_value_expr_(self):
-        with self._optional():
-            self._numeric_value_expr_()
-            self._plus_or_minus_()
-        self._term_()
-
-    @graken()
-    def _term_(self):
-        with self._optional():
-            self._term_()
-            self._multiply_or_divide_()
-        self._factor_()
-
-    @graken()
-    def _factor_(self):
-        with self._optional():
-            self._plus_or_minus_()
-        self._numeric_primary_()
-
-    @graken()
-    def _numeric_primary_(self):
+    def _primary_(self):
         with self._choice():
             with self._option():
                 self._token('POSITION')
                 self._left_paren_()
-                self._chr_value_expr_()
+                self._value_expr_()
                 self._token('IN')
-                self._chr_value_expr_()
+                self._value_expr_()
                 self._right_paren_()
             with self._option():
                 self._token('EXTRACT')
                 self._left_paren_()
                 self._extract_field_()
                 self._token('FROM')
-                self._extract_source_()
+                self._value_expr_()
                 self._right_paren_()
             with self._option():
                 self._token('CHAR_LENGTH')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('CHARACTER_LENGTH')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('OCTET_LENGTH')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('ABS')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('MOD')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('LN')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('EXP')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('POWER')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('SQRT')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('FLOOR')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('CEIL')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('CEILING')
-                self._numeric_value_expr_list_()
+                self._value_expr_list_()
             with self._option():
                 self._token('WIDTH_BUCKET')
-                self._numeric_value_expr_list_()
-            with self._option():
-                self._value_expr_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _extract_field_(self):
-        with self._choice():
-            with self._option():
-                self._primary_datetime_field_()
-            with self._option():
-                self._token('TIMEZONE_HOUR')
-            with self._option():
-                self._token('TIMEZONE_MINUTE')
-            self._error('expecting one of: TIMEZONE_HOUR TIMEZONE_MINUTE')
-
-    @graken()
-    def _extract_source_(self):
-        with self._choice():
-            with self._option():
-                self._datetime_value_expr_()
-            with self._option():
-                self._interval_value_expr_()
-            self._error('no available options')
-
-    @graken()
-    def _numeric_value_expr_list_(self):
-        self._left_paren_()
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._numeric_value_expr_()
-        self._positive_closure(block0, prefix=sep0)
-        self._right_paren_()
-
-    @graken()
-    def _chr_value_expr_(self):
-        with self._optional():
-            self._chr_value_expr_()
-            self._token('||')
-        self._chr_primary_()
-
-    @graken()
-    def _chr_primary_(self):
-        with self._choice():
+                self._value_expr_list_()
             with self._option():
                 self._token('SUBSTRING')
                 self._left_paren_()
-                self._chr_value_expr_()
+                self._value_expr_()
                 self._token('FROM')
-                self._numeric_value_expr_()
+                self._value_expr_()
                 with self._optional():
                     self._token('FOR')
-                    self._numeric_value_expr_()
+                    self._value_expr_()
                 self._right_paren_()
             with self._option():
                 self._token('UPPER')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('LOWER')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('TRIM')
-                self._left_paren_()
-                self._trim_operands_()
-                self._right_paren_()
+                self._value_expr_list_()
             with self._option():
                 self._token('NORMALIZE')
-                self._left_paren_()
-                self._chr_value_expr_()
-                self._right_paren_()
-            with self._option():
-                self._value_expr_primary_()
-            self._error('no available options')
-
-    @graken()
-    def _trim_operands_(self):
-        with self._optional():
-            with self._optional():
-                self._trim_spec_()
-            with self._optional():
-                self._chr_value_expr_()
-            self._token('FROM')
-        self._chr_value_expr_()
-
-    @graken()
-    def _trim_spec_(self):
-        with self._choice():
-            with self._option():
-                self._token('LEADING')
-            with self._option():
-                self._token('TRAILING')
-            with self._option():
-                self._token('BOTH')
-            self._error('expecting one of: BOTH LEADING TRAILING')
-
-    @graken()
-    def _datetime_value_expr_(self):
-        with self._choice():
-            with self._option():
-                with self._optional():
-                    self._interval_value_expr_()
-                    self._token('+')
-                self._datetime_primary_()
-            with self._option():
-                self._datetime_value_expr_()
-                self._plus_or_minus_()
-                self._interval_term_()
-            self._error('no available options')
-
-    @graken()
-    def _datetime_primary_(self):
-        with self._choice():
+                self._value_expr_list_()
             with self._option():
                 self._token('CURRENT_DATE')
             with self._option():
@@ -1226,73 +1017,78 @@ class SqlParser(Parser):
                 with self._optional():
                     self._integer_list_()
             with self._option():
-                self._value_expr_primary_()
+                self._value_expr_list_()
+            with self._option():
+                self._nonparenthesized_value_expr_primary_()
             self._error('expecting one of: CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP LOCALTIME LOCALTIMESTAMP')
 
     @graken()
-    def _interval_value_expr_(self):
+    def _extract_field_(self):
         with self._choice():
             with self._option():
-                with self._optional():
-                    self._interval_value_expr_()
-                    self._plus_or_minus_()
-                self._interval_term_()
+                self._primary_datetime_field_()
             with self._option():
-                self._left_paren_()
-                self._datetime_value_expr_()
-                self._token('-')
-                self._datetime_primary_()
-                self._right_paren_()
-                self._interval_qualifier_()
-            self._error('no available options')
+                self._token('TIMEZONE_HOUR')
+            with self._option():
+                self._token('TIMEZONE_MINUTE')
+            self._error('expecting one of: TIMEZONE_HOUR TIMEZONE_MINUTE')
 
     @graken()
-    def _interval_term_(self):
+    def _trim_operands_(self):
+        with self._optional():
+            with self._optional():
+                self._trim_spec_()
+            with self._optional():
+                self._value_expr_()
+            self._token('FROM')
+        self._value_expr_()
+
+    @graken()
+    def _trim_spec_(self):
         with self._choice():
             with self._option():
-                self._interval_term_()
-                self._multiply_or_divide_()
-                self._factor_()
+                self._token('LEADING')
             with self._option():
-                with self._optional():
-                    self._term_()
-                    self._token('*')
-                self._interval_factor_()
-            self._error('no available options')
-
-    @graken()
-    def _interval_factor_(self):
-        with self._optional():
-            self._plus_or_minus_()
-        self._interval_primary_()
-
-    @graken()
-    def _interval_primary_(self):
-        self._value_expr_primary_()
-        with self._optional():
-            self._interval_qualifier_()
+                self._token('TRAILING')
+            with self._option():
+                self._token('BOTH')
+            self._error('expecting one of: BOTH LEADING TRAILING')
 
     @graken()
     def _boolean_value_expr_(self):
         with self._optional():
-            self._boolean_value_expr_()
-            self._token('OR')
-        self._boolean_term_()
-
-    @graken()
-    def _boolean_term_(self):
-        with self._optional():
-            self._boolean_term_()
-            self._token('AND')
-        with self._optional():
             self._token('NOT')
         self._boolean_primary_()
+        with self._optional():
+
+            def block0():
+                self._and_or_()
+                with self._optional():
+                    self._token('NOT')
+                self._boolean_primary_()
+            self._positive_closure(block0)
+
+    @graken()
+    def _and_or_(self):
+        with self._choice():
+            with self._option():
+                self._token('AND')
+            with self._option():
+                self._token('OR')
+            self._error('expecting one of: AND OR')
 
     @graken()
     def _boolean_primary_(self):
         with self._choice():
             with self._option():
-                self._predicate_()
+                self._value_expr_()
+                self._part_predicate_()
+            with self._option():
+                self._token('EXISTS')
+                self._subquery_()
+            with self._option():
+                self._token('UNIQUE')
+                self._subquery_()
             with self._option():
                 self._left_paren_()
                 self._boolean_value_expr_()
@@ -1311,17 +1107,6 @@ class SqlParser(Parser):
             self._error('expecting one of: ALL DISTINCT')
 
     @graken()
-    def _row_value_expr_(self):
-        with self._choice():
-            with self._option():
-                self._nonparenthesized_value_expr_primary_()
-            with self._option():
-                self._value_expr_list_()
-            with self._option():
-                self._subquery_()
-            self._error('no available options')
-
-    @graken()
     def _table_expr_(self):
         self._from_clause_()
         with self._optional():
@@ -1330,6 +1115,14 @@ class SqlParser(Parser):
             self._group_by_clause_()
         with self._optional():
             self._having_clause_()
+        with self._optional():
+            self._connect_clause_()
+
+    @graken()
+    def _connect_clause_(self):
+        self._token('CONNECT')
+        self._token('BY')
+        self._boolean_value_expr_()
 
     @graken()
     def _from_clause_(self):
@@ -1350,9 +1143,9 @@ class SqlParser(Parser):
     def _table_reference_(self):
         with self._choice():
             with self._option():
-                self._table_primary_()
-            with self._option():
                 self._joined_table_()
+            with self._option():
+                self._table_primary_()
             self._error('no available options')
 
     @graken()
@@ -1364,18 +1157,13 @@ class SqlParser(Parser):
                 self._right_paren_()
             with self._option():
                 self._subquery_()
-                self._as_clause_()
+                with self._optional():
+                    self._as_clause_()
             with self._option():
                 self._qualified_name_()
                 with self._optional():
                     self._as_clause_()
             self._error('no available options')
-
-    @graken()
-    def _parenthesized_name_list_(self):
-        self._left_paren_()
-        self._name_list_()
-        self._right_paren_()
 
     @graken()
     def _joined_table_(self):
@@ -1391,7 +1179,8 @@ class SqlParser(Parser):
                     self._join_type_()
                 self._token('JOIN')
                 self._table_reference_()
-                self._join_spec_()
+                self._token('ON')
+                self._boolean_value_expr_()
             with self._option():
                 self._table_reference_()
                 self._token('NATURAL')
@@ -1400,11 +1189,6 @@ class SqlParser(Parser):
                 self._token('JOIN')
                 self._table_primary_()
             self._error('no available options')
-
-    @graken()
-    def _join_spec_(self):
-        self._token('ON')
-        self._boolean_value_expr_()
 
     @graken()
     def _join_type_(self):
@@ -1455,11 +1239,11 @@ class SqlParser(Parser):
     def _ordinary_grouping_set_(self):
         with self._choice():
             with self._option():
-                self._qualified_name_()
-            with self._option():
                 self._left_paren_()
                 self._name_list_()
                 self._right_paren_()
+            with self._option():
+                self._qualified_name_()
             self._error('no available options')
 
     @graken()
@@ -1484,8 +1268,6 @@ class SqlParser(Parser):
     @graken()
     def _window_spec_(self):
         self._left_paren_()
-        with self._optional():
-            self._identifier_()
         with self._optional():
             self._partition_clause_()
         with self._optional():
@@ -1524,10 +1306,6 @@ class SqlParser(Parser):
                 self._qualified_name_()
                 self._token('.')
                 self._token('*')
-            with self._option():
-                self._value_expr_primary_()
-                self._token('.')
-                self._token('*')
             self._error('no available options')
 
     @graken()
@@ -1557,12 +1335,15 @@ class SqlParser(Parser):
 
     @graken()
     def _query_expr_body_(self):
+        self._query_primary_()
         with self._optional():
-            self._query_expr_body_()
-            self._union_except_()
-            with self._optional():
-                self._all_distinct_()
-        self._query_term_()
+
+            def block0():
+                self._union_except_()
+                with self._optional():
+                    self._all_distinct_()
+                self._query_primary_()
+            self._positive_closure(block0)
 
     @graken()
     def _union_except_(self):
@@ -1571,16 +1352,9 @@ class SqlParser(Parser):
                 self._token('UNION')
             with self._option():
                 self._token('EXCEPT')
-            self._error('expecting one of: EXCEPT UNION')
-
-    @graken()
-    def _query_term_(self):
-        with self._optional():
-            self._query_term_()
-            self._token('INTERSECT')
-            with self._optional():
-                self._all_distinct_()
-        self._query_primary_()
+            with self._option():
+                self._token('INTERSECT')
+            self._error('expecting one of: EXCEPT INTERSECT UNION')
 
     @graken()
     def _query_primary_(self):
@@ -1604,35 +1378,23 @@ class SqlParser(Parser):
         self._right_paren_()
 
     @graken()
-    def _predicate_(self):
-        with self._choice():
-            with self._option():
-                self._value_expr_()
-                self._part_predicate_()
-            with self._option():
-                self._token('EXISTS')
-                self._subquery_()
-            with self._option():
-                self._token('UNIQUE')
-                self._subquery_()
-            self._error('no available options')
-
-    @graken()
     def _comp_op_(self):
         with self._choice():
-            with self._option():
-                self._token('=')
-            with self._option():
-                self._token('<>')
-            with self._option():
-                self._token('<')
-            with self._option():
-                self._token('>')
             with self._option():
                 self._token('<=')
             with self._option():
                 self._token('>=')
-            self._error('expecting one of: < <= <> = > >=')
+            with self._option():
+                self._token('<>')
+            with self._option():
+                self._token('=')
+            with self._option():
+                self._token('!=')
+            with self._option():
+                self._token('<')
+            with self._option():
+                self._token('>')
+            self._error('expecting one of: != < <= <> = > >=')
 
     @graken()
     def _in_predicate_value_(self):
@@ -1640,20 +1402,8 @@ class SqlParser(Parser):
             with self._option():
                 self._subquery_()
             with self._option():
-                self._left_paren_()
-                self._in_value_list_()
-                self._right_paren_()
+                self._value_expr_list_()
             self._error('no available options')
-
-    @graken()
-    def _in_value_list_(self):
-
-        def sep0():
-            self._token(',')
-
-        def block0():
-            self._row_value_expr_()
-        self._positive_closure(block0, prefix=sep0)
 
     @graken()
     def _quantifier_(self):
@@ -1695,40 +1445,6 @@ class SqlParser(Parser):
             self._error('expecting one of: DAY HOUR MINUTE MONTH SECOND YEAR')
 
     @graken()
-    def _routine_invocation_(self):
-        self._qualified_name_()
-        self._argument_list_()
-
-    @graken()
-    def _argument_list_(self):
-        self._left_paren_()
-        with self._optional():
-
-            def sep0():
-                self._token(',')
-
-            def block0():
-                self._argument_()
-            self._positive_closure(block0, prefix=sep0)
-        self._right_paren_()
-
-    @graken()
-    def _argument_(self):
-        with self._choice():
-            with self._option():
-                self._value_expr_()
-                with self._optional():
-                    self._token('AS')
-                    self._qualified_name_()
-            with self._option():
-                self._parameter_name_()
-            with self._option():
-                self._qualified_name_()
-            with self._option():
-                self._token('?')
-            self._error('expecting one of: ?')
-
-    @graken()
     def _aggregate_function_(self):
         with self._choice():
             with self._option():
@@ -1745,11 +1461,6 @@ class SqlParser(Parser):
                     self._all_distinct_()
                 self._value_expr_()
                 self._right_paren_()
-                with self._optional():
-                    self._filter_clause_()
-            with self._option():
-                self._ordered_set_function_()
-                self._within_group_spec_()
                 with self._optional():
                     self._filter_clause_()
             self._error('no available options')
@@ -1770,6 +1481,10 @@ class SqlParser(Parser):
             with self._option():
                 self._token('ANY')
             with self._option():
+                self._token('LEAD')
+            with self._option():
+                self._token('LAG')
+            with self._option():
                 self._token('SOME')
             with self._option():
                 self._token('COUNT')
@@ -1787,26 +1502,13 @@ class SqlParser(Parser):
                 self._token('FUSION')
             with self._option():
                 self._token('INTERSECTION')
-            self._error('expecting one of: ANY AVG COLLECT COUNT EVERY FUSION INTERSECTION MAX MIN SOME STDDEV_POP STDDEV_SAMP SUM VAR_POP VAR_SAMP')
+            self._error('expecting one of: ANY AVG COLLECT COUNT EVERY FUSION INTERSECTION LAG LEAD MAX MIN SOME STDDEV_POP STDDEV_SAMP SUM VAR_POP VAR_SAMP')
 
     @graken()
     def _filter_clause_(self):
         self._token('FILTER')
         self._left_paren_()
         self._where_clause_()
-        self._right_paren_()
-
-    @graken()
-    def _ordered_set_function_(self):
-        self._rank_function_type_()
-        self._value_expr_list_()
-
-    @graken()
-    def _within_group_spec_(self):
-        self._token('WITHIN')
-        self._token('GROUP')
-        self._left_paren_()
-        self._order_by_clause_()
         self._right_paren_()
 
     @graken()
@@ -1860,15 +1562,6 @@ class SqlParser(Parser):
         self._sort_spec_list_()
 
     @graken()
-    def _with_out_(self):
-        with self._choice():
-            with self._option():
-                self._token('WITH')
-            with self._option():
-                self._token('WITHOUT')
-            self._error('expecting one of: WITH WITHOUT')
-
-    @graken()
     def _start_(self):
         self._cursor_spec_()
         self._check_eof()
@@ -1920,12 +1613,6 @@ class SqlSemantics(object):
     def datetime_literal(self, ast):
         return ast
 
-    def date_value(self, ast):
-        return ast
-
-    def time_value(self, ast):
-        return ast
-
     def interval_literal(self, ast):
         return ast
 
@@ -1947,34 +1634,13 @@ class SqlSemantics(object):
     def data_type(self, ast):
         return ast
 
-    def predefined_type(self, ast):
-        return ast
-
-    def value_expr_primary(self, ast):
-        return ast
-
-    def parenthesized_value_expr(self, ast):
-        return ast
-
     def nonparenthesized_value_expr_primary(self, ast):
         return ast
 
     def identifier_chain(self, ast):
         return ast
 
-    def set_function_spec(self, ast):
-        return ast
-
-    def window_function(self, ast):
-        return ast
-
-    def window_function_type(self, ast):
-        return ast
-
     def rank_function_type(self, ast):
-        return ast
-
-    def window_name_or_spec(self, ast):
         return ast
 
     def value_expr_list(self, ast):
@@ -2004,43 +1670,16 @@ class SqlSemantics(object):
     def result(self, ast):
         return ast
 
-    def cast_target(self, ast):
-        return ast
-
-    def method_invocation(self, ast):
-        return ast
-
     def value_expr(self, ast):
         return ast
 
-    def common_value_expr(self, ast):
+    def ops(self, ast):
         return ast
 
-    def numeric_value_expr(self, ast):
-        return ast
-
-    def term(self, ast):
-        return ast
-
-    def factor(self, ast):
-        return ast
-
-    def numeric_primary(self, ast):
+    def primary(self, ast):
         return ast
 
     def extract_field(self, ast):
-        return ast
-
-    def extract_source(self, ast):
-        return ast
-
-    def numeric_value_expr_list(self, ast):
-        return ast
-
-    def chr_value_expr(self, ast):
-        return ast
-
-    def chr_primary(self, ast):
         return ast
 
     def trim_operands(self, ast):
@@ -2049,28 +1688,10 @@ class SqlSemantics(object):
     def trim_spec(self, ast):
         return ast
 
-    def datetime_value_expr(self, ast):
-        return ast
-
-    def datetime_primary(self, ast):
-        return ast
-
-    def interval_value_expr(self, ast):
-        return ast
-
-    def interval_term(self, ast):
-        return ast
-
-    def interval_factor(self, ast):
-        return ast
-
-    def interval_primary(self, ast):
-        return ast
-
     def boolean_value_expr(self, ast):
         return ast
 
-    def boolean_term(self, ast):
+    def and_or(self, ast):
         return ast
 
     def boolean_primary(self, ast):
@@ -2079,10 +1700,10 @@ class SqlSemantics(object):
     def all_distinct(self, ast):
         return ast
 
-    def row_value_expr(self, ast):
+    def table_expr(self, ast):
         return ast
 
-    def table_expr(self, ast):
+    def connect_clause(self, ast):
         return ast
 
     def from_clause(self, ast):
@@ -2097,13 +1718,7 @@ class SqlSemantics(object):
     def table_primary(self, ast):
         return ast
 
-    def parenthesized_name_list(self, ast):
-        return ast
-
     def joined_table(self, ast):
-        return ast
-
-    def join_spec(self, ast):
         return ast
 
     def join_type(self, ast):
@@ -2160,25 +1775,16 @@ class SqlSemantics(object):
     def union_except(self, ast):
         return ast
 
-    def query_term(self, ast):
-        return ast
-
     def query_primary(self, ast):
         return ast
 
     def subquery(self, ast):
         return ast
 
-    def predicate(self, ast):
-        return ast
-
     def comp_op(self, ast):
         return ast
 
     def in_predicate_value(self, ast):
-        return ast
-
-    def in_value_list(self, ast):
         return ast
 
     def quantifier(self, ast):
@@ -2190,15 +1796,6 @@ class SqlSemantics(object):
     def primary_datetime_field(self, ast):
         return ast
 
-    def routine_invocation(self, ast):
-        return ast
-
-    def argument_list(self, ast):
-        return ast
-
-    def argument(self, ast):
-        return ast
-
     def aggregate_function(self, ast):
         return ast
 
@@ -2206,12 +1803,6 @@ class SqlSemantics(object):
         return ast
 
     def filter_clause(self, ast):
-        return ast
-
-    def ordered_set_function(self, ast):
-        return ast
-
-    def within_group_spec(self, ast):
         return ast
 
     def sort_spec_list(self, ast):
@@ -2230,9 +1821,6 @@ class SqlSemantics(object):
         return ast
 
     def order_by_clause(self, ast):
-        return ast
-
-    def with_out(self, ast):
         return ast
 
     def start(self, ast):

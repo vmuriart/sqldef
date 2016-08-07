@@ -147,47 +147,36 @@ data_type =
   | 'INTERVAL' interval_qualifier
     ;
 
-value_expr_primary =
-  | parenthesized_value_expr
-  | nonparenthesized_value_expr_primary
-    ;
-
-parenthesized_value_expr =
-    left_paren value_expr right_paren
-    ;
-
 nonparenthesized_value_expr_primary =
-  | aggregate_function
-  | 'DECODE' left_paren value_expr_list right_paren
-  | window_function_type 'OVER' window_spec
+  | 'DECODE' value_expr_list
+  | rank_function_type empty_set 'OVER' window_spec
+  | 'ROW_NUMBER' empty_set 'OVER' window_spec
+  | aggregate_function ['OVER' window_spec]
   | subquery
   | 'NULLIF' value_expr_list
+  | 'LENGTH' value_expr_list
   | 'COALESCE' value_expr_list
+  | 'SUBSTR' value_expr_list
+  | 'REGEXP_SUBSTR' value_expr_list
+  | 'REGEXP_REPLACE' value_expr_list
   | case_expr
   | 'CAST' left_paren result 'AS' data_type right_paren
-  | value_expr_primary '.' identifier
   | 'TREAT' left_paren value_expr 'AS' qualified_name right_paren
   | unsigned_numeric_literal
   | general_literal
   | parameter_name
   | '?'
-  | qualified_name
   | 'CURRENT_ROLE'
   | 'CURRENT_USER'
   | 'SESSION_USER'
   | 'SYSTEM_USER'
   | 'USER'
   | 'VALUE'
+  | qualified_name
     ;
 
 identifier_chain =
     '.'.{identifier}
-    ;
-
-window_function_type =
-  | rank_function_type empty_set
-  | 'ROW_NUMBER' empty_set
-  | aggregate_function
     ;
 
 rank_function_type =
@@ -235,7 +224,7 @@ part_predicate =
   | 'IS' ['NOT'] 'NORMALIZED'
   | 'IS' ['NOT'] 'DISTINCT' 'FROM' value_expr
   | ['NOT'] 'IN' in_predicate_value
-  | ['NOT'] 'LIKE' chr_value_expr
+  | ['NOT'] 'LIKE' value_expr
   | ['NOT'] 'BETWEEN' value_expr 'AND' value_expr
     ;
 
@@ -245,44 +234,44 @@ result =
     ;
 
 value_expr =
-  | numeric_value_expr
-  | chr_value_expr
-  | datetime_value_expr
-  | interval_value_expr
-  | value_expr_primary
+  | [value_expr ops] [plus_or_minus] primary
   | boolean_value_expr
-  | row_value_expr
     ;
 
-numeric_value_expr =
-    [numeric_value_expr plus_or_minus] term
+ops =
+  | plus_or_minus
+  | multiply_or_divide
+  | '||'
     ;
 
-term =
-    [term multiply_or_divide] factor
-    ;
-
-factor =
-    [plus_or_minus] numeric_primary
-    ;
-
-numeric_primary =
-  | 'POSITION' left_paren chr_value_expr 'IN' chr_value_expr right_paren
-  | 'EXTRACT' left_paren extract_field 'FROM' extract_source right_paren
-  | 'CHAR_LENGTH' left_paren chr_value_expr right_paren
-  | 'CHARACTER_LENGTH' left_paren chr_value_expr right_paren
-  | 'OCTET_LENGTH' left_paren chr_value_expr right_paren
-  | 'ABS' numeric_value_expr_list
-  | 'MOD' numeric_value_expr_list
-  | 'LN' numeric_value_expr_list
-  | 'EXP' numeric_value_expr_list
-  | 'POWER' numeric_value_expr_list
-  | 'SQRT' numeric_value_expr_list
-  | 'FLOOR' numeric_value_expr_list
-  | 'CEIL' numeric_value_expr_list
-  | 'CEILING' numeric_value_expr_list
-  | 'WIDTH_BUCKET' numeric_value_expr_list
-  | value_expr_primary
+primary =
+  | 'POSITION' left_paren value_expr 'IN' value_expr right_paren
+  | 'EXTRACT' left_paren extract_field 'FROM' value_expr right_paren
+  | 'CHAR_LENGTH' value_expr_list
+  | 'CHARACTER_LENGTH' value_expr_list
+  | 'OCTET_LENGTH' value_expr_list
+  | 'ABS' value_expr_list
+  | 'MOD' value_expr_list
+  | 'LN' value_expr_list
+  | 'EXP' value_expr_list
+  | 'POWER' value_expr_list
+  | 'SQRT' value_expr_list
+  | 'FLOOR' value_expr_list
+  | 'CEIL' value_expr_list
+  | 'CEILING' value_expr_list
+  | 'WIDTH_BUCKET' value_expr_list
+  | 'SUBSTRING' left_paren value_expr 'FROM' value_expr ['FOR' value_expr] right_paren
+  | 'UPPER' value_expr_list
+  | 'LOWER' value_expr_list
+  | 'TRIM' value_expr_list
+  | 'NORMALIZE' value_expr_list
+  | 'CURRENT_DATE'
+  | 'CURRENT_TIME' [integer_list]
+  | 'CURRENT_TIMESTAMP' [integer_list]
+  | 'LOCALTIME' [integer_list]
+  | 'LOCALTIMESTAMP' [integer_list]
+  | value_expr_list
+  | nonparenthesized_value_expr_primary
     ;
 
 extract_field =
@@ -291,30 +280,8 @@ extract_field =
   | 'TIMEZONE_MINUTE'
     ;
 
-extract_source =
-  | datetime_value_expr
-  | interval_value_expr
-    ;
-
-numeric_value_expr_list =
-    left_paren ','.{numeric_value_expr} right_paren
-    ;
-
-chr_value_expr =
-    [chr_value_expr '||'] chr_primary
-    ;
-
-chr_primary =
-  | 'SUBSTRING' left_paren chr_value_expr 'FROM' numeric_value_expr ['FOR' numeric_value_expr] right_paren
-  | 'UPPER' left_paren chr_value_expr right_paren
-  | 'LOWER' left_paren chr_value_expr right_paren
-  | 'TRIM' left_paren trim_operands right_paren
-  | 'NORMALIZE' left_paren chr_value_expr right_paren
-  | value_expr_primary
-    ;
-
 trim_operands =
-    [[trim_spec] [chr_value_expr] 'FROM'] chr_value_expr
+    [[trim_spec] [value_expr] 'FROM'] value_expr
     ;
 
 trim_spec =
@@ -323,44 +290,19 @@ trim_spec =
   | 'BOTH'
     ;
 
-datetime_value_expr =
-  | [interval_value_expr '+'] datetime_primary
-  | datetime_value_expr plus_or_minus interval_term
-    ;
-
-datetime_primary =
-  | 'CURRENT_DATE'
-  | 'CURRENT_TIME' [integer_list]
-  | 'CURRENT_TIMESTAMP' [integer_list]
-  | 'LOCALTIME' [integer_list]
-  | 'LOCALTIMESTAMP' [integer_list]
-  | value_expr_primary
-    ;
-
-interval_value_expr =
-  | left_paren datetime_value_expr '-' datetime_primary right_paren interval_qualifier
-  | [interval_value_expr plus_or_minus] interval_term
-    ;
-
-interval_term =
-  | interval_term multiply_or_divide factor
-  | [term '*'] interval_factor
-    ;
-
-interval_factor =
-    [plus_or_minus] value_expr_primary [interval_qualifier]
-    ;
-
 boolean_value_expr =
-    [boolean_value_expr 'OR'] boolean_term
+    ['NOT'] boolean_primary [{and_or ['NOT'] boolean_primary}+]
     ;
 
-boolean_term =
-    [boolean_term 'AND'] ['NOT'] boolean_primary
+and_or =
+  | 'AND'
+  | 'OR'
     ;
 
 boolean_primary =
-  | predicate
+  | value_expr part_predicate
+  | 'EXISTS' subquery
+  | 'UNIQUE' subquery
   | left_paren boolean_value_expr right_paren
   | nonparenthesized_value_expr_primary
     ;
@@ -370,14 +312,12 @@ all_distinct =
   | 'DISTINCT'
     ;
 
-row_value_expr =
-  | nonparenthesized_value_expr_primary
-  | value_expr_list
-  | subquery
+table_expr =
+    from_clause [where_clause] [group_by_clause] [having_clause] [connect_clause]
     ;
 
-table_expr =
-    from_clause [where_clause] [group_by_clause] [having_clause]
+connect_clause =
+    'CONNECT' 'BY' boolean_value_expr
     ;
 
 from_clause =
@@ -389,13 +329,13 @@ table_reference_list =
     ;
 
 table_reference =
-  | table_primary
   | joined_table
+  | table_primary
     ;
 
 table_primary =
   | left_paren joined_table right_paren
-  | subquery as_clause
+  | subquery [as_clause]
   | qualified_name [as_clause]
     ;
 
@@ -477,16 +417,13 @@ with_list =
     ;
 
 query_expr_body =
-    [query_expr_body union_except [all_distinct]] query_term
+    query_primary [{union_except [all_distinct] query_primary}+]
     ;
 
 union_except =
   | 'UNION'
   | 'EXCEPT'
-    ;
-
-query_term =
-    [query_term 'INTERSECT' [all_distinct]] query_primary
+  | 'INTERSECT'
     ;
 
 query_primary =
@@ -498,24 +435,19 @@ subquery =
     left_paren query_expr right_paren
     ;
 
-predicate =
-  | value_expr part_predicate
-  | 'EXISTS' subquery
-  | 'UNIQUE' subquery
-    ;
-
 comp_op =
-  | '='
-  | '<>'
-  | '<'
-  | '>'
   | '<='
   | '>='
+  | '<>'
+  | '='
+  | '!='
+  | '<'
+  | '>'
     ;
 
 in_predicate_value =
   | subquery
-  | left_paren ','.{row_value_expr} right_paren
+  | value_expr_list
     ;
 
 quantifier =
@@ -549,6 +481,8 @@ computational_operation =
   | 'SUM'
   | 'EVERY'
   | 'ANY'
+  | 'LEAD'
+  | 'LAG'
   | 'SOME'
   | 'COUNT'
   | 'STDDEV_POP'
