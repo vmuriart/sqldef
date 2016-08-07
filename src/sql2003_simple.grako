@@ -147,7 +147,7 @@ data_type =
   | 'INTERVAL' interval_qualifier
     ;
 
-nonparenthesized_value_expr_primary =
+value_expr_primary =
   | 'DECODE' value_expr_list
   | rank_function_type empty_set 'OVER' window_spec
   | 'ROW_NUMBER' empty_set 'OVER' window_spec
@@ -184,10 +184,6 @@ rank_function_type =
   | 'DENSE_RANK'
   | 'PERCENT_RANK'
   | 'CUME_DIST'
-    ;
-
-value_expr_list =
-    left_paren ','.{value_expr} right_paren
     ;
 
 case_expr =
@@ -238,6 +234,10 @@ value_expr =
   | boolean_value_expr
     ;
 
+value_expr_list =
+    left_paren ','.{value_expr} right_paren
+    ;
+
 ops =
   | plus_or_minus
   | multiply_or_divide
@@ -271,11 +271,11 @@ primary =
   | 'LOCALTIME' [integer_list]
   | 'LOCALTIMESTAMP' [integer_list]
   | value_expr_list
-  | nonparenthesized_value_expr_primary
+  | value_expr_primary
     ;
 
 extract_field =
-  | primary_datetime_field
+  | datetime_field
   | 'TIMEZONE_HOUR'
   | 'TIMEZONE_MINUTE'
     ;
@@ -294,7 +294,7 @@ boolean_primary =
   | 'EXISTS' subquery
   | 'UNIQUE' subquery
   | left_paren boolean_value_expr right_paren
-  | nonparenthesized_value_expr_primary
+  | value_expr_primary
     ;
 
 all_distinct =
@@ -447,10 +447,10 @@ quantifier =
     ;
 
 interval_qualifier =
-    primary_datetime_field [integer_list] ['TO' primary_datetime_field [integer_list]]
+    datetime_field [integer_list] ['TO' datetime_field [integer_list]]
     ;
 
-primary_datetime_field =
+datetime_field =
   | 'YEAR'
   | 'MONTH'
   | 'DAY'
