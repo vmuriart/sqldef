@@ -1,0 +1,529 @@
+# The MIT License (MIT)
+# Copyright (c) 2016, Victor M. Uriarte
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+
+@@grammar :: Sql
+@@ignorecase :: True
+
+@@whitespace :: /\s+/
+@@eol_comments :: /--.*?$/
+@@comments :: ?//\*[\s\S]*?\*//?
+#include :: reserved.grako
+
+integer =
+    /\d+/
+    ;
+
+integer_list =
+    left_paren ','.{integer} right_paren
+    ;
+
+left_paren =
+    '('
+    ;
+
+right_paren =
+    ')'
+    ;
+
+@name
+regular_identifier =
+    /[a-z]\w*/
+    ;
+
+delimited_identifier =
+    '"' /(""|[^"\n])+/ '"'
+    ;
+
+general_literal =
+  | chr_str_literal
+  | datetime_literal
+  | interval_literal
+  | 'TRUE'
+  | 'FALSE'
+  | 'UNKNOWN'
+    ;
+
+chr_str_literal =
+    {"'" /(''|[^'\n])*/ "'"}+
+    ;
+
+unsigned_numeric_literal =
+    decimal_literal ['E' signed_integer]
+    ;
+
+proper_decimal =
+    integer ['.' [integer]]
+    ;
+
+decimal_literal =
+  | proper_decimal
+  | '.' integer
+    ;
+
+plus_or_minus =
+  | '+'
+  | '-'
+    ;
+
+multiply_or_divide =
+  | '*'
+  | '/'
+    ;
+
+signed_integer =
+    [plus_or_minus] integer
+    ;
+
+datetime_literal =
+  | 'DATE' "'" integer '-' integer '-' integer "'"
+  | 'TIME' "'" integer ':' integer ':' proper_decimal "'"
+  | 'TIMESTAMP' "'" integer '-' integer '-' integer integer ':' integer ':' proper_decimal "'"
+    ;
+
+interval_literal =
+    'INTERVAL' [plus_or_minus] "'" [plus_or_minus] unquoted_interval_str "'" interval_qualifier
+    ;
+
+unquoted_interval_str =
+  | integer ['-' integer]
+  | integer [integer [':' integer [':' proper_decimal]]]
+  | integer [':' integer [':' proper_decimal]]
+  | integer [':' proper_decimal]
+  | proper_decimal
+    ;
+
+name_list =
+    ','.{qualified_name}
+    ;
+
+identifier =
+  | regular_identifier
+  | delimited_identifier
+    ;
+
+qualified_name =
+    ['MODULE' '.'] identifier_chain
+    ;
+
+parameter_name =
+    ':' identifier
+    ;
+
+data_type =
+  | 'CHARACTER' [integer_list]
+  | 'CHAR' [integer_list]
+  | 'NUMERIC' [integer_list]
+  | 'DECIMAL' [integer_list]
+  | 'DEC' [integer_list]
+  | 'SMALLINT'
+  | 'INTEGER'
+  | 'INT'
+  | 'BIGINT'
+  | 'FLOAT' [integer_list]
+  | 'REAL'
+  | 'DOUBLE' 'PRECISION'
+  | 'BOOLEAN'
+  | 'DATE'
+  | 'TIME' [integer_list]
+  | 'TIMESTAMP' [integer_list]
+  | 'INTERVAL' interval_qualifier
+    ;
+
+nonparenthesized_value_expr_primary =
+  | 'DECODE' value_expr_list
+  | rank_function_type empty_set 'OVER' window_spec
+  | 'ROW_NUMBER' empty_set 'OVER' window_spec
+  | aggregate_function ['OVER' window_spec]
+  | subquery
+  | 'NULLIF' value_expr_list
+  | 'LENGTH' value_expr_list
+  | 'COALESCE' value_expr_list
+  | 'SUBSTR' value_expr_list
+  | 'REGEXP_SUBSTR' value_expr_list
+  | 'REGEXP_REPLACE' value_expr_list
+  | case_expr
+  | 'CAST' left_paren result 'AS' data_type right_paren
+  | 'TREAT' left_paren value_expr 'AS' qualified_name right_paren
+  | unsigned_numeric_literal
+  | general_literal
+  | parameter_name
+  | '?'
+  | 'CURRENT_ROLE'
+  | 'CURRENT_USER'
+  | 'SESSION_USER'
+  | 'SYSTEM_USER'
+  | 'USER'
+  | 'VALUE'
+  | qualified_name
+    ;
+
+identifier_chain =
+    '.'.{identifier}
+    ;
+
+rank_function_type =
+  | 'RANK'
+  | 'DENSE_RANK'
+  | 'PERCENT_RANK'
+  | 'CUME_DIST'
+    ;
+
+value_expr_list =
+    left_paren ','.{value_expr} right_paren
+    ;
+
+case_expr =
+  | 'CASE' value_expr {simple_when_clause}+ [else_clause] 'END'
+  | 'CASE' {searched_when_clause}+ [else_clause] 'END'
+    ;
+
+simple_when_clause =
+    'WHEN' when_operand_list 'THEN' result
+    ;
+
+searched_when_clause =
+    'WHEN' boolean_value_expr 'THEN' result
+    ;
+
+else_clause =
+    'ELSE' result
+    ;
+
+when_operand_list =
+    ','.{when_operand}
+    ;
+
+when_operand =
+  | part_predicate
+  | value_expr
+    ;
+
+part_predicate =
+  | comp_op value_expr
+  | comp_op quantifier subquery
+  | 'OVERLAPS' value_expr
+  | 'IS' ['NOT'] 'NULL'
+  | 'IS' ['NOT'] 'NORMALIZED'
+  | 'IS' ['NOT'] 'DISTINCT' 'FROM' value_expr
+  | ['NOT'] 'IN' in_predicate_value
+  | ['NOT'] 'LIKE' value_expr
+  | ['NOT'] 'BETWEEN' value_expr 'AND' value_expr
+    ;
+
+result =
+  | 'NULL'
+  | value_expr
+    ;
+
+value_expr =
+  | [value_expr ops] [plus_or_minus] primary
+  | boolean_value_expr
+    ;
+
+ops =
+  | plus_or_minus
+  | multiply_or_divide
+  | '||'
+    ;
+
+primary =
+  | 'POSITION' left_paren value_expr 'IN' value_expr right_paren
+  | 'EXTRACT' left_paren extract_field 'FROM' value_expr right_paren
+  | 'CHAR_LENGTH' value_expr_list
+  | 'CHARACTER_LENGTH' value_expr_list
+  | 'OCTET_LENGTH' value_expr_list
+  | 'ABS' value_expr_list
+  | 'MOD' value_expr_list
+  | 'LN' value_expr_list
+  | 'EXP' value_expr_list
+  | 'POWER' value_expr_list
+  | 'SQRT' value_expr_list
+  | 'FLOOR' value_expr_list
+  | 'CEIL' value_expr_list
+  | 'CEILING' value_expr_list
+  | 'WIDTH_BUCKET' value_expr_list
+  | 'SUBSTRING' left_paren value_expr 'FROM' value_expr ['FOR' value_expr] right_paren
+  | 'UPPER' value_expr_list
+  | 'LOWER' value_expr_list
+  | 'TRIM' value_expr_list
+  | 'NORMALIZE' value_expr_list
+  | 'CURRENT_DATE'
+  | 'CURRENT_TIME' [integer_list]
+  | 'CURRENT_TIMESTAMP' [integer_list]
+  | 'LOCALTIME' [integer_list]
+  | 'LOCALTIMESTAMP' [integer_list]
+  | value_expr_list
+  | nonparenthesized_value_expr_primary
+    ;
+
+extract_field =
+  | primary_datetime_field
+  | 'TIMEZONE_HOUR'
+  | 'TIMEZONE_MINUTE'
+    ;
+
+trim_operands =
+    [[trim_spec] [value_expr] 'FROM'] value_expr
+    ;
+
+trim_spec =
+  | 'LEADING'
+  | 'TRAILING'
+  | 'BOTH'
+    ;
+
+boolean_value_expr =
+    ['NOT'] boolean_primary [{and_or ['NOT'] boolean_primary}+]
+    ;
+
+and_or =
+  | 'AND'
+  | 'OR'
+    ;
+
+boolean_primary =
+  | value_expr part_predicate
+  | 'EXISTS' subquery
+  | 'UNIQUE' subquery
+  | left_paren boolean_value_expr right_paren
+  | nonparenthesized_value_expr_primary
+    ;
+
+all_distinct =
+  | 'ALL'
+  | 'DISTINCT'
+    ;
+
+table_expr =
+    from_clause [where_clause] [group_by_clause] [having_clause] [connect_clause]
+    ;
+
+connect_clause =
+    'CONNECT' 'BY' boolean_value_expr
+    ;
+
+from_clause =
+    'FROM' table_reference_list
+    ;
+
+table_reference_list =
+    ','.{table_reference}
+    ;
+
+table_reference =
+  | joined_table
+  | table_primary
+    ;
+
+table_primary =
+  | left_paren joined_table right_paren
+  | subquery [as_clause]
+  | qualified_name [as_clause]
+    ;
+
+joined_table =
+  | table_reference 'CROSS' 'JOIN' table_primary
+  | table_reference [join_type] 'JOIN' table_reference 'ON' boolean_value_expr
+  | table_reference 'NATURAL' [join_type] 'JOIN' table_primary
+    ;
+
+join_type =
+  | 'INNER'
+  | outer_join_type ['OUTER']
+    ;
+
+outer_join_type =
+  | 'LEFT'
+  | 'RIGHT'
+  | 'FULL'
+    ;
+
+where_clause =
+    'WHERE' boolean_value_expr
+    ;
+
+group_by_clause =
+    'GROUP' 'BY' [all_distinct] grouping_element_list
+    ;
+
+grouping_element_list =
+    ','.{grouping_set}
+    ;
+
+ordinary_grouping_set =
+  | left_paren name_list right_paren
+  | qualified_name
+    ;
+
+grouping_set =
+  | ordinary_grouping_set
+  | empty_set
+    ;
+
+empty_set =
+    left_paren right_paren
+    ;
+
+having_clause =
+    'HAVING' boolean_value_expr
+    ;
+
+window_spec =
+    left_paren [partition_clause] [order_by_clause] right_paren
+    ;
+
+partition_clause =
+    'PARTITION' 'BY' name_list
+    ;
+
+select_list =
+  | '*'
+  | ','.{select_sublist}
+    ;
+
+select_sublist =
+  | value_expr [as_clause]
+  | qualified_name '.' '*'
+    ;
+
+as_clause =
+    ['AS'] identifier
+    ;
+
+query_expr =
+    ['WITH' with_list] query_expr_body
+    ;
+
+with_list =
+    ','.{identifier 'AS' subquery}
+    ;
+
+query_expr_body =
+    query_primary [{union_except [all_distinct] query_primary}+]
+    ;
+
+union_except =
+  | 'UNION'
+  | 'EXCEPT'
+  | 'INTERSECT'
+    ;
+
+query_primary =
+  | 'SELECT' [all_distinct] select_list table_expr
+  | left_paren query_expr_body right_paren
+    ;
+
+subquery =
+    left_paren query_expr right_paren
+    ;
+
+comp_op =
+  | '<='
+  | '>='
+  | '<>'
+  | '='
+  | '!='
+  | '<'
+  | '>'
+    ;
+
+in_predicate_value =
+  | subquery
+  | value_expr_list
+    ;
+
+quantifier =
+  | 'ALL'
+  | 'SOME'
+  | 'ANY'
+    ;
+
+interval_qualifier =
+    primary_datetime_field [integer_list] ['TO' primary_datetime_field [integer_list]]
+    ;
+
+primary_datetime_field =
+  | 'YEAR'
+  | 'MONTH'
+  | 'DAY'
+  | 'HOUR'
+  | 'MINUTE'
+  | 'SECOND'
+    ;
+
+aggregate_function =
+  | 'COUNT' left_paren '*' right_paren [filter_clause]
+  | computational_operation left_paren [all_distinct] value_expr right_paren [filter_clause]
+    ;
+
+computational_operation =
+  | 'AVG'
+  | 'MAX'
+  | 'MIN'
+  | 'SUM'
+  | 'EVERY'
+  | 'ANY'
+  | 'LEAD'
+  | 'LAG'
+  | 'SOME'
+  | 'COUNT'
+  | 'STDDEV_POP'
+  | 'STDDEV_SAMP'
+  | 'VAR_SAMP'
+  | 'VAR_POP'
+  | 'COLLECT'
+  | 'FUSION'
+  | 'INTERSECTION'
+    ;
+
+filter_clause =
+    'FILTER' left_paren where_clause right_paren
+    ;
+
+sort_spec_list =
+    ','.{sort_spec}
+    ;
+
+sort_spec =
+    value_expr [ordering_spec] [null_ordering]
+    ;
+
+ordering_spec =
+  | 'ASC'
+  | 'DESC'
+    ;
+
+null_ordering =
+  | 'NULLS' 'FIRST'
+  | 'NULLS' 'LAST'
+    ;
+
+cursor_spec =
+    query_expr [order_by_clause]
+    ;
+
+order_by_clause =
+    'ORDER' 'BY' sort_spec_list
+    ;
+
+start =
+    cursor_spec $
+    ;

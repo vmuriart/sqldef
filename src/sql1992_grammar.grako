@@ -338,18 +338,18 @@ data_type =
 character_string_type =
   | 'CHARACTER' [left_paren length right_paren]
   | 'CHAR' [left_paren length right_paren]
-  | 'CHARACTER' 'VARYING' [left_paren length right_paren]
-  | 'CHAR' 'VARYING' [left_paren length right_paren]
-  | 'VARCHAR' [left_paren length right_paren]
+  | 'CHARACTER' 'VARYING' left_paren length right_paren
+  | 'CHAR' 'VARYING' left_paren length right_paren
+  | 'VARCHAR' left_paren length right_paren
     ;
 
 national_character_string_type =
   | 'NATIONAL' 'CHARACTER' [left_paren length right_paren]
   | 'NATIONAL' 'CHAR' [left_paren length right_paren]
   | 'NCHAR' [left_paren length right_paren]
-  | 'NATIONAL' 'CHARACTER' 'VARYING' [left_paren length right_paren]
-  | 'NATIONAL' 'CHAR' 'VARYING' [left_paren length right_paren]
-  | 'NCHAR' 'VARYING' [left_paren length right_paren]
+  | 'NATIONAL' 'CHARACTER' 'VARYING' left_paren length right_paren
+  | 'NATIONAL' 'CHAR' 'VARYING' left_paren length right_paren
+  | 'NCHAR' 'VARYING' left_paren length right_paren
     ;
 
 numeric_type =
@@ -878,6 +878,7 @@ predicate =
   | null_predicate
   | quantified_comparison_predicate
   | exists_predicate
+  | unique_predicate
   | match_predicate
   | overlaps_predicate
     ;
@@ -917,7 +918,7 @@ like_predicate =
     ;
 
 null_predicate =
-    'IS' ['NOT'] 'NULL'
+    row_value_constructor 'IS' ['NOT'] 'NULL'
     ;
 
 quantified_comparison_predicate =
@@ -932,6 +933,10 @@ quantifier =
 
 exists_predicate =
     'EXISTS' subquery
+    ;
+
+unique_predicate =
+    'UNIQUE' subquery
     ;
 
 match_predicate =
@@ -963,7 +968,7 @@ end_field =
 
 single_datetime_field =
   | non_second_datetime_field [left_paren precision right_paren]
-  | 'SECOND' [left_paren precision [comma left_paren precision] right_paren]
+  | 'SECOND' [left_paren precision [comma precision] right_paren]
     ;
 
 collate_clause =
@@ -1034,6 +1039,7 @@ drop_behavior =
   | 'CASCADE'
   | 'RESTRICT'
     ;
+
 table_definition =
     'CREATE' [('GLOBAL' | 'LOCAL') 'TEMPORARY'] 'TABLE' table_name table_element_list ['ON' 'COMMIT' ('DELETE' | 'PRESERVE') 'ROWS']
     ;
@@ -1077,7 +1083,7 @@ default_option =
     ;
 
 table_constraint_definition =
-    [constraint_name_definition] table_constraint [constraint_check_time]
+    [constraint_name_definition] table_constraint [constraint_attributes]
     ;
 
 table_constraint =
@@ -1199,7 +1205,7 @@ drop_view_statement =
     ;
 
 domain_definition =
-    'CREATE' 'DOMAIN' schema_qualified_name ['AS'] data_type [default_clause] [domain_constraint] [collate_clause]
+    'CREATE' 'DOMAIN' schema_qualified_name ['AS'] data_type [default_clause] [{domain_constraint}+] [collate_clause]
     ;
 
 domain_constraint =
@@ -1502,6 +1508,7 @@ set_names_statement =
 direct_sql_statement =
     directly_executable_statement semicolon
     ;
+
 directly_executable_statement =
   | direct_sql_data_statement
   | sql_schema_statement
@@ -1536,7 +1543,7 @@ qualified_local_table_name =
 
 bit_string_type =
   | 'BIT' [left_paren length right_paren]
-  | 'BIT' 'VARYING' [left_paren length right_paren]
+  | 'BIT' 'VARYING' left_paren length right_paren
     ;
 
 non_second_datetime_field =

@@ -186,6 +186,10 @@
     '/'
     ;
 
+<reverse_solidus> =
+    '\'
+    ;
+
 <colon> =
     ':'
     ;
@@ -266,10 +270,11 @@
   | <key_word>
   | <unsigned_numeric_literal>
   | <national_character_string_literal>
-  | <bit_string_literal>
-  | <hex_string_literal>
+  | <binary_string_literal>
   | <large_object_length_token>
-  | <multiplier>
+  | <unicode_delimited_identifier>
+  | <unicode_character_string_literal>
+  | <sql_language_identifier>
     ;
 
 <regular_identifier> =
@@ -370,7 +375,6 @@
   | <timestamp_string>
   | <interval_string>
   | <delimited_identifier>
-  | <unicode_delimited_identifier>
   | <sql_special_character>
   | <not_equals_operator>
   | <greater_than_or_equals_operator>
@@ -464,10 +468,10 @@
 
 <non_reserved_word> =
   | 'A'
-  | 'ABS'
   | 'ABSOLUTE'
   | 'ACTION'
   | 'ADA'
+  | 'ADD'
   | 'ADMIN'
   | 'AFTER'
   | 'ALWAYS'
@@ -476,55 +480,39 @@
   | 'ASSIGNMENT'
   | 'ATTRIBUTE'
   | 'ATTRIBUTES'
-  | 'AVG'
   | 'BEFORE'
   | 'BERNOULLI'
   | 'BREADTH'
   | 'C'
-  | 'CARDINALITY'
   | 'CASCADE'
   | 'CATALOG'
   | 'CATALOG_NAME'
-  | 'CEIL'
-  | 'CEILING'
   | 'CHAIN'
-  | 'CHARACTERISTICS'
-  | 'CHARACTERS'
-  | 'CHARACTER_LENGTH'
   | 'CHARACTER_SET_CATALOG'
   | 'CHARACTER_SET_NAME'
   | 'CHARACTER_SET_SCHEMA'
-  | 'CHAR_LENGTH'
-  | 'CHECKED'
+  | 'CHARACTERISTICS'
+  | 'CHARACTERS'
   | 'CLASS_ORIGIN'
-  | 'COALESCE'
   | 'COBOL'
-  | 'CODE_UNITS'
   | 'COLLATION'
   | 'COLLATION_CATALOG'
   | 'COLLATION_NAME'
   | 'COLLATION_SCHEMA'
-  | 'COLLECT'
   | 'COLUMN_NAME'
   | 'COMMAND_FUNCTION'
   | 'COMMAND_FUNCTION_CODE'
   | 'COMMITTED'
-  | 'CONDITION'
   | 'CONDITION_NUMBER'
+  | 'CONNECTION'
   | 'CONNECTION_NAME'
-  | 'CONSTRAINTS'
   | 'CONSTRAINT_CATALOG'
   | 'CONSTRAINT_NAME'
   | 'CONSTRAINT_SCHEMA'
-  | 'CONSTRUCTORS'
+  | 'CONSTRAINTS'
+  | 'CONSTRUCTOR'
   | 'CONTAINS'
-  | 'CONVERT'
-  | 'CORR'
-  | 'COUNT'
-  | 'COVAR_POP'
-  | 'COVAR_SAMP'
-  | 'CUME_DIST'
-  | 'CURRENT_COLLATION'
+  | 'CONTINUE'
   | 'CURSOR_NAME'
   | 'DATA'
   | 'DATETIME_INTERVAL_CODE'
@@ -535,7 +523,6 @@
   | 'DEFINED'
   | 'DEFINER'
   | 'DEGREE'
-  | 'DENSE_RANK'
   | 'DEPTH'
   | 'DERIVED'
   | 'DESC'
@@ -546,32 +533,29 @@
   | 'DYNAMIC_FUNCTION'
   | 'DYNAMIC_FUNCTION_CODE'
   | 'EQUALS'
-  | 'EVERY'
   | 'EXCEPTION'
   | 'EXCLUDE'
   | 'EXCLUDING'
-  | 'EXP'
-  | 'EXTRACT'
   | 'FINAL'
   | 'FIRST'
-  | 'FLOOR'
   | 'FOLLOWING'
   | 'FORTRAN'
   | 'FOUND'
-  | 'FUSION'
   | 'G'
   | 'GENERAL'
+  | 'GENERATED'
   | 'GO'
   | 'GOTO'
   | 'GRANTED'
   | 'HIERARCHY'
+  | 'IMMEDIATE'
   | 'IMPLEMENTATION'
   | 'INCLUDING'
   | 'INCREMENT'
   | 'INITIALLY'
+  | 'INPUT'
   | 'INSTANCE'
   | 'INSTANTIABLE'
-  | 'INTERSECTION'
   | 'INVOKER'
   | 'ISOLATION'
   | 'K'
@@ -581,41 +565,33 @@
   | 'LAST'
   | 'LENGTH'
   | 'LEVEL'
-  | 'LN'
   | 'LOCATOR'
-  | 'LOWER'
   | 'M'
   | 'MAP'
   | 'MATCHED'
-  | 'MAX'
   | 'MAXVALUE'
   | 'MESSAGE_LENGTH'
   | 'MESSAGE_OCTET_LENGTH'
   | 'MESSAGE_TEXT'
-  | 'MIN'
   | 'MINVALUE'
-  | 'MOD'
   | 'MORE'
   | 'MUMPS'
   | 'NAME'
   | 'NAMES'
   | 'NESTING'
   | 'NEXT'
-  | 'NORMALIZE'
   | 'NORMALIZED'
   | 'NULLABLE'
-  | 'NULLIF'
   | 'NULLS'
   | 'NUMBER'
   | 'OBJECT'
   | 'OCTETS'
-  | 'OCTET_LENGTH'
   | 'OPTION'
   | 'OPTIONS'
   | 'ORDERING'
   | 'ORDINALITY'
   | 'OTHERS'
-  | 'OVERLAY'
+  | 'OUTPUT'
   | 'OVERRIDING'
   | 'PAD'
   | 'PARAMETER_MODE'
@@ -627,23 +603,18 @@
   | 'PARTIAL'
   | 'PASCAL'
   | 'PATH'
-  | 'PERCENTILE_CONT'
-  | 'PERCENTILE_DISC'
-  | 'PERCENT_RANK'
   | 'PLACING'
   | 'PLI'
-  | 'POSITION'
-  | 'POWER'
   | 'PRECEDING'
   | 'PRESERVE'
   | 'PRIOR'
   | 'PRIVILEGES'
   | 'PUBLIC'
-  | 'RANK'
   | 'READ'
   | 'RELATIVE'
   | 'REPEATABLE'
   | 'RESTART'
+  | 'RESTRICT'
   | 'RETURNED_CARDINALITY'
   | 'RETURNED_LENGTH'
   | 'RETURNED_OCTET_LENGTH'
@@ -654,7 +625,6 @@
   | 'ROUTINE_NAME'
   | 'ROUTINE_SCHEMA'
   | 'ROW_COUNT'
-  | 'ROW_NUMBER'
   | 'SCALE'
   | 'SCHEMA'
   | 'SCHEMA_NAME'
@@ -674,32 +644,24 @@
   | 'SOURCE'
   | 'SPACE'
   | 'SPECIFIC_NAME'
-  | 'SQRT'
   | 'STATE'
   | 'STATEMENT'
-  | 'STDDEV_POP'
-  | 'STDDEV_SAMP'
   | 'STRUCTURE'
   | 'STYLE'
   | 'SUBCLASS_ORIGIN'
-  | 'SUBSTRING'
-  | 'SUM'
-  | 'TABLESAMPLE'
   | 'TABLE_NAME'
   | 'TEMPORARY'
   | 'TIES'
   | 'TOP_LEVEL_COUNT'
   | 'TRANSACTION'
+  | 'TRANSACTION_ACTIVE'
   | 'TRANSACTIONS_COMMITTED'
   | 'TRANSACTIONS_ROLLED_BACK'
-  | 'TRANSACTION_ACTIVE'
   | 'TRANSFORM'
   | 'TRANSFORMS'
-  | 'TRANSLATE'
   | 'TRIGGER_CATALOG'
   | 'TRIGGER_NAME'
   | 'TRIGGER_SCHEMA'
-  | 'TRIM'
   | 'TYPE'
   | 'UNBOUNDED'
   | 'UNCOMMITTED'
@@ -717,7 +679,7 @@
     ;
 
 <reserved_word> =
-  | 'ADD'
+  | 'ABS'
   | 'ALL'
   | 'ALLOCATE'
   | 'ALTER'
@@ -731,6 +693,7 @@
   | 'AT'
   | 'ATOMIC'
   | 'AUTHORIZATION'
+  | 'AVG'
   | 'BEGIN'
   | 'BETWEEN'
   | 'BIGINT'
@@ -741,24 +704,37 @@
   | 'BY'
   | 'CALL'
   | 'CALLED'
+  | 'CARDINALITY'
   | 'CASCADED'
   | 'CASE'
   | 'CAST'
+  | 'CEIL'
+  | 'CEILING'
   | 'CHAR'
+  | 'CHAR_LENGTH'
   | 'CHARACTER'
+  | 'CHARACTER_LENGTH'
   | 'CHECK'
   | 'CLOB'
   | 'CLOSE'
+  | 'COALESCE'
   | 'COLLATE'
+  | 'COLLECT'
   | 'COLUMN'
   | 'COMMIT'
+  | 'CONDITION'
   | 'CONNECT'
   | 'CONSTRAINT'
-  | 'CONTINUE'
+  | 'CONVERT'
+  | 'CORR'
   | 'CORRESPONDING'
+  | 'COUNT'
+  | 'COVAR_POP'
+  | 'COVAR_SAMP'
   | 'CREATE'
   | 'CROSS'
   | 'CUBE'
+  | 'CUME_DIST'
   | 'CURRENT'
   | 'CURRENT_DATE'
   | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
@@ -778,6 +754,7 @@
   | 'DECLARE'
   | 'DEFAULT'
   | 'DELETE'
+  | 'DENSE_RANK'
   | 'DEREF'
   | 'DESCRIBE'
   | 'DETERMINISTIC'
@@ -792,21 +769,26 @@
   | 'END'
   | 'END-EXEC'
   | 'ESCAPE'
+  | 'EVERY'
   | 'EXCEPT'
   | 'EXEC'
   | 'EXECUTE'
   | 'EXISTS'
+  | 'EXP'
   | 'EXTERNAL'
+  | 'EXTRACT'
   | 'FALSE'
   | 'FETCH'
   | 'FILTER'
   | 'FLOAT'
+  | 'FLOOR'
   | 'FOR'
   | 'FOREIGN'
   | 'FREE'
   | 'FROM'
   | 'FULL'
   | 'FUNCTION'
+  | 'FUSION'
   | 'GET'
   | 'GLOBAL'
   | 'GRANT'
@@ -816,21 +798,19 @@
   | 'HOLD'
   | 'HOUR'
   | 'IDENTITY'
-  | 'IMMEDIATE'
   | 'IN'
   | 'INDICATOR'
   | 'INNER'
   | 'INOUT'
-  | 'INPUT'
   | 'INSENSITIVE'
   | 'INSERT'
   | 'INT'
   | 'INTEGER'
   | 'INTERSECT'
+  | 'INTERSECTION'
   | 'INTERVAL'
   | 'INTO'
   | 'IS'
-  | 'ISOLATION'
   | 'JOIN'
   | 'LANGUAGE'
   | 'LARGE'
@@ -838,14 +818,19 @@
   | 'LEADING'
   | 'LEFT'
   | 'LIKE'
+  | 'LN'
   | 'LOCAL'
   | 'LOCALTIME'
   | 'LOCALTIMESTAMP'
+  | 'LOWER'
   | 'MATCH'
+  | 'MAX'
   | 'MEMBER'
   | 'MERGE'
   | 'METHOD'
+  | 'MIN'
   | 'MINUTE'
+  | 'MOD'
   | 'MODIFIES'
   | 'MODULE'
   | 'MONTH'
@@ -857,9 +842,12 @@
   | 'NEW'
   | 'NO'
   | 'NONE'
+  | 'NORMALIZE'
   | 'NOT'
   | 'NULL'
+  | 'NULLIF'
   | 'NUMERIC'
+  | 'OCTET_LENGTH'
   | 'OF'
   | 'OLD'
   | 'ON'
@@ -869,16 +857,22 @@
   | 'ORDER'
   | 'OUT'
   | 'OUTER'
-  | 'OUTPUT'
   | 'OVER'
   | 'OVERLAPS'
+  | 'OVERLAY'
   | 'PARAMETER'
   | 'PARTITION'
+  | 'PERCENT_RANK'
+  | 'PERCENTILE_CONT'
+  | 'PERCENTILE_DISC'
+  | 'POSITION'
+  | 'POWER'
   | 'PRECISION'
   | 'PREPARE'
   | 'PRIMARY'
   | 'PROCEDURE'
   | 'RANGE'
+  | 'RANK'
   | 'READS'
   | 'REAL'
   | 'RECURSIVE'
@@ -903,8 +897,10 @@
   | 'ROLLBACK'
   | 'ROLLUP'
   | 'ROW'
+  | 'ROW_NUMBER'
   | 'ROWS'
   | 'SAVEPOINT'
+  | 'SCOPE'
   | 'SCROLL'
   | 'SEARCH'
   | 'SECOND'
@@ -921,13 +917,19 @@
   | 'SQLEXCEPTION'
   | 'SQLSTATE'
   | 'SQLWARNING'
+  | 'SQRT'
   | 'START'
   | 'STATIC'
+  | 'STDDEV_POP'
+  | 'STDDEV_SAMP'
   | 'SUBMULTISET'
+  | 'SUBSTRING'
+  | 'SUM'
   | 'SYMMETRIC'
   | 'SYSTEM'
   | 'SYSTEM_USER'
   | 'TABLE'
+  | 'TABLESAMPLE'
   | 'THEN'
   | 'TIME'
   | 'TIMESTAMP'
@@ -935,9 +937,11 @@
   | 'TIMEZONE_MINUTE'
   | 'TO'
   | 'TRAILING'
+  | 'TRANSLATE'
   | 'TRANSLATION'
   | 'TREAT'
   | 'TRIGGER'
+  | 'TRIM'
   | 'TRUE'
   | 'UESCAPE'
   | 'UNION'
@@ -1011,7 +1015,7 @@
     ;
 
 <unicode_character_string_literal> =
-    [<introducer> <character_set_specification>] 'U' <ampersand> <quote> [{<unicode_representation>}+] <quote> [{<separator> <quote> [{<unicode_representation>}+] <quote>}+] ['ESCAPE' <escape_character>]
+    [<introducer> <character_set_specification>] 'U' <ampersand> <quote> [{<unicode_representation>}+] <quote> [{<separator> <quote> [{<unicode_representation>}+] <quote>}+] <unicode_escape_specifier>
     ;
 
 <unicode_representation> =
@@ -1020,7 +1024,7 @@
     ;
 
 <binary_string_literal> =
-    'X' <quote> [{<hexit> <hexit>}+] <quote> [{<separator> <quote> [{<hexit> <hexit>}+] <quote>}+] ['ESCAPE' <escape_character>]
+    'X' <quote> [{<hexit> <hexit>}+] <quote> [{<separator> <quote> [{<hexit> <hexit>}+] <quote>}+]
     ;
 
 <hexit> =
@@ -1145,8 +1149,8 @@
     ;
 
 <year_month_literal> =
-  | <years_value>
-  | [<years_value> <minus_sign>] <months_value>
+  | <years_value> [<minus_sign> <months_value>]
+  | <months_value>
     ;
 
 <day_time_literal> =
@@ -1213,10 +1217,11 @@
 <actual_identifier> =
   | <regular_identifier>
   | <delimited_identifier>
+  | <unicode_delimited_identifier>
     ;
 
 <sql_language_identifier> =
-    <sql_language_identifier_start> [{<underscore> | <sql_language_identifier_part>}+]
+    <sql_language_identifier_start> [{<sql_language_identifier_part>}+]
     ;
 
 <sql_language_identifier_start> =
@@ -1226,6 +1231,7 @@
 <sql_language_identifier_part> =
   | <simple_latin_letter>
   | <digit>
+  | <underscore>
     ;
 
 <authorization_identifier> =
@@ -1245,6 +1251,10 @@
     [<catalog_name> <period>] <unqualified_schema_name>
     ;
 
+<unqualified_schema_name> =
+    <identifier>
+    ;
+
 <catalog_name> =
     <identifier>
     ;
@@ -1259,7 +1269,7 @@
 
 <local_or_schema_qualifier> =
   | <schema_name>
-  | 'MODULE'
+  | <local_qualifier>
     ;
 
 <qualified_identifier> =
@@ -1347,15 +1357,11 @@
     <schema_qualified_name>
     ;
 
-<user_defined_type_name> =
-    <schema_qualified_type_name>
-    ;
-
 <schema_resolved_user_defined_type_name> =
     <user_defined_type_name>
     ;
 
-<schema_qualified_type_name> =
+<user_defined_type_name> =
     [<schema_name> <period>] <qualified_identifier>
     ;
 
@@ -1454,6 +1460,10 @@
   | 'CHARACTER' 'VARYING' <left_paren> <length> <right_paren>
   | 'CHAR' 'VARYING' <left_paren> <length> <right_paren>
   | 'VARCHAR' <left_paren> <length> <right_paren>
+  | <character_large_object_type>
+    ;
+
+<character_large_object_type> =
   | 'CHARACTER' 'LARGE' 'OBJECT' [<left_paren> <large_object_length> <right_paren>]
   | 'CHAR' 'LARGE' 'OBJECT' [<left_paren> <large_object_length> <right_paren>]
   | 'CLOB' [<left_paren> <large_object_length> <right_paren>]
@@ -1466,6 +1476,10 @@
   | 'NATIONAL' 'CHARACTER' 'VARYING' <left_paren> <length> <right_paren>
   | 'NATIONAL' 'CHAR' 'VARYING' <left_paren> <length> <right_paren>
   | 'NCHAR' 'VARYING' <left_paren> <length> <right_paren>
+  | <national_character_large_object_type>
+    ;
+
+<national_character_large_object_type> =
   | 'NATIONAL' 'CHARACTER' 'LARGE' 'OBJECT' [<left_paren> <large_object_length> <right_paren>]
   | 'NCHAR' 'LARGE' 'OBJECT' [<left_paren> <large_object_length> <right_paren>]
   | 'NCLOB' [<left_paren> <large_object_length> <right_paren>]
@@ -1498,7 +1512,7 @@
     ;
 
 <length> =
-    <unsigned_integer>
+    <unsigned_integer> [<char_length_units>]
     ;
 
 <large_object_length> =
@@ -1508,7 +1522,6 @@
 
 <char_length_units> =
   | 'CHARACTERS'
-  | 'CODE_UNITS'
   | 'OCTETS'
     ;
 
@@ -1581,7 +1594,11 @@
     ;
 
 <array_type> =
-    <data_type> 'ARRAY' [<left_bracket_or_trigraph> <unsigned_integer> <right_bracket_or_trigraph>]
+    <data_type> 'ARRAY' [<left_bracket_or_trigraph> <maximum_cardinality> <right_bracket_or_trigraph>]
+    ;
+
+<maximum_cardinality> =
+    <unsigned_integer>
     ;
 
 <multiset_type> =
@@ -1589,7 +1606,7 @@
     ;
 
 <field_definition> =
-    <field_name> <data_type> [<reference_scope_check>]
+    <field_name> <data_type>
     ;
 
 <value_expression_primary> =
@@ -1621,6 +1638,11 @@
   | <multiset_element_reference>
   | <routine_invocation>
   | <next_value_expression>
+    ;
+
+<collection_value_constructor> =
+  | <array_value_constructor>
+  | <multiset_value_constructor>
     ;
 
 <value_specification> =
@@ -1703,7 +1725,7 @@
     ;
 
 <current_collation_specification> =
-    'CURRENT_COLLATION' <left_paren> <string_value_expression> <right_paren>
+    'COLLATION' 'FOR' <left_paren> <string_value_expression> <right_paren>
     ;
 
 <contextually_typed_value_specification> =
@@ -1805,7 +1827,7 @@
     ;
 
 <simple_when_clause> =
-    'WHEN' <when_operand> 'THEN' <result>
+    'WHEN' <when_operand_list> 'THEN' <result>
     ;
 
 <searched_when_clause> =
@@ -1821,6 +1843,10 @@
   | <overlaps_predicate_part_1>
     ;
 
+<when_operand_list> =
+    <when_operand> [{<comma> <when_operand>}+]
+    ;
+
 <when_operand> =
   | <row_value_predicand>
   | <comparison_predicate_part_2>
@@ -1831,6 +1857,7 @@
   | <similar_predicate_part_2>
   | <null_predicate_part_2>
   | <quantified_comparison_predicate_part_2>
+  | <normalized_predicate_part_2>
   | <match_predicate_part_2>
   | <overlaps_predicate_part_2>
   | <distinct_predicate_part_2>
@@ -1914,7 +1941,7 @@
     ;
 
 <new_specification> =
-    'NEW' <routine_invocation>
+    'NEW' <path_resolved_user_defined_type_name> <sql_argument_list>
     ;
 
 <new_invocation> =
@@ -1977,11 +2004,6 @@
 <collection_value_expression> =
   | <array_value_expression>
   | <multiset_value_expression>
-    ;
-
-<collection_value_constructor> =
-  | <array_value_constructor>
-  | <multiset_value_constructor>
     ;
 
 <numeric_value_expression> =
@@ -2076,6 +2098,14 @@
 
 <modulus_expression> =
     'MOD' <left_paren> <numeric_value_expression_dividend> <comma> <numeric_value_expression_divisor> <right_paren>
+    ;
+
+<numeric_value_expression_dividend> =
+    <numeric_value_expression>
+    ;
+
+<numeric_value_expression_divisor> =
+    <numeric_value_expression>
     ;
 
 <natural_logarithm> =
@@ -2239,7 +2269,7 @@
     ;
 
 <specific_type_method> =
-    <user_defined_type_value_expression> <period> 'SPECIFICTYPE'
+    <user_defined_type_value_expression> <period> 'SPECIFICTYPE' [<left_paren> <right_paren>]
     ;
 
 <blob_value_function> =
@@ -2420,18 +2450,18 @@
 
 <array_value_expression> =
   | <array_concatenation>
-  | <array_factor>
+  | <array_primary>
     ;
 
 <array_concatenation> =
-    <array_value_expression_1> <concatenation_operator> <array_factor>
+    <array_value_expression_1> <concatenation_operator> <array_primary>
     ;
 
 <array_value_expression_1> =
     <array_value_expression>
     ;
 
-<array_factor> =
+<array_primary> =
     <value_expression_primary>
     ;
 
@@ -2526,10 +2556,12 @@
     <value_expression>
     ;
 
+# note this one was changed contextually_typed_[ROW]_value_specification
 <contextually_typed_row_value_constructor> =
   | <common_value_expression>
   | <boolean_value_expression>
   | <contextually_typed_value_specification>
+  | <left_paren> <contextually_typed_value_specification> <right_paren>
   | <left_paren> <contextually_typed_row_value_constructor_element> <comma> <contextually_typed_row_value_constructor_element_list> <right_paren>
   | 'ROW' <left_paren> <contextually_typed_row_value_constructor_element_list> <right_paren>
     ;
@@ -2602,12 +2634,12 @@
     ;
 
 <table_reference> =
-    <table_primary_or_joined_table> [<sample_clause>]
+  | <table_factor>
+  | <joined_table>
     ;
 
-<table_primary_or_joined_table> =
-  | <table_primary>
-  | <joined_table>
+<table_factor> =
+    <table_primary> [<sample_clause>]
     ;
 
 <sample_clause> =
@@ -2663,6 +2695,7 @@
 
 <table_or_query_name> =
   | <table_name>
+  | <transition_table_name>
   | <query_name>
     ;
 
@@ -2678,11 +2711,10 @@
   | <cross_join>
   | <qualified_join>
   | <natural_join>
-  | <union_join>
     ;
 
 <cross_join> =
-    <table_reference> 'CROSS' 'JOIN' <table_primary>
+    <table_reference> 'CROSS' 'JOIN' <table_factor>
     ;
 
 <qualified_join> =
@@ -2690,11 +2722,7 @@
     ;
 
 <natural_join> =
-    <table_reference> 'NATURAL' [<join_type>] 'JOIN' <table_primary>
-    ;
-
-<union_join> =
-    <table_reference> 'UNION' 'JOIN' <table_primary>
+    <table_reference> 'NATURAL' [<join_type>] 'JOIN' <table_factor>
     ;
 
 <join_specification> =
@@ -2955,34 +2983,19 @@
     ;
 
 <query_expression_body> =
-  | <non_join_query_expression>
-  | <joined_table>
-    ;
-
-<non_join_query_expression> =
-  | <non_join_query_term>
+  | <query_term>
   | <query_expression_body> 'UNION' ['ALL' | 'DISTINCT'] [<corresponding_spec>] <query_term>
   | <query_expression_body> 'EXCEPT' ['ALL' | 'DISTINCT'] [<corresponding_spec>] <query_term>
     ;
 
 <query_term> =
-  | <non_join_query_term>
-  | <joined_table>
-    ;
-
-<non_join_query_term> =
-  | <non_join_query_primary>
+  | <query_primary>
   | <query_term> 'INTERSECT' ['ALL' | 'DISTINCT'] [<corresponding_spec>] <query_primary>
     ;
 
 <query_primary> =
-  | <non_join_query_primary>
-  | <joined_table>
-    ;
-
-<non_join_query_primary> =
   | <simple_table>
-  | <left_paren> <non_join_query_expression> <right_paren>
+  | <left_paren> <query_expression_body> <right_paren>
     ;
 
 <simple_table> =
@@ -3295,7 +3308,11 @@
     ;
 
 <normalized_predicate> =
-    <string_value_expression> 'IS' ['NOT'] 'NORMALIZED'
+    <row_value_predicand> <normalized_predicate_part_2>
+    ;
+
+<normalized_predicate_part_2> =
+    'IS' ['NOT'] 'NORMALIZED'
     ;
 
 <match_predicate> =
@@ -3726,7 +3743,7 @@
 
 <table_contents_source> =
   | <table_element_list>
-  | 'OF' <path_resolved_user_defined_type_name> [<subtable_clause>] [<table_element_list>]
+  | <typed_table_clause>
   | <as_subquery_clause>
     ;
 
@@ -3752,12 +3769,24 @@
   | <column_definition>
   | <table_constraint_definition>
   | <like_clause>
-  | <self_referencing_column_specification>
+    ;
+
+<typed_table_clause> =
+    'OF' <path_resolved_user_defined_type_name> [<subtable_clause>] [<typed_table_element_list>]
+    ;
+
+<typed_table_element_list> =
+    <left_paren> <typed_table_element> [{<comma> <typed_table_element>}+] <right_paren>
+    ;
+
+<typed_table_element> =
   | <column_options>
+  | <table_constraint_definition>
+  | <self_referencing_column_specification>
     ;
 
 <self_referencing_column_specification> =
-    'REF' 'IS' <self_referencing_column_name> <reference_generation>
+    'REF' 'IS' <self_referencing_column_name> [<reference_generation>]
     ;
 
 <reference_generation> =
@@ -3795,8 +3824,13 @@
     ;
 
 <like_options> =
+    {<like_option>}+
+    ;
+
+<like_option> =
   | <identity_option>
   | <column_default_option>
+  | <generation_option>
     ;
 
 <identity_option> =
@@ -3809,6 +3843,11 @@
   | 'EXCLUDING' 'DEFAULTS'
     ;
 
+<generation_option> =
+  | 'INCLUDING' 'GENERATED'
+  | 'EXCLUDING' 'GENERATED'
+    ;
+
 <as_subquery_clause> =
     [<left_paren> <column_name_list> <right_paren>] 'AS' <subquery> <with_or_without_data>
     ;
@@ -3819,7 +3858,12 @@
     ;
 
 <column_definition> =
-    <column_name> [<data_type> | <domain_name>] [<reference_scope_check>] [<default_clause> | <identity_column_specification> | <generation_clause>] [{<column_constraint_definition>}+] [<collate_clause>]
+    <column_name> [<data_type_or_domain_name>] [<default_clause> | <identity_column_specification> | <generation_clause>] [{<column_constraint_definition>}+] [<collate_clause>]
+    ;
+
+<data_type_or_domain_name> =
+  | <data_type>
+  | <domain_name>
     ;
 
 <column_constraint_definition> =
@@ -3831,14 +3875,6 @@
   | <unique_specification>
   | <references_specification>
   | <check_constraint_definition>
-    ;
-
-<reference_scope_check> =
-    'REFERENCES' 'ARE' ['NOT'] 'CHECKED' ['ON' 'DELETE' <reference_scope_check_action>]
-    ;
-
-<reference_scope_check_action> =
-    <referential_action>
     ;
 
 <identity_column_specification> =
@@ -4065,7 +4101,7 @@
     ;
 
 <domain_definition> =
-    'CREATE' 'DOMAIN' <domain_name> ['AS'] <data_type> [<default_clause>] [{<domain_constraint>}+] [<collate_clause>]
+    'CREATE' 'DOMAIN' <domain_name> ['AS'] <predefined_type> [<default_clause>] [{<domain_constraint>}+] [<collate_clause>]
     ;
 
 <domain_constraint> =
@@ -4166,11 +4202,11 @@
     ;
 
 <drop_assertion_statement> =
-    'DROP' 'ASSERTION' <constraint_name>
+    'DROP' 'ASSERTION' <constraint_name> [<drop_behavior>]
     ;
 
 <trigger_definition> =
-    'CREATE' 'TRIGGER' <trigger_name> <trigger_action_time> <trigger_event> 'ON' <table_name> ['REFERENCING' <old_or_new_values_alias_list>] <triggered_action>
+    'CREATE' 'TRIGGER' <trigger_name> <trigger_action_time> <trigger_event> 'ON' <table_name> ['REFERENCING' <transition_table_or_variable_list>] <triggered_action>
     ;
 
 <trigger_action_time> =
@@ -4197,30 +4233,34 @@
   | 'BEGIN' 'ATOMIC' {<sql_procedure_statement> <semicolon>}+ 'END'
     ;
 
-<old_or_new_values_alias_list> =
-    {<old_or_new_values_alias>}+
+<transition_table_or_variable_list> =
+    {<transition_table_or_variable>}+
     ;
 
-<old_or_new_values_alias> =
-  | 'OLD' ['ROW'] ['AS'] <old_values_correlation_name>
-  | 'NEW' ['ROW'] ['AS'] <new_values_correlation_name>
-  | 'OLD' 'TABLE' ['AS'] <old_values_table_alias>
-  | 'NEW' 'TABLE' ['AS'] <new_values_table_alias>
+<transition_table_or_variable> =
+  | 'OLD' ['ROW'] ['AS'] <old_transition_variable_name>
+  | 'NEW' ['ROW'] ['AS'] <new_transition_variable_name>
+  | 'OLD' 'TABLE' ['AS'] <old_transition_table_name>
+  | 'NEW' 'TABLE' ['AS'] <new_transition_table_name>
     ;
 
-<old_values_table_alias> =
+<old_transition_table_name> =
+    <transition_table_name>
+    ;
+
+<new_transition_table_name> =
+    <transition_table_name>
+    ;
+
+<transition_table_name> =
     <identifier>
     ;
 
-<new_values_table_alias> =
-    <identifier>
-    ;
-
-<old_values_correlation_name> =
+<old_transition_variable_name> =
     <correlation_name>
     ;
 
-<new_values_correlation_name> =
+<new_transition_variable_name> =
     <correlation_name>
     ;
 
@@ -4244,8 +4284,10 @@
   | <instantiable_clause>
   | <finality>
   | <reference_type_specification>
-  | <ref_cast_option>
-  | <cast_option>
+  | <cast_to_ref>
+  | <cast_to_type>
+  | <cast_to_distinct>
+  | <cast_to_source>
     ;
 
 <subtype_clause> =
@@ -4297,10 +4339,6 @@
     'REF' 'IS' 'SYSTEM' 'GENERATED'
     ;
 
-<ref_cast_option> =
-    [<cast_to_ref>] [<cast_to_type>]
-    ;
-
 <cast_to_ref> =
     'CAST' <left_paren> 'SOURCE' 'AS' 'REF' <right_paren> 'WITH' <cast_to_ref_identifier>
     ;
@@ -4319,10 +4357,6 @@
 
 <list_of_attributes> =
     <left_paren> <attribute_name> [{<comma> <attribute_name>}+] <right_paren>
-    ;
-
-<cast_option> =
-    [<cast_to_distinct>] [<cast_to_source>]
     ;
 
 <cast_to_distinct> =
@@ -4379,7 +4413,7 @@
     ;
 
 <attribute_definition> =
-    <attribute_name> <data_type> [<reference_scope_check>] [<attribute_default>] [<collate_clause>]
+    <attribute_name> <data_type> [<attribute_default>] [<collate_clause>]
     ;
 
 <attribute_default> =
@@ -5178,7 +5212,7 @@
     ;
 
 <sql_dynamic_statement> =
-  | <system_descriptor_statement>
+  | <sql_descriptor_statement>
   | <prepare_statement>
   | <deallocate_prepared_statement>
   | <describe_statement>
@@ -5196,7 +5230,7 @@
   | <dynamic_update_statement_positioned>
     ;
 
-<system_descriptor_statement> =
+<sql_descriptor_statement> =
   | <allocate_descriptor_statement>
   | <deallocate_descriptor_statement>
   | <set_descriptor_statement>
@@ -5273,7 +5307,7 @@
     ;
 
 <delete_statement_positioned> =
-    'DELETE' 'FROM' <target_table> 'WHERE' 'CURRENT' 'OF' <cursor_name>
+    'DELETE' 'FROM' <target_table> [['AS'] <correlation_name>] 'WHERE' 'CURRENT' 'OF' <cursor_name>
     ;
 
 <target_table> =
@@ -5282,7 +5316,7 @@
     ;
 
 <delete_statement_searched> =
-    'DELETE' 'FROM' <target_table> ['WHERE' <search_condition>]
+    'DELETE' 'FROM' <target_table> [['AS'] <correlation_name>] ['WHERE' <search_condition>]
     ;
 
 <insert_statement> =
@@ -5363,11 +5397,11 @@
     ;
 
 <update_statement_positioned> =
-    'UPDATE' <target_table> 'SET' <set_clause_list> 'WHERE' 'CURRENT' 'OF' <cursor_name>
+    'UPDATE' <target_table> [['AS'] <correlation_name>] 'SET' <set_clause_list> 'WHERE' 'CURRENT' 'OF' <cursor_name>
     ;
 
 <update_statement_searched> =
-    'UPDATE' <target_table> 'SET' <set_clause_list> ['WHERE' <search_condition>]
+    'UPDATE' <target_table> [['AS'] <correlation_name>] 'SET' <set_clause_list> ['WHERE' <search_condition>]
     ;
 
 <set_clause_list> =
@@ -5430,6 +5464,7 @@
 <locator_reference> =
   | <host_parameter_name>
   | <embedded_variable_name>
+  | <dynamic_parameter_specification>
     ;
 
 <hold_locator_statement> =
@@ -5784,6 +5819,8 @@
   | <merge_statement>
   | <preparable_dynamic_delete_statement_positioned>
   | <preparable_dynamic_update_statement_positioned>
+  | <hold_locator_statement>
+  | <free_locator_statement>
     ;
 
 <preparable_sql_schema_statement> =
@@ -5978,7 +6015,6 @@
   | <embedded_transform_group_specification>
   | <embedded_collation_specification>
   | <embedded_exception_declaration>
-  | <handler_declaration>
   | <sql_procedure_statement>
     ;
 
@@ -6330,7 +6366,7 @@
     ;
 
 <c_ref_variable> =
-    'SQL' 'TYPE' 'IS' <reference_type>
+    'SQL' 'TYPE' 'IS' <reference_type> <c_host_identifier> [<c_initial_value>] [{<comma> <c_host_identifier> [<c_initial_value>]}+]
     ;
 
 <c_initial_value> =
@@ -6663,7 +6699,8 @@
     ;
 
 <pl_i_variable_definition> =
-  ('DCL' | 'DECLARE') (<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [{<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
+  | ('DCL' | 'DECLARE') <pl_i_type_specification> [{<character_representation>}+] <semicolon>
+  | (<pl_i_host_identifier> | <left_paren> <pl_i_host_identifier> [{<comma> <pl_i_host_identifier>}+] <right_paren>) <pl_i_type_specification> [{<character_representation>}+] <semicolon>
     ;
 
 <pl_i_host_identifier> =
@@ -6841,33 +6878,4 @@
 
 <condition_number> =
     <simple_value_specification>
-    ;
-
-<unqualified_schema_name> =
-    <identifier>
-    ;
-
-<numeric_value_expression_divisor> =
-    <numeric_value_expression>
-    ;
-
-<numeric_value_expression_dividend> =
-    <numeric_value_expression>
-    ;
-
-<bit_string_literal> =
-    'B' <quote> [{<bit>}+] <quote> [{{<separator>}+ <quote> [{<bit>}+] <quote>}+]
-    ;
-
-<bit> =
-  | '0'
-  | '1'
-    ;
-
-<hex_string_literal> =
-    'X' <quote> [{<hexit>}+] <quote> [{{<separator>}+ <quote> [{<hexit>}+] <quote>}+]
-    ;
-
-<handler_declaration> =
-    '#MISSING'
     ;

@@ -5,7 +5,7 @@ options
     language=Java;
 }
 
-/* 
+/*
 =====================================================================================
 
 BNF Grammar for ISO/IEC 9075-2:2003 - Database Language SQL (SQL-2003) SQL/Foundation
@@ -13,7 +13,7 @@ BNF Grammar for ISO/IEC 9075-2:2003 - Database Language SQL (SQL-2003) SQL/Found
 4/27/2011 - Lexer updated:
 			1) Support case insensitive keyword tokens.
 			2) Improve parsing of Numeric tokens
-			3) Improve parsing of string constant tokens			
+			3) Improve parsing of string constant tokens
 
 =====================================================================================
 
@@ -24,27 +24,27 @@ Portions Copyright (c)  Jonathan Leffler 2004-2009'
 Portions Copyright (c) 2003, ISO - International Organization for Standardization
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright notice, this 
+    * Redistributions of source code must retain the above copyright notice, this
       list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, 
-      this list of conditions and the following disclaimer in the documentation 
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
       and/or other materials provided with the distribution.
-    * Neither the name of the "Mage Systems" nor the names of its contributors 
-      may be used to endorse or promote products derived from this software 
+    * Neither the name of the "Mage Systems" nor the names of its contributors
+      may be used to endorse or promote products derived from this software
       without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
@@ -83,19 +83,19 @@ fragment
 Line_Comment    : '//';
 
 COMMENT
-    :   (   Start_Comment ( options {greedy=false;} : . )* End_Comment )+ 
+    :   (   Start_Comment ( options {greedy=false;} : . )* End_Comment )+
 		{
 //			$channel=HIDDEN;
 			SKIP();
-		} 
+		}
     ;
 
 LINE_COMMENT
-    : 	(   ( Line_Comment | '--' ) ~('\n'|'\r')* '\r'? '\n')+ 
+    : 	(   ( Line_Comment | '--' ) ~('\n'|'\r')* '\r'? '\n')+
 		{
 //			$channel=HIDDEN;
 			SKIP();
-		} 
+		}
     ;
 
 
@@ -111,15 +111,15 @@ Simple_Latin_Letter  :  Simple_Latin_Upper_Case_Letter | Simple_Latin_Lower_Case
 fragment A
 	:	'A' | 'a';
 
-fragment B 
+fragment B
 	:	'B' | 'b';
 
-fragment C 
+fragment C
 	:	'C' | 'c';
-	
-fragment D 
+
+fragment D
 	:	'D' | 'd';
-	
+
 fragment E
 	:	'E' | 'e';
 
@@ -131,69 +131,69 @@ fragment G
 
 fragment H
 	:	'H' | 'h';
-	
+
 fragment I
 	:	'I' | 'i';
-	
+
 fragment J
 	:	'J' | 'j';
-	
+
 fragment K
 	:	'K' | 'k';
-	
+
 fragment L
 	:	'L' | 'l';
-	
-fragment M 
+
+fragment M
 	:	'M' | 'm';
-	
+
 fragment N
 	:	'N' | 'n';
-	
+
 fragment O
 	:	'O' | 'o';
-	
+
 fragment P
 	:	'P' | 'p';
-	
+
 fragment Q
 	:	'Q' | 'q';
-	
+
 fragment R
 	:	'R' | 'r';
-	
+
 fragment S
 	:	'S' | 's';
-	
+
 fragment T
 	:	'T' | 't';
-	
+
 fragment U
 	:	'U' | 'u';
-	
+
 fragment V
 	:	'V' | 'v';
-	
+
 fragment W
 	:	'W' | 'w';
-	
+
 fragment X
 	:	'X' | 'x';
-	
+
 fragment Y
 	:	'Y' | 'y';
-	
+
 fragment Z
 	:	'Z' | 'z';
 
 fragment
 Simple_Latin_Upper_Case_Letter :
-		'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 
+		'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' |
 		'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z';
 
 fragment
 Simple_Latin_Lower_Case_Letter :
-		'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 
+		'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' |
 		'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z';
 
 fragment
@@ -297,16 +297,16 @@ Signed_Float
 	CROSS                       :   C R O S S;
 	CUBE                        :   C U B E;
 	CURRENT_DATE                :   C U R R E N T Underscore D A T E;
-	CURRENT_DEFAULT_TRANSFORM_GROUP 
-	                            :   C U R R E N T Underscore D E F A U L T Underscore 
-	                            	T R A N S F O R M Underscore G R O U P;                 
+	CURRENT_DEFAULT_TRANSFORM_GROUP
+	                            :   C U R R E N T Underscore D E F A U L T Underscore
+	                            	T R A N S F O R M Underscore G R O U P;
 	CURRENT_PATH                :   C U R R E N T Underscore P A T H;
 	CURRENT_ROLE                :   C U R R E N T Underscore R O L E ;
-	CURRENT_TIMESTAMP           :   C U R R E N T Underscore T I M E S T A M P;     
+	CURRENT_TIMESTAMP           :   C U R R E N T Underscore T I M E S T A M P;
 	CURRENT_TIME                :   C U R R E N T Underscore T I M E;
-	CURRENT_TRANSFORM_GROUP_FOR_TYPE    
-	                            :   C U R R E N T Underscore T R A N S F O R M Underscore 
-	                            	G R O U P Underscore F O R Underscore T Y P E;                 
+	CURRENT_TRANSFORM_GROUP_FOR_TYPE
+	                            :   C U R R E N T Underscore T R A N S F O R M Underscore
+	                            	G R O U P Underscore F O R Underscore T Y P E;
 	CURRENT_USER                :   C U R R E N T Underscore U S E R;
 	CURRENT                     :   C U R R E N T;
 	CURSOR                      :   C U R S O R;
@@ -542,7 +542,7 @@ Signed_Float
 	COLLATION                   :   C O L L A T I O N;
 	COLLECT                     :   C O L L E C T;
 	COLUMN_NAME                 :   C O L U M N Underscore N A M E;
-	COMMAND_FUNCTION_CODE       :   C O M M A N D Underscore F U N C T I O N Underscore C O D E; 
+	COMMAND_FUNCTION_CODE       :   C O M M A N D Underscore F U N C T I O N Underscore C O D E;
 	COMMAND_FUNCTION            :   C O M M A N D Underscore F U N C T I O N;
 	COMMITTED                   :   C O M M I T T E D;
 	CONDITION_NUMBER            :   C O N D I T I O N Underscore N U M B E R;
@@ -789,87 +789,87 @@ Signed_Float
 
 //  Punctuation and Arithmetic/Logical Operators
 
-Not_Equals_Operator     
+Not_Equals_Operator
 	:	 '<>';
-Greater_Or_Equals_Operator  
+Greater_Or_Equals_Operator
 	:	 '>=';
-Less_Or_Equals_Operator 
+Less_Or_Equals_Operator
 	:	 '<=';
-Concatenation_Operator  
+Concatenation_Operator
 	:	 '||';
-Right_Arrow             
+Right_Arrow
 	:	 '->';
-Double_Colon            
+Double_Colon
 	:	 '::';
-Double_Period           
+Double_Period
 	:	 '..';
 
-Back_Quote              
+Back_Quote
 	:	 '`';
-Tilde                   
+Tilde
 	:	 '~';
-Exclamation             
+Exclamation
 	:	 '!';
-AT_Sign                 
+AT_Sign
 	:	 '@';
-Percent                 
+Percent
 	:	 '\%';
-Circumflex              
+Circumflex
 	:	 '^';
-Ampersand               
+Ampersand
 	:	 '&';
-Asterisk                
+Asterisk
 	:	 '*';
-Left_Paren              
+Left_Paren
 	:	 '(';
-Right_Paren             
+Right_Paren
 	:	 ')';
-Plus_Sign               
+Plus_Sign
 	:	 '+';
-Minus_Sign              
+Minus_Sign
 	:	 '-';
 fragment
-Hyphen              
+Hyphen
 	:	 '-';
-Equals_Operator         
+Equals_Operator
 	:	 '=';
-Left_Brace              
+Left_Brace
 	:	 '{';
-Right_Brace             
+Right_Brace
 	:	 '}';
 /*
     The trigraphs are new in SQL-2003.
 */
-Left_Bracket            
+Left_Bracket
 	:	 '[';
-Left_Bracket_Trigraph   
+Left_Bracket_Trigraph
 	:	 '??(';
-Right_Bracket           
+Right_Bracket
 	:	 ']';
-Right_Bracket_Trigraph  
+Right_Bracket_Trigraph
 	:	 '??)';
 
-Vertical_Bar            
+Vertical_Bar
 	:	 '|';
-Colon                   
+Colon
 	:	 ':';
-Semicolon               
+Semicolon
 	:	 ';';
-Double_Quote            
+Double_Quote
 	:	 '"';
-Quote                   
+Quote
 	:	 '\'';
-Less_Than_Operator      
+Less_Than_Operator
 	:	 '<';
-Greater_Than_Operator   
+Greater_Than_Operator
 	:	 '>';
-Comma                   
+Comma
 	:	 ',';
-Period                  
+Period
 	:	 '.';
-Question_Mark           
+Question_Mark
 	:	 '?';
-Slash                   
+Slash
 	:	 '/';
 
 fragment
@@ -1110,127 +1110,127 @@ Limbu                               :   '\u1900' .. '\u194F';
 fragment
 Tai_Le                              :   '\u1950' .. '\u197F';
 fragment
-Khmer_Symbols                       :   '\u19E0' .. '\u19FF';   
+Khmer_Symbols                       :   '\u19E0' .. '\u19FF';
 fragment
-Phonetic_Extensions                 :   '\u1D00' .. '\u1D7F';   
+Phonetic_Extensions                 :   '\u1D00' .. '\u1D7F';
 fragment
-Latin_Extended_Additional           :   '\u1E00' .. '\u1EFF';   
+Latin_Extended_Additional           :   '\u1E00' .. '\u1EFF';
 fragment
-Greek_Extended                      :   '\u1F00' .. '\u1FFF';   
+Greek_Extended                      :   '\u1F00' .. '\u1FFF';
 fragment
-General_Punctuation                 :   '\u2000' .. '\u206F';   
+General_Punctuation                 :   '\u2000' .. '\u206F';
 fragment
-Superscripts_and_Subscripts         :   '\u2070' .. '\u209F';   
+Superscripts_and_Subscripts         :   '\u2070' .. '\u209F';
 fragment
-Currency_Symbols                    :   '\u20A0' .. '\u20CF';   
+Currency_Symbols                    :   '\u20A0' .. '\u20CF';
 fragment
-Combining_Diacritical_Symbol_Marks  :   '\u20D0' .. '\u20FF';   
+Combining_Diacritical_Symbol_Marks  :   '\u20D0' .. '\u20FF';
 fragment
-Letterlike_Symbols                  :   '\u2100' .. '\u214F';   
+Letterlike_Symbols                  :   '\u2100' .. '\u214F';
 fragment
-Number_Forms                        :   '\u2150' .. '\u218F';   
+Number_Forms                        :   '\u2150' .. '\u218F';
 fragment
-Arrows                              :   '\u2190' .. '\u21FF';   
+Arrows                              :   '\u2190' .. '\u21FF';
 fragment
-Mathematical_Operators              :   '\u2200' .. '\u22FF';   
+Mathematical_Operators              :   '\u2200' .. '\u22FF';
 fragment
-Miscellaneous_Technical             :   '\u2300' .. '\u23FF';   
+Miscellaneous_Technical             :   '\u2300' .. '\u23FF';
 fragment
-Control_Pictures                    :   '\u2400' .. '\u243F';   
+Control_Pictures                    :   '\u2400' .. '\u243F';
 fragment
-Optical_Character_Recognition       :   '\u2440' .. '\u245F';   
+Optical_Character_Recognition       :   '\u2440' .. '\u245F';
 fragment
-Enclosed_Alphanumerics              :   '\u2460' .. '\u24FF';   
+Enclosed_Alphanumerics              :   '\u2460' .. '\u24FF';
 fragment
-Box_Drawing                         :   '\u2500' .. '\u257F';   
+Box_Drawing                         :   '\u2500' .. '\u257F';
 fragment
-Block_Elements                      :   '\u2580' .. '\u259F';   
+Block_Elements                      :   '\u2580' .. '\u259F';
 fragment
-Geometric_Shapes                    :   '\u25A0' .. '\u25FF';   
+Geometric_Shapes                    :   '\u25A0' .. '\u25FF';
 fragment
-Miscellaneous_Symbols               :   '\u2600' .. '\u26FF';   
+Miscellaneous_Symbols               :   '\u2600' .. '\u26FF';
 fragment
-Dingbats                            :   '\u2700' .. '\u27BF';   
+Dingbats                            :   '\u2700' .. '\u27BF';
 fragment
-Miscellaneous_Mathematical_SymbolsA  :    '\u27C0' .. '\u27EF';   
+Miscellaneous_Mathematical_SymbolsA  :    '\u27C0' .. '\u27EF';
 fragment
-Supplemental_ArrowsA                :   '\u27F0' .. '\u27FF';   
+Supplemental_ArrowsA                :   '\u27F0' .. '\u27FF';
 fragment
-Braille_Patterns                    :   '\u2800' .. '\u28FF';   
+Braille_Patterns                    :   '\u2800' .. '\u28FF';
 fragment
-Supplemental_ArrowsB                :   '\u2900' .. '\u297F';   
+Supplemental_ArrowsB                :   '\u2900' .. '\u297F';
 fragment
-Miscellaneous_Mathematical_SymbolsB  :    '\u2980' .. '\u29FF';   
+Miscellaneous_Mathematical_SymbolsB  :    '\u2980' .. '\u29FF';
 fragment
-Supplemental_Mathematical_Operators  :    '\u2A00' .. '\u2AFF';   
+Supplemental_Mathematical_Operators  :    '\u2A00' .. '\u2AFF';
 fragment
-Miscellaneous_Symbols_and_Arrows    :   '\u2B00' .. '\u2BFF';   
+Miscellaneous_Symbols_and_Arrows    :   '\u2B00' .. '\u2BFF';
 fragment
-CJK_Radicals_Supplement             :   '\u2E80' .. '\u2EFF';   
+CJK_Radicals_Supplement             :   '\u2E80' .. '\u2EFF';
 fragment
-Kangxi_Radicals                     :   '\u2F00' .. '\u2FDF';   
+Kangxi_Radicals                     :   '\u2F00' .. '\u2FDF';
 fragment
-Ideographic_Description_Characters  :   '\u2FF0' .. '\u2FFF';   
+Ideographic_Description_Characters  :   '\u2FF0' .. '\u2FFF';
 fragment
-CJK_Symbols_and_Punctuation         :   '\u3000' .. '\u303F';   
+CJK_Symbols_and_Punctuation         :   '\u3000' .. '\u303F';
 fragment
-Hiragana                            :   '\u3040' .. '\u309F';   
+Hiragana                            :   '\u3040' .. '\u309F';
 fragment
-Katakana                            :   '\u30A0' .. '\u30FF';   
+Katakana                            :   '\u30A0' .. '\u30FF';
 fragment
-Bopomofo                            :   '\u3100' .. '\u312F';   
+Bopomofo                            :   '\u3100' .. '\u312F';
 fragment
-Hangul_Compatibility_Jamo           :   '\u3130' .. '\u318F';   
+Hangul_Compatibility_Jamo           :   '\u3130' .. '\u318F';
 fragment
-Kanbun                              :   '\u3190' .. '\u319F';   
+Kanbun                              :   '\u3190' .. '\u319F';
 fragment
-Bopomofo_Extended                   :   '\u31A0' .. '\u31BF';   
+Bopomofo_Extended                   :   '\u31A0' .. '\u31BF';
 fragment
-Katakana_Phonetic_Extensions        :   '\u31F0' .. '\u31FF';   
+Katakana_Phonetic_Extensions        :   '\u31F0' .. '\u31FF';
 fragment
-Enclosed_CJK_Letters_and_Months     :   '\u3200' .. '\u32FF';   
+Enclosed_CJK_Letters_and_Months     :   '\u3200' .. '\u32FF';
 fragment
-CJK_Compatibility                   :   '\u3300' .. '\u33FF';   
+CJK_Compatibility                   :   '\u3300' .. '\u33FF';
 fragment
-CJK_Unified_Ideographs_ExtensionA   :   '\u3400' .. '\u4DBF';   
+CJK_Unified_Ideographs_ExtensionA   :   '\u3400' .. '\u4DBF';
 fragment
-CJK_Unified_Ideographs              :   '\u4E00' .. '\u9FFF';   
+CJK_Unified_Ideographs              :   '\u4E00' .. '\u9FFF';
 fragment
-Yijing_Hexagram_Symbols             :   '\u4DC0' .. '\u4DFF';   
+Yijing_Hexagram_Symbols             :   '\u4DC0' .. '\u4DFF';
 fragment
-Yi_Syllables                        :   '\uA000' .. '\uA48F';   
+Yi_Syllables                        :   '\uA000' .. '\uA48F';
 fragment
-Yi_Radicals                         :   '\uA490' .. '\uA4CF';   
+Yi_Radicals                         :   '\uA490' .. '\uA4CF';
 fragment
-Hangul_Syllables                    :   '\uAC00' .. '\uD7AF';   
+Hangul_Syllables                    :   '\uAC00' .. '\uD7AF';
 fragment
-High_Surrogates                     :   '\uD800' .. '\uDB7F';   
+High_Surrogates                     :   '\uD800' .. '\uDB7F';
 fragment
-High_Private_Use_Surrogates         :   '\uDB80' .. '\uDBFF';   
+High_Private_Use_Surrogates         :   '\uDB80' .. '\uDBFF';
 fragment
-Low_Surrogates                      :   '\uDC00' .. '\uDFFF';   
+Low_Surrogates                      :   '\uDC00' .. '\uDFFF';
 fragment
-Private_Use_Area                    :   '\uE000' .. '\uF8FF';   
+Private_Use_Area                    :   '\uE000' .. '\uF8FF';
 fragment
-CJK_Compatibility_Ideographs        :   '\uF900' .. '\uFAFF';   
+CJK_Compatibility_Ideographs        :   '\uF900' .. '\uFAFF';
 fragment
-Alphabetic_Presentation_Forms       :   '\uFB00' .. '\uFB4F';   
+Alphabetic_Presentation_Forms       :   '\uFB00' .. '\uFB4F';
 fragment
-Arabic_Presentation_FormsA          :   '\uFB50' .. '\uFDFF';   
+Arabic_Presentation_FormsA          :   '\uFB50' .. '\uFDFF';
 fragment
-Variation_Selectors                 :   '\uFE00' .. '\uFE0F';   
+Variation_Selectors                 :   '\uFE00' .. '\uFE0F';
 fragment
-Combining_Half_Marks                :   '\uFE20' .. '\uFE2F';   
+Combining_Half_Marks                :   '\uFE20' .. '\uFE2F';
 fragment
-CJK_Compatibility_Forms             :   '\uFE30' .. '\uFE4F';   
+CJK_Compatibility_Forms             :   '\uFE30' .. '\uFE4F';
 fragment
-Small_Form_Variants                 :   '\uFE50' .. '\uFE6F';   
+Small_Form_Variants                 :   '\uFE50' .. '\uFE6F';
 fragment
-Arabic_Presentation_FormsB          :   '\uFE70' .. '\uFEFF';   
+Arabic_Presentation_FormsB          :   '\uFE70' .. '\uFEFF';
 fragment
-Halfwidth_and_Fullwidth_Forms       :   '\uFF00' .. '\uFFEF';   
+Halfwidth_and_Fullwidth_Forms       :   '\uFF00' .. '\uFFEF';
 fragment
-Specials                            :   '\uFFF0' .. '\uFFFF';   
+Specials                            :   '\uFFF0' .. '\uFFFF';
 
 
 
@@ -1247,7 +1247,7 @@ Unicode_4_Digit_Escape_Value     :  Escape_Character  Hexit  Hexit  Hexit  Hexit
 fragment
 Unicode_6_Digit_Escape_Value     :  Escape_Character  Plus_Sign Hexit  Hexit  Hexit  Hexit  Hexit  Hexit ;
 
-Escape_Character                 :  '\\' /* Unicode_Allowed_Escape_Chracter */ /*!! See the Syntax Rules*/; 
+Escape_Character                 :  '\\' /* Unicode_Allowed_Escape_Chracter */ /*!! See the Syntax Rules*/;
 
 
 /*
@@ -1264,24 +1264,24 @@ HexQuad     :   Hexit Hexit Hexit Hexit;
 fragment
 Unsigned_Integer	:
 	(	'0'
-			(	( 'x' | 'X' ) 
-				HexPair ( HexPair ( HexQuad (HexQuad HexQuad)? )? )? 
-			|	OctalDigit ( OctalDigit )* 
-			|	{true}? 
+			(	( 'x' | 'X' )
+				HexPair ( HexPair ( HexQuad (HexQuad HexQuad)? )? )?
+			|	OctalDigit ( OctalDigit )*
+			|	{true}?
 				( '0' )*
-			)  
-	|	( '1'..'9' ) ( Digit )* 
+			)
+	|	( '1'..'9' ) ( Digit )*
 	);
 
 fragment
 Signed_Integer	:
-	( Plus_Sign | Minus_Sign ) ( Digit )+ 			
+	( Plus_Sign | Minus_Sign ) ( Digit )+
 	;
 
 Number	:
 	(	'0'
-			(	( 'x' | 'X' ) 
-				HexPair ( HexPair ( HexQuad (HexQuad HexQuad)? )? )? 
+			(	( 'x' | 'X' )
+				HexPair ( HexPair ( HexQuad (HexQuad HexQuad)? )? )?
 				(	('K' | 'M' |'G')
 					{
 						_type  =  Unsigned_Large_Integer;
@@ -1291,8 +1291,8 @@ Number	:
 						_type  =  Unsigned_Integer;
 					}
 				)
-				
-			|	( OctalDigit )* 
+
+			|	( OctalDigit )*
 				(	('K' | 'M' |'G')
 					{
 						_type  =  Unsigned_Large_Integer;
@@ -1302,13 +1302,13 @@ Number	:
 						_type  =  Unsigned_Integer;
 					}
 				)
-				
-			|	Period 
+
+			|	Period
 				( Digit )+ ( ( 'f' | 'F' | 'd' | 'D' | 'e' | 'E' ) ( Plus_Sign | Minus_Sign )? Digit ( Digit ( Digit )? )? )?
 				{
 					_type  =  Unsigned_Float;
 				}
-				
+
 			|	'8'..'9' ( Digit )*
 				(	('K' | 'M' |'G')
 					{
@@ -1319,13 +1319,13 @@ Number	:
 						_type  =  Unsigned_Integer;
 					}
 				)
-			)  
-	|	( Plus_Sign | Minus_Sign ) ( Digit )+ 
+			)
+	|	( Plus_Sign | Minus_Sign ) ( Digit )+
 			(	Period ( Digit )+ ( ( 'f' | 'F' | 'd' | 'D' | 'e' | 'E' ) ( Plus_Sign | Minus_Sign )? Digit ( Digit ( Digit )? )? )?
 				{
 					_type  =  Signed_Float;
 				}
-				
+
 			|	(	('K' | 'M' |'G')
 					{
 						_type  =  Signed_Large_Integer;
@@ -1336,12 +1336,12 @@ Number	:
 					}
 				)
 			)
-	|	( '1'..'9' ) ( Digit )* 
+	|	( '1'..'9' ) ( Digit )*
 			(	Period ( Digit )+ ( ( 'f' | 'F' | 'd' | 'D' | 'e' | 'E' ) ( Plus_Sign | Minus_Sign )? Digit ( Digit ( Digit )? )? )?
 				{
 					_type  =  Unsigned_Float;
 				}
-				
+
 			|	(	('K' | 'M' |'G')
 					{
 						_type  =  Unsigned_Large_Integer;
@@ -1352,7 +1352,7 @@ Number	:
 					}
 				)
 			)
-			
+
 	|	Period
 			( Digit )+ ( ( 'f' | 'F' | 'd' | 'D' | 'e' | 'E' ) ( Plus_Sign | Minus_Sign )? Digit ( Digit ( Digit )? )? )?
 				{
@@ -1362,8 +1362,8 @@ Number	:
 
 
 fragment
-Character_Set_Name  : ( ( ( Regular_Identifier )  Period )? 
-                          ( Regular_Identifier )  Period )? 
+Character_Set_Name  : ( ( ( Regular_Identifier )  Period )?
+                          ( Regular_Identifier )  Period )?
                             Regular_Identifier ;
 
 fragment
@@ -1373,7 +1373,7 @@ fragment
 Character_String_Literal :
 		  Quote ( Extended_Latin_Without_Quotes  )* Quote ( Quote ( Extended_Latin_Without_Quotes  )* Quote )*
 		;
-		
+
 fragment
 National_Character_String_Literal :
 		'N' Quote ( Extended_Latin_Without_Quotes  )* Quote ( Quote ( Extended_Latin_Without_Quotes  )* Quote )*
@@ -1412,11 +1412,11 @@ String_Literal	:
 	|	Bit_String_Literal
 			{
 				_type  =  Bit_String_Literal;
-			}	
+			}
 	|	Hex_String_Literal
 			{
 				_type  =  Hex_String_Literal;
-			}	
+			}
 	|	National_Character_String_Literal
 			{
 				_type  =  National_Character_String_Literal;
@@ -1449,21 +1449,21 @@ String_Literal	:
 // IBM DB2         same as ANSI SQL92                                      no              128
 // HP Neoview      same as ANSI SQL92                                      no              128
 
-Regular_Identifier  :  SQL92_Identifier 
+Regular_Identifier  :  SQL92_Identifier
 //                    |   {isSybaseASA()}? 				SybaseASA_Identifier
 //                    |   {isSQLServerOrSybaseASE()}? 	SqlServer_Identifier
 //                    |   {isTeradata()}?				Teradata_Identifier
 //                    |   {isMySQL()}?					MySQL_Identifier
-//                    |   {isInformixOrPostgreSQL()}?	Informix_PostgreSQL_Identifier 
+//                    |   {isInformixOrPostgreSQL()}?	Informix_PostgreSQL_Identifier
 //                    |   {isOracle()}?					Oracle_Identifier
 //                    |   {isInterbase()}?				Interbase_Identifier
-//                    |   {true}?						SQL92_Identifier 
+//                    |   {true}?						SQL92_Identifier
                     ;
 
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // Sybase ASA      Latin,'_','@','#','$'   Latin,Digit,'_','@','#','$'     no              128
 fragment
-SybaseASA_Identifier  :  
+SybaseASA_Identifier  :
     SybaseASA_Identifier_Start ( SybaseASA_Identifier_Part )*;
 fragment
 SybaseASA_Identifier_Start  :  Simple_Latin_Letter | AT_Sign | Hash_Sign | Dollar_Sign; // | Underscore;
@@ -1475,7 +1475,7 @@ SybaseASA_Identifier_Part  :  Simple_Latin_Letter |
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // SQL Server      Latin,'_','@','#'       Latin,Digit,'_','@','#','$'     no              128
 fragment
-SqlServer_Identifier  :  
+SqlServer_Identifier  :
     SqlServer_Identifier_Start ( SqlServer_Identifier_Part )*;
 fragment
 SqlServer_Identifier_Start  :  Simple_Latin_Letter | AT_Sign | Hash_Sign; // | Underscore;
@@ -1487,7 +1487,7 @@ SqlServer_Identifier_Part  :  Simple_Latin_Letter |
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // Teradata        Latin,'_','#','$'       Latin,Digit,'_','#','$'         no              30
 fragment
-Teradata_Identifier  :  
+Teradata_Identifier  :
     Teradata_Identifier_Start ( Teradata_Identifier_Part )*;
 fragment
 Teradata_Identifier_Start  :  Simple_Latin_Letter | Hash_Sign | Dollar_Sign; // | Underscore;
@@ -1498,7 +1498,7 @@ Teradata_Identifier_Part   :  Simple_Latin_Letter | Digit | Underscore | Hash_Si
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // MySQL           Latin,Digit             Latin,Digit,'_','$'             yes             64
 fragment
-MySQL_Identifier  :  
+MySQL_Identifier  :
     MySQL_Identifier_Start ( MySQL_Identifier_Part )*;
 fragment
 MySQL_Identifier_Start  :  Simple_Latin_Letter | Digit;
@@ -1509,7 +1509,7 @@ MySQL_Identifier_Part  :  Simple_Latin_Letter | Digit | Underscore | Dollar_Sign
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // Informix        Latin,'_'               Latin,Digit,'_','$'             no              128
 fragment
-Informix_PostgreSQL_Identifier  :  
+Informix_PostgreSQL_Identifier  :
     Informix_Identifier_Start ( Informix_Identifier_Part )*;
 fragment
 Informix_Identifier_Start  :  Simple_Latin_Letter; // | Underscore;
@@ -1520,7 +1520,7 @@ Informix_Identifier_Part  :  Simple_Latin_Letter | Digit | Underscore | Dollar_S
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // Oracle          Latin                   Latin,Digit,'_','#','$'         no              30
 fragment
-Oracle_Identifier  :  
+Oracle_Identifier  :
     Oracle_Identifier_Start ( Oracle_Identifier_Part )*;
 fragment
 Oracle_Identifier_Start  :  Simple_Latin_Letter;
@@ -1531,7 +1531,7 @@ Oracle_Identifier_Part  :  Simple_Latin_Letter | Digit | Underscore | Hash_Sign 
 // Database        1st Character           Sunsequent Characters           Case Sensitive  Max Length
 // Interbase       Latin                   Latin,Digit,'_','$'             no              67
 fragment
-Interbase_Identifier  :  
+Interbase_Identifier  :
     Interbase_Identifier_Start ( Interbase_Identifier_Part )*;
 fragment
 Interbase_Identifier_Start  :  Simple_Latin_Letter;
@@ -1569,7 +1569,7 @@ Space    :  ' '
 	SKIP();
 };
 
-White_Space  :	( Control_Characters  | Extended_Control_Characters )+ 
+White_Space  :	( Control_Characters  | Extended_Control_Characters )+
 {
 //	$channel=HIDDEN;
 	SKIP();

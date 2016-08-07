@@ -138,6 +138,8 @@ multiplier =
   | 'K'
   | 'M'
   | 'G'
+  | 'T'
+  | 'P'
     ;
 
 delimited_identifier =
@@ -498,7 +500,8 @@ extended_cursor_name =
     ;
 
 descriptor_name =
-    [scope_option] simple_value_specification
+  | identifier
+  | [scope_option] simple_value_specification
     ;
 
 scope_option =
@@ -517,6 +520,7 @@ data_type =
 predefined_type =
   | character_string_type ['CHARACTER' 'SET' character_set_name] [collate_clause]
   | national_character_string_type [collate_clause]
+  | binary_string_type
   | binary_large_object_string_type
   | numeric_type
   | 'BOOLEAN'
@@ -665,6 +669,7 @@ nonparenthesized_value_expression_primary =
   | column_reference
   | set_function_specification
   | window_function
+  | nested_window_function
   | subquery
   | case_expression
   | cast_specification
@@ -678,8 +683,8 @@ nonparenthesized_value_expression_primary =
   | collection_value_constructor
   | array_element_reference
   | multiset_element_reference
-  | routine_invocation
   | next_value_expression
+  | routine_invocation
     ;
 
 collection_value_constructor =
@@ -702,9 +707,11 @@ general_value_specification =
   | sql_parameter_reference
   | dynamic_parameter_specification
   | current_collation_specification
+  | 'CURRENT_CATALOG'
   | 'CURRENT_DEFAULT_TRANSFORM_GROUP'
   | 'CURRENT_PATH'
   | 'CURRENT_ROLE'
+  | 'CURRENT_SCHEMA'
   | 'CURRENT_TRANSFORM_GROUP_FOR_TYPE' schema_qualified_name
   | 'CURRENT_USER'
   | 'SESSION_USER'
@@ -728,7 +735,7 @@ target_specification =
     ;
 
 simple_target_specification =
-  | host_parameter_specification
+  | host_parameter_name
   | sql_parameter_reference
   | column_reference
     ;
@@ -803,6 +810,10 @@ window_function_type =
   | rank_function_type left_paren right_paren
   | 'ROW_NUMBER' left_paren right_paren
   | aggregate_function
+  | ntile_function
+  | lead_or_lag_function
+  | first_or_last_value_function
+  | nth_value_function
     ;
 
 rank_function_type =
@@ -868,6 +879,7 @@ when_operand =
   | character_like_predicate_part_2
   | octet_like_predicate_part_2
   | similar_predicate_part_2
+  | regex_like_predicate_part_2
   | null_predicate_part_2
   | quantified_comparison_predicate_part_2
   | normalized_predicate_part_2
@@ -1005,9 +1017,12 @@ numeric_primary =
 
 numeric_value_function =
   | position_expression
+  | regex_occurrences_function
+  | regex_position_expression
   | extract_expression
   | length_expression
   | cardinality_expression
+  | max_cardinality_expression
   | absolute_value_expression
   | modulus_expression
   | natural_logarithm
@@ -1025,7 +1040,7 @@ position_expression =
     ;
 
 string_position_expression =
-    'POSITION' left_paren string_value_expression 'IN' string_value_expression ['USING' char_length_units] right_paren
+    'POSITION' left_paren character_value_expression 'IN' character_value_expression ['USING' char_length_units] right_paren
     ;
 
 blob_position_expression =
@@ -1038,7 +1053,7 @@ length_expression =
     ;
 
 char_length_expression =
-    ('CHAR_LENGTH' | 'CHARACTER_LENGTH') left_paren string_value_expression ['USING' char_length_units] right_paren
+    ('CHAR_LENGTH' | 'CHARACTER_LENGTH') left_paren character_value_expression ['USING' char_length_units] right_paren
     ;
 
 octet_length_expression =
@@ -1153,9 +1168,11 @@ string_value_function =
 character_value_function =
   | character_substring_function
   | regular_expression_substring_function
+  | regex_substring_function
   | fold
   | transcoding
   | character_transliteration
+  | regex_transliteration
   | trim_function
   | character_overlay_function
   | normalize_function
@@ -1201,7 +1218,7 @@ character_overlay_function =
     ;
 
 normalize_function =
-    'NORMALIZE' left_paren character_value_expression right_paren
+    'NORMALIZE' left_paren character_value_expression [comma normal_form [comma normalize_function_result_length]] right_paren
     ;
 
 specific_type_method =
@@ -1362,7 +1379,8 @@ array_concatenation =
     ;
 
 array_primary =
-    value_expression_primary
+  | trim_array_function
+  | value_expression_primary
     ;
 
 array_value_constructor =
@@ -1383,7 +1401,7 @@ array_element =
     ;
 
 array_value_constructor_by_query =
-    'ARRAY' left_paren query_expression [order_by_clause] right_paren
+    'ARRAY' subquery
     ;
 
 multiset_value_expression =
@@ -1452,7 +1470,6 @@ row_value_constructor_element =
     value_expression
     ;
 
-# note originally was '(' contextually_typed_ROW_value_specification ')'
 contextually_typed_row_value_constructor =
   | common_value_expression
   | boolean_value_expression
@@ -1552,17 +1569,19 @@ repeatable_clause =
     ;
 
 table_primary =
-  | table_or_query_name [as_clause [left_paren column_name_list right_paren]]
+  | table_or_query_name [query_system_time_period_specification] [as_clause [left_paren column_name_list right_paren]]
   | subquery as_clause [left_paren column_name_list right_paren]
   | lateral_derived_table as_clause [left_paren column_name_list right_paren]
   | collection_derived_table as_clause [left_paren column_name_list right_paren]
   | table_function_derived_table as_clause [left_paren column_name_list right_paren]
   | only_spec [as_clause [left_paren column_name_list right_paren]]
+  | data_change_delta_table [as_clause [left_paren column_name_list right_paren]]
   | parenthesized_joined_table
     ;
 
 parenthesized_joined_table =
-    left_paren joined_table right_paren
+  | left_paren parenthesized_joined_table right_paren
+  | left_paren joined_table right_paren
     ;
 
 only_spec =
@@ -1574,7 +1593,7 @@ lateral_derived_table =
     ;
 
 collection_derived_table =
-    'UNNEST' left_paren collection_value_expression right_paren ['WITH' 'ORDINALITY']
+    'UNNEST' left_paren ','.{collection_value_expression} right_paren ['WITH' 'ORDINALITY']
     ;
 
 table_function_derived_table =
@@ -1601,11 +1620,11 @@ cross_join =
     ;
 
 qualified_join =
-    table_reference [join_type] 'JOIN' table_reference join_specification
+    (table_reference | partitioned_join_table) [join_type] 'JOIN' (table_reference | partitioned_join_table) join_specification
     ;
 
 natural_join =
-    table_reference 'NATURAL' [join_type] 'JOIN' table_factor
+    (table_reference | partitioned_join_table) 'NATURAL' [join_type] 'JOIN' (table_factor | partitioned_join_table)
     ;
 
 join_specification =
@@ -1740,6 +1759,7 @@ window_frame_clause =
 window_frame_units =
   | 'ROWS'
   | 'RANGE'
+  | 'GROUPS'
     ;
 
 window_frame_extent =
@@ -1810,7 +1830,7 @@ all_fields_reference =
     ;
 
 query_expression =
-    [with_clause] query_expression_body
+    [with_clause] query_expression_body [order_by_clause] [result_offset_clause] [fetch_first_clause]
     ;
 
 with_clause =
@@ -1838,7 +1858,7 @@ query_term =
 
 query_primary =
   | simple_table
-  | left_paren query_expression_body right_paren
+  | left_paren query_expression_body [order_by_clause] [result_offset_clause] [fetch_first_clause] right_paren
     ;
 
 simple_table =
@@ -1866,8 +1886,8 @@ search_clause =
     ;
 
 recursive_search_order =
-  | 'DEPTH' 'FIRST' 'BY' sort_specification_list
-  | 'BREADTH' 'FIRST' 'BY' sort_specification_list
+  | 'DEPTH' 'FIRST' 'BY' column_name_list
+  | 'BREADTH' 'FIRST' 'BY' column_name_list
     ;
 
 cycle_clause =
@@ -1888,6 +1908,7 @@ predicate =
   | in_predicate
   | like_predicate
   | similar_predicate
+  | regex_like_predicate
   | null_predicate
   | quantified_comparison_predicate
   | exists_predicate
@@ -1900,6 +1921,7 @@ predicate =
   | submultiset_predicate
   | set_predicate
   | type_predicate
+  | period_predicate
     ;
 
 comparison_predicate =
@@ -2012,7 +2034,7 @@ normalized_predicate =
     ;
 
 normalized_predicate_part_2 =
-    'IS' ['NOT'] 'NORMALIZED'
+    'IS' ['NOT'] [normal_form] 'NORMALIZED'
     ;
 
 match_predicate =
@@ -2156,6 +2178,8 @@ sql_argument =
   | value_expression
   | generalized_expression
   | target_specification
+  | contextually_typed_value_specification
+  | named_argument_specification
     ;
 
 generalized_expression =
@@ -2196,8 +2220,9 @@ constraint_name_definition =
     ;
 
 constraint_characteristics =
-  | constraint_check_time [['NOT'] 'DEFERRABLE']
-  | ['NOT'] 'DEFERRABLE' [constraint_check_time]
+  | constraint_check_time [['NOT'] 'DEFERRABLE'] [constraint_enforcement]
+  | ['NOT'] 'DEFERRABLE' [constraint_check_time] [constraint_enforcement]
+  | constraint_enforcement
     ;
 
 constraint_check_time =
@@ -2210,6 +2235,7 @@ aggregate_function =
   | general_set_function [filter_clause]
   | binary_set_function [filter_clause]
   | ordered_set_function [filter_clause]
+  | array_aggregate_function [filter_clause]
     ;
 
 general_set_function =
@@ -2360,7 +2386,7 @@ drop_behavior =
     ;
 
 table_definition =
-    'CREATE' [table_scope] 'TABLE' table_name table_contents_source ['ON' 'COMMIT' table_commit_action 'ROWS']
+    'CREATE' [table_scope] 'TABLE' table_name table_contents_source ['WITH' 'SYSTEM' 'VERSIONING'] ['ON' 'COMMIT' table_commit_action 'ROWS']
     ;
 
 table_contents_source =
@@ -2389,6 +2415,7 @@ table_element_list =
 
 table_element =
   | column_definition
+  | table_period_definition
   | table_constraint_definition
   | like_clause
     ;
@@ -2468,7 +2495,7 @@ with_or_without_data =
     ;
 
 column_definition =
-    identifier [data_type_or_domain_name] [default_clause | identity_column_specification | generation_clause] [{column_constraint_definition}+] [collate_clause]
+  identifier [data_type_or_domain_name] [default_clause | identity_column_specification | generation_clause | system_time_period_start_column_specification | system_time_period_end_column_specification] [{column_constraint_definition}+] [collate_clause]
     ;
 
 data_type_or_domain_name =
@@ -2515,6 +2542,8 @@ default_option =
   | 'CURRENT_ROLE'
   | 'SESSION_USER'
   | 'SYSTEM_USER'
+  | 'CURRENT_CATALOG'
+  | 'CURRENT_SCHEMA'
   | 'CURRENT_PATH'
   | implicitly_typed_value_specification
     ;
@@ -2530,7 +2559,7 @@ table_constraint =
     ;
 
 unique_constraint_definition =
-  | unique_specification left_paren column_name_list right_paren
+  | unique_specification left_paren column_name_list [comma without_overlap_specification] right_paren
   | 'UNIQUE' '(' 'VALUE' ')'
     ;
 
@@ -2540,7 +2569,7 @@ unique_specification =
     ;
 
 referential_constraint_definition =
-    'FOREIGN' 'KEY' left_paren column_name_list right_paren references_specification
+    'FOREIGN' 'KEY' left_paren column_name_list [comma referencing_period_specification] right_paren references_specification
     ;
 
 references_specification =
@@ -2554,7 +2583,7 @@ match_type =
     ;
 
 referenced_table_and_columns =
-    table_name [left_paren column_name_list right_paren]
+    table_name [left_paren column_name_list [comma referenced_period_specification] right_paren]
     ;
 
 referential_triggered_action =
@@ -2591,7 +2620,12 @@ alter_table_action =
   | alter_column_definition
   | drop_column_definition
   | add_table_constraint_definition
+  | alter_table_constraint_definition
   | drop_table_constraint_definition
+  | add_table_period_definition
+  | drop_table_period_definition
+  | add_system_versioning_clause
+  | drop_system_versioning_clause
     ;
 
 add_column_definition =
@@ -2605,9 +2639,14 @@ alter_column_definition =
 alter_column_action =
   | set_column_default_clause
   | drop_column_default_clause
+  | set_column_not_null_clause
+  | drop_column_not_null_clause
   | add_column_scope_clause
   | drop_column_scope_clause
+  | alter_column_data_type_clause
   | alter_identity_column_specification
+  | drop_identity_property_clause
+  | drop_column_generation_expression_clause
     ;
 
 set_column_default_clause =
@@ -2627,7 +2666,8 @@ drop_column_scope_clause =
     ;
 
 alter_identity_column_specification =
-    {alter_identity_column_option}+
+  | set_identity_column_generation_clause [{alter_identity_column_option}+]
+  | {alter_identity_column_option}+
     ;
 
 alter_identity_column_option =
@@ -2786,6 +2826,7 @@ trigger_definition =
 trigger_action_time =
   | 'BEFORE'
   | 'AFTER'
+  | 'INSTEAD' 'OF'
     ;
 
 trigger_event =
@@ -2846,6 +2887,7 @@ subtype_clause =
 
 representation =
   | predefined_type
+  | collection_type
   | member_list
     ;
 
@@ -3008,7 +3050,7 @@ sql_parameter_declaration_list =
     ;
 
 sql_parameter_declaration =
-    [parameter_mode] [identifier] parameter_type ['RESULT']
+    [parameter_mode] [identifier] parameter_type ['RESULT'] ['DEFAULT' parameter_default]
     ;
 
 parameter_mode =
@@ -3367,7 +3409,7 @@ alter_sequence_generator_option =
     ;
 
 alter_sequence_generator_restart_option =
-    'RESTART' 'WITH' signed_numeric_literal
+    'RESTART' ['WITH' signed_numeric_literal]
     ;
 
 drop_sequence_generator_statement =
@@ -3547,6 +3589,7 @@ sql_data_change_statement =
   | insert_statement
   | update_statement_positioned
   | update_statement_searched
+  | truncate_table_statement
   | merge_statement
     ;
 
@@ -3596,6 +3639,7 @@ sql_dynamic_statement =
 
 sql_dynamic_data_statement =
   | allocate_cursor_statement
+  | result_set_cursor
   | dynamic_open_statement
   | dynamic_fetch_statement
   | dynamic_close_statement
@@ -3632,7 +3676,7 @@ cursor_returnability =
     ;
 
 cursor_specification =
-    query_expression [order_by_clause] [updatability_clause]
+    query_expression [updatability_clause]
     ;
 
 updatability_clause =
@@ -3685,7 +3729,7 @@ target_table =
     ;
 
 delete_statement_searched =
-    'DELETE' 'FROM' target_table [as_clause] ['WHERE' search_condition]
+    'DELETE' 'FROM' target_table ['FOR' 'PORTION' 'OF' identifier 'FROM' point_in_time 'TO' point_in_time] [as_clause] ['WHERE' search_condition]
     ;
 
 insert_statement =
@@ -3729,11 +3773,11 @@ merge_when_clause =
     ;
 
 merge_when_matched_clause =
-    'WHEN' 'MATCHED' 'THEN' merge_update_specification
+    'WHEN' 'MATCHED' ['AND' search_condition] 'THEN' merge_update_or_delete_specification
     ;
 
 merge_when_not_matched_clause =
-    'WHEN' 'NOT' 'MATCHED' 'THEN' merge_insert_specification
+    'WHEN' 'NOT' 'MATCHED' ['AND' search_condition] 'THEN' merge_insert_specification
     ;
 
 merge_update_specification =
@@ -3758,7 +3802,7 @@ update_statement_positioned =
     ;
 
 update_statement_searched =
-    'UPDATE' target_table [as_clause] 'SET' set_clause_list ['WHERE' search_condition]
+    'UPDATE' target_table ['FOR' 'PORTION' 'OF' identifier 'FROM' point_in_time 'TO' point_in_time] [as_clause] 'SET' set_clause_list ['WHERE' search_condition]
     ;
 
 set_clause_list =
@@ -4141,7 +4185,7 @@ using_descriptor =
 
 described_object =
   | sql_statement_name
-  | 'CURSOR' extended_cursor_name 'STRUCTURE'
+  | 'CURSOR' cursor_name 'STRUCTURE'
     ;
 
 input_using_clause =
@@ -4183,20 +4227,15 @@ execute_immediate_statement =
     ;
 
 allocate_cursor_statement =
-    'ALLOCATE' extended_cursor_name cursor_intent
-    ;
-
-cursor_intent =
-  | statement_cursor
-  | result_set_cursor
+    'ALLOCATE' extended_cursor_name statement_cursor 'FOR' extended_statement_name
     ;
 
 statement_cursor =
-    [cursor_sensitivity] [cursor_scrollability] 'CURSOR' [cursor_holdability] [cursor_returnability] 'FOR' extended_statement_name
+    [cursor_sensitivity] [cursor_scrollability] 'CURSOR' [cursor_holdability] [cursor_returnability]
     ;
 
 result_set_cursor =
-    'FOR' 'PROCEDURE' specific_routine_designator
+    'ALLOCATE' cursor_name ['CURSOR'] 'FOR' 'PROCEDURE' specific_routine_designator
     ;
 
 dynamic_open_statement =
@@ -4236,6 +4275,7 @@ direct_sql_data_statement =
   | cursor_specification
   | insert_statement
   | update_statement_searched
+  | truncate_table_statement
   | merge_statement
   | temporary_table_declaration
     ;
@@ -4247,6 +4287,7 @@ get_diagnostics_statement =
 sql_diagnostics_information =
   | statement_information
   | condition_information
+  | all_information
     ;
 
 statement_information =
@@ -4271,7 +4312,7 @@ statement_information_item_name =
     ;
 
 condition_information =
-    ('EXCEPTION' | 'CONDITION') simple_value_specification ','.{condition_information_item}
+    'CONDITION' simple_value_specification ','.{condition_information_item}
     ;
 
 condition_information_item =
@@ -4306,6 +4347,439 @@ condition_information_item_name =
   | 'TRIGGER_CATALOG'
   | 'TRIGGER_NAME'
   | 'TRIGGER_SCHEMA'
+    ;
+
+named_argument_assignment_token =
+    '=>'
+    ;
+
+binary_string_type =
+  | 'BINARY' [left_paren length right_paren]
+  | 'BINARY' 'VARYING' left_paren length right_paren
+  | 'VARBINARY' left_paren length right_paren
+    ;
+
+max_cardinality_expression =
+    'ARRAY_MAX_CARDINALITY' left_paren array_value_expression right_paren
+    ;
+
+trim_array_function =
+    'TRIM_ARRAY' left_paren array_value_expression comma numeric_value_expression right_paren
+    ;
+
+data_change_delta_table =
+    result_option 'TABLE' left_paren data_change_statement right_paren
+    ;
+
+array_aggregate_function =
+    'ARRAY_AGG' left_paren value_expression ['ORDER' 'BY' sort_specification_list] right_paren
+    ;
+
+without_overlap_specification =
+    identifier 'WITHOUT' 'OVERLAPS'
+    ;
+
+parameter_default =
+  | value_expression
+  | contextually_typed_value_specification
+    ;
+
+all_information =
+    simple_target_specification equals_operator 'ALL' [all_qualifier]
+    ;
+
+all_qualifier =
+  | 'STATEMENT'
+  | 'CONDITION' [simple_value_specification]
+    ;
+
+ntile_function =
+    'NTILE' left_paren number_of_tiles right_paren
+    ;
+
+number_of_tiles =
+  | simple_value_specification
+  | dynamic_parameter_specification
+    ;
+
+lead_or_lag_function =
+    lead_or_lag left_paren value_expression [comma exact_numeric_literal [comma value_expression]] right_paren [null_treatment]
+    ;
+
+lead_or_lag =
+  | 'LEAD'
+  | 'LAG'
+    ;
+
+null_treatment =
+  | 'RESPECT' 'NULLS'
+  | 'IGNORE' 'NULLS'
+    ;
+
+first_or_last_value_function =
+    first_or_last_value left_paren value_expression right_paren [null_treatment]
+    ;
+
+first_or_last_value =
+  | 'FIRST_VALUE'
+  | 'LAST_VALUE'
+    ;
+
+nth_value_function =
+    'NTH_VALUE' left_paren value_expression comma nth_row right_paren [from_first_or_last] [null_treatment]
+    ;
+
+nth_row =
+  | simple_value_specification
+  | dynamic_parameter_specification
+    ;
+
+from_first_or_last =
+  | 'FROM' 'FIRST'
+  | 'FROM' 'LAST'
+    ;
+
+nested_window_function =
+  | nested_row_number_function
+  | value_of_expression_at_row
+    ;
+
+nested_row_number_function =
+    'ROW_NUMBER' left_paren row_marker right_paren
+    ;
+
+value_of_expression_at_row =
+    'VALUE_OF' left_paren value_expression 'AT' row_marker_expression [comma value_expression] right_paren
+    ;
+
+row_marker =
+  | 'BEGIN_PARTITION'
+  | 'BEGIN_FRAME'
+  | 'CURRENT_ROW'
+  | 'FRAME_ROW'
+  | 'END_FRAME'
+  | 'END_PARTITION'
+    ;
+
+row_marker_expression =
+    row_marker [row_marker_delta]
+    ;
+
+row_marker_delta =
+  | plus_sign row_marker_offset
+  | minus_sign row_marker_offset
+    ;
+
+row_marker_offset =
+  | simple_value_specification
+  | dynamic_parameter_specification
+    ;
+
+regex_occurrences_function =
+    'OCCURRENCES_REGEX' left_paren xquery_pattern ['FLAG' xquery_option_flag] 'IN' regex_subject_string ['FROM' start_position] ['USING' char_length_units] right_paren
+    ;
+
+xquery_pattern =
+    character_value_expression
+    ;
+
+xquery_option_flag =
+    character_value_expression
+    ;
+
+regex_subject_string =
+    character_value_expression
+    ;
+
+regex_position_expression =
+    'POSITION_REGEX' left_paren [regex_position_start_or_after] xquery_pattern ['FLAG' xquery_option_flag] 'IN' regex_subject_string ['FROM' start_position] ['USING' char_length_units] ['OCCURRENCE' regex_occurrence] ['GROUP' regex_capture_group] right_paren
+    ;
+
+regex_position_start_or_after =
+  | 'START'
+  | 'AFTER'
+    ;
+
+regex_occurrence =
+    numeric_value_expression
+    ;
+
+regex_capture_group =
+    numeric_value_expression
+    ;
+
+period_predicate =
+  | period_overlaps_predicate
+  | period_equals_predicate
+  | period_contains_predicate
+  | period_precedes_predicate
+  | period_succeeds_predicate
+  | period_immediately_precedes_predicate
+  | period_immediately_succeeds_predicate
+    ;
+
+period_overlaps_predicate =
+    period_predicand period_overlaps_predicate_part_2
+    ;
+
+period_overlaps_predicate_part_2 =
+    'OVERLAPS' period_predicand
+    ;
+
+period_predicand =
+  | identifier_chain
+  | 'PERIOD' left_paren datetime_value_expression comma datetime_value_expression right_paren
+    ;
+
+period_equals_predicate =
+    period_predicand period_equals_predicate_part_2
+    ;
+
+period_equals_predicate_part_2 =
+    'EQUALS' period_predicand
+    ;
+
+period_contains_predicate =
+    period_predicand period_contains_predicate_part_2
+    ;
+
+period_contains_predicate_part_2 =
+    'CONTAINS' period_or_point_in_time_predicand
+    ;
+
+period_or_point_in_time_predicand =
+  | period_predicand
+  | datetime_value_expression
+    ;
+
+period_precedes_predicate =
+    period_predicand period_precedes_predicate_part_2
+    ;
+
+period_precedes_predicate_part_2 =
+    'PRECEDES' period_predicand
+    ;
+
+period_succeeds_predicate =
+    period_predicand period_succeeds_predicate_part_2
+    ;
+
+period_succeeds_predicate_part_2 =
+    'SUCCEEDS' period_predicand
+    ;
+
+period_immediately_precedes_predicate =
+    period_predicand period_immediately_precedes_predicate_part_2
+    ;
+
+period_immediately_precedes_predicate_part_2 =
+    'IMMEDIATELY' 'PRECEDES' period_predicand
+    ;
+
+period_immediately_succeeds_predicate =
+    period_predicand period_immediately_succeeds_predicate_part_2
+    ;
+
+period_immediately_succeeds_predicate_part_2 =
+    'IMMEDIATELY' 'SUCCEEDS' period_predicand
+    ;
+
+table_period_definition =
+    system_or_application_time_period_specification left_paren identifier comma identifier right_paren
+    ;
+
+system_or_application_time_period_specification =
+  | system_time_period_specification
+  | application_time_period_specification
+    ;
+
+system_time_period_specification =
+    'PERIOD' 'FOR' 'SYSTEM_TIME'
+    ;
+
+application_time_period_specification =
+    'PERIOD' 'FOR' identifier
+    ;
+
+system_time_period_start_column_specification =
+    timestamp_generation_rule 'AS' 'ROW' 'START'
+    ;
+
+system_time_period_end_column_specification =
+    timestamp_generation_rule 'AS' 'ROW' 'END'
+    ;
+
+timestamp_generation_rule =
+    'GENERATED' 'ALWAYS'
+    ;
+
+referencing_period_specification =
+    'PERIOD' identifier
+    ;
+
+referenced_period_specification =
+    'PERIOD' identifier
+    ;
+
+regex_substring_function =
+    'SUBSTRING_REGEX' left_paren xquery_pattern ['FLAG' xquery_option_flag] 'IN' regex_subject_string ['FROM' start_position] ['USING' char_length_units] ['OCCURRENCE' regex_occurrence] ['GROUP' regex_capture_group] right_paren
+    ;
+
+regex_transliteration =
+    'TRANSLATE_REGEX' left_paren xquery_pattern ['FLAG' xquery_option_flag] 'IN' regex_subject_string ['WITH' character_value_expression] ['FROM' start_position] ['USING' char_length_units] ['OCCURRENCE' regex_transliteration_occurrence] right_paren
+    ;
+
+regex_transliteration_occurrence =
+  | regex_occurrence
+  | 'ALL'
+    ;
+
+normal_form =
+  | 'NFC'
+  | 'NFD'
+  | 'NFKC'
+  | 'NFKD'
+    ;
+
+normalize_function_result_length =
+  | length
+  | large_object_length
+    ;
+
+data_change_statement =
+  | delete_statement_searched
+  | insert_statement
+  | merge_statement
+  | update_statement_searched
+    ;
+
+result_option =
+  | 'FINAL'
+  | 'NEW'
+  | 'OLD'
+    ;
+
+partitioned_join_table =
+    table_factor 'PARTITION' 'BY' partitioned_join_column_reference_list
+    ;
+
+partitioned_join_column_reference_list =
+    left_paren ','.{partitioned_join_column_reference} right_paren
+    ;
+
+partitioned_join_column_reference =
+    column_reference
+    ;
+
+query_system_time_period_specification =
+  | 'FOR' 'SYSTEM_TIME' 'AS' 'OF' point_in_time
+  | 'FOR' 'SYSTEM_TIME' 'BETWEEN' ['ASYMMETRIC' | 'SYMMETRIC'] point_in_time 'AND' point_in_time
+  | 'FOR' 'SYSTEM_TIME' 'FROM' point_in_time 'TO' point_in_time
+    ;
+
+point_in_time =
+    datetime_value_expression
+    ;
+
+result_offset_clause =
+    'OFFSET' simple_value_specification ('ROW' | 'ROWS')
+    ;
+
+fetch_first_clause =
+    'FETCH' ('FIRST' | 'NEXT') [fetch_first_quantity] ('ROW' | 'ROWS') ('ONLY' | 'WITH' 'TIES')
+    ;
+
+fetch_first_quantity =
+  | simple_value_specification
+  | fetch_first_percentage
+    ;
+
+fetch_first_percentage =
+    simple_value_specification 'PERCENT'
+    ;
+
+regex_like_predicate =
+    row_value_predicand regex_like_predicate_part_2
+    ;
+
+regex_like_predicate_part_2 =
+    ['NOT'] 'LIKE_REGEX' xquery_pattern ['FLAG' xquery_option_flag]
+    ;
+
+named_argument_specification =
+    identifier named_argument_assignment_token named_argument_sql_argument
+    ;
+
+named_argument_sql_argument =
+  | value_expression
+  | target_specification
+  | contextually_typed_value_specification
+    ;
+
+alter_table_constraint_definition =
+    'ALTER' 'CONSTRAINT' schema_qualified_name constraint_enforcement
+    ;
+
+add_table_period_definition =
+    'ADD' table_period_definition [add_system_time_period_column_list]
+    ;
+
+add_system_time_period_column_list =
+    'ADD' ['COLUMN'] column_definition 'ADD' ['COLUMN'] column_definition
+    ;
+
+drop_table_period_definition =
+    'DROP' system_or_application_time_period_specification drop_behavior
+    ;
+
+add_system_versioning_clause =
+    'ADD' 'SYSTEM' 'VERSIONING'
+    ;
+
+drop_system_versioning_clause =
+    'DROP' 'SYSTEM' 'VERSIONING' drop_behavior
+    ;
+
+identity_column_restart_option =
+  | 'CONTINUE' 'IDENTITY'
+  | 'RESTART' 'IDENTITY'
+    ;
+
+merge_update_or_delete_specification =
+  | merge_update_specification
+  | 'DELETE'
+    ;
+
+set_column_not_null_clause =
+    'SET' 'NOT' 'NULL'
+    ;
+
+drop_column_not_null_clause =
+    'DROP' 'NOT' 'NULL'
+    ;
+
+alter_column_data_type_clause =
+    'SET' 'DATA' 'TYPE' data_type
+    ;
+
+set_identity_column_generation_clause =
+    'SET' 'GENERATED' ('ALWAYS' | 'BY' 'DEFAULT')
+    ;
+
+drop_identity_property_clause =
+    'DROP' 'IDENTITY'
+    ;
+
+drop_column_generation_expression_clause =
+    'DROP' 'EXPRESSION'
+    ;
+
+truncate_table_statement =
+    'TRUNCATE' 'TABLE' target_table [identity_column_restart_option]
+    ;
+
+constraint_enforcement =
+    ['NOT'] 'ENFORCED'
     ;
 
 start =

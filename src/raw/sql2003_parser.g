@@ -10,7 +10,7 @@ options
 }
 
 // !!WARNING!! This grammar requires 64bit Java 1.6 and heap size for AntlrWorks [1GB] and Antlr [8GB] or greater.
-// 
+//
 // !!WARNING!! Your PC or Mac will require 10GB RAM or greater!
 //
 // You need to specify the heap size separately for both AntlrWorks and for Antlr [when it is run by AntlrWorks]
@@ -40,7 +40,7 @@ options
 //        <key>JVMArchs</key>
 //        <array>
 //          <string>x86_64</string>
-//        </array> 
+//        </array>
 //    </dict>
 //
 // This SQL 2003 grammar has infinite look-ahead in some of the rules relating to SQL expressions.
@@ -736,66 +736,66 @@ non_reserved_word  :
 		 5.4 Names and identifiers (p151)
 */
 
-identifier   	   
-	options{k=1;} 
-	:  
+identifier
+	options{k=1;}
+	:
 	/*( non_reserved_word )=> non_reserved_word |*/ Regular_Identifier | Unicode_Identifier;
-sql_language_identifier          
-	options{k=1;}  				 
+sql_language_identifier
+	options{k=1;}
 	:  Regular_Identifier;
-user_identifier                  
-	options{k=1;}  				 
+user_identifier
+	options{k=1;}
 	:  Regular_Identifier;
-schema_name                      
-	options{k=1;}  				 
+schema_name
+	options{k=1;}
 	:  identifier  ( Period  identifier )? ;
-fully_qualified_identifier       
-	options{k=1;}  				 
+fully_qualified_identifier
+	options{k=1;}
 	:  identifier  ( Period  identifier (  Period  identifier )? )?;
 
-table_name                       
-	options{k=1;}  				 
+table_name
+	options{k=1;}
 	:  	( MODULE Period identifier
 		| identifier  ( Period  identifier (  Period  identifier )? )?
 		);
-cursor_name                      
-	options{k=1;}  				 
+cursor_name
+	options{k=1;}
 	:  ( MODULE  Period )? identifier ;
-external_routine_name            
-	options{k=1;}  				 
+external_routine_name
+	options{k=1;}
 	:  identifier  | Character_String_Literal  ;
-sql_statement_name               
-	options{k=1;}  				 
+sql_statement_name
+	options{k=1;}
 	:  identifier  | scoped_identifier ;
-dynamic_cursor_name              
-	options{k=1;}  				 
+dynamic_cursor_name
+	options{k=1;}
 	:  cursor_name  | scoped_identifier ;
-scoped_identifier                
-	options{k=1;}  				 
+scoped_identifier
+	options{k=1;}
 	:  ( scope_option  )? simple_value_specification ;
-scope_option                     
-	options{k=1;}  				 
+scope_option
+	options{k=1;}
 	:  GLOBAL | LOCAL;
 
-connection_name                  
-	options{k=1;}  				 
+connection_name
+	options{k=1;}
 	:  simple_value_specification ;
-sql_server_name                  
-	options{k=1;}  				 
+sql_server_name
+	options{k=1;}
 	:  simple_value_specification ;
-connection_user_name             
-	options{k=1;}  				 
+connection_user_name
+	options{k=1;}
 	:  simple_value_specification ;
 
-simple_value_specification  	 
-	options{k=1;}  				 
+simple_value_specification
+	options{k=1;}
 	:	literal
 	//|	host_parameter_name 	 // Colon identifier
 	|	identifier_chain 		 // identifier ( Period identifier )*
 	;
 
 column_reference
-	options{k=1;}  				 
+	options{k=1;}
 	: 	identifier_chain | MODULE Period identifier  Period identifier;
 identifier_chain   				 :  identifier  ( Period identifier  )*;
 
@@ -1262,27 +1262,27 @@ current_collation_specification   :  CURRENT_COLLATION Left_Paren string_value_e
 /*
 		 6.5 <contextually typed value specification> (p181)*/
 
-contextually_typed_value_specification  
+contextually_typed_value_specification
 	options {k=1;}
-	:	implicitly_typed_value_specification  
+	:	implicitly_typed_value_specification
 	| 	default_specification ;
 
-implicitly_typed_value_specification   
+implicitly_typed_value_specification
 	options {k=1;}
-	:  	null_specification  
+	:  	null_specification
 	| 	empty_specification ;
 
-null_specification   
+null_specification
 	options {k=1;}
 	:  NULL;
 
-empty_specification  
+empty_specification
 	options {k=1;}
 	:	ARRAY left_bracket_or_trigraph right_bracket_or_trigraph
 	|	MULTISET left_bracket_or_trigraph right_bracket_or_trigraph
 	;
 
-default_specification   
+default_specification
 	options {k=1;}
 	:  DEFAULT;
 
@@ -1310,7 +1310,7 @@ default_specification
 		 6.9 set_function_specification  (p191)
 */
 
-set_function_specification   
+set_function_specification
 	options{k=1;}
 	:  aggregate_function  | grouping_operation ;
 
@@ -1320,7 +1320,7 @@ grouping_operation   :  GROUPING Left_Paren column_reference  ( Comma column_ref
 		 6.10 window_function  (p193)
 */
 
-window_function   
+window_function
 	options {k=1;}
 	:  window_function_type  OVER window_name_or_specification ;
 
@@ -1342,7 +1342,7 @@ in_line_window_specification   :  window_specification ;
 
 		 6.11 case_expression  (p197)*/
 
-case_expression   
+case_expression
 	options{k=1;}
 	:  case_abbreviation  | case_specification ;
 
@@ -1421,7 +1421,7 @@ cast_target
 		 6.13 next_value_expression  (p216)
 */
 
-next_value_expression   
+next_value_expression
 	options{k=1;}
 	:  NEXT VALUE FOR fully_qualified_identifier ;
 
@@ -1439,7 +1439,7 @@ field_reference   :  value_expression_primary  Period identifier ;
 		 6.15 subtype_treatment  (p219)
 */
 
-subtype_treatment  
+subtype_treatment
 	options{k=1;}
 	:
 		TREAT Left_Paren subtype_operand  AS target_subtype  Right_Paren;
@@ -1480,7 +1480,7 @@ constructor_method_selection   :  routine_invocation ;
 
 		 6.17 static_method_invocation  (p223)*/
 
-static_method_invocation  
+static_method_invocation
 	options{k=1;}
 	:
 		fully_qualified_identifier  Double_Colon  identifier  ( sql_argument_list )?;
@@ -1532,7 +1532,7 @@ method_reference  :
 
 		 6.22 reference_resolution  (p232)*/
 
-reference_resolution   
+reference_resolution
 	options{k=1;}
 	:  DEREF Left_Paren reference_value_expression  Right_Paren;
 
@@ -1549,7 +1549,7 @@ array_element_reference  :
 /*
 		 6.24 multiset_element_reference  (p235)*/
 
-multiset_element_reference  
+multiset_element_reference
 	options{k=1;}
 	:
 		ELEMENT Left_Paren multiset_value_expression  Right_Paren;
@@ -2273,7 +2273,7 @@ explicit_row_value_constructor
 row_value_constructor_element_list  :
 		row_value_constructor_element  ( Comma row_value_constructor_element  )*;
 
-row_value_constructor_element   
+row_value_constructor_element
 	options {k=1;}
 	:  value_expression ;
 
@@ -2286,7 +2286,7 @@ contextually_typed_row_value_constructor
 	|	(ROW)? Left_Paren contextually_typed_row_value_constructor_element_list  Right_Paren
 	;
 
-contextually_typed_row_value_constructor_element_list  
+contextually_typed_row_value_constructor_element_list
 	options {k=1;}
 	:
 		contextually_typed_row_value_constructor_element
@@ -2454,7 +2454,7 @@ table_or_query_name   :  table_name  | identifier ;
 
 derived_column_list   :  column_name_list ;
 
-column_name_list   
+column_name_list
 	options {k=1;}
 	:  identifier  ( Comma identifier  )*;
 
@@ -2700,7 +2700,7 @@ with_list_element
 	:	identifier  ( Left_Paren with_column_list  Right_Paren )?
 		AS Left_Paren query_expression  Right_Paren ( search_or_cycle_clause  )?;
 
-with_column_list   
+with_column_list
 	options {k=1;}
 	:  column_name_list ;
 
@@ -2818,7 +2818,7 @@ non_cycle_mark_value   :  value_expression ;
 Specify a scalar value, a row, or a table derived from a query_expression .
 */
 
-scalar_subquery   
+scalar_subquery
 	options {k=1;}
 	:  subquery ;
 
@@ -3320,7 +3320,7 @@ routine_invocation
 	options{k=1;}
 	:	fully_qualified_identifier  sql_argument_list;
 
-sql_argument_list  
+sql_argument_list
 	options{k=1;}
 	:  Left_Paren ( sql_argument ( Comma sql_argument )* )? Right_Paren;
 
@@ -5299,15 +5299,15 @@ insert_columns_and_source
 
 // from_constructor  : ( Left_Paren insert_column_list  Right_Paren )? ( override_clause  )? contextually_typed_table_value_constructor ;
 
-override_clause   
+override_clause
 	options{k=1;}
 	:  OVERRIDING USER VALUE | OVERRIDING SYSTEM VALUE;
 
-from_default   
+from_default
 	options{k=1;}
 	:  DEFAULT VALUES;
 
-insert_column_list   
+insert_column_list
 	options{k=1;}
 	:  column_name_list ;
 
