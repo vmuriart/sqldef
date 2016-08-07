@@ -519,7 +519,6 @@ value_expr_primary =
   | oracle_functions
   | case_expr
   | cast_specification
-  | field_reference
   | subtype_treatment
   | method_invocation
   | static_method_invocation
@@ -735,10 +734,6 @@ next_value_expr =
     'NEXT' 'VALUE' 'FOR' schema_qualified_name
     ;
 
-field_reference =
-    value_expr period identifier
-    ;
-
 subtype_treatment =
     'TREAT' left_paren value_expr 'AS' target_subtype right_paren
     ;
@@ -749,12 +744,7 @@ target_subtype =
     ;
 
 method_invocation =
-  | direct_invocation
-  | generalized_invocation
-    ;
-
-direct_invocation =
-    value_expr period identifier [sql_argument_list]
+    generalized_invocation
     ;
 
 generalized_invocation =
@@ -786,7 +776,7 @@ multiset_element_reference =
     ;
 
 value_expr =
-  | [value_expr operators] common_term
+  | common_term [{operators common_term}+]
   | boolean_value_expr
     ;
 
@@ -908,7 +898,6 @@ character_value_function =
   | trim_function
   | character_overlay_function
   | normalize_function
-  | specific_type_method
     ;
 
 character_substring_function =
@@ -954,17 +943,13 @@ normalize_function =
     'NORMALIZE' parenthesized_value_expr_list
     ;
 
-specific_type_method =
-    value_expr period 'SPECIFICTYPE' [empty]
-    ;
-
 time_zone =
     'AT' time_zone_specifier
     ;
 
 time_zone_specifier =
   | 'LOCAL'
-  | 'TIME' 'ZONE' interval_primary [interval_qualifier]
+  | 'TIME' 'ZONE' value_expr [interval_qualifier]
     ;
 
 datetime_value_function =
@@ -973,11 +958,6 @@ datetime_value_function =
   | 'CURRENT_TIMESTAMP' [left_paren precision right_paren]
   | 'LOCALTIME' [left_paren precision right_paren]
   | 'LOCALTIMESTAMP' [left_paren precision right_paren]
-    ;
-
-interval_primary =
-  | value_expr
-  | interval_absolute_value_function
     ;
 
 interval_absolute_value_function =
