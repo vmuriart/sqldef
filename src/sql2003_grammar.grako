@@ -819,6 +819,10 @@ value_expression =
   | row_value_expression
     ;
 
+value_expression_list =
+    ','.{value_expression}
+    ;
+
 common_value_expression =
     [common_value_expression operators] common_term
     ;
@@ -1083,11 +1087,7 @@ array_value_constructor =
     ;
 
 array_value_constructor_by_enumeration =
-    'ARRAY' left_bracket_or_trigraph array_element_list right_bracket_or_trigraph
-    ;
-
-array_element_list =
-    ','.{value_expression}
+    'ARRAY' left_bracket_or_trigraph value_expression_list right_bracket_or_trigraph
     ;
 
 array_value_constructor_by_query =
@@ -1110,11 +1110,7 @@ multiset_value_constructor =
     ;
 
 multiset_value_constructor_by_enumeration =
-    'MULTISET' left_bracket_or_trigraph multiset_element_list right_bracket_or_trigraph
-    ;
-
-multiset_element_list =
-    ','.{value_expression}
+    'MULTISET' left_bracket_or_trigraph value_expression_list right_bracket_or_trigraph
     ;
 
 row_value_constructor =
@@ -1124,13 +1120,9 @@ row_value_constructor =
     ;
 
 explicit_row_value_constructor =
-  | left_paren value_expression comma row_value_constructor_element_list right_paren
-  | 'ROW' left_paren row_value_constructor_element_list right_paren
+  | left_paren value_expression comma value_expression_list right_paren
+  | 'ROW' left_paren value_expression_list right_paren
   | subquery
-    ;
-
-row_value_constructor_element_list =
-    ','.{value_expression}
     ;
 
 # note originally was '(' contextually_typed_ROW_value_specification ')'
@@ -1944,15 +1936,11 @@ ordered_set_function =
     ;
 
 hypothetical_set_function =
-    rank_function_type left_paren hypothetical_set_function_value_expression_list right_paren within_group_specification
+    rank_function_type left_paren value_expression_list right_paren within_group_specification
     ;
 
 within_group_specification =
     'WITHIN' 'GROUP' left_paren order_by_clause right_paren
-    ;
-
-hypothetical_set_function_value_expression_list =
-    ','.{value_expression}
     ;
 
 inverse_distribution_function =
