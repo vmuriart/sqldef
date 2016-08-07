@@ -1211,8 +1211,8 @@ table_reference_list =
     ;
 
 table_reference =
-  | table_factor
   | joined_table
+  | table_factor
     ;
 
 table_factor =
@@ -1595,11 +1595,11 @@ comparison_predicate_part_2 =
     ;
 
 comp_op =
-  | '='
-  | '!='
   | '>='
   | '<='
   | '<>'
+  | '!='
+  | '='
   | '<'
   | '>'
     ;
