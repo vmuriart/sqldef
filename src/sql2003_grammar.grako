@@ -523,7 +523,7 @@ parenthesized_value_expression =
 nonparenthesized_value_expression_primary =
   | unsigned_value_specification
   | column_reference
-  | set_function_specification
+  | grouping_operation
   | window_function
   | subquery
   | case_expression
@@ -615,7 +615,7 @@ target_array_reference =
     ;
 
 current_collation_specification =
-    'COLLATION' 'FOR' left_paren common_value_expression right_paren
+    'COLLATION' 'FOR' common_value_expression_list
     ;
 
 contextually_typed_value_specification =
@@ -646,23 +646,14 @@ sql_parameter_reference =
     identifier_chain
     ;
 
-set_function_specification =
-  | aggregate_function
-  | grouping_operation
-    ;
-
 grouping_operation =
     'GROUPING' left_paren ','.{column_reference} right_paren
     ;
 
 window_function =
-    window_function_type 'OVER' window_name_or_specification
-    ;
-
-window_function_type =
-  | rank_function_type left_paren right_paren
-  | 'ROW_NUMBER' left_paren right_paren
-  | aggregate_function
+  | rank_function_type empty 'OVER' window_name_or_specification
+  | 'ROW_NUMBER' empty 'OVER' window_name_or_specification
+  | aggregate_function ['OVER' window_name_or_specification]
     ;
 
 rank_function_type =
@@ -673,8 +664,8 @@ rank_function_type =
     ;
 
 window_name_or_specification =
-  | identifier
   | window_specification
+  | identifier
     ;
 
 case_expression =
@@ -683,8 +674,8 @@ case_expression =
     ;
 
 case_abbreviation =
-  | 'NULLIF' left_paren value_expression comma value_expression right_paren
-  | 'COALESCE' left_paren value_expression {comma value_expression}+ right_paren
+  | 'NULLIF' left_paren value_expression_list right_paren
+  | 'COALESCE' left_paren value_expression_list right_paren
     ;
 
 case_specification =
@@ -741,8 +732,8 @@ when_operand =
     ;
 
 result =
-  | value_expression
   | 'NULL'
+  | value_expression
     ;
 
 cast_specification =
@@ -810,7 +801,7 @@ array_element_reference =
     ;
 
 multiset_element_reference =
-    'ELEMENT' left_paren common_value_expression right_paren
+    'ELEMENT' common_value_expression_list
     ;
 
 value_expression =
@@ -828,7 +819,7 @@ common_value_expression =
     ;
 
 common_value_expression_list =
-    ','.{common_value_expression}
+    left_paren ','.{common_value_expression} right_paren
     ;
 
 common_term =
@@ -838,7 +829,6 @@ common_term =
 common_primary =
   | numeric_value_function
   | character_value_function
-  | blob_value_function
   | datetime_value_function
   | multiset_set_function
   | interval_absolute_value_function
@@ -869,22 +859,13 @@ numeric_value_function =
     ;
 
 position_expression =
-  | string_position_expression
-  | blob_position_expression
-    ;
-
-string_position_expression =
     'POSITION' left_paren common_value_expression 'IN' common_value_expression ['USING' char_length_units] right_paren
-    ;
-
-blob_position_expression =
-    'POSITION' left_paren common_value_expression 'IN' common_value_expression right_paren
     ;
 
 length_expression =
   | 'CHAR_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
   | 'CHARACTER_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
-  | 'OCTET_LENGTH' left_paren common_value_expression right_paren
+  | 'OCTET_LENGTH' common_value_expression_list
     ;
 
 extract_expression =
@@ -902,44 +883,44 @@ time_zone_field =
     ;
 
 cardinality_expression =
-    'CARDINALITY' left_paren common_value_expression right_paren
+    'CARDINALITY' common_value_expression_list
     ;
 
 absolute_value_expression =
-    'ABS' left_paren common_value_expression right_paren
+    'ABS' common_value_expression_list
     ;
 
 modulus_expression =
-    'MOD' left_paren common_value_expression_list right_paren
+    'MOD' common_value_expression_list
     ;
 
 natural_logarithm =
-    'LN' left_paren common_value_expression right_paren
+    'LN' common_value_expression_list
     ;
 
 exponential_function =
-    'EXP' left_paren common_value_expression right_paren
+    'EXP' common_value_expression_list
     ;
 
 power_function =
-    'POWER' left_paren common_value_expression_list right_paren
+    'POWER' common_value_expression_list
     ;
 
 square_root =
-    'SQRT' left_paren common_value_expression right_paren
+    'SQRT' common_value_expression_list
     ;
 
 floor_function =
-    'FLOOR' left_paren common_value_expression right_paren
+    'FLOOR' common_value_expression_list
     ;
 
 ceiling_function =
-  | 'CEIL' left_paren common_value_expression right_paren
-  | 'CEILING' left_paren common_value_expression right_paren
+  | 'CEIL' common_value_expression_list
+  | 'CEILING' common_value_expression_list
     ;
 
 width_bucket_function =
-    'WIDTH_BUCKET' left_paren common_value_expression_list right_paren
+    'WIDTH_BUCKET' common_value_expression_list
     ;
 
 character_value_function =
@@ -963,8 +944,8 @@ regular_expression_substring_function =
     ;
 
 fold =
-  | 'UPPER' left_paren common_value_expression right_paren
-  | 'LOWER' left_paren common_value_expression right_paren
+  | 'UPPER' common_value_expression_list
+  | 'LOWER' common_value_expression_list
     ;
 
 transcoding =
@@ -994,33 +975,11 @@ character_overlay_function =
     ;
 
 normalize_function =
-    'NORMALIZE' left_paren common_value_expression right_paren
+    'NORMALIZE' common_value_expression_list
     ;
 
 specific_type_method =
-    value_expression_primary period 'SPECIFICTYPE' [left_paren right_paren]
-    ;
-
-blob_value_function =
-  | blob_substring_function
-  | blob_trim_function
-  | blob_overlay_function
-    ;
-
-blob_substring_function =
-    'SUBSTRING' left_paren common_value_expression 'FROM' common_value_expression ['FOR' common_value_expression] right_paren
-    ;
-
-blob_trim_function =
-    'TRIM' left_paren blob_trim_operands right_paren
-    ;
-
-blob_trim_operands =
-    [[trim_specification] [common_value_expression] 'FROM'] common_value_expression
-    ;
-
-blob_overlay_function =
-    'OVERLAY' left_paren common_value_expression 'PLACING' common_value_expression 'FROM' common_value_expression ['FOR' common_value_expression] right_paren
+    value_expression_primary period 'SPECIFICTYPE' [empty]
     ;
 
 time_zone =
@@ -1046,15 +1005,16 @@ interval_primary =
     ;
 
 interval_absolute_value_function =
-    'ABS' left_paren common_value_expression right_paren
+    'ABS' common_value_expression_list
     ;
 
 boolean_value_expression =
-    [boolean_value_expression 'OR'] boolean_term
+    [boolean_value_expression and_or] boolean_factor
     ;
 
-boolean_term =
-    [boolean_term 'AND'] boolean_factor
+and_or =
+  | 'AND'
+  | 'OR'
     ;
 
 boolean_factor =
@@ -1104,7 +1064,7 @@ all_distinct =
     ;
 
 multiset_set_function =
-    'SET' left_paren common_value_expression right_paren
+    'SET' common_value_expression_list
     ;
 
 multiset_value_constructor =
@@ -1153,27 +1113,23 @@ row_value_constructor_predicand =
     ;
 
 row_value_expression =
-  | row_value_special_case
+  | nonparenthesized_value_expression_primary
   | explicit_row_value_constructor
     ;
 
 table_row_value_expression =
-  | row_value_special_case
+  | nonparenthesized_value_expression_primary
   | row_value_constructor
     ;
 
 contextually_typed_row_value_expression =
-  | row_value_special_case
+  | nonparenthesized_value_expression_primary
   | contextually_typed_row_value_constructor
     ;
 
 row_value_predicand =
-  | row_value_special_case
+  | nonparenthesized_value_expression_primary
   | row_value_constructor_predicand
-    ;
-
-row_value_special_case =
-    nonparenthesized_value_expression_primary
     ;
 
 table_value_constructor =
@@ -1193,7 +1149,11 @@ contextually_typed_row_value_expression_list =
     ;
 
 table_expression =
-    from_clause [where_clause] [group_by_clause] [having_clause] [window_clause]
+    from_clause [where_clause] [group_by_clause] [having_clause] [window_clause] [connect_clause]
+    ;
+
+connect_clause =
+    'CONNECT' 'BY' search_condition
     ;
 
 from_clause =
@@ -1214,7 +1174,7 @@ table_factor =
     ;
 
 sample_clause =
-    'TABLESAMPLE' sample_method left_paren common_value_expression right_paren [repeatable_clause]
+    'TABLESAMPLE' sample_method common_value_expression_list [repeatable_clause]
     ;
 
 sample_method =
@@ -1223,12 +1183,12 @@ sample_method =
     ;
 
 repeatable_clause =
-    'REPEATABLE' left_paren common_value_expression right_paren
+    'REPEATABLE' common_value_expression_list
     ;
 
 table_primary =
   | table_or_query_name [as_clause [parenthesized_column_name_list]]
-  | subquery as_clause [parenthesized_column_name_list]
+  | subquery [as_clause [parenthesized_column_name_list]]
   | lateral_derived_table as_clause [parenthesized_column_name_list]
   | collection_derived_table as_clause [parenthesized_column_name_list]
   | table_function_derived_table as_clause [parenthesized_column_name_list]
@@ -1253,11 +1213,11 @@ lateral_derived_table =
     ;
 
 collection_derived_table =
-    'UNNEST' left_paren common_value_expression right_paren ['WITH' 'ORDINALITY']
+    'UNNEST' common_value_expression_list ['WITH' 'ORDINALITY']
     ;
 
 table_function_derived_table =
-    'TABLE' left_paren common_value_expression right_paren
+    'TABLE' common_value_expression_list
     ;
 
 table_or_query_name =
@@ -1328,7 +1288,7 @@ grouping_element =
   | rollup_list
   | cube_list
   | grouping_sets_specification
-  | empty_grouping_set
+  | empty
     ;
 
 ordinary_grouping_set =
@@ -1369,10 +1329,10 @@ grouping_set =
   | rollup_list
   | cube_list
   | grouping_sets_specification
-  | empty_grouping_set
+  | empty
     ;
 
-empty_grouping_set =
+empty =
     left_paren right_paren
     ;
 
@@ -1914,7 +1874,7 @@ filter_clause =
     ;
 
 binary_set_function =
-    binary_set_function_type left_paren common_value_expression_list right_paren
+    binary_set_function_type common_value_expression_list
     ;
 
 binary_set_function_type =
@@ -1946,7 +1906,7 @@ within_group_specification =
     ;
 
 inverse_distribution_function =
-    inverse_distribution_function_type left_paren common_value_expression right_paren within_group_specification
+    inverse_distribution_function_type common_value_expression_list within_group_specification
     ;
 
 inverse_distribution_function_type =
