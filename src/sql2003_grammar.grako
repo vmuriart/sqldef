@@ -512,17 +512,7 @@ field_definition =
     ;
 
 value_expression_primary =
-  | parenthesized_value_expression
-  | nonparenthesized_value_expression_primary
-    ;
-
-parenthesized_value_expression =
-    left_paren value_expression right_paren
-    ;
-
-nonparenthesized_value_expression_primary =
-  | unsigned_value_specification
-  | column_reference
+  | left_paren value_expression right_paren
   | grouping_operation
   | window_function
   | subquery
@@ -541,14 +531,16 @@ nonparenthesized_value_expression_primary =
   | multiset_element_reference
   | routine_invocation
   | next_value_expression
+  | column_reference
+  | unsigned_value_specification
     ;
 
 oracle_functions =
-  | 'SUBSTR' common_value_expression_list
-  | 'REGEXP_SUBSTR' common_value_expression_list
-  | 'REGEXP_REPLACE' common_value_expression_list
-  | 'LENGTH' common_value_expression_list
-  | 'DECODE' common_value_expression_list
+  | 'SUBSTR' parenthesized_value_expression_list
+  | 'REGEXP_SUBSTR' parenthesized_value_expression_list
+  | 'REGEXP_REPLACE' parenthesized_value_expression_list
+  | 'LENGTH' parenthesized_value_expression_list
+  | 'DECODE' parenthesized_value_expression_list
     ;
 
 collection_value_constructor =
@@ -624,7 +616,7 @@ target_array_reference =
     ;
 
 current_collation_specification =
-    'COLLATION' 'FOR' common_value_expression_list
+    'COLLATION' 'FOR' parenthesized_value_expression_list
     ;
 
 contextually_typed_value_specification =
@@ -683,8 +675,8 @@ case_expression =
     ;
 
 case_abbreviation =
-  | 'NULLIF' left_paren value_expression_list right_paren
-  | 'COALESCE' left_paren value_expression_list right_paren
+  | 'NULLIF' parenthesized_value_expression_list
+  | 'COALESCE' parenthesized_value_expression_list
     ;
 
 case_specification =
@@ -713,7 +705,7 @@ else_clause =
     ;
 
 case_operand =
-    row_value_predicand
+    value_expression
     ;
 
 when_operand_list =
@@ -721,7 +713,7 @@ when_operand_list =
     ;
 
 when_operand =
-  | row_value_predicand
+  | value_expression
   | comparison_predicate_part_2
   | between_predicate_part_2
   | in_predicate_part_2
@@ -810,13 +802,17 @@ array_element_reference =
     ;
 
 multiset_element_reference =
-    'ELEMENT' common_value_expression_list
+    'ELEMENT' parenthesized_value_expression_list
     ;
 
 value_expression =
   | common_value_expression
   | boolean_value_expression
-  | row_value_expression
+  | value_expression_primary
+  | contextually_typed_value_specification
+  | left_paren contextually_typed_value_specification right_paren
+  | ['ROW'] parenthesized_value_expression_list
+  | subquery
     ;
 
 value_expression_list =
@@ -827,8 +823,8 @@ common_value_expression =
     [common_value_expression operators] common_term
     ;
 
-common_value_expression_list =
-    left_paren ','.{common_value_expression} right_paren
+parenthesized_value_expression_list =
+    left_paren value_expression_list right_paren
     ;
 
 common_term =
@@ -874,7 +870,7 @@ position_expression =
 length_expression =
   | 'CHAR_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
   | 'CHARACTER_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
-  | 'OCTET_LENGTH' common_value_expression_list
+  | 'OCTET_LENGTH' parenthesized_value_expression_list
     ;
 
 extract_expression =
@@ -892,44 +888,44 @@ time_zone_field =
     ;
 
 cardinality_expression =
-    'CARDINALITY' common_value_expression_list
+    'CARDINALITY' parenthesized_value_expression_list
     ;
 
 absolute_value_expression =
-    'ABS' common_value_expression_list
+    'ABS' parenthesized_value_expression_list
     ;
 
 modulus_expression =
-    'MOD' common_value_expression_list
+    'MOD' parenthesized_value_expression_list
     ;
 
 natural_logarithm =
-    'LN' common_value_expression_list
+    'LN' parenthesized_value_expression_list
     ;
 
 exponential_function =
-    'EXP' common_value_expression_list
+    'EXP' parenthesized_value_expression_list
     ;
 
 power_function =
-    'POWER' common_value_expression_list
+    'POWER' parenthesized_value_expression_list
     ;
 
 square_root =
-    'SQRT' common_value_expression_list
+    'SQRT' parenthesized_value_expression_list
     ;
 
 floor_function =
-    'FLOOR' common_value_expression_list
+    'FLOOR' parenthesized_value_expression_list
     ;
 
 ceiling_function =
-  | 'CEIL' common_value_expression_list
-  | 'CEILING' common_value_expression_list
+  | 'CEIL' parenthesized_value_expression_list
+  | 'CEILING' parenthesized_value_expression_list
     ;
 
 width_bucket_function =
-    'WIDTH_BUCKET' common_value_expression_list
+    'WIDTH_BUCKET' parenthesized_value_expression_list
     ;
 
 character_value_function =
@@ -953,8 +949,8 @@ regular_expression_substring_function =
     ;
 
 fold =
-  | 'UPPER' common_value_expression_list
-  | 'LOWER' common_value_expression_list
+  | 'UPPER' parenthesized_value_expression_list
+  | 'LOWER' parenthesized_value_expression_list
     ;
 
 transcoding =
@@ -984,7 +980,7 @@ character_overlay_function =
     ;
 
 normalize_function =
-    'NORMALIZE' common_value_expression_list
+    'NORMALIZE' parenthesized_value_expression_list
     ;
 
 specific_type_method =
@@ -1014,7 +1010,7 @@ interval_primary =
     ;
 
 interval_absolute_value_function =
-    'ABS' common_value_expression_list
+    'ABS' parenthesized_value_expression_list
     ;
 
 boolean_value_expression =
@@ -1047,7 +1043,7 @@ boolean_primary =
 
 boolean_predicand =
   | parenthesized_boolean_value_expression
-  | nonparenthesized_value_expression_primary
+  | value_expression_primary
     ;
 
 parenthesized_boolean_value_expression =
@@ -1073,7 +1069,7 @@ all_distinct =
     ;
 
 multiset_set_function =
-    'SET' common_value_expression_list
+    'SET' parenthesized_value_expression_list
     ;
 
 multiset_value_constructor =
@@ -1086,75 +1082,8 @@ multiset_value_constructor_by_enumeration =
     'MULTISET' left_bracket_or_trigraph value_expression_list right_bracket_or_trigraph
     ;
 
-row_value_constructor =
-  | common_value_expression
-  | boolean_value_expression
-  | explicit_row_value_constructor
-    ;
-
-explicit_row_value_constructor =
-  | ['ROW'] left_paren value_expression_list right_paren
-  | subquery
-    ;
-
-# note originally was '(' contextually_typed_ROW_value_specification ')'
-contextually_typed_row_value_constructor =
-  | common_value_expression
-  | boolean_value_expression
-  | contextually_typed_value_specification
-  | left_paren contextually_typed_value_specification right_paren
-  | ['ROW'] left_paren contextually_typed_row_value_constructor_element_list right_paren
-    ;
-
-contextually_typed_row_value_constructor_element_list =
-    ','.{contextually_typed_row_value_constructor_element}
-    ;
-
-contextually_typed_row_value_constructor_element =
-  | value_expression
-  | contextually_typed_value_specification
-    ;
-
-row_value_constructor_predicand =
-  | common_value_expression
-  | boolean_predicand
-  | explicit_row_value_constructor
-    ;
-
-row_value_expression =
-  | nonparenthesized_value_expression_primary
-  | explicit_row_value_constructor
-    ;
-
-table_row_value_expression =
-  | nonparenthesized_value_expression_primary
-  | row_value_constructor
-    ;
-
-contextually_typed_row_value_expression =
-  | nonparenthesized_value_expression_primary
-  | contextually_typed_row_value_constructor
-    ;
-
-row_value_predicand =
-  | nonparenthesized_value_expression_primary
-  | row_value_constructor_predicand
-    ;
-
 table_value_constructor =
-    'VALUES' row_value_expression_list
-    ;
-
-row_value_expression_list =
-    ','.{table_row_value_expression}
-    ;
-
-contextually_typed_table_value_constructor =
-    'VALUES' contextually_typed_row_value_expression_list
-    ;
-
-contextually_typed_row_value_expression_list =
-    ','.{contextually_typed_row_value_expression}
+    'VALUES' value_expression_list
     ;
 
 table_expression =
@@ -1183,7 +1112,7 @@ table_factor =
     ;
 
 sample_clause =
-    'TABLESAMPLE' sample_method common_value_expression_list [repeatable_clause]
+    'TABLESAMPLE' sample_method parenthesized_value_expression_list [repeatable_clause]
     ;
 
 sample_method =
@@ -1192,7 +1121,7 @@ sample_method =
     ;
 
 repeatable_clause =
-    'REPEATABLE' common_value_expression_list
+    'REPEATABLE' parenthesized_value_expression_list
     ;
 
 table_primary =
@@ -1222,11 +1151,11 @@ lateral_derived_table =
     ;
 
 collection_derived_table =
-    'UNNEST' common_value_expression_list ['WITH' 'ORDINALITY']
+    'UNNEST' parenthesized_value_expression_list ['WITH' 'ORDINALITY']
     ;
 
 table_function_derived_table =
-    'TABLE' common_value_expression_list
+    'TABLE' parenthesized_value_expression_list
     ;
 
 table_or_query_name =
@@ -1550,11 +1479,11 @@ predicate =
     ;
 
 comparison_predicate =
-    row_value_predicand comparison_predicate_part_2
+    value_expression comparison_predicate_part_2
     ;
 
 comparison_predicate_part_2 =
-    comp_op row_value_predicand
+    comp_op value_expression
     ;
 
 comp_op =
@@ -1568,11 +1497,11 @@ comp_op =
     ;
 
 between_predicate =
-    row_value_predicand between_predicate_part_2
+    value_expression between_predicate_part_2
     ;
 
 between_predicate_part_2 =
-    ['NOT'] 'BETWEEN' [a_symmetric] row_value_predicand 'AND' row_value_predicand
+    ['NOT'] 'BETWEEN' [a_symmetric] value_expression 'AND' value_expression
     ;
 
 a_symmetric =
@@ -1581,7 +1510,7 @@ a_symmetric =
     ;
 
 in_predicate =
-    row_value_predicand in_predicate_part_2
+    value_expression in_predicate_part_2
     ;
 
 in_predicate_part_2 =
@@ -1590,11 +1519,7 @@ in_predicate_part_2 =
 
 in_predicate_value =
   | subquery
-  | left_paren in_value_list right_paren
-    ;
-
-in_value_list =
-    ','.{row_value_expression}
+  | parenthesized_value_expression_list
     ;
 
 like_predicate =
@@ -1603,7 +1528,7 @@ like_predicate =
     ;
 
 character_like_predicate =
-    row_value_predicand character_like_predicate_part_2
+    value_expression character_like_predicate_part_2
     ;
 
 character_like_predicate_part_2 =
@@ -1611,7 +1536,7 @@ character_like_predicate_part_2 =
     ;
 
 octet_like_predicate =
-    row_value_predicand octet_like_predicate_part_2
+    value_expression octet_like_predicate_part_2
     ;
 
 octet_like_predicate_part_2 =
@@ -1619,7 +1544,7 @@ octet_like_predicate_part_2 =
     ;
 
 similar_predicate =
-    row_value_predicand similar_predicate_part_2
+    value_expression similar_predicate_part_2
     ;
 
 similar_predicate_part_2 =
@@ -1627,7 +1552,7 @@ similar_predicate_part_2 =
     ;
 
 null_predicate =
-    row_value_predicand null_predicate_part_2
+    value_expression null_predicate_part_2
     ;
 
 null_predicate_part_2 =
@@ -1635,7 +1560,7 @@ null_predicate_part_2 =
     ;
 
 quantified_comparison_predicate =
-    row_value_predicand quantified_comparison_predicate_part_2
+    value_expression quantified_comparison_predicate_part_2
     ;
 
 quantified_comparison_predicate_part_2 =
@@ -1657,7 +1582,7 @@ unique_predicate =
     ;
 
 normalized_predicate =
-    row_value_predicand normalized_predicate_part_2
+    value_expression normalized_predicate_part_2
     ;
 
 normalized_predicate_part_2 =
@@ -1665,7 +1590,7 @@ normalized_predicate_part_2 =
     ;
 
 match_predicate =
-    row_value_predicand match_predicate_part_2
+    value_expression match_predicate_part_2
     ;
 
 match_predicate_part_2 =
@@ -1673,23 +1598,23 @@ match_predicate_part_2 =
     ;
 
 overlaps_predicate =
-    row_value_predicand overlaps_predicate_part_2
+    value_expression overlaps_predicate_part_2
     ;
 
 overlaps_predicate_part_2 =
-    'OVERLAPS' row_value_predicand
+    'OVERLAPS' value_expression
     ;
 
 distinct_predicate =
-    row_value_predicand distinct_predicate_part_2
+    value_expression distinct_predicate_part_2
     ;
 
 distinct_predicate_part_2 =
-    'IS' ['NOT'] 'DISTINCT' 'FROM' row_value_predicand
+    'IS' ['NOT'] 'DISTINCT' 'FROM' value_expression
     ;
 
 member_predicate =
-    row_value_predicand member_predicate_part_2
+    value_expression member_predicate_part_2
     ;
 
 member_predicate_part_2 =
@@ -1697,7 +1622,7 @@ member_predicate_part_2 =
     ;
 
 submultiset_predicate =
-    row_value_predicand submultiset_predicate_part_2
+    value_expression submultiset_predicate_part_2
     ;
 
 submultiset_predicate_part_2 =
@@ -1705,7 +1630,7 @@ submultiset_predicate_part_2 =
     ;
 
 set_predicate =
-    row_value_predicand set_predicate_part_2
+    value_expression set_predicate_part_2
     ;
 
 set_predicate_part_2 =
@@ -1713,7 +1638,7 @@ set_predicate_part_2 =
     ;
 
 type_predicate =
-    row_value_predicand type_predicate_part_2
+    value_expression type_predicate_part_2
     ;
 
 type_predicate_part_2 =
@@ -1885,7 +1810,7 @@ filter_clause =
     ;
 
 binary_set_function =
-    binary_set_function_type common_value_expression_list
+    binary_set_function_type parenthesized_value_expression_list
     ;
 
 binary_set_function_type =
@@ -1909,7 +1834,7 @@ ordered_set_function =
     ;
 
 hypothetical_set_function =
-    rank_function_type left_paren value_expression_list right_paren within_group_specification
+    rank_function_type parenthesized_value_expression_list within_group_specification
     ;
 
 within_group_specification =
@@ -1917,7 +1842,7 @@ within_group_specification =
     ;
 
 inverse_distribution_function =
-    inverse_distribution_function_type common_value_expression_list within_group_specification
+    inverse_distribution_function_type parenthesized_value_expression_list within_group_specification
     ;
 
 inverse_distribution_function_type =
@@ -2110,7 +2035,7 @@ identity_column_specification =
     ;
 
 generation_clause =
-    'GENERATED' 'ALWAYS' 'AS' parenthesized_value_expression
+    'GENERATED' 'ALWAYS' 'AS' parenthesized_value_expression_list
     ;
 
 default_clause =
@@ -3008,13 +2933,13 @@ privileges =
     ;
 
 object_name =
-  | ['TABLE'] table_name
   | 'DOMAIN' schema_qualified_name
   | 'COLLATION' schema_qualified_name
   | 'CHARACTER' 'SET' character_set_name
   | 'TRANSLATION' schema_qualified_name
   | 'TYPE' schema_qualified_name
   | 'SEQUENCE' schema_qualified_name
+  | ['TABLE'] table_name
   | specific_routine_designator
     ;
 
@@ -3323,7 +3248,7 @@ from_subquery =
     ;
 
 from_constructor =
-    [parenthesized_column_name_list] [override_clause] contextually_typed_table_value_constructor
+    [parenthesized_column_name_list] [override_clause] table_value_constructor
     ;
 
 override_clause =
@@ -3361,16 +3286,7 @@ merge_update_specification =
     ;
 
 merge_insert_specification =
-    'INSERT' [parenthesized_column_name_list] [override_clause] 'VALUES' merge_insert_value_list
-    ;
-
-merge_insert_value_list =
-    left_paren ','.{merge_insert_value_element} right_paren
-    ;
-
-merge_insert_value_element =
-  | value_expression
-  | contextually_typed_value_specification
+    'INSERT' [parenthesized_column_name_list] [override_clause] 'VALUES' parenthesized_value_expression_list
     ;
 
 update_statement_positioned =
@@ -3387,7 +3303,7 @@ set_clause_list =
 
 set_clause =
   | multiple_column_assignment
-  | set_target '=' update_source
+  | set_target '=' value_expression
     ;
 
 set_target =
@@ -3396,7 +3312,7 @@ set_target =
     ;
 
 multiple_column_assignment =
-    set_target_list '=' contextually_typed_row_value_expression
+    set_target_list '=' value_expression
     ;
 
 set_target_list =
@@ -3415,11 +3331,6 @@ mutated_set_clause =
 mutated_target =
   | identifier
   | mutated_set_clause
-    ;
-
-update_source =
-  | value_expression
-  | contextually_typed_value_specification
     ;
 
 temporary_table_declaration =
