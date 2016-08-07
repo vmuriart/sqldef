@@ -280,16 +280,6 @@ extract_field =
   | 'TIMEZONE_MINUTE'
     ;
 
-trim_operands =
-    [[trim_spec] [value_expr] 'FROM'] value_expr
-    ;
-
-trim_spec =
-  | 'LEADING'
-  | 'TRAILING'
-  | 'BOTH'
-    ;
-
 boolean_value_expr =
     ['NOT'] boolean_primary [{and_or ['NOT'] boolean_primary}+]
     ;

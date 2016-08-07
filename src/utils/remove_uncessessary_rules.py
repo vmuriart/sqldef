@@ -16,7 +16,7 @@ def process(text, start=None):
 
     # List of rule paths to check and leave. Any not needed will be removed
     if start is None:
-        start = ['cursor_specification']
+        start = ['start']
 
     rules_required = set(start)
 
