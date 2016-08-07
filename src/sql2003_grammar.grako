@@ -511,13 +511,13 @@ field_definition =
     identifier data_type
     ;
 
-value_expression_primary =
-  | left_paren value_expression right_paren
+value_expr_primary =
+  | ['ROW'] parenthesized_value_expr_list
   | grouping_operation
   | window_function
   | subquery
   | oracle_functions
-  | case_expression
+  | case_expr
   | cast_specification
   | field_reference
   | subtype_treatment
@@ -530,17 +530,21 @@ value_expression_primary =
   | array_element_reference
   | multiset_element_reference
   | routine_invocation
-  | next_value_expression
+  | next_value_expr
   | column_reference
   | unsigned_value_specification
+  | 'ARRAY' left_bracket_or_trigraph right_bracket_or_trigraph
+  | 'MULTISET' left_bracket_or_trigraph right_bracket_or_trigraph
+  | 'DEFAULT'
+  | 'NULL'
     ;
 
 oracle_functions =
-  | 'SUBSTR' parenthesized_value_expression_list
-  | 'REGEXP_SUBSTR' parenthesized_value_expression_list
-  | 'REGEXP_REPLACE' parenthesized_value_expression_list
-  | 'LENGTH' parenthesized_value_expression_list
-  | 'DECODE' parenthesized_value_expression_list
+  | 'SUBSTR' parenthesized_value_expr_list
+  | 'REGEXP_SUBSTR' parenthesized_value_expr_list
+  | 'REGEXP_REPLACE' parenthesized_value_expr_list
+  | 'LENGTH' parenthesized_value_expr_list
+  | 'DECODE' parenthesized_value_expr_list
     ;
 
 collection_value_constructor =
@@ -616,22 +620,7 @@ target_array_reference =
     ;
 
 current_collation_specification =
-    'COLLATION' 'FOR' parenthesized_value_expression_list
-    ;
-
-contextually_typed_value_specification =
-  | implicitly_typed_value_specification
-  | 'DEFAULT'
-    ;
-
-implicitly_typed_value_specification =
-  | 'NULL'
-  | empty_specification
-    ;
-
-empty_specification =
-  | 'ARRAY' left_bracket_or_trigraph right_bracket_or_trigraph
-  | 'MULTISET' left_bracket_or_trigraph right_bracket_or_trigraph
+    'COLLATION' 'FOR' parenthesized_value_expr_list
     ;
 
 identifier_chain =
@@ -669,14 +658,14 @@ window_name_or_specification =
   | identifier
     ;
 
-case_expression =
+case_expr =
   | case_abbreviation
   | case_specification
     ;
 
 case_abbreviation =
-  | 'NULLIF' parenthesized_value_expression_list
-  | 'COALESCE' parenthesized_value_expression_list
+  | 'NULLIF' parenthesized_value_expr_list
+  | 'COALESCE' parenthesized_value_expr_list
     ;
 
 case_specification =
@@ -685,7 +674,7 @@ case_specification =
     ;
 
 simple_case =
-    'CASE' case_operand {simple_when_clause}+ [else_clause] 'END'
+    'CASE' value_expr {simple_when_clause}+ [else_clause] 'END'
     ;
 
 searched_case =
@@ -697,15 +686,11 @@ simple_when_clause =
     ;
 
 searched_when_clause =
-    'WHEN' search_condition 'THEN' result
+    'WHEN' boolean_value_expr 'THEN' result
     ;
 
 else_clause =
     'ELSE' result
-    ;
-
-case_operand =
-    value_expression
     ;
 
 when_operand_list =
@@ -713,7 +698,6 @@ when_operand_list =
     ;
 
 when_operand =
-  | value_expression
   | comparison_predicate_part_2
   | between_predicate_part_2
   | in_predicate_part_2
@@ -730,20 +714,16 @@ when_operand =
   | submultiset_predicate_part_2
   | set_predicate_part_2
   | type_predicate_part_2
+  | value_expr
     ;
 
 result =
   | 'NULL'
-  | value_expression
+  | value_expr
     ;
 
 cast_specification =
-    'CAST' left_paren cast_operand 'AS' cast_target right_paren
-    ;
-
-cast_operand =
-  | value_expression
-  | implicitly_typed_value_specification
+    'CAST' left_paren value_expr 'AS' cast_target right_paren
     ;
 
 cast_target =
@@ -751,16 +731,16 @@ cast_target =
   | data_type
     ;
 
-next_value_expression =
+next_value_expr =
     'NEXT' 'VALUE' 'FOR' schema_qualified_name
     ;
 
 field_reference =
-    value_expression_primary period identifier
+    value_expr period identifier
     ;
 
 subtype_treatment =
-    'TREAT' left_paren value_expression 'AS' target_subtype right_paren
+    'TREAT' left_paren value_expr 'AS' target_subtype right_paren
     ;
 
 target_subtype =
@@ -774,11 +754,11 @@ method_invocation =
     ;
 
 direct_invocation =
-    value_expression_primary period identifier [sql_argument_list]
+    value_expr period identifier [sql_argument_list]
     ;
 
 generalized_invocation =
-    left_paren value_expression_primary 'AS' data_type right_paren period identifier [sql_argument_list]
+    left_paren value_expr 'AS' data_type right_paren period identifier [sql_argument_list]
     ;
 
 static_method_invocation =
@@ -790,41 +770,32 @@ new_specification =
     ;
 
 attribute_or_method_reference =
-    value_expression_primary '->' identifier [sql_argument_list]
+    value_expr '->' identifier [sql_argument_list]
     ;
 
 reference_resolution =
-    'DEREF' left_paren value_expression_primary right_paren
+    'DEREF' parenthesized_value_expr_list
     ;
 
 array_element_reference =
-    common_value_expression left_bracket_or_trigraph common_value_expression right_bracket_or_trigraph
+    value_expr left_bracket_or_trigraph value_expr right_bracket_or_trigraph
     ;
 
 multiset_element_reference =
-    'ELEMENT' parenthesized_value_expression_list
+    'ELEMENT' parenthesized_value_expr_list
     ;
 
-value_expression =
-  | common_value_expression
-  | boolean_value_expression
-  | value_expression_primary
-  | contextually_typed_value_specification
-  | left_paren contextually_typed_value_specification right_paren
-  | ['ROW'] parenthesized_value_expression_list
-  | subquery
+value_expr =
+  | [value_expr operators] common_term
+  | boolean_value_expr
     ;
 
-value_expression_list =
-    ','.{value_expression}
+value_expr_list =
+    ','.{value_expr}
     ;
 
-common_value_expression =
-    [common_value_expression operators] common_term
-    ;
-
-parenthesized_value_expression_list =
-    left_paren value_expression_list right_paren
+parenthesized_value_expr_list =
+    left_paren value_expr_list right_paren
     ;
 
 common_term =
@@ -837,7 +808,7 @@ common_primary =
   | datetime_value_function
   | multiset_set_function
   | interval_absolute_value_function
-  | value_expression_primary
+  | value_expr_primary
     ;
 
 operators =
@@ -848,12 +819,12 @@ operators =
     ;
 
 numeric_value_function =
-  | position_expression
-  | extract_expression
-  | length_expression
-  | cardinality_expression
-  | absolute_value_expression
-  | modulus_expression
+  | position_expr
+  | extract_expr
+  | length_expr
+  | cardinality_expr
+  | absolute_value_expr
+  | modulus_expr
   | natural_logarithm
   | exponential_function
   | power_function
@@ -863,18 +834,18 @@ numeric_value_function =
   | width_bucket_function
     ;
 
-position_expression =
-    'POSITION' left_paren common_value_expression 'IN' common_value_expression ['USING' char_length_units] right_paren
+position_expr =
+    'POSITION' left_paren value_expr 'IN' value_expr ['USING' char_length_units] right_paren
     ;
 
-length_expression =
-  | 'CHAR_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
-  | 'CHARACTER_LENGTH' left_paren common_value_expression ['USING' char_length_units] right_paren
-  | 'OCTET_LENGTH' parenthesized_value_expression_list
+length_expr =
+  | 'CHAR_LENGTH' left_paren value_expr ['USING' char_length_units] right_paren
+  | 'CHARACTER_LENGTH' left_paren value_expr ['USING' char_length_units] right_paren
+  | 'OCTET_LENGTH' parenthesized_value_expr_list
     ;
 
-extract_expression =
-    'EXTRACT' left_paren extract_field 'FROM' common_value_expression right_paren
+extract_expr =
+    'EXTRACT' left_paren extract_field 'FROM' value_expr right_paren
     ;
 
 extract_field =
@@ -887,50 +858,50 @@ time_zone_field =
   | 'TIMEZONE_MINUTE'
     ;
 
-cardinality_expression =
-    'CARDINALITY' parenthesized_value_expression_list
+cardinality_expr =
+    'CARDINALITY' parenthesized_value_expr_list
     ;
 
-absolute_value_expression =
-    'ABS' parenthesized_value_expression_list
+absolute_value_expr =
+    'ABS' parenthesized_value_expr_list
     ;
 
-modulus_expression =
-    'MOD' parenthesized_value_expression_list
+modulus_expr =
+    'MOD' parenthesized_value_expr_list
     ;
 
 natural_logarithm =
-    'LN' parenthesized_value_expression_list
+    'LN' parenthesized_value_expr_list
     ;
 
 exponential_function =
-    'EXP' parenthesized_value_expression_list
+    'EXP' parenthesized_value_expr_list
     ;
 
 power_function =
-    'POWER' parenthesized_value_expression_list
+    'POWER' parenthesized_value_expr_list
     ;
 
 square_root =
-    'SQRT' parenthesized_value_expression_list
+    'SQRT' parenthesized_value_expr_list
     ;
 
 floor_function =
-    'FLOOR' parenthesized_value_expression_list
+    'FLOOR' parenthesized_value_expr_list
     ;
 
 ceiling_function =
-  | 'CEIL' parenthesized_value_expression_list
-  | 'CEILING' parenthesized_value_expression_list
+  | 'CEIL' parenthesized_value_expr_list
+  | 'CEILING' parenthesized_value_expr_list
     ;
 
 width_bucket_function =
-    'WIDTH_BUCKET' parenthesized_value_expression_list
+    'WIDTH_BUCKET' parenthesized_value_expr_list
     ;
 
 character_value_function =
   | character_substring_function
-  | regular_expression_substring_function
+  | regular_expr_substring_function
   | fold
   | transcoding
   | character_transliteration
@@ -941,32 +912,32 @@ character_value_function =
     ;
 
 character_substring_function =
-    'SUBSTRING' left_paren common_value_expression 'FROM' common_value_expression ['FOR' common_value_expression] ['USING' char_length_units] right_paren
+    'SUBSTRING' left_paren value_expr 'FROM' value_expr ['FOR' value_expr] ['USING' char_length_units] right_paren
     ;
 
-regular_expression_substring_function =
-    'SUBSTRING' left_paren common_value_expression 'SIMILAR' common_value_expression 'ESCAPE' common_value_expression right_paren
+regular_expr_substring_function =
+    'SUBSTRING' left_paren value_expr 'SIMILAR' value_expr 'ESCAPE' value_expr right_paren
     ;
 
 fold =
-  | 'UPPER' parenthesized_value_expression_list
-  | 'LOWER' parenthesized_value_expression_list
+  | 'UPPER' parenthesized_value_expr_list
+  | 'LOWER' parenthesized_value_expr_list
     ;
 
 transcoding =
-    'CONVERT' left_paren common_value_expression 'USING' schema_qualified_name right_paren
+    'CONVERT' left_paren value_expr 'USING' schema_qualified_name right_paren
     ;
 
 character_transliteration =
-    'TRANSLATE' left_paren common_value_expression 'USING' schema_qualified_name right_paren
+    'TRANSLATE' left_paren value_expr 'USING' schema_qualified_name right_paren
     ;
 
 trim_function =
-    'TRIM' left_paren [trim_operands] common_value_expression right_paren
+    'TRIM' left_paren [trim_operands] value_expr right_paren
     ;
 
 trim_operands =
-    [trim_specification] [common_value_expression] 'FROM'
+    [trim_specification] [value_expr] 'FROM'
     ;
 
 trim_specification =
@@ -976,15 +947,15 @@ trim_specification =
     ;
 
 character_overlay_function =
-    'OVERLAY' left_paren common_value_expression 'PLACING' common_value_expression 'FROM' common_value_expression ['FOR' common_value_expression] ['USING' char_length_units] right_paren
+    'OVERLAY' left_paren value_expr 'PLACING' value_expr 'FROM' value_expr ['FOR' value_expr] ['USING' char_length_units] right_paren
     ;
 
 normalize_function =
-    'NORMALIZE' parenthesized_value_expression_list
+    'NORMALIZE' parenthesized_value_expr_list
     ;
 
 specific_type_method =
-    value_expression_primary period 'SPECIFICTYPE' [empty]
+    value_expr period 'SPECIFICTYPE' [empty]
     ;
 
 time_zone =
@@ -1005,16 +976,16 @@ datetime_value_function =
     ;
 
 interval_primary =
-  | value_expression_primary
+  | value_expr
   | interval_absolute_value_function
     ;
 
 interval_absolute_value_function =
-    'ABS' parenthesized_value_expression_list
+    'ABS' parenthesized_value_expr_list
     ;
 
-boolean_value_expression =
-    [boolean_value_expression and_or] boolean_factor
+boolean_value_expr =
+    [boolean_value_expr and_or] boolean_factor
     ;
 
 and_or =
@@ -1037,17 +1008,9 @@ truth_value =
     ;
 
 boolean_primary =
+  | left_paren boolean_value_expr right_paren
   | predicate
-  | boolean_predicand
-    ;
-
-boolean_predicand =
-  | parenthesized_boolean_value_expression
-  | value_expression_primary
-    ;
-
-parenthesized_boolean_value_expression =
-    left_paren boolean_value_expression right_paren
+  | value_expr
     ;
 
 array_value_constructor =
@@ -1056,11 +1019,11 @@ array_value_constructor =
     ;
 
 array_value_constructor_by_enumeration =
-    'ARRAY' left_bracket_or_trigraph value_expression_list right_bracket_or_trigraph
+    'ARRAY' left_bracket_or_trigraph value_expr_list right_bracket_or_trigraph
     ;
 
 array_value_constructor_by_query =
-    'ARRAY' left_paren query_expression [order_by_clause] right_paren
+    'ARRAY' left_paren query_expr [order_by_clause] right_paren
     ;
 
 all_distinct =
@@ -1069,7 +1032,7 @@ all_distinct =
     ;
 
 multiset_set_function =
-    'SET' parenthesized_value_expression_list
+    'SET' parenthesized_value_expr_list
     ;
 
 multiset_value_constructor =
@@ -1079,19 +1042,19 @@ multiset_value_constructor =
     ;
 
 multiset_value_constructor_by_enumeration =
-    'MULTISET' left_bracket_or_trigraph value_expression_list right_bracket_or_trigraph
+    'MULTISET' left_bracket_or_trigraph value_expr_list right_bracket_or_trigraph
     ;
 
 table_value_constructor =
-    'VALUES' value_expression_list
+    'VALUES' value_expr_list
     ;
 
-table_expression =
+table_expr =
     from_clause [where_clause] [group_by_clause] [having_clause] [window_clause] [connect_clause]
     ;
 
 connect_clause =
-    'CONNECT' 'BY' search_condition
+    'CONNECT' 'BY' boolean_value_expr
     ;
 
 from_clause =
@@ -1112,7 +1075,7 @@ table_factor =
     ;
 
 sample_clause =
-    'TABLESAMPLE' sample_method parenthesized_value_expression_list [repeatable_clause]
+    'TABLESAMPLE' sample_method parenthesized_value_expr_list [repeatable_clause]
     ;
 
 sample_method =
@@ -1121,7 +1084,7 @@ sample_method =
     ;
 
 repeatable_clause =
-    'REPEATABLE' parenthesized_value_expression_list
+    'REPEATABLE' parenthesized_value_expr_list
     ;
 
 table_primary =
@@ -1151,11 +1114,11 @@ lateral_derived_table =
     ;
 
 collection_derived_table =
-    'UNNEST' parenthesized_value_expression_list ['WITH' 'ORDINALITY']
+    'UNNEST' parenthesized_value_expr_list ['WITH' 'ORDINALITY']
     ;
 
 table_function_derived_table =
-    'TABLE' parenthesized_value_expression_list
+    'TABLE' parenthesized_value_expr_list
     ;
 
 table_or_query_name =
@@ -1191,7 +1154,7 @@ join_specification =
     ;
 
 join_condition =
-    'ON' search_condition
+    'ON' boolean_value_expr
     ;
 
 named_columns_join =
@@ -1210,7 +1173,7 @@ outer_join_type =
     ;
 
 where_clause =
-    'WHERE' search_condition
+    'WHERE' boolean_value_expr
     ;
 
 group_by_clause =
@@ -1275,7 +1238,7 @@ empty =
     ;
 
 having_clause =
-    'HAVING' search_condition
+    'HAVING' boolean_value_expr
     ;
 
 window_clause =
@@ -1356,7 +1319,7 @@ window_frame_exclusion =
     ;
 
 query_specification =
-    'SELECT' [all_distinct] select_list table_expression
+    'SELECT' [all_distinct] select_list table_expr
     ;
 
 select_list =
@@ -1375,7 +1338,7 @@ qualified_asterisk =
     ;
 
 derived_column =
-    value_expression [as_clause]
+    value_expr [as_clause]
     ;
 
 as_clause =
@@ -1383,11 +1346,11 @@ as_clause =
     ;
 
 all_fields_reference =
-    value_expression_primary period '*' ['AS' parenthesized_column_name_list]
+    value_expr period '*' ['AS' parenthesized_column_name_list]
     ;
 
-query_expression =
-    [with_clause] query_expression_body
+query_expr =
+    [with_clause] query_expr_body
     ;
 
 with_clause =
@@ -1402,8 +1365,8 @@ with_list_element =
     identifier [parenthesized_column_name_list] 'AS' subquery [search_or_cycle_clause]
     ;
 
-query_expression_body =
-    [query_expression_body union_except [all_distinct] [corresponding_spec]] query_term
+query_expr_body =
+    [query_expr_body union_except [all_distinct] [corresponding_spec]] query_term
     ;
 
 union_except =
@@ -1418,7 +1381,7 @@ query_term =
 
 query_primary =
   | simple_table
-  | left_paren query_expression_body right_paren
+  | left_paren query_expr_body right_paren
     ;
 
 simple_table =
@@ -1451,11 +1414,11 @@ recursive_search_order =
     ;
 
 cycle_clause =
-    'CYCLE' column_name_list 'SET' identifier 'TO' value_expression 'DEFAULT' value_expression 'USING' identifier
+    'CYCLE' column_name_list 'SET' identifier 'TO' value_expr 'DEFAULT' value_expr 'USING' identifier
     ;
 
 subquery =
-    left_paren query_expression right_paren
+    left_paren query_expr right_paren
     ;
 
 predicate =
@@ -1479,11 +1442,11 @@ predicate =
     ;
 
 comparison_predicate =
-    value_expression comparison_predicate_part_2
+    value_expr comparison_predicate_part_2
     ;
 
 comparison_predicate_part_2 =
-    comp_op value_expression
+    comp_op value_expr
     ;
 
 comp_op =
@@ -1497,11 +1460,11 @@ comp_op =
     ;
 
 between_predicate =
-    value_expression between_predicate_part_2
+    value_expr between_predicate_part_2
     ;
 
 between_predicate_part_2 =
-    ['NOT'] 'BETWEEN' [a_symmetric] value_expression 'AND' value_expression
+    ['NOT'] 'BETWEEN' [a_symmetric] value_expr 'AND' value_expr
     ;
 
 a_symmetric =
@@ -1510,7 +1473,7 @@ a_symmetric =
     ;
 
 in_predicate =
-    value_expression in_predicate_part_2
+    value_expr in_predicate_part_2
     ;
 
 in_predicate_part_2 =
@@ -1519,7 +1482,7 @@ in_predicate_part_2 =
 
 in_predicate_value =
   | subquery
-  | parenthesized_value_expression_list
+  | parenthesized_value_expr_list
     ;
 
 like_predicate =
@@ -1528,31 +1491,31 @@ like_predicate =
     ;
 
 character_like_predicate =
-    value_expression character_like_predicate_part_2
+    value_expr character_like_predicate_part_2
     ;
 
 character_like_predicate_part_2 =
-    ['NOT'] 'LIKE' common_value_expression ['ESCAPE' common_value_expression]
+    ['NOT'] 'LIKE' value_expr ['ESCAPE' value_expr]
     ;
 
 octet_like_predicate =
-    value_expression octet_like_predicate_part_2
+    value_expr octet_like_predicate_part_2
     ;
 
 octet_like_predicate_part_2 =
-    ['NOT'] 'LIKE' common_value_expression ['ESCAPE' common_value_expression]
+    ['NOT'] 'LIKE' value_expr ['ESCAPE' value_expr]
     ;
 
 similar_predicate =
-    value_expression similar_predicate_part_2
+    value_expr similar_predicate_part_2
     ;
 
 similar_predicate_part_2 =
-    ['NOT'] 'SIMILAR' 'TO' common_value_expression ['ESCAPE' common_value_expression]
+    ['NOT'] 'SIMILAR' 'TO' value_expr ['ESCAPE' value_expr]
     ;
 
 null_predicate =
-    value_expression null_predicate_part_2
+    value_expr null_predicate_part_2
     ;
 
 null_predicate_part_2 =
@@ -1560,7 +1523,7 @@ null_predicate_part_2 =
     ;
 
 quantified_comparison_predicate =
-    value_expression quantified_comparison_predicate_part_2
+    value_expr quantified_comparison_predicate_part_2
     ;
 
 quantified_comparison_predicate_part_2 =
@@ -1582,7 +1545,7 @@ unique_predicate =
     ;
 
 normalized_predicate =
-    value_expression normalized_predicate_part_2
+    value_expr normalized_predicate_part_2
     ;
 
 normalized_predicate_part_2 =
@@ -1590,7 +1553,7 @@ normalized_predicate_part_2 =
     ;
 
 match_predicate =
-    value_expression match_predicate_part_2
+    value_expr match_predicate_part_2
     ;
 
 match_predicate_part_2 =
@@ -1598,39 +1561,39 @@ match_predicate_part_2 =
     ;
 
 overlaps_predicate =
-    value_expression overlaps_predicate_part_2
+    value_expr overlaps_predicate_part_2
     ;
 
 overlaps_predicate_part_2 =
-    'OVERLAPS' value_expression
+    'OVERLAPS' value_expr
     ;
 
 distinct_predicate =
-    value_expression distinct_predicate_part_2
+    value_expr distinct_predicate_part_2
     ;
 
 distinct_predicate_part_2 =
-    'IS' ['NOT'] 'DISTINCT' 'FROM' value_expression
+    'IS' ['NOT'] 'DISTINCT' 'FROM' value_expr
     ;
 
 member_predicate =
-    value_expression member_predicate_part_2
+    value_expr member_predicate_part_2
     ;
 
 member_predicate_part_2 =
-    ['NOT'] 'MEMBER' ['OF'] common_value_expression
+    ['NOT'] 'MEMBER' ['OF'] value_expr
     ;
 
 submultiset_predicate =
-    value_expression submultiset_predicate_part_2
+    value_expr submultiset_predicate_part_2
     ;
 
 submultiset_predicate_part_2 =
-    ['NOT'] 'SUBMULTISET' ['OF'] common_value_expression
+    ['NOT'] 'SUBMULTISET' ['OF'] value_expr
     ;
 
 set_predicate =
-    value_expression set_predicate_part_2
+    value_expr set_predicate_part_2
     ;
 
 set_predicate_part_2 =
@@ -1638,7 +1601,7 @@ set_predicate_part_2 =
     ;
 
 type_predicate =
-    value_expression type_predicate_part_2
+    value_expr type_predicate_part_2
     ;
 
 type_predicate_part_2 =
@@ -1651,10 +1614,6 @@ type_list =
 
 user_defined_type_specification =
     ['ONLY'] schema_qualified_name
-    ;
-
-search_condition =
-    boolean_value_expression
     ;
 
 interval_qualifier =
@@ -1722,13 +1681,13 @@ sql_argument_list =
     ;
 
 sql_argument =
-  | value_expression
-  | generalized_expression
+  | value_expr
+  | generalized_expr
   | target_specification
     ;
 
-generalized_expression =
-    value_expression 'AS' schema_qualified_name
+generalized_expr =
+    value_expr 'AS' schema_qualified_name
     ;
 
 specific_routine_designator =
@@ -1782,7 +1741,7 @@ aggregate_function =
     ;
 
 general_set_function =
-    computational_operation left_paren [all_distinct] value_expression right_paren
+    computational_operation left_paren [all_distinct] value_expr right_paren
     ;
 
 computational_operation =
@@ -1806,11 +1765,11 @@ computational_operation =
     ;
 
 filter_clause =
-    'FILTER' left_paren 'WHERE' search_condition right_paren
+    'FILTER' left_paren 'WHERE' boolean_value_expr right_paren
     ;
 
 binary_set_function =
-    binary_set_function_type parenthesized_value_expression_list
+    binary_set_function_type parenthesized_value_expr_list
     ;
 
 binary_set_function_type =
@@ -1834,7 +1793,7 @@ ordered_set_function =
     ;
 
 hypothetical_set_function =
-    rank_function_type parenthesized_value_expression_list within_group_specification
+    rank_function_type parenthesized_value_expr_list within_group_specification
     ;
 
 within_group_specification =
@@ -1842,7 +1801,7 @@ within_group_specification =
     ;
 
 inverse_distribution_function =
-    inverse_distribution_function_type parenthesized_value_expression_list within_group_specification
+    inverse_distribution_function_type parenthesized_value_expr_list within_group_specification
     ;
 
 inverse_distribution_function_type =
@@ -1855,7 +1814,7 @@ sort_specification_list =
     ;
 
 sort_specification =
-    value_expression [ordering_specification] [null_ordering]
+    value_expr [ordering_specification] [null_ordering]
     ;
 
 ordering_specification =
@@ -2035,7 +1994,7 @@ identity_column_specification =
     ;
 
 generation_clause =
-    'GENERATED' 'ALWAYS' 'AS' parenthesized_value_expression_list
+    'GENERATED' 'ALWAYS' 'AS' parenthesized_value_expr_list
     ;
 
 default_clause =
@@ -2051,7 +2010,9 @@ default_option =
   | 'SESSION_USER'
   | 'SYSTEM_USER'
   | 'CURRENT_PATH'
-  | implicitly_typed_value_specification
+  | 'NULL'
+  | 'ARRAY' left_bracket_or_trigraph right_bracket_or_trigraph
+  | 'MULTISET' left_bracket_or_trigraph right_bracket_or_trigraph
     ;
 
 table_constraint_definition =
@@ -2114,7 +2075,7 @@ referential_action =
     ;
 
 check_constraint_definition =
-    'CHECK' left_paren search_condition right_paren
+    'CHECK' left_paren boolean_value_expr right_paren
     ;
 
 alter_table_statement =
@@ -2187,7 +2148,7 @@ drop_table_statement =
     ;
 
 view_definition =
-    'CREATE' ['RECURSIVE'] 'VIEW' table_name [view_specification] 'AS' query_expression ['WITH' [levels_clause] 'CHECK' 'OPTION']
+    'CREATE' ['RECURSIVE'] 'VIEW' table_name [view_specification] 'AS' query_expr ['WITH' [levels_clause] 'CHECK' 'OPTION']
     ;
 
 view_specification =
@@ -2303,7 +2264,7 @@ drop_transliteration_statement =
     ;
 
 assertion_definition =
-    'CREATE' 'ASSERTION' schema_qualified_name 'CHECK' left_paren search_condition right_paren [constraint_characteristics]
+    'CREATE' 'ASSERTION' schema_qualified_name 'CHECK' left_paren boolean_value_expr right_paren [constraint_characteristics]
     ;
 
 drop_assertion_statement =
@@ -2326,7 +2287,7 @@ trigger_event =
     ;
 
 triggered_action =
-    ['FOR' 'EACH' statement_or_row] ['WHEN' left_paren search_condition right_paren] triggered_sql_statement
+    ['FOR' 'EACH' statement_or_row] ['WHEN' left_paren boolean_value_expr right_paren] triggered_sql_statement
     ;
 
 statement_or_row =
@@ -3175,7 +3136,7 @@ cursor_returnability =
     ;
 
 cursor_specification =
-    query_expression [order_by_clause] [updatability_clause]
+    query_expr [order_by_clause] [updatability_clause]
     ;
 
 updatability_clause =
@@ -3213,7 +3174,7 @@ close_statement =
     ;
 
 select_statement_single_row =
-    'SELECT' [all_distinct] select_list 'INTO' select_target_list table_expression
+    'SELECT' [all_distinct] select_list 'INTO' select_target_list table_expr
     ;
 
 select_target_list =
@@ -3230,7 +3191,7 @@ target_table =
     ;
 
 delete_statement_searched =
-    'DELETE' 'FROM' target_table [as_clause] ['WHERE' search_condition]
+    'DELETE' 'FROM' target_table [as_clause] ['WHERE' boolean_value_expr]
     ;
 
 insert_statement =
@@ -3244,7 +3205,7 @@ insert_columns_and_source =
     ;
 
 from_subquery =
-    [parenthesized_column_name_list] [override_clause] query_expression
+    [parenthesized_column_name_list] [override_clause] query_expr
     ;
 
 from_constructor =
@@ -3261,7 +3222,7 @@ from_default =
     ;
 
 merge_statement =
-    'MERGE' 'INTO' target_table [as_clause] 'USING' table_reference 'ON' search_condition merge_operation_specification
+    'MERGE' 'INTO' target_table [as_clause] 'USING' table_reference 'ON' boolean_value_expr merge_operation_specification
     ;
 
 merge_operation_specification =
@@ -3286,7 +3247,7 @@ merge_update_specification =
     ;
 
 merge_insert_specification =
-    'INSERT' [parenthesized_column_name_list] [override_clause] 'VALUES' parenthesized_value_expression_list
+    'INSERT' [parenthesized_column_name_list] [override_clause] 'VALUES' parenthesized_value_expr_list
     ;
 
 update_statement_positioned =
@@ -3294,7 +3255,7 @@ update_statement_positioned =
     ;
 
 update_statement_searched =
-    'UPDATE' target_table [as_clause] 'SET' set_clause_list ['WHERE' search_condition]
+    'UPDATE' target_table [as_clause] 'SET' set_clause_list ['WHERE' boolean_value_expr]
     ;
 
 set_clause_list =
@@ -3303,7 +3264,7 @@ set_clause_list =
 
 set_clause =
   | multiple_column_assignment
-  | set_target '=' value_expression
+  | set_target '=' value_expr
     ;
 
 set_target =
@@ -3312,7 +3273,7 @@ set_target =
     ;
 
 multiple_column_assignment =
-    set_target_list '=' value_expression
+    set_target_list '=' value_expr
     ;
 
 set_target_list =
@@ -3359,7 +3320,7 @@ return_statement =
     ;
 
 return_value =
-  | value_expression
+  | value_expr
   | 'NULL'
     ;
 
@@ -3489,7 +3450,7 @@ set_local_time_zone_statement =
     ;
 
 set_time_zone_value =
-  | common_value_expression
+  | value_expr
   | 'LOCAL'
     ;
 
