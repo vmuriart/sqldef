@@ -526,6 +526,7 @@ nonparenthesized_value_expression_primary =
   | grouping_operation
   | window_function
   | subquery
+  | oracle_functions
   | case_expression
   | cast_specification
   | field_reference
@@ -540,6 +541,14 @@ nonparenthesized_value_expression_primary =
   | multiset_element_reference
   | routine_invocation
   | next_value_expression
+    ;
+
+oracle_functions =
+  | 'SUBSTR' common_value_expression_list
+  | 'REGEXP_SUBSTR' common_value_expression_list
+  | 'REGEXP_REPLACE' common_value_expression_list
+  | 'LENGTH' common_value_expression_list
+  | 'DECODE' common_value_expression_list
     ;
 
 collection_value_constructor =
@@ -1856,6 +1865,8 @@ computational_operation =
   | 'MAX'
   | 'MIN'
   | 'SUM'
+  | 'LEAD'
+  | 'LAG'
   | 'EVERY'
   | 'ANY'
   | 'SOME'
