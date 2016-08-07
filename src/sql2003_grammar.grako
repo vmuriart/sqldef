@@ -1975,8 +1975,8 @@ schema_definition =
     ;
 
 schema_character_set_or_path =
-  | schema_character_set_specification [schema_path_specification]
-  | schema_path_specification [schema_character_set_specification]
+  | schema_character_set_specification [path_specification]
+  | path_specification [schema_character_set_specification]
     ;
 
 schema_name_clause =
@@ -1986,10 +1986,6 @@ schema_name_clause =
 
 schema_character_set_specification =
     'DEFAULT' 'CHARACTER' 'SET' character_set_name
-    ;
-
-schema_path_specification =
-    path_specification
     ;
 
 schema_element =
@@ -2141,11 +2137,7 @@ identity_column_specification =
     ;
 
 generation_clause =
-    'GENERATED' 'ALWAYS' 'AS' generation_expression
-    ;
-
-generation_expression =
-    parenthesized_value_expression
+    'GENERATED' 'ALWAYS' 'AS' parenthesized_value_expression
     ;
 
 default_clause =
@@ -2297,16 +2289,12 @@ drop_table_statement =
     ;
 
 view_definition =
-    'CREATE' ['RECURSIVE'] 'VIEW' table_name view_specification 'AS' query_expression ['WITH' [levels_clause] 'CHECK' 'OPTION']
+    'CREATE' ['RECURSIVE'] 'VIEW' table_name [view_specification] 'AS' query_expression ['WITH' [levels_clause] 'CHECK' 'OPTION']
     ;
 
 view_specification =
   | referenceable_view_specification
-  | [regular_view_specification]
-    ;
-
-regular_view_specification =
-    parenthesized_column_name_list
+  | parenthesized_column_name_list
     ;
 
 referenceable_view_specification =
