@@ -827,6 +827,10 @@ common_value_expression =
     [common_value_expression operators] common_term
     ;
 
+common_value_expression_list =
+    ','.{common_value_expression}
+    ;
+
 common_term =
     [sign] common_primary [collate_clause] [time_zone] [interval_qualifier]
     ;
@@ -906,7 +910,7 @@ absolute_value_expression =
     ;
 
 modulus_expression =
-    'MOD' left_paren common_value_expression comma common_value_expression right_paren
+    'MOD' left_paren common_value_expression_list right_paren
     ;
 
 natural_logarithm =
@@ -918,7 +922,7 @@ exponential_function =
     ;
 
 power_function =
-    'POWER' left_paren common_value_expression comma common_value_expression right_paren
+    'POWER' left_paren common_value_expression_list right_paren
     ;
 
 square_root =
@@ -935,7 +939,7 @@ ceiling_function =
     ;
 
 width_bucket_function =
-    'WIDTH_BUCKET' left_paren common_value_expression comma common_value_expression comma common_value_expression comma common_value_expression right_paren
+    'WIDTH_BUCKET' left_paren common_value_expression_list right_paren
     ;
 
 character_value_function =
@@ -1120,8 +1124,7 @@ row_value_constructor =
     ;
 
 explicit_row_value_constructor =
-  | left_paren value_expression comma value_expression_list right_paren
-  | 'ROW' left_paren value_expression_list right_paren
+  | ['ROW'] left_paren value_expression_list right_paren
   | subquery
     ;
 
@@ -1131,8 +1134,7 @@ contextually_typed_row_value_constructor =
   | boolean_value_expression
   | contextually_typed_value_specification
   | left_paren contextually_typed_value_specification right_paren
-  | left_paren contextually_typed_row_value_constructor_element comma contextually_typed_row_value_constructor_element_list right_paren
-  | 'ROW' left_paren contextually_typed_row_value_constructor_element_list right_paren
+  | ['ROW'] left_paren contextually_typed_row_value_constructor_element_list right_paren
     ;
 
 contextually_typed_row_value_constructor_element_list =
@@ -1912,7 +1914,7 @@ filter_clause =
     ;
 
 binary_set_function =
-    binary_set_function_type left_paren common_value_expression comma common_value_expression right_paren
+    binary_set_function_type left_paren common_value_expression_list right_paren
     ;
 
 binary_set_function_type =
